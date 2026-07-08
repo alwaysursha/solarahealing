@@ -1,10 +1,10 @@
 import type { Metadata } from "next";
 import { AboutSection } from "@/components/sections/AboutSection";
 import { ArticlesSection } from "@/components/sections/ArticlesSection";
-import { ContactSection } from "@/components/sections/ContactSection";
+import { CoursesSection } from "@/components/sections/CoursesSection";
 import { Hero } from "@/components/sections/Hero";
-import { ServicesSection } from "@/components/sections/ServicesSection";
-import { TestimonialsSection } from "@/components/sections/TestimonialsSection";
+import { ScheduleSection } from "@/components/sections/ScheduleSection";
+import { TestimonialsShowcaseSection } from "@/components/sections/TestimonialsShowcaseSection";
 import { WorkshopsSection } from "@/components/sections/WorkshopsSection";
 import { getSiteSettings } from "@/lib/site-settings";
 
@@ -27,9 +27,9 @@ export default async function HomePage() {
       <AboutSection />
       <WorkshopsSection />
       <ArticlesSection />
-      <ServicesSection />
-      <TestimonialsSection />
-      <ContactSection />
+      <CoursesSection />
+      <TestimonialsShowcaseSection />
+      <ScheduleSection />
     </main>
   );
 }
