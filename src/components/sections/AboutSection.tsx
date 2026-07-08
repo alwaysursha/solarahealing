@@ -1,8 +1,9 @@
 "use client";
 
-import { motion, useInView, useReducedMotion } from "framer-motion";
+import { motion, useReducedMotion } from "framer-motion";
 import { useEffect, useRef, useState, type ReactNode } from "react";
 import { useAnimationsActive } from "@/hooks/useAnimationsActive";
+import { useHeroEntranceComplete } from "@/hooks/useHeroEntranceComplete";
 import { aboutContent } from "@/lib/site";
 
 const ease = [0.22, 1, 0.36, 1] as const;
@@ -26,6 +27,7 @@ function Reveal({
   delay?: number;
 }) {
   const reduceMotion = useReducedMotion();
+  const heroEntranceComplete = useHeroEntranceComplete();
 
   if (reduceMotion) {
     return <div className={className}>{children}</div>;
@@ -35,9 +37,8 @@ function Reveal({
     <motion.div
       className={className}
       initial={{ opacity: 0, y: 24 }}
-      whileInView={{ opacity: 1, y: 0 }}
-      viewport={{ once: true, margin: "-60px" }}
-      transition={{ duration: 0.85, delay, ease }}
+      animate={heroEntranceComplete ? { opacity: 1, y: 0 } : { opacity: 0, y: 24 }}
+      transition={{ duration: 0.85, delay: heroEntranceComplete ? delay : 0, ease }}
     >
       {children}
     </motion.div>
@@ -192,14 +193,13 @@ const DELETE_INTERVAL_MS = 32;
 const REPEAT_PAUSE_MS = 3000;
 
 function TypewriterQuote({ reduceMotion }: { reduceMotion: boolean | null }) {
-  const ref = useRef<HTMLParagraphElement>(null);
-  const isInView = useInView(ref, { margin: "-40px", amount: 0.15 });
+  const heroEntranceComplete = useHeroEntranceComplete();
   const [charCount, setCharCount] = useState(reduceMotion ? FULL_QUOTE.length : 0);
   const [isComplete, setIsComplete] = useState(Boolean(reduceMotion));
   const [isActive, setIsActive] = useState(Boolean(reduceMotion));
 
   useEffect(() => {
-    if (reduceMotion || !isInView) return;
+    if (reduceMotion || !heroEntranceComplete) return;
 
     let stepTimer: number | undefined;
     let pauseTimer: number | undefined;
@@ -266,18 +266,17 @@ function TypewriterQuote({ reduceMotion }: { reduceMotion: boolean | null }) {
       cancelled = true;
       clearTimers();
     };
-  }, [isInView, reduceMotion]);
+  }, [heroEntranceComplete, reduceMotion]);
 
   const visible = FULL_QUOTE.slice(0, charCount);
   const lead = visible.slice(0, Math.min(visible.length, QUOTE_LEAD.length));
   const accent =
     visible.length > QUOTE_LEAD.length ? visible.slice(QUOTE_LEAD.length) : "";
-  const showCursor = isInView && isActive;
+  const showCursor = heroEntranceComplete && isActive;
   const cursorBlink = isComplete || charCount === 0;
 
   return (
     <p
-      ref={ref}
       className="font-serif text-lg italic leading-snug text-purple-deep md:text-xl lg:text-[1.15rem] xl:text-xl"
       aria-label={FULL_QUOTE}
     >
@@ -315,13 +314,7 @@ function PracticeQuote() {
         aria-hidden
       />
 
-      <motion.blockquote
-        className="relative border-l-2 border-gold/50 pl-3.5"
-        initial={reduceMotion ? false : { opacity: 0, y: 12 }}
-        whileInView={reduceMotion ? undefined : { opacity: 1, y: 0 }}
-        viewport={{ once: true, margin: "-40px" }}
-        transition={{ duration: 0.85, ease }}
-      >
+      <blockquote className="relative border-l-2 border-gold/50 pl-3.5">
         <span
           className="font-serif pointer-events-none absolute -top-1 left-2.5 text-3xl leading-none text-gold/20"
           aria-hidden
@@ -335,7 +328,7 @@ function PracticeQuote() {
             The heart of our practice
           </p>
         </div>
-      </motion.blockquote>
+      </blockquote>
     </div>
   );
 }
@@ -343,7 +336,9 @@ function PracticeQuote() {
 export function AboutSection() {
   const [first, second, third] = aboutContent.paragraphs;
   const sectionRef = useRef<HTMLElement>(null);
-  const animationsActive = useAnimationsActive(sectionRef);
+  const heroEntranceComplete = useHeroEntranceComplete();
+  const scrollAnimationsActive = useAnimationsActive(sectionRef);
+  const animationsActive = heroEntranceComplete || scrollAnimationsActive;
 
   return (
     <section

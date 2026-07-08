@@ -34,6 +34,10 @@ export const heroSlides = [
   {
     id: "awaken",
     variant: "illustrated",
+    image:
+      "https://images.unsplash.com/photo-1544367567-0f2fcb009e0b?auto=format&fit=crop&w=1920&q=80",
+    imageAlt: "Peaceful meditation in a serene healing practice",
+    imagePosition: "94% 40%",
     eyebrow: "सर्वे भवन्तु सुखिनः",
     eyebrowSub: "May all beings be happy",
     title: "Awaken Your Inner",
@@ -49,6 +53,7 @@ export const heroSlides = [
     image:
       "https://images.unsplash.com/photo-1506126613408-eca07ce68773?auto=format&fit=crop&w=1920&q=80",
     imageAlt: "Peaceful meditation session in a serene healing space",
+    imagePosition: "68% center",
     eyebrow: "चक्र संतुलन",
     eyebrowSub: "Balance of the seven chakras",
     title: "Restore Your Energy",
@@ -60,8 +65,9 @@ export const heroSlides = [
     id: "distance",
     variant: "photo",
     image:
-      "https://images.unsplash.com/photo-1540555700478-4be289fbbe23?auto=format&fit=crop&w=1920&q=80",
-    imageAlt: "Calm wellness space with soft light and healing atmosphere",
+      "https://images.unsplash.com/photo-1573496359142-b8d87734a5a2?auto=format&fit=crop&w=1920&q=80",
+    imageAlt: "Peaceful distance Reiki session from a calm home setting",
+    imagePosition: "92% 18%",
     eyebrow: "दूर संचार",
     eyebrowSub: "Healing beyond distance",
     title: "Heal From",

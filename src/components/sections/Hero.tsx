@@ -6,11 +6,47 @@ import {
   useReducedMotion,
 } from "framer-motion";
 import Image from "next/image";
-import { useCallback, useEffect, useState } from "react";
+import { useCallback, useEffect, useRef, useState } from "react";
 import { GlowButton } from "@/components/ui/GlowButton";
+import {
+  HERO_CAPTION_DELAY_S,
+  HERO_CONTROLS_DELAY_S,
+  HERO_ENTRANCE_DURATION_S,
+  HERO_IMAGE_DELAY_S,
+  HERO_REVEAL_EASE,
+  HERO_SLIDE_BG_DURATION_S,
+  HERO_SLIDE_CHANGE_DURATION_S,
+  HERO_SLIDE_CHANGE_EASE,
+  HERO_TEXT_DELAY_S,
+} from "@/lib/home-entrance";
 import { heroSlides, site } from "@/lib/site";
 
 const AUTO_PLAY_MS = 6500;
+
+type SlideMotionCustom = {
+  direction: number;
+  isSlideChange: boolean;
+};
+
+const heroSlideTextVariants = {
+  enter: ({ direction, isSlideChange }: SlideMotionCustom) =>
+    isSlideChange
+      ? { opacity: 0, x: direction * 26, filter: "blur(6px)" }
+      : { opacity: 0, y: 20, filter: "blur(0px)" },
+  center: { opacity: 1, x: 0, y: 0, filter: "blur(0px)" },
+  exit: ({ direction, isSlideChange }: SlideMotionCustom) =>
+    isSlideChange
+      ? { opacity: 0, x: direction * -26, filter: "blur(6px)" }
+      : { opacity: 0, y: -12, filter: "blur(0px)" },
+};
+
+function getSlideDirection(from: number, to: number, count: number) {
+  if (from === to) return 1;
+
+  const forward = (to - from + count) % count;
+  const backward = (from - to + count) % count;
+  return forward <= backward ? 1 : -1;
+}
 
 function LotusVisual({ className }: { className?: string }) {
   return (
@@ -33,23 +69,56 @@ function LotusVisual({ className }: { className?: string }) {
   );
 }
 
-function IllustratedSlideBackground() {
+function HeroPhotoOverlays() {
+  return (
+    <>
+      <div className="absolute inset-0 bg-gradient-to-r from-canvas/95 via-canvas/82 to-canvas/35" />
+      <div className="absolute inset-0 bg-gradient-to-t from-canvas/90 via-transparent to-accent-soft/20" />
+    </>
+  );
+}
+
+function IllustratedSlideBackground({
+  image,
+  imageAlt,
+  priority,
+  imagePosition = "94% center",
+}: {
+  image?: string;
+  imageAlt?: string;
+  priority?: boolean;
+  imagePosition?: string;
+}) {
   return (
     <>
       <div className="absolute inset-0 bg-hero-light" />
+      {image && imageAlt ? (
+        <>
+          <Image
+            src={image}
+            alt={imageAlt}
+            fill
+            priority={priority}
+            sizes="100vw"
+            className="object-cover"
+            style={{ objectPosition: imagePosition }}
+          />
+          <HeroPhotoOverlays />
+        </>
+      ) : null}
       <div
         className="pointer-events-none absolute inset-0"
         style={{
           backgroundImage:
-            "radial-gradient(ellipse 70% 55% at 88% 28%, rgba(67,56,202,0.1) 0%, transparent 58%), radial-gradient(ellipse 55% 45% at 12% 75%, rgba(201,162,39,0.08) 0%, transparent 52%), radial-gradient(ellipse 40% 35% at 50% 100%, rgba(99,102,241,0.08) 0%, transparent 60%)",
+            "radial-gradient(ellipse 55% 45% at 12% 75%, rgba(201,162,39,0.08) 0%, transparent 52%), radial-gradient(ellipse 40% 35% at 50% 100%, rgba(99,102,241,0.06) 0%, transparent 60%)",
         }}
         aria-hidden
       />
-      <div className="pointer-events-none absolute inset-x-0 top-0 h-px bg-gradient-to-r from-transparent via-accent/20 to-transparent" />
-      <div className="pointer-events-none absolute -right-[8%] top-[8%] hidden text-accent/25 md:block lg:-right-[4%]">
+      <div className="pointer-events-none absolute inset-x-0 top-0 z-[1] h-px bg-gradient-to-r from-transparent via-accent/20 to-transparent" />
+      <div className="pointer-events-none absolute -right-[8%] top-[8%] z-[2] hidden text-accent/25 md:block lg:-right-[4%]">
         <LotusVisual className="h-[min(52vw,420px)] w-[min(52vw,420px)]" />
       </div>
-      <div className="pointer-events-none absolute right-[5%] top-[16%] text-accent/20 md:hidden">
+      <div className="pointer-events-none absolute right-[5%] top-[16%] z-[2] text-accent/20 md:hidden">
         <LotusVisual className="h-44 w-44" />
       </div>
     </>
@@ -60,10 +129,12 @@ function PhotoSlideBackground({
   image,
   imageAlt,
   priority,
+  imagePosition = "68% center",
 }: {
   image: string;
   imageAlt: string;
   priority?: boolean;
+  imagePosition?: string;
 }) {
   return (
     <>
@@ -74,9 +145,9 @@ function PhotoSlideBackground({
         priority={priority}
         sizes="100vw"
         className="object-cover"
+        style={{ objectPosition: imagePosition }}
       />
-      <div className="absolute inset-0 bg-gradient-to-r from-canvas/95 via-canvas/82 to-canvas/35" />
-      <div className="absolute inset-0 bg-gradient-to-t from-canvas/90 via-transparent to-accent-soft/20" />
+      <HeroPhotoOverlays />
     </>
   );
 }
@@ -85,7 +156,12 @@ export function Hero() {
   const reduceMotion = useReducedMotion();
   const [active, setActive] = useState(0);
   const [paused, setPaused] = useState(false);
+  const [entranceComplete, setEntranceComplete] = useState(reduceMotion === true);
+  const [slideDirection, setSlideDirection] = useState(1);
+  const activeRef = useRef(active);
   const slideCount = heroSlides.length;
+
+  activeRef.current = active;
 
   const togglePause = useCallback(() => {
     setPaused((current) => !current);
@@ -93,7 +169,9 @@ export function Hero() {
 
   const goTo = useCallback(
     (index: number) => {
-      setActive((index + slideCount) % slideCount);
+      const normalized = (index + slideCount) % slideCount;
+      setSlideDirection(getSlideDirection(activeRef.current, normalized, slideCount));
+      setActive(normalized);
     },
     [slideCount],
   );
@@ -102,11 +180,24 @@ export function Hero() {
   const prev = useCallback(() => goTo(active - 1), [active, goTo]);
 
   useEffect(() => {
-    if (reduceMotion || paused) return;
+    if (reduceMotion) {
+      setEntranceComplete(true);
+      return;
+    }
+
+    const timer = window.setTimeout(
+      () => setEntranceComplete(true),
+      (HERO_IMAGE_DELAY_S + HERO_ENTRANCE_DURATION_S) * 1000,
+    );
+    return () => window.clearTimeout(timer);
+  }, [reduceMotion]);
+
+  useEffect(() => {
+    if (reduceMotion || paused || !entranceComplete) return;
 
     const timer = window.setInterval(next, AUTO_PLAY_MS);
     return () => window.clearInterval(timer);
-  }, [next, paused, reduceMotion]);
+  }, [next, paused, reduceMotion, entranceComplete]);
 
   const slide = heroSlides[active];
 
@@ -116,22 +207,42 @@ export function Hero() {
       aria-roledescription="carousel"
       aria-label="Hero highlights"
     >
-      <div className="relative min-h-[min(72vh,640px)] w-full md:min-h-[min(78vh,720px)]">
+      <div className="relative h-[min(72vh,640px)] w-full md:h-[min(78vh,720px)]">
+        <div className="absolute inset-0 bg-hero-light" aria-hidden />
+
         {heroSlides.map((item, index) => (
           <motion.div
             key={item.id}
             className="absolute inset-0"
+            initial={entranceComplete ? false : { opacity: 0 }}
             animate={{ opacity: index === active ? 1 : 0 }}
-            transition={{ duration: reduceMotion ? 0 : 0.9, ease: "easeInOut" }}
+            transition={
+              entranceComplete
+                ? {
+                    duration: reduceMotion ? 0 : HERO_SLIDE_BG_DURATION_S,
+                    ease: HERO_SLIDE_CHANGE_EASE,
+                  }
+                : {
+                    duration: reduceMotion ? 0 : HERO_ENTRANCE_DURATION_S,
+                    delay: reduceMotion || index !== active ? 0 : HERO_IMAGE_DELAY_S,
+                    ease: HERO_REVEAL_EASE,
+                  }
+            }
             style={{ zIndex: index === active ? 1 : 0 }}
             aria-hidden={index !== active}
           >
             {item.variant === "illustrated" ? (
-              <IllustratedSlideBackground />
+              <IllustratedSlideBackground
+                image={"image" in item ? item.image : undefined}
+                imageAlt={"imageAlt" in item ? item.imageAlt : undefined}
+                imagePosition={"imagePosition" in item ? item.imagePosition : undefined}
+                priority={index === 0}
+              />
             ) : (
               <PhotoSlideBackground
                 image={item.image}
                 imageAlt={item.imageAlt}
+                imagePosition={"imagePosition" in item ? item.imagePosition : undefined}
                 priority={index === 0}
               />
             )}
@@ -140,52 +251,97 @@ export function Hero() {
 
         <div className="absolute inset-x-0 bottom-0 z-10 h-20 bg-gradient-to-t from-canvas to-transparent" />
 
-        <div className="relative z-20 flex min-h-[inherit] w-full flex-col justify-end px-6 pb-16 pt-28 md:px-12 md:pb-20 md:pt-32 lg:px-16 lg:pb-24">
-          <AnimatePresence mode="wait">
-            <motion.div
-              key={slide.id}
-              className="w-full max-w-3xl"
-              initial={reduceMotion ? false : { opacity: 0, y: 20 }}
-              animate={reduceMotion ? undefined : { opacity: 1, y: 0 }}
-              exit={reduceMotion ? undefined : { opacity: 0, y: -12 }}
-              transition={{ duration: 0.55, ease: [0.22, 1, 0.36, 1] }}
-            >
-              <p className="mb-5 text-xs font-semibold uppercase tracking-[0.22em] text-gold">
-                {slide.eyebrowSub}
-              </p>
+        <div className="relative z-20 grid h-full w-full grid-rows-[1fr_auto] px-6 pb-16 pt-28 md:px-12 md:pb-20 md:pt-32 lg:px-16 lg:pb-24">
+          <div className="flex min-h-0 flex-col justify-end">
+            <AnimatePresence mode="wait" custom={slideDirection}>
+              <motion.div
+                key={slide.id}
+                className="w-full max-w-3xl"
+                custom={{
+                  direction: slideDirection,
+                  isSlideChange: entranceComplete,
+                }}
+                variants={heroSlideTextVariants}
+                initial={reduceMotion ? false : "enter"}
+                animate={reduceMotion ? undefined : "center"}
+                exit={reduceMotion ? undefined : "exit"}
+                transition={{
+                  duration: entranceComplete
+                    ? HERO_SLIDE_CHANGE_DURATION_S
+                    : 0.55,
+                  delay: reduceMotion
+                    ? 0
+                    : entranceComplete
+                      ? 0.06
+                      : HERO_TEXT_DELAY_S,
+                  ease: entranceComplete ? HERO_SLIDE_CHANGE_EASE : HERO_REVEAL_EASE,
+                }}
+              >
+                <p className="mb-5 text-xs font-semibold uppercase tracking-[0.22em] text-gold">
+                  {slide.eyebrowSub}
+                </p>
 
-              <h1 className="font-display text-4xl font-semibold leading-[1.08] text-accent md:text-5xl lg:text-6xl xl:text-7xl">
-                {slide.title}{" "}
-                <span className="text-gold">{slide.titleAccent}</span>
-              </h1>
+                <h1 className="font-display text-4xl font-semibold leading-[1.08] text-accent md:text-5xl lg:text-6xl xl:text-7xl">
+                  {slide.title}{" "}
+                  <span className="text-gold">{slide.titleAccent}</span>
+                </h1>
 
-              <p className="mt-6 max-w-xl text-base leading-relaxed text-accent/75 md:text-lg">
-                {slide.description}
-              </p>
+                <p className="mt-6 max-w-xl text-base leading-relaxed text-accent/75 md:text-lg">
+                  {slide.description}
+                </p>
 
-              <div className="mt-10 flex flex-wrap gap-4">
-                <GlowButton href="#contact">{site.cta}</GlowButton>
-                <GlowButton
-                  href="#sessions"
-                  variant="outline"
-                  className="border-accent/25 text-accent hover:border-gold hover:text-gold"
-                >
-                  Explore Sessions
-                </GlowButton>
-              </div>
-            </motion.div>
-          </AnimatePresence>
+                <div className="mt-10 flex flex-wrap gap-4">
+                  <GlowButton href="#contact">{site.cta}</GlowButton>
+                  <GlowButton
+                    href="#sessions"
+                    variant="outline"
+                    className="border-accent/25 text-accent hover:border-gold hover:text-gold"
+                  >
+                    Explore Sessions
+                  </GlowButton>
+                </div>
+              </motion.div>
+            </AnimatePresence>
+          </div>
 
-          {slide.variant === "illustrated" && "caption" in slide && (
-            <div className="absolute bottom-14 right-6 hidden max-w-xs text-right md:block lg:right-16 lg:bottom-20">
-              <p className="font-display text-lg text-accent/85 md:text-xl">
-                {slide.caption}
-              </p>
-              <p className="mt-1 text-sm text-accent/45">{slide.captionSub}</p>
+          <div className="shrink-0">
+            <div className="hidden h-[5.25rem] md:ml-auto md:block md:max-w-xs md:text-right">
+              <AnimatePresence mode="wait">
+                {slide.variant === "illustrated" && "caption" in slide && (
+                  <motion.div
+                    key={`${slide.id}-caption`}
+                    initial={reduceMotion ? false : { opacity: 0, y: 12 }}
+                    animate={reduceMotion ? undefined : { opacity: 1, y: 0 }}
+                    exit={reduceMotion ? undefined : { opacity: 0, y: -8 }}
+                    transition={{
+                      duration: 0.55,
+                      delay: reduceMotion
+                        ? 0
+                        : entranceComplete
+                          ? 0.08
+                          : HERO_CAPTION_DELAY_S,
+                      ease: HERO_REVEAL_EASE,
+                    }}
+                  >
+                    <p className="font-display text-lg text-accent/85 md:text-xl">
+                      {slide.caption}
+                    </p>
+                    <p className="mt-1 text-sm text-accent/45">{slide.captionSub}</p>
+                  </motion.div>
+                )}
+              </AnimatePresence>
             </div>
-          )}
 
-          <div className="mt-10 flex items-center gap-4">
+            <motion.div
+              className="mt-8 flex h-9 items-center gap-4 md:mt-10"
+              initial={false}
+              animate={reduceMotion ? undefined : { opacity: 1, y: 0 }}
+              transition={{
+                duration: reduceMotion ? 0 : 0.55,
+                delay: reduceMotion ? 0 : HERO_CONTROLS_DELAY_S,
+                ease: HERO_REVEAL_EASE,
+              }}
+            >
             <div className="flex items-center gap-2" role="tablist" aria-label="Choose slide">
               {heroSlides.map((item, index) => (
                 <button
@@ -254,6 +410,7 @@ export function Hero() {
                 </svg>
               </button>
             </div>
+          </motion.div>
           </div>
         </div>
       </div>
