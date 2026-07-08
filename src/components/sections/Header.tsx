@@ -1,10 +1,19 @@
 "use client";
 
 import { AnimatePresence, motion, useReducedMotion } from "framer-motion";
-import { useState } from "react";
+import { useCallback, useEffect, useState } from "react";
 import { site } from "@/lib/site";
+import {
+  HEADER_PANEL_EXIT_MS,
+  HEADER_PANEL_SHELL_EXPAND_MS,
+  headerPanelShellVariants,
+  headerPanelSlideVariants,
+} from "@/lib/header-panel-motion";
 import { Logo } from "@/components/ui/Logo";
+import { HeaderIconButton } from "@/components/ui/HeaderIconButton";
 import { MenuToggleIcon } from "@/components/ui/MenuToggleIcon";
+import { HeaderCartPanel } from "@/components/sections/HeaderCartPanel";
+import { HeaderLoginPanel } from "@/components/sections/HeaderLoginPanel";
 import { MobileNavMenu, mobileNavItemVariants } from "@/components/sections/MobileNavMenu";
 
 const expandVariants = {
@@ -47,7 +56,114 @@ const expandVariants = {
 
 export function Header() {
   const reduceMotion = useReducedMotion();
-  const [open, setOpen] = useState(false);
+  const [navOpen, setNavOpen] = useState(false);
+  const [loginOpen, setLoginOpen] = useState(false);
+  const [loginPanelReady, setLoginPanelReady] = useState(false);
+  const [cartOpen, setCartOpen] = useState(false);
+  const [cartPanelReady, setCartPanelReady] = useState(false);
+
+  const closeNav = useCallback(() => setNavOpen(false), []);
+
+  const closeOtherPanels = useCallback(() => {
+    setLoginPanelReady(false);
+    setCartPanelReady(false);
+    setLoginOpen(false);
+    setCartOpen(false);
+  }, []);
+
+  const beginCloseLogin = useCallback(() => {
+    setLoginPanelReady(false);
+    window.setTimeout(() => setLoginOpen(false), reduceMotion ? 0 : HEADER_PANEL_EXIT_MS);
+  }, [reduceMotion]);
+
+  const beginCloseCart = useCallback(() => {
+    setCartPanelReady(false);
+    window.setTimeout(() => setCartOpen(false), reduceMotion ? 0 : HEADER_PANEL_EXIT_MS);
+  }, [reduceMotion]);
+
+  const closeLogin = useCallback(() => {
+    beginCloseLogin();
+  }, [beginCloseLogin]);
+
+  const closeCart = useCallback(() => {
+    beginCloseCart();
+  }, [beginCloseCart]);
+
+  const toggleLogin = useCallback(() => {
+    if (loginOpen) {
+      beginCloseLogin();
+      return;
+    }
+    setCartOpen(false);
+    setCartPanelReady(false);
+    setNavOpen(false);
+    setLoginOpen(true);
+  }, [beginCloseLogin, loginOpen]);
+
+  const toggleCart = useCallback(() => {
+    if (cartOpen) {
+      beginCloseCart();
+      return;
+    }
+    setLoginOpen(false);
+    setLoginPanelReady(false);
+    setNavOpen(false);
+    setCartOpen(true);
+  }, [beginCloseCart, cartOpen]);
+
+  const toggleNav = useCallback(() => {
+    setNavOpen((open) => !open);
+    closeOtherPanels();
+  }, [closeOtherPanels]);
+
+  useEffect(() => {
+    if (!loginOpen) {
+      setLoginPanelReady(false);
+      return;
+    }
+
+    if (reduceMotion) {
+      setLoginPanelReady(true);
+      return;
+    }
+
+    const timer = window.setTimeout(() => setLoginPanelReady(true), HEADER_PANEL_SHELL_EXPAND_MS);
+    return () => window.clearTimeout(timer);
+  }, [loginOpen, reduceMotion]);
+
+  useEffect(() => {
+    if (!cartOpen) {
+      setCartPanelReady(false);
+      return;
+    }
+
+    if (reduceMotion) {
+      setCartPanelReady(true);
+      return;
+    }
+
+    const timer = window.setTimeout(() => setCartPanelReady(true), HEADER_PANEL_SHELL_EXPAND_MS);
+    return () => window.clearTimeout(timer);
+  }, [cartOpen, reduceMotion]);
+
+  useEffect(() => {
+    if (!loginOpen && !cartOpen && !navOpen) return;
+
+    const onKeyDown = (event: KeyboardEvent) => {
+      if (event.key !== "Escape") return;
+
+      if (cartOpen) {
+        beginCloseCart();
+      } else if (loginOpen) {
+        beginCloseLogin();
+      } else {
+        setNavOpen(false);
+      }
+    };
+
+    window.addEventListener("keydown", onKeyDown);
+    return () => window.removeEventListener("keydown", onKeyDown);
+  }, [beginCloseCart, beginCloseLogin, cartOpen, loginOpen, navOpen]);
 
   return (
     <motion.div
@@ -73,25 +189,88 @@ export function Header() {
           ))}
         </nav>
 
-        <div className="relative z-40 flex shrink-0 items-center gap-3">
+        <div className="relative z-40 flex shrink-0 items-center gap-1.5 sm:gap-2">
+          <HeaderIconButton
+            label={loginOpen ? "Close sign in" : "Open sign in"}
+            icon="login"
+            active={loginOpen}
+            onClick={toggleLogin}
+          />
+          <HeaderIconButton
+            label={cartOpen ? "Close cart" : "Open cart"}
+            icon="cart"
+            active={cartOpen}
+            onClick={toggleCart}
+          />
+
           <motion.button
             type="button"
             className="flex h-10 w-10 items-center justify-center text-gold transition-colors hover:text-gold-light lg:hidden"
-            aria-label={open ? "Close menu" : "Open menu"}
-            aria-expanded={open}
-            onClick={() => setOpen(!open)}
+            aria-label={navOpen ? "Close menu" : "Open menu"}
+            aria-expanded={navOpen}
+            onClick={toggleNav}
             whileTap={reduceMotion ? undefined : { scale: 0.9 }}
             transition={{ type: "spring", stiffness: 500, damping: 30 }}
           >
-            <MenuToggleIcon open={open} />
+            <MenuToggleIcon open={navOpen} />
           </motion.button>
         </div>
       </div>
 
       <AnimatePresence initial={false}>
-        {open && (
+        {loginOpen && (
           <motion.div
-            key="header-expand"
+            key="header-login-expand"
+            className="grid overflow-hidden"
+            variants={reduceMotion ? undefined : headerPanelShellVariants}
+            initial={reduceMotion ? undefined : "closed"}
+            animate={reduceMotion ? undefined : "open"}
+            exit={reduceMotion ? undefined : "exit"}
+          >
+            <div className="min-h-0 overflow-hidden">
+              <motion.div
+                className="origin-top"
+                variants={reduceMotion ? undefined : headerPanelSlideVariants}
+                initial={reduceMotion ? undefined : "closed"}
+                animate={reduceMotion ? undefined : loginPanelReady ? "open" : "closed"}
+                exit={reduceMotion ? undefined : "exit"}
+              >
+                <HeaderLoginPanel onClose={closeLogin} />
+              </motion.div>
+            </div>
+          </motion.div>
+        )}
+      </AnimatePresence>
+
+      <AnimatePresence initial={false}>
+        {cartOpen && (
+          <motion.div
+            key="header-cart-expand"
+            className="grid overflow-hidden"
+            variants={reduceMotion ? undefined : headerPanelShellVariants}
+            initial={reduceMotion ? undefined : "closed"}
+            animate={reduceMotion ? undefined : "open"}
+            exit={reduceMotion ? undefined : "exit"}
+          >
+            <div className="min-h-0 overflow-hidden">
+              <motion.div
+                className="origin-top"
+                variants={reduceMotion ? undefined : headerPanelSlideVariants}
+                initial={reduceMotion ? undefined : "closed"}
+                animate={reduceMotion ? undefined : cartPanelReady ? "open" : "closed"}
+                exit={reduceMotion ? undefined : "exit"}
+              >
+                <HeaderCartPanel onClose={closeCart} />
+              </motion.div>
+            </div>
+          </motion.div>
+        )}
+      </AnimatePresence>
+
+      <AnimatePresence initial={false}>
+        {navOpen && (
+          <motion.div
+            key="header-nav-expand"
             className="overflow-hidden lg:hidden"
             variants={reduceMotion ? undefined : expandVariants}
             initial={reduceMotion ? undefined : "closed"}
@@ -105,11 +284,33 @@ export function Header() {
                   href={item.href}
                   className="text-cream/90 hover:text-gold"
                   variants={reduceMotion ? undefined : mobileNavItemVariants}
-                  onClick={() => setOpen(false)}
+                  onClick={closeNav}
                 >
                   {item.label}
                 </motion.a>
               ))}
+              <motion.button
+                type="button"
+                className="text-left text-cream/90 hover:text-gold"
+                variants={reduceMotion ? undefined : mobileNavItemVariants}
+                onClick={() => {
+                  closeNav();
+                  setLoginOpen(true);
+                }}
+              >
+                Log in
+              </motion.button>
+              <motion.button
+                type="button"
+                className="text-left text-cream/90 hover:text-gold"
+                variants={reduceMotion ? undefined : mobileNavItemVariants}
+                onClick={() => {
+                  closeNav();
+                  setCartOpen(true);
+                }}
+              >
+                Cart
+              </motion.button>
             </MobileNavMenu>
           </motion.div>
         )}

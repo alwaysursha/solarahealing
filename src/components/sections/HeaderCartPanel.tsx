@@ -1,0 +1,68 @@
+"use client";
+
+import Link from "next/link";
+import { CartIcon } from "@/components/ui/CartIcon";
+
+type HeaderCartPanelProps = {
+  onClose: () => void;
+};
+
+export function HeaderCartPanel({ onClose }: HeaderCartPanelProps) {
+  return (
+    <div className="header-login-panel relative mt-2.5 w-full">
+      <div className="header-login-panel-inner relative overflow-hidden rounded-[1.1rem] border border-gold/25 px-4 py-3.5 shadow-[0_20px_60px_-28px_rgba(0,0,0,0.55)] sm:rounded-[1.25rem] sm:px-5 sm:py-4">
+        <div className="header-login-panel-glow pointer-events-none absolute inset-0" aria-hidden />
+        <div className="header-login-panel-shine pointer-events-none absolute inset-0" aria-hidden />
+
+        <div className="relative z-[1] flex flex-col gap-2.5">
+          <div className="flex flex-wrap items-center gap-3 lg:flex-nowrap lg:gap-4">
+            <div className="header-login-intro hidden shrink-0 md:block">
+              <p className="text-[0.56rem] font-semibold uppercase tracking-[0.3em] text-gold/82">
+                Your selections
+              </p>
+              <h2 className="mt-1 font-serif text-[1.15rem] font-normal leading-none tracking-[-0.02em] text-cream lg:text-[1.25rem]">
+                Shopping cart
+              </h2>
+            </div>
+
+            <div className="flex min-w-0 flex-1 items-center gap-3 rounded-[0.9rem] border border-cream/10 bg-cream/[0.04] px-4 py-3">
+              <span className="flex h-9 w-9 shrink-0 items-center justify-center rounded-full border border-gold/25 bg-gold/10 text-gold">
+                <CartIcon className="h-4 w-4" />
+              </span>
+              <div className="min-w-0">
+                <p className="text-[0.72rem] font-medium text-cream/88">Your cart is empty</p>
+                <p className="mt-0.5 text-[0.66rem] text-cream/48">
+                  Add a course or session to begin checkout.
+                </p>
+              </div>
+            </div>
+
+            <div className="flex shrink-0 items-center gap-2">
+              <Link
+                href="/checkout"
+                className="header-login-submit header-login-submit-compact shrink-0 inline-flex items-center justify-center"
+                onClick={onClose}
+              >
+                <span className="header-login-submit-shine pointer-events-none absolute inset-0" />
+                <span className="relative">Checkout</span>
+              </Link>
+            </div>
+          </div>
+
+          <div className="header-login-footer flex flex-wrap items-center justify-between gap-x-4 gap-y-1 md:pl-[8.5rem]">
+            <Link
+              href="/#courses"
+              className="text-[0.68rem] font-medium text-gold/86 transition-colors hover:text-gold-light"
+              onClick={onClose}
+            >
+              Browse courses
+            </Link>
+            <p className="text-[0.68rem] text-cream/52">
+              Secure checkout in Canadian dollars
+            </p>
+          </div>
+        </div>
+      </div>
+    </div>
+  );
+}
