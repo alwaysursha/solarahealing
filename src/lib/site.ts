@@ -265,6 +265,261 @@ export const articlesList = [
   },
 ] as const;
 
+export const coursesIntro = {
+  eyebrow: "Learn at your pace",
+  title: "Soulara Healing",
+  titleAccent: "Online Courses",
+  description:
+    "Seven immersive programs — from foundational Reiki to master-level attunement. Study on your schedule with lifetime access, guided modules, and practices you can return to again and again.",
+} as const;
+
+export const scheduleBooking = {
+  eyebrow: "Online Bookings",
+  title: "Schedule a Healing Session",
+  cta: "Schedule Appointment",
+  ctaHref: "#contact",
+  socialProof: {
+    count: "50+",
+    label: "Experienced Healers & Doctors",
+    avatars: [
+      {
+        src: "https://images.unsplash.com/photo-1573496359142-b8d87734a5a2?auto=format&fit=crop&w=200&q=80",
+        alt: "Experienced healer portrait",
+      },
+      {
+        src: "https://images.unsplash.com/photo-1507003211169-0a1dd7228f2d?auto=format&fit=crop&w=200&q=80",
+        alt: "Healing practitioner portrait",
+      },
+      {
+        src: "https://images.unsplash.com/photo-1545389336-cf090694435e?auto=format&fit=crop&w=200&q=80",
+        alt: "Wellness doctor portrait",
+      },
+    ],
+  },
+  image:
+    "https://images.unsplash.com/photo-1545205597-3d9d02c29597?auto=format&fit=crop&w=1400&q=90",
+  imageAlt: "Woman in peaceful meditation for a healing session",
+} as const;
+
+export const onlineCourses = [
+  {
+    id: "reiki-level-1",
+    title: "Reiki Level I Certification",
+    priceCad: 299,
+    image:
+      "https://images.unsplash.com/photo-1545389336-cf090694435e?auto=format&fit=crop&w=1200&q=90",
+    imageAlt: "Reiki Level I online certification course",
+    level: "Foundations",
+  },
+  {
+    id: "reiki-level-2",
+    title: "Reiki Level II Advanced",
+    priceCad: 449,
+    image:
+      "https://images.unsplash.com/photo-1518199336456-b69c30b1516c?auto=format&fit=crop&w=1200&q=90",
+    imageAlt: "Advanced Reiki Level II online training",
+    level: "Intermediate",
+  },
+  {
+    id: "chakra-mastery",
+    title: "Chakra Mastery Program",
+    priceCad: 329,
+    image:
+      "https://images.unsplash.com/photo-1506126613408-eca07ce68773?auto=format&fit=crop&w=1200&q=90",
+    imageAlt: "Chakra mastery online healing program",
+    level: "Energy work",
+  },
+  {
+    id: "distance-practitioner",
+    title: "Distance Healing Practitioner",
+    priceCad: 279,
+    image:
+      "https://images.unsplash.com/photo-1573496359142-b8d87734a5a2?auto=format&fit=crop&w=1200&q=90",
+    imageAlt: "Distance Reiki practitioner course online",
+    level: "Practitioner",
+  },
+  {
+    id: "master-teacher",
+    title: "Reiki Master Teacher Path",
+    priceCad: 899,
+    image:
+      "https://images.unsplash.com/photo-1544367567-0f2fcb009e0b?auto=format&fit=crop&w=1200&q=90",
+    imageAlt: "Reiki master teacher certification path",
+    level: "Master",
+  },
+  {
+    id: "energy-anatomy",
+    title: "Energy Anatomy & Aura",
+    priceCad: 199,
+    image:
+      "https://images.unsplash.com/photo-1507003211169-0a1dd7228f2d?auto=format&fit=crop&w=1200&q=90",
+    imageAlt: "Energy anatomy and aura reading course",
+    level: "Foundations",
+  },
+  {
+    id: "sacred-symbols",
+    title: "Sacred Symbols & Attunement",
+    priceCad: 379,
+    image:
+      "https://images.unsplash.com/photo-1499205798772-66a89db83f24?auto=format&fit=crop&w=1200&q=90",
+    imageAlt: "Sacred Reiki symbols and attunement course",
+    level: "Advanced",
+  },
+] as const;
+
+export const testimonialsIntro = {
+  eyebrow: "Client Stories",
+  title: "Voices of",
+  titleAccent: "Transformation",
+  description:
+    "Real experiences from souls who found balance, clarity, and renewal through Soulara Healing.",
+} as const;
+
+export const footerColumns = [
+  {
+    groups: [
+      {
+        title: "About Soulara Healing",
+        links: [
+          { label: "Who We Are", href: "#about" },
+          { label: "Our Achievements", href: "#about" },
+          { label: "Vision & Mission", href: "#about" },
+          { label: "Leadership", href: "#about" },
+          { label: "Our Services", href: "#schedule" },
+          { label: "Knowledge Cove", href: "/blog" },
+        ],
+      },
+      {
+        title: "Reiki Courses",
+        links: [
+          { label: "Reiki Level 1 (Free)", href: "#courses" },
+          { label: "Reiki Level 2", href: "#courses" },
+          { label: "Reiki Level 3", href: "#courses" },
+          { label: "Reiki Mastership", href: "#courses" },
+          { label: "Reiki Grand Master", href: "#courses" },
+        ],
+      },
+      {
+        title: "Live Online Reiki Workshops (Upcoming)",
+        links: [{ label: "View Workshops", href: "#workshops" }],
+      },
+    ],
+  },
+  {
+    groups: [
+      {
+        title: "Non-Reiki Online Courses",
+        links: [
+          { label: "Dowsing", href: "#courses" },
+          { label: "Wealth & Success", href: "#courses" },
+          { label: "Past Life Regression", href: "#courses" },
+          { label: "Past-Life Master Course", href: "#courses" },
+          { label: "Clinical Hypnotherapy", href: "#courses" },
+          { label: "Crystal Ball Gazing", href: "#courses" },
+          { label: "Science of Fingerprint", href: "#courses" },
+          { label: "Whole Brain Activation", href: "#courses" },
+        ],
+      },
+      {
+        title: "Non-Reiki Live Online Workshops (Upcoming)",
+        links: [{ label: "View Workshops", href: "/workshops" }],
+      },
+    ],
+  },
+  {
+    groups: [
+      {
+        title: "Healing",
+        links: [
+          { label: "About Healing at Soulara", href: "#about" },
+          { label: "What & How We Cure", href: "#about" },
+          { label: "Book an Appointment", href: "#schedule" },
+          { label: "Treatment Packages", href: "#schedule" },
+          { label: "Testimonials", href: "#testimonials" },
+          { label: "FAQ's", href: "#about" },
+        ],
+      },
+      {
+        title: "Nutrition",
+        links: [
+          { label: "Healing with Nutrition", href: "#about" },
+          { label: "Plans & Programs", href: "#schedule" },
+          { label: "Consult a Nutritionist", href: "#schedule" },
+          { label: "Nutrition Videos", href: "/blog" },
+          { label: "Testimonials", href: "#testimonials" },
+          { label: "FAQ's", href: "#about" },
+        ],
+      },
+      {
+        title: "Transformation",
+        links: [
+          { label: "Life Coaching", href: "#schedule" },
+          { label: "Programs", href: "#courses" },
+          { label: "Consult a Life Coach", href: "#schedule" },
+          { label: "FAQ's", href: "#about" },
+        ],
+      },
+    ],
+  },
+  {
+    groups: [
+      {
+        title: "Contact Us",
+        links: [
+          { label: "Soulara Healing", href: "#schedule" },
+          { label: "Reiki Healing Temple", href: "#schedule" },
+          { label: "Mind Magic India", href: "#schedule" },
+        ],
+      },
+      {
+        title: "Legal",
+        links: [
+          { label: "Terms & Conditions", href: "/legal/terms" },
+          { label: "Refund or Replacement Policy", href: "/legal/refund" },
+          { label: "Shipping and Delivery Policy", href: "/legal/shipping" },
+          { label: "Privacy Policy", href: "/legal/privacy" },
+          { label: "Disclaimer of Warranty", href: "/legal/disclaimer" },
+          { label: "Limitations of Liability", href: "/legal/liability" },
+          { label: "Termination Provisions", href: "/legal/termination" },
+        ],
+      },
+    ],
+  },
+] as const;
+
+export const footerSocial = {
+  title: "Social",
+  links: [
+    { label: "YouTube", href: "https://youtube.com" },
+    { label: "Facebook", href: "https://facebook.com" },
+    { label: "Instagram", href: "https://instagram.com" },
+    { label: "LinkedIn", href: "https://linkedin.com" },
+  ],
+  communityTitle: "Join the Soulara Healing Family",
+  communityDescription:
+    "Join our WhatsApp Community with over 1 million members worldwide and receive daily wisdom.",
+  communityCta: "Join Our WhatsApp Community",
+  communityProof: "Join the community",
+  communityAvatars: [
+    {
+      src: "https://images.unsplash.com/photo-1573496359142-b8d87734a5a2?auto=format&fit=crop&w=200&q=80",
+      alt: "Community member",
+    },
+    {
+      src: "https://images.unsplash.com/photo-1507003211169-0a1dd7228f2d?auto=format&fit=crop&w=200&q=80",
+      alt: "Community member",
+    },
+    {
+      src: "https://images.unsplash.com/photo-1545389336-cf090694435e?auto=format&fit=crop&w=200&q=80",
+      alt: "Community member",
+    },
+    {
+      src: "https://images.unsplash.com/photo-1494790108377-be9c29b29330?auto=format&fit=crop&w=200&q=80",
+      alt: "Community member",
+    },
+  ],
+} as const;
+
 export const testimonials = [
   {
     quote:
