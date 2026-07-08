@@ -10,8 +10,6 @@ type PanelBorderStarProps = {
   tracePath: string;
 };
 
-const TRAVEL_DUR = "20s";
-
 const STROKE = {
   linecap: "round" as const,
   linejoin: "round" as const,
@@ -26,7 +24,6 @@ export function PanelBorderStar({
 }: PanelBorderStarProps) {
   const reduceMotion = useReducedMotion();
   const uid = useId().replace(/:/g, "");
-  const shimmerId = `border-shimmer-${uid}`;
   const ridgeId = `border-ridge-${uid}`;
   const shadowId = `border-shadow-${uid}`;
   const depthFilterId = `border-depth-${uid}`;
@@ -43,23 +40,15 @@ export function PanelBorderStar({
     >
       <defs>
         <linearGradient id={ridgeId} x1="0%" y1="0%" x2="100%" y2="100%">
-          <stop offset="0%" stopColor="#f5e6b8" stopOpacity="0.85" />
-          <stop offset="45%" stopColor="#dbb94a" stopOpacity="0.72" />
-          <stop offset="100%" stopColor="#c9a227" stopOpacity="0.55" />
+          <stop offset="0%" stopColor="#c9a85a" stopOpacity="0.95" />
+          <stop offset="45%" stopColor="#b8922a" stopOpacity="0.92" />
+          <stop offset="100%" stopColor="#8a6d14" stopOpacity="0.9" />
         </linearGradient>
 
         <linearGradient id={shadowId} x1="0%" y1="0%" x2="100%" y2="100%">
-          <stop offset="0%" stopColor="#f5e6b8" stopOpacity="0.35" />
-          <stop offset="50%" stopColor="#c9a227" stopOpacity="0.28" />
-          <stop offset="100%" stopColor="#8a6d14" stopOpacity="0.18" />
-        </linearGradient>
-
-        <linearGradient id={shimmerId} x1="0%" y1="0%" x2="100%" y2="0%">
-          <stop offset="0%" stopColor="#fff8e7" stopOpacity="0" />
-          <stop offset="35%" stopColor="#ffffff" stopOpacity="0.95" />
-          <stop offset="50%" stopColor="#ffe08a" stopOpacity="1" />
-          <stop offset="65%" stopColor="#ffffff" stopOpacity="0.95" />
-          <stop offset="100%" stopColor="#fff8e7" stopOpacity="0" />
+          <stop offset="0%" stopColor="#8a6d14" stopOpacity="0.45" />
+          <stop offset="50%" stopColor="#6b5410" stopOpacity="0.38" />
+          <stop offset="100%" stopColor="#4a3a0a" stopOpacity="0.3" />
         </linearGradient>
 
         <filter
@@ -71,48 +60,45 @@ export function PanelBorderStar({
           colorInterpolationFilters="sRGB"
         >
           <feDropShadow
-            dx="0.75"
-            dy="1.75"
-            stdDeviation="1.2"
-            floodColor="#c9a227"
-            floodOpacity="0.32"
+            dx="0.5"
+            dy="1.25"
+            stdDeviation="1.4"
+            floodColor="#6b5410"
+            floodOpacity="0.42"
           />
           <feDropShadow
-            dx="-0.4"
-            dy="-0.35"
+            dx="-0.35"
+            dy="-0.3"
             stdDeviation="0"
-            floodColor="#f5e6b8"
-            floodOpacity="0.45"
+            floodColor="#c9a85a"
+            floodOpacity="0.35"
           />
         </filter>
       </defs>
 
-      {/* Cast shadow */}
       <path
         d={outlinePath}
         fill="none"
         stroke={`url(#${shadowId})`}
-        strokeWidth="1.5"
-        transform="translate(1, 1.5)"
+        strokeWidth="1.65"
+        transform="translate(1, 1.25)"
         {...STROKE}
       />
 
-      {/* Light catch on inner edge */}
       <path
         d={outlinePath}
         fill="none"
-        stroke="rgba(245, 230, 184, 0.55)"
-        strokeWidth="1"
-        transform="translate(-0.4, -0.35)"
+        stroke="rgba(180, 145, 50, 0.55)"
+        strokeWidth="1.15"
+        transform="translate(-0.35, -0.3)"
         {...STROKE}
       />
 
-      {/* Main edge */}
       <path
         d={outlinePath}
         fill="none"
         stroke={`url(#${ridgeId})`}
-        strokeWidth="1.25"
+        strokeWidth="1.55"
         filter={`url(#${depthFilterId})`}
         {...STROKE}
       />
@@ -121,20 +107,13 @@ export function PanelBorderStar({
         <path
           d={tracePath}
           fill="none"
-          stroke={`url(#${shimmerId})`}
-          strokeWidth="1.5"
-          pathLength="100"
-          strokeDasharray="3 97"
-          opacity="0.9"
+          stroke="#ffffff"
+          strokeWidth="0.9"
+          strokeOpacity="0.72"
+          pathLength={100}
+          className="panel-border-shimmer"
           {...STROKE}
-        >
-          <animate
-            attributeName="stroke-dashoffset"
-            values="0;-100;0"
-            dur={TRAVEL_DUR}
-            repeatCount="indefinite"
-          />
-        </path>
+        />
       )}
     </svg>
   );
