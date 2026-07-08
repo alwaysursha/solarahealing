@@ -1,0 +1,732 @@
+@import "tailwindcss";
+
+:root {
+  --purple-deep: #4b0082;
+  --purple-mid: #8b3a9a;
+  --purple-light: #b868c8;
+  --indigo-deep: #3a1258;
+  --violet-glow: #d48ec8;
+  --gold: #c9a227;
+  --gold-light: #dbb94a;
+  --saffron: #e8a838;
+  --cream: #faf7f2;
+  --canvas: #fdfcfa;
+  --foreground: #2d1b4e;
+  --accent: #4338ca;
+  --accent-light: #6366f1;
+  --accent-soft: #f5f3ff;
+  --hero-blush: #f5f3ff;
+  --hero-wash: #ede9fe;
+}
+
+@theme inline {
+  --color-purple-deep: var(--purple-deep);
+  --color-purple-mid: var(--purple-mid);
+  --color-purple-light: var(--purple-light);
+  --color-indigo-deep: var(--indigo-deep);
+  --color-violet-glow: var(--violet-glow);
+  --color-gold: var(--gold);
+  --color-gold-light: var(--gold-light);
+  --color-saffron: var(--saffron);
+  --color-cream: var(--cream);
+  --color-canvas: var(--canvas);
+  --color-foreground: var(--foreground);
+  --color-accent: var(--accent);
+  --color-accent-light: var(--accent-light);
+  --color-accent-soft: var(--accent-soft);
+  --color-hero-blush: var(--hero-blush);
+  --color-hero-wash: var(--hero-wash);
+  --font-display: var(--font-jakarta);
+  --font-sans: var(--font-jakarta);
+  --font-serif: var(--font-instrument-serif);
+}
+
+html {
+  scroll-behavior: smooth;
+}
+
+body {
+  color: var(--foreground);
+  font-family: var(--font-jakarta), system-ui, sans-serif;
+  overflow: hidden;
+}
+
+.font-display {
+  font-family: var(--font-jakarta), system-ui, sans-serif;
+}
+
+.font-serif {
+  font-family: var(--font-instrument-serif), Georgia, serif;
+}
+
+.bg-hero-light {
+  background: linear-gradient(
+    145deg,
+    var(--canvas) 0%,
+    var(--accent-soft) 55%,
+    var(--hero-wash) 100%
+  );
+}
+
+.bg-spiritual-gradient {
+  /* Static dark base — never shifts to light lavender */
+  background: linear-gradient(
+    155deg,
+    #28085c 0%,
+    #3a1258 28%,
+    #501868 52%,
+    #4b0082 72%,
+    #3a1048 100%
+  );
+}
+
+.bg-spiritual-mesh {
+  opacity: 0.45;
+  background-image:
+    radial-gradient(ellipse at 18% 45%, rgba(130, 45, 120, 0.5) 0%, transparent 52%),
+    radial-gradient(ellipse at 82% 18%, rgba(201, 162, 39, 0.1) 0%, transparent 38%),
+    radial-gradient(ellipse at 55% 85%, rgba(100, 20, 110, 0.5) 0%, transparent 48%);
+}
+
+/* Moving shine — overlay only, does not lighten the base */
+.bg-spiritual-shimmer {
+  mix-blend-mode: soft-light;
+  opacity: 0.85;
+  background: linear-gradient(
+    105deg,
+    transparent 0%,
+    transparent 38%,
+    rgba(201, 162, 39, 0.22) 46%,
+    rgba(210, 90, 180, 0.26) 50%,
+    rgba(201, 162, 39, 0.18) 54%,
+    transparent 62%,
+    transparent 100%
+  );
+  background-size: 220% 100%;
+  animation: shimmer-sweep 9s ease-in-out infinite;
+}
+
+.bg-spiritual-shimmer-secondary {
+  mix-blend-mode: color-dodge;
+  opacity: 0.12;
+  background: radial-gradient(
+    ellipse 55% 40% at 50% 50%,
+    rgba(232, 200, 120, 0.35) 0%,
+    transparent 70%
+  );
+  background-size: 180% 180%;
+  animation: shimmer-pulse 14s ease-in-out infinite;
+}
+
+@keyframes shimmer-sweep {
+  0%,
+  100% {
+    background-position: 100% 50%;
+  }
+  50% {
+    background-position: 0% 50%;
+  }
+}
+
+@keyframes shimmer-pulse {
+  0%,
+  100% {
+    background-position: 30% 40%;
+    opacity: 0.08;
+  }
+  50% {
+    background-position: 70% 60%;
+    opacity: 0.14;
+  }
+}
+
+.bg-purple-gradient {
+  background: linear-gradient(
+    135deg,
+    var(--purple-deep) 0%,
+    var(--indigo-deep) 40%,
+    var(--purple-mid) 70%,
+    #5a2878 100%
+  );
+  background-size: 200% 200%;
+}
+
+@keyframes gradient-shift {
+  0%,
+  100% {
+    background-position: 0% 50%;
+  }
+  50% {
+    background-position: 100% 50%;
+  }
+}
+
+.animate-gradient-shift {
+  animation: gradient-shift 14s ease infinite;
+}
+
+@keyframes about-quote-shimmer {
+  0%,
+  100% {
+    background-position: 0% 50%;
+  }
+  50% {
+    background-position: 100% 50%;
+  }
+}
+
+@keyframes about-quote-pulse {
+  0%,
+  100% {
+    opacity: 0.45;
+    transform: scale(1);
+  }
+  50% {
+    opacity: 0.75;
+    transform: scale(1.06);
+  }
+}
+
+.about-quote-shimmer {
+  background-size: 200% auto;
+  animation: about-quote-shimmer 5s ease-in-out infinite;
+}
+
+.about-quote-glow {
+  animation: about-quote-pulse 4.5s ease-in-out infinite;
+}
+
+.about-quote-shadow {
+  box-shadow:
+    0 1px 2px rgba(45, 27, 78, 0.04),
+    0 3px 12px -2px rgba(75, 0, 130, 0.07),
+    0 8px 24px -6px rgba(75, 0, 130, 0.08),
+    0 14px 36px -12px rgba(201, 162, 39, 0.1);
+}
+
+@keyframes workshop-register-shimmer {
+  0% {
+    transform: translateX(-120%) skewX(-12deg);
+  }
+  100% {
+    transform: translateX(220%) skewX(-12deg);
+  }
+}
+
+@keyframes workshop-card-shimmer {
+  0% {
+    transform: translateX(-100%) rotate(8deg);
+  }
+  100% {
+    transform: translateX(200%) rotate(8deg);
+  }
+}
+
+.workshop-section-glow {
+  background:
+    radial-gradient(ellipse 50% 40% at 15% 20%, rgba(201, 162, 39, 0.08) 0%, transparent 55%),
+    radial-gradient(ellipse 45% 35% at 85% 75%, rgba(139, 58, 154, 0.1) 0%, transparent 52%),
+    radial-gradient(ellipse 60% 30% at 50% 100%, rgba(75, 0, 130, 0.06) 0%, transparent 50%);
+}
+
+/* Articles / insights section */
+.article-section {
+  background: var(--canvas);
+}
+
+/* Mobile nav — clip-path + SVG stroke applied in MobileNavMenu */
+.mobile-nav-menu {
+  isolation: isolate;
+}
+
+.article-featured-overlay {
+  background:
+    linear-gradient(180deg, rgba(30, 10, 56, 0.15) 0%, rgba(30, 10, 56, 0.05) 35%, rgba(30, 10, 56, 0.72) 100%),
+    linear-gradient(135deg, rgba(75, 0, 130, 0.25) 0%, transparent 55%);
+}
+
+.article-featured-shine {
+  background: linear-gradient(
+    118deg,
+    transparent 30%,
+    rgba(255, 255, 255, 0.06) 48%,
+    rgba(255, 255, 255, 0.12) 52%,
+    transparent 68%
+  );
+}
+
+.article-featured {
+  box-shadow: 0 24px 70px -28px rgba(45, 27, 78, 0.35);
+}
+
+.article-list-item {
+  transition: background-color 0.4s ease;
+}
+
+.article-list-item:hover {
+  background: linear-gradient(90deg, rgba(201, 162, 39, 0.04) 0%, transparent 72%);
+}
+
+.article-list-thumb {
+  box-shadow: 0 8px 28px -12px rgba(45, 27, 78, 0.2);
+}
+
+.workshop-stage {
+  --workshop-blend-bottom: clamp(7rem, 18vw, 12rem);
+  background: linear-gradient(
+    155deg,
+    #1e0a38 0%,
+    #281050 26%,
+    #321860 52%,
+    #241048 100%
+  );
+}
+
+.workshop-stage::after {
+  content: "";
+  position: absolute;
+  inset: auto 0 0;
+  z-index: 2;
+  height: var(--workshop-blend-bottom);
+  background: linear-gradient(
+    180deg,
+    transparent 0%,
+    rgba(253, 252, 250, 0.02) 8%,
+    rgba(253, 252, 250, 0.06) 16%,
+    rgba(253, 252, 250, 0.12) 26%,
+    rgba(253, 252, 250, 0.22) 38%,
+    rgba(253, 252, 250, 0.36) 50%,
+    rgba(253, 252, 250, 0.52) 62%,
+    rgba(253, 252, 250, 0.7) 74%,
+    rgba(253, 252, 250, 0.86) 86%,
+    rgba(253, 252, 250, 0.96) 94%,
+    var(--canvas) 100%
+  );
+  pointer-events: none;
+}
+
+.workshop-stage-mesh {
+  background:
+    radial-gradient(ellipse 40% 50% at 12% 18%, rgba(201, 162, 39, 0.14) 0%, transparent 55%),
+    radial-gradient(ellipse 38% 42% at 88% 78%, rgba(139, 58, 154, 0.18) 0%, transparent 50%),
+    radial-gradient(ellipse 55% 35% at 50% 100%, rgba(75, 0, 130, 0.12) 0%, transparent 48%);
+}
+
+.workshop-stage-gloss {
+  background: linear-gradient(
+    180deg,
+    rgba(255, 255, 255, 0.06) 0%,
+    rgba(255, 255, 255, 0.02) 16%,
+    transparent 40%
+  );
+}
+
+.workshop-stage-shine {
+  background: linear-gradient(
+    118deg,
+    transparent 28%,
+    rgba(255, 255, 255, 0.04) 42%,
+    rgba(255, 255, 255, 0.1) 50%,
+    rgba(255, 255, 255, 0.03) 58%,
+    transparent 72%
+  );
+}
+
+@keyframes workshop-gloss-sweep {
+  0%,
+  100% {
+    opacity: 0.45;
+    transform: translateX(-6%) skewX(-6deg);
+  }
+  50% {
+    opacity: 0.85;
+    transform: translateX(6%) skewX(-6deg);
+  }
+}
+
+.workshop-gloss-sweep {
+  animation: workshop-gloss-sweep 9s ease-in-out infinite;
+}
+
+.workshop-stage-noise {
+  background-image: url("data:image/svg+xml,%3Csvg viewBox='0 0 256 256' xmlns='http://www.w3.org/2000/svg'%3E%3Cfilter id='n'%3E%3CfeTurbulence type='fractalNoise' baseFrequency='0.85' numOctaves='4' stitchTiles='stitch'/%3E%3C/filter%3E%3Crect width='100%25' height='100%25' filter='url(%23n)'/%3E%3C/svg%3E");
+}
+
+.workshop-featured {
+  box-shadow:
+    0 20px 60px -20px rgba(0, 0, 0, 0.45),
+    inset 0 1px 0 rgba(255, 255, 255, 0.12);
+  transition: box-shadow 0.5s ease;
+}
+
+.workshop-featured:hover {
+  box-shadow:
+    0 24px 70px -20px rgba(0, 0, 0, 0.5),
+    0 0 40px -10px rgba(201, 162, 39, 0.18),
+    inset 0 1px 0 rgba(255, 255, 255, 0.16);
+}
+
+.workshop-upcoming {
+  box-shadow:
+    0 12px 40px -16px rgba(0, 0, 0, 0.4),
+    inset 0 1px 0 rgba(255, 255, 255, 0.1);
+  transition:
+    box-shadow 0.35s ease,
+    border-color 0.35s ease;
+  transform-origin: center center;
+}
+
+.workshop-upcoming:hover {
+  border-color: rgba(255, 255, 255, 0.28);
+  box-shadow:
+    0 28px 60px -18px rgba(0, 0, 0, 0.55),
+    0 0 36px -10px rgba(201, 162, 39, 0.22),
+    inset 0 1px 0 rgba(255, 255, 255, 0.18);
+}
+
+.workshop-price-tag {
+  border-radius: 0.75rem;
+  border: 1px solid rgba(255, 255, 255, 0.12);
+  background: linear-gradient(
+    165deg,
+    rgba(255, 255, 255, 0.1) 0%,
+    rgba(40, 16, 80, 0.75) 35%,
+    rgba(30, 10, 56, 0.85) 100%
+  );
+  backdrop-filter: blur(10px);
+  padding: 0.5rem 0.75rem;
+  text-align: center;
+  box-shadow:
+    inset 0 1px 0 rgba(255, 255, 255, 0.15),
+    0 4px 16px -4px rgba(0, 0, 0, 0.35);
+}
+
+.workshop-price-large {
+  margin-top: 0.25rem;
+}
+
+.workshop-title-line {
+  animation: workshop-line-grow 1s ease forwards;
+}
+
+@keyframes workshop-line-grow {
+  from {
+    transform: scaleX(0);
+  }
+  to {
+    transform: scaleX(1);
+  }
+}
+
+.workshop-view-all {
+  box-shadow: 0 8px 32px -8px rgba(201, 162, 39, 0.2);
+}
+
+.workshop-card {
+  transition:
+    box-shadow 0.45s ease,
+    border-color 0.45s ease;
+}
+
+.workshop-card:hover {
+  border-color: rgba(201, 162, 39, 0.35);
+  box-shadow:
+    0 4px 20px -4px rgba(75, 0, 130, 0.15),
+    0 20px 50px -20px rgba(201, 162, 39, 0.25);
+}
+
+.workshop-card-shimmer::after {
+  content: "";
+  position: absolute;
+  inset: -50%;
+  background: linear-gradient(
+    105deg,
+    transparent 40%,
+    rgba(255, 255, 255, 0.12) 48%,
+    rgba(219, 185, 74, 0.2) 50%,
+    rgba(255, 255, 255, 0.12) 52%,
+    transparent 60%
+  );
+  animation: workshop-card-shimmer 1.2s ease forwards;
+}
+
+.workshop-register-btn:hover .workshop-register-shimmer::after {
+  animation: workshop-register-shimmer 0.85s ease;
+}
+
+.workshop-register-shimmer::after {
+  content: "";
+  position: absolute;
+  inset: 0;
+  background: linear-gradient(
+    90deg,
+    transparent,
+    rgba(255, 255, 255, 0.45),
+    transparent
+  );
+  transform: translateX(-120%) skewX(-12deg);
+}
+
+/* Crystal glass effects — workshop cards (idle until hover) */
+.workshop-crystal {
+  isolation: isolate;
+}
+
+.workshop-crystal-ring {
+  animation: none;
+}
+
+.workshop-crystal-sweep {
+  background: linear-gradient(
+    108deg,
+    transparent 30%,
+    rgba(255, 255, 255, 0.04) 40%,
+    rgba(255, 255, 255, 0.2) 50%,
+    rgba(219, 185, 74, 0.14) 52%,
+    rgba(196, 181, 253, 0.1) 56%,
+    transparent 68%
+  );
+  background-size: 220% 100%;
+  mix-blend-mode: overlay;
+  animation: none;
+}
+
+.workshop-crystal-prism::before,
+.workshop-crystal-prism::after {
+  content: "";
+  position: absolute;
+  border-radius: 50%;
+  filter: blur(18px);
+  animation: none;
+}
+
+.workshop-crystal:hover .workshop-crystal-ring {
+  animation: workshop-crystal-ring 4.5s ease-in-out infinite;
+}
+
+.workshop-crystal:hover .workshop-crystal-sweep {
+  animation: workshop-crystal-sweep 5.5s ease-in-out infinite;
+}
+
+.workshop-crystal:hover .workshop-crystal-prism::before,
+.workshop-crystal:hover .workshop-crystal-prism::after {
+  animation: workshop-crystal-sparkle 6s ease-in-out infinite;
+}
+
+.workshop-crystal:hover .workshop-crystal-prism::after {
+  animation-delay: 3s;
+}
+
+.workshop-crystal-price::after {
+  animation: none;
+}
+
+.workshop-crystal:hover .workshop-crystal-price::after {
+  animation: workshop-crystal-price-gleam 3.5s ease-in-out infinite;
+}
+
+.workshop-crystal-btn-gleam {
+  animation: none;
+}
+
+.workshop-crystal:hover .workshop-crystal-btn-gleam {
+  animation: workshop-crystal-btn-pulse 3s ease-in-out infinite;
+}
+
+.workshop-crystal-prism::before {
+  top: 8%;
+  left: 6%;
+  width: 28%;
+  height: 22%;
+  background: radial-gradient(circle, rgba(255, 255, 255, 0.22) 0%, transparent 70%);
+}
+
+.workshop-crystal-price {
+  position: relative;
+  overflow: hidden;
+}
+
+.workshop-crystal-price::after {
+  content: "";
+  position: absolute;
+  inset: -50%;
+  background: linear-gradient(
+    105deg,
+    transparent 42%,
+    rgba(255, 255, 255, 0.35) 50%,
+    transparent 58%
+  );
+}
+
+.workshop-crystal-btn {
+  box-shadow:
+    inset 0 1px 0 rgba(255, 255, 255, 0.35),
+    0 4px 14px -4px rgba(201, 162, 39, 0.35);
+}
+
+.workshop-crystal-btn-gleam {
+  background: linear-gradient(
+    180deg,
+    rgba(255, 255, 255, 0.28) 0%,
+    transparent 45%
+  );
+}
+
+.workshop-crystal-prism::after {
+  right: 8%;
+  bottom: 12%;
+  width: 32%;
+  height: 24%;
+  background: radial-gradient(circle, rgba(219, 185, 74, 0.18) 0%, transparent 72%);
+}
+
+.animations-paused .bg-spiritual-shimmer,
+.animations-paused .bg-spiritual-shimmer-secondary,
+.animations-paused .workshop-gloss-sweep,
+.animations-paused .about-quote-shimmer,
+.animations-paused .about-quote-glow,
+.animations-paused .about-quote-cursor-blink,
+.animations-paused .workshop-crystal-ring,
+.animations-paused .workshop-crystal-sweep,
+.animations-paused .workshop-crystal-prism::before,
+.animations-paused .workshop-crystal-prism::after,
+.animations-paused .workshop-crystal-price::after,
+.animations-paused .workshop-crystal-btn-gleam {
+  animation-play-state: paused !important;
+}
+
+.animations-paused .workshop-crystal:hover .workshop-crystal-ring,
+.animations-paused .workshop-crystal:hover .workshop-crystal-sweep,
+.animations-paused .workshop-crystal:hover .workshop-crystal-prism::before,
+.animations-paused .workshop-crystal:hover .workshop-crystal-prism::after,
+.animations-paused .workshop-crystal:hover .workshop-crystal-price::after,
+.animations-paused .workshop-crystal:hover .workshop-crystal-btn-gleam {
+  animation: none !important;
+}
+
+@keyframes workshop-crystal-ring {
+  0%,
+  100% {
+    box-shadow:
+      inset 0 1px 0 rgba(255, 255, 255, 0.28),
+      inset 0 0 0 1px rgba(255, 255, 255, 0.1),
+      0 0 18px rgba(201, 162, 39, 0.08);
+  }
+  50% {
+    box-shadow:
+      inset 0 1px 0 rgba(255, 255, 255, 0.48),
+      inset 0 0 0 1px rgba(219, 185, 74, 0.28),
+      0 0 30px rgba(201, 162, 39, 0.2),
+      0 0 44px rgba(196, 181, 253, 0.08);
+  }
+}
+
+@keyframes workshop-crystal-sweep {
+  0%,
+  100% {
+    background-position: 130% 50%;
+    opacity: 0.55;
+  }
+  50% {
+    background-position: -30% 50%;
+    opacity: 1;
+  }
+}
+
+@keyframes workshop-crystal-sparkle {
+  0%,
+  100% {
+    opacity: 0.35;
+    transform: scale(1);
+  }
+  50% {
+    opacity: 0.85;
+    transform: scale(1.08);
+  }
+}
+
+@keyframes workshop-crystal-price-gleam {
+  0%,
+  100% {
+    transform: translateX(-80%) rotate(8deg);
+    opacity: 0.3;
+  }
+  50% {
+    transform: translateX(80%) rotate(8deg);
+    opacity: 0.9;
+  }
+}
+
+@keyframes workshop-crystal-btn-pulse {
+  0%,
+  100% {
+    opacity: 0.5;
+  }
+  50% {
+    opacity: 1;
+  }
+}
+
+.about-quote-cursor-blink {
+  animation: about-quote-cursor-blink 1s step-end infinite;
+}
+
+@keyframes about-quote-cursor-blink {
+  0%,
+  100% {
+    opacity: 1;
+  }
+  50% {
+    opacity: 0;
+  }
+}
+
+@media (prefers-reduced-motion: reduce) {
+  html {
+    scroll-behavior: auto;
+  }
+
+  .animate-gradient-shift {
+    animation: none;
+  }
+
+  .bg-spiritual-shimmer,
+  .bg-spiritual-shimmer-secondary {
+    animation: none;
+  }
+
+  .about-quote-shimmer,
+  .about-quote-glow {
+    animation: none;
+  }
+
+  .about-quote-cursor-blink {
+    animation: none;
+    opacity: 1;
+  }
+
+  .workshop-card-shimmer::after,
+  .workshop-register-shimmer::after {
+    animation: none !important;
+  }
+
+  .workshop-title-line {
+    animation: none;
+    transform: scaleX(1);
+  }
+
+  .workshop-gloss-sweep {
+    animation: none;
+    opacity: 0.6;
+    transform: none;
+  }
+
+  .workshop-crystal-ring,
+  .workshop-crystal-sweep,
+  .workshop-crystal-prism::before,
+  .workshop-crystal-prism::after,
+  .workshop-crystal-price::after,
+  .workshop-crystal-btn-gleam {
+    animation: none;
+  }
+}
