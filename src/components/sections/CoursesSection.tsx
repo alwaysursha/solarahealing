@@ -12,6 +12,7 @@ import Image from "next/image";
 import Link from "next/link";
 import { useCallback, useEffect, useMemo, useRef, useState } from "react";
 import { useAnimationsActive } from "@/hooks/useAnimationsActive";
+import { CartIcon } from "@/components/ui/CartIcon";
 import { coursesIntro, formatCad, onlineCourses } from "@/lib/site";
 
 const ease: [number, number, number, number] = [0.22, 1, 0.36, 1];
@@ -88,20 +89,7 @@ function CourseCard({
             className="courses-cart-btn group/btn relative flex w-full items-center justify-center gap-2 overflow-hidden rounded-full border border-purple-deep/30 bg-purple-deep px-6 py-3.5 text-[0.68rem] font-semibold uppercase tracking-[0.22em] text-gold shadow-lg shadow-purple-deep/25 transition-colors hover:border-gold/35 hover:bg-purple-mid"
           >
             <span className="courses-cart-shimmer pointer-events-none absolute inset-0" />
-            <svg
-              className="relative h-4 w-4"
-              fill="none"
-              viewBox="0 0 24 24"
-              stroke="currentColor"
-              strokeWidth={1.75}
-              aria-hidden
-            >
-              <path
-                strokeLinecap="round"
-                strokeLinejoin="round"
-                d="M2.25 3h1.386c.51 0 .955.343 1.087.835l.383 1.437M7.5 14.25a3 3 0 00-3 3h15.75m-12.75-3h11.218c1.121-2.3 2.1-4.684 2.924-7.138a60.114 60.114 0 00-16.536-1.84M7.5 14.25L5.106 5.272M6 20.25a.75.75 0 11-1.5 0 .75.75 0 011.5 0zm12.75 0a.75.75 0 11-1.5 0 .75.75 0 011.5 0z"
-              />
-            </svg>
+            <CartIcon className="relative h-4 w-4" />
             <span className="relative">Add to Cart</span>
           </Link>
         </div>
