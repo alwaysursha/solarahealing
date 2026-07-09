@@ -68,7 +68,7 @@ export function CoursesSpaceBackground({ animationsActive, cosmosEnabled }: Cour
   const layersMounted = cosmosEnabled && !reduceMotion;
 
   return (
-    <div className="courses-cosmos-backdrop pointer-events-none absolute inset-0 z-[1] overflow-hidden" aria-hidden>
+    <div className="courses-cosmos-backdrop pointer-events-none absolute inset-0 z-0 overflow-hidden" aria-hidden>
       {layersMounted && <div className="courses-cosmos-night-veil absolute inset-0" />}
 
       <div className="courses-cosmos-celestial absolute inset-0 overflow-hidden">

@@ -7,7 +7,6 @@ import { useRef } from "react";
 import { CartIcon } from "@/components/ui/CartIcon";
 import { CoursesSpaceBackground } from "@/components/sections/CoursesSpaceBackground";
 import { useAnimationsActive } from "@/hooks/useAnimationsActive";
-import { useChromeMobile } from "@/hooks/useChromeMobile";
 import { coursesIntro, formatCad, onlineCourses } from "@/lib/site";
 
 const ease: [number, number, number, number] = [0.22, 1, 0.36, 1];
@@ -462,16 +461,18 @@ function UpcomingCourseCardContent({ course }: { course: (typeof onlineCourses)[
 export function CoursesSection() {
   const reduceMotion = useReducedMotion();
   const sectionRef = useRef<HTMLElement>(null);
-  const animationsActive = useAnimationsActive(sectionRef, "-10% 0px -10% 0px", { once: true });
+  const animationsActive = useAnimationsActive(sectionRef, "0px 0px -5% 0px", {
+    once: true,
+    amount: 0.25,
+  });
   const cosmosEnabled = !reduceMotion;
-  const chromeMobile = useChromeMobile();
   const gridCourses = upcoming.slice(0, 3);
 
   return (
     <section
       id="courses"
       ref={sectionRef}
-      className={`relative overflow-hidden${animationsActive ? "" : " animations-paused"}${chromeMobile ? " courses-chrome-fix" : ""}`}
+      className={`site-scroll-section relative overflow-hidden${animationsActive ? "" : " animations-paused"}`}
     >
       <div
         className={`workshop-stage courses-cosmos-stage relative w-full overflow-hidden rounded-none${cosmosEnabled ? " courses-cosmos-daynight" : ""}`}
@@ -483,7 +484,7 @@ export function CoursesSection() {
         <CoursesSpaceBackground animationsActive={animationsActive} cosmosEnabled={cosmosEnabled} />
 
         <div
-          className="courses-cosmos-content relative z-[3] grid gap-12 px-5 py-6 sm:px-8 md:p-10 lg:grid-cols-12 lg:gap-10 lg:px-12 xl:px-14 xl:py-14"
+          className="courses-cosmos-content grid gap-12 px-5 py-6 sm:px-8 md:p-10 lg:grid-cols-12 lg:gap-10 lg:px-12 xl:px-14 xl:py-14"
         >
           <motion.div
             className="lg:col-span-4 lg:self-start xl:sticky xl:top-8"
