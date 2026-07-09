@@ -336,7 +336,7 @@ export function Hero() {
 
             <motion.div
               className="mt-8 flex h-9 items-center gap-4 md:mt-10"
-              initial={false}
+              initial={reduceMotion ? false : { opacity: 0, y: 14 }}
               animate={reduceMotion ? undefined : { opacity: 1, y: 0 }}
               transition={{
                 duration: reduceMotion ? 0 : 0.55,
