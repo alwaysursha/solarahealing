@@ -809,6 +809,88 @@ body {
   }
 }
 
+/* Real phones/tablets — lighter GPU load (also applied via .courses-cosmos-lite) */
+@media (hover: none) and (pointer: coarse) {
+  .courses-cosmos-daynight {
+    --courses-daynight-cycle: 90s;
+  }
+
+  .courses-cosmos-noise-layer {
+    display: none !important;
+  }
+
+  .courses-cosmos-day-layer,
+  .courses-cosmos-daynight .workshop-stage-shine,
+  .courses-cosmos-night-glow,
+  .courses-cosmos-depth-fog-cycle,
+  .courses-cosmos-daynight .courses-space-nebula,
+  .courses-space-parallax-deep,
+  .courses-space-parallax-mid,
+  .courses-space-dust-drift,
+  .courses-space-star-twinkle,
+  .courses-night-star-twinkle,
+  .courses-space-planet-drift-a,
+  .courses-space-planet-drift-b,
+  .courses-space-planet-drift-c,
+  .courses-space-shooting-star,
+  .courses-cosmos-daynight .courses-space-planet-a,
+  .courses-cosmos-daynight .courses-space-planet-b {
+    animation: none !important;
+  }
+
+  .courses-space-star,
+  .courses-space-star-deep,
+  .courses-night-star {
+    box-shadow: none !important;
+    filter: none !important;
+  }
+
+  .courses-space-shooting-star::after {
+    filter: none !important;
+  }
+
+  #courses .backdrop-blur-xl,
+  #courses .backdrop-blur-sm,
+  #courses .backdrop-blur-md {
+    -webkit-backdrop-filter: none !important;
+    backdrop-filter: none !important;
+  }
+}
+
+.courses-cosmos-lite {
+  --courses-daynight-cycle: 90s;
+}
+
+.courses-cosmos-lite .courses-cosmos-noise-layer {
+  display: none !important;
+}
+
+.courses-cosmos-lite .courses-cosmos-day-layer,
+.courses-cosmos-lite.courses-cosmos-daynight .workshop-stage-shine,
+.courses-cosmos-lite .courses-cosmos-night-glow,
+.courses-cosmos-lite .courses-cosmos-depth-fog-cycle,
+.courses-cosmos-lite.courses-cosmos-daynight .courses-space-nebula,
+.courses-cosmos-lite .courses-space-parallax-deep,
+.courses-cosmos-lite .courses-space-parallax-mid,
+.courses-cosmos-lite .courses-space-dust-drift,
+.courses-cosmos-lite .courses-space-star-twinkle,
+.courses-cosmos-lite .courses-night-star-twinkle,
+.courses-cosmos-lite .courses-space-planet-drift-a,
+.courses-cosmos-lite .courses-space-planet-drift-b,
+.courses-cosmos-lite .courses-space-planet-drift-c,
+.courses-cosmos-lite .courses-space-shooting-star,
+.courses-cosmos-lite.courses-cosmos-daynight .courses-space-planet-a,
+.courses-cosmos-lite.courses-cosmos-daynight .courses-space-planet-b {
+  animation: none !important;
+}
+
+.courses-cosmos-lite .courses-space-star,
+.courses-cosmos-lite .courses-space-star-deep,
+.courses-cosmos-lite .courses-night-star {
+  box-shadow: none !important;
+  filter: none !important;
+}
+
 @keyframes courses-night-veil {
   0%,
   100% {
