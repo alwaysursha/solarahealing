@@ -55,13 +55,20 @@ export function SiteShell({ header, children }: SiteShellProps) {
     const panel = panelRef.current;
     if (!panel) return;
 
-    const observer = new ResizeObserver(updateClip);
+    let frame = 0;
+    const scheduleUpdate = () => {
+      cancelAnimationFrame(frame);
+      frame = requestAnimationFrame(updateClip);
+    };
+
+    const observer = new ResizeObserver(scheduleUpdate);
     observer.observe(panel);
     if (headerRef.current) observer.observe(headerRef.current);
-    window.addEventListener("resize", updateClip);
+    window.addEventListener("resize", scheduleUpdate);
     return () => {
+      cancelAnimationFrame(frame);
       observer.disconnect();
-      window.removeEventListener("resize", updateClip);
+      window.removeEventListener("resize", scheduleUpdate);
     };
   }, [updateClip]);
 
