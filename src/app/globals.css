@@ -810,12 +810,21 @@ body {
 [data-compositor="chrome-touch"] #courses.courses-scrolling .courses-cosmos-backdrop,
 [data-compositor="chrome-touch"] #courses.courses-scrolling .courses-cosmos-day-layer,
 [data-compositor="chrome-touch"] #courses.courses-scrolling .courses-cosmos-noise-layer,
-[data-compositor="chrome-touch"] #courses.courses-scrolling .courses-cosmos-stage {
+[data-compositor="chrome-touch"] #courses.courses-scrolling .courses-cosmos-stage,
+[data-compositor="chrome-touch"] #courses.courses-scrolling .courses-cosmos-night-veil,
+[data-compositor="chrome-touch"] #courses.courses-scrolling .courses-cosmos-night-glow,
+[data-compositor="chrome-touch"] #courses.courses-scrolling .courses-cosmos-night-stars,
+[data-compositor="chrome-touch"] #courses.courses-scrolling .courses-cosmos-celestial,
+[data-compositor="chrome-touch"] #courses.courses-scrolling .courses-cosmos-depth-fog,
+[data-compositor="chrome-touch"] #courses.courses-scrolling .courses-space-planet,
+[data-compositor="chrome-touch"] #courses.courses-scrolling .courses-space-star,
+[data-compositor="chrome-touch"] #courses.courses-scrolling .courses-night-star {
   animation-play-state: paused !important;
 }
 
-[data-compositor="chrome-touch"] #courses.courses-scrolling .courses-cosmos-backdrop * {
-  animation-play-state: paused !important;
+[data-compositor="chrome-touch"] #courses.courses-scrolling .courses-cosmos-shooting-layer,
+[data-compositor="chrome-touch"] #courses.courses-scrolling .courses-space-shooting-star {
+  animation-play-state: running !important;
 }
 
 [data-compositor="chrome-touch"] #courses.courses-cosmos-daynight .courses-space-planet-c,
