@@ -2,6 +2,7 @@ export const HEADER_PANEL_SHELL_EXPAND_MS = 360;
 export const HEADER_PANEL_EXIT_MS = 240;
 
 const shellEase: [number, number, number, number] = [0.4, 0, 0.2, 1];
+const shellCloseEase: [number, number, number, number] = [0.4, 0, 1, 1];
 
 export const headerPanelShellVariants = {
   closed: {
@@ -44,37 +45,24 @@ export const headerPanelShellVariantsChrome = {
   closed: {
     maxHeight: 0,
     marginTop: 0,
-    opacity: 0,
     overflow: "hidden",
   },
   open: {
     maxHeight: 360,
     marginTop: 14,
-    opacity: 1,
     overflow: "hidden",
     transition: {
-      maxHeight: { duration: 0.36, ease: shellEase },
-      marginTop: { duration: 0.36, ease: shellEase },
-      opacity: { duration: 0.2 },
+      maxHeight: { duration: 0.32, ease: shellEase },
+      marginTop: { duration: 0.32, ease: shellEase },
     },
   },
   exit: {
     maxHeight: 0,
     marginTop: 0,
-    opacity: 0,
     overflow: "hidden",
     transition: {
-      maxHeight: {
-        duration: 0.3,
-        ease: shellEase,
-        delay: HEADER_PANEL_EXIT_MS / 1000,
-      },
-      marginTop: {
-        duration: 0.3,
-        ease: shellEase,
-        delay: HEADER_PANEL_EXIT_MS / 1000,
-      },
-      opacity: { duration: 0.16, delay: HEADER_PANEL_EXIT_MS / 1000 },
+      maxHeight: { duration: 0.24, ease: shellCloseEase },
+      marginTop: { duration: 0.24, ease: shellCloseEase },
     },
   },
 } as const;
@@ -82,40 +70,25 @@ export const headerPanelShellVariantsChrome = {
 export const mobileNavExpandVariantsChrome = {
   closed: {
     maxHeight: 0,
-    opacity: 0,
     marginTop: 0,
     overflow: "hidden",
   },
   open: {
-    maxHeight: 520,
-    opacity: 1,
+    maxHeight: 480,
     marginTop: 16,
     overflow: "hidden",
     transition: {
-      maxHeight: {
-        type: "spring",
-        stiffness: 380,
-        damping: 36,
-        mass: 0.9,
-      },
-      opacity: { duration: 0.28, delay: 0.04 },
-      marginTop: {
-        type: "spring",
-        stiffness: 380,
-        damping: 36,
-        mass: 0.9,
-      },
+      maxHeight: { duration: 0.32, ease: shellEase },
+      marginTop: { duration: 0.32, ease: shellEase },
     },
   },
   exit: {
     maxHeight: 0,
-    opacity: 0,
     marginTop: 0,
     overflow: "hidden",
     transition: {
-      maxHeight: { duration: 0.26, ease: shellEase },
-      opacity: { duration: 0.18 },
-      marginTop: { duration: 0.26, ease: shellEase },
+      maxHeight: { duration: 0.22, ease: shellCloseEase },
+      marginTop: { duration: 0.22, ease: shellCloseEase },
     },
   },
 } as const;
@@ -144,13 +117,7 @@ export const headerPanelSlideVariants = {
 } as const;
 
 export const headerPanelSlideVariantsChrome = {
-  closed: { opacity: 0 },
-  open: {
-    opacity: 1,
-    transition: { duration: 0.2, ease: [0.22, 1, 0.36, 1] },
-  },
-  exit: {
-    opacity: 0,
-    transition: { duration: 0.16, ease: [0.4, 0, 0.2, 1] },
-  },
+  closed: { opacity: 1 },
+  open: { opacity: 1 },
+  exit: { opacity: 1 },
 } as const;

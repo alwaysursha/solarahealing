@@ -82,13 +82,21 @@ export function Header() {
 
   const beginCloseLogin = useCallback(() => {
     setLoginPanelReady(false);
-    window.setTimeout(() => setLoginOpen(false), reduceMotion ? 0 : HEADER_PANEL_EXIT_MS);
-  }, [reduceMotion]);
+    if (reduceMotion || chromeTouch) {
+      setLoginOpen(false);
+      return;
+    }
+    window.setTimeout(() => setLoginOpen(false), HEADER_PANEL_EXIT_MS);
+  }, [chromeTouch, reduceMotion]);
 
   const beginCloseCart = useCallback(() => {
     setCartPanelReady(false);
-    window.setTimeout(() => setCartOpen(false), reduceMotion ? 0 : HEADER_PANEL_EXIT_MS);
-  }, [reduceMotion]);
+    if (reduceMotion || chromeTouch) {
+      setCartOpen(false);
+      return;
+    }
+    window.setTimeout(() => setCartOpen(false), HEADER_PANEL_EXIT_MS);
+  }, [chromeTouch, reduceMotion]);
 
   const closeLogin = useCallback(() => {
     beginCloseLogin();
@@ -236,7 +244,7 @@ export function Header() {
             animate={reduceMotion ? undefined : "open"}
             exit={reduceMotion ? undefined : "exit"}
           >
-            <div className="min-h-0 overflow-hidden">
+            <div className={chromeTouch ? "overflow-hidden" : "min-h-0 overflow-hidden"}>
               <motion.div
                 className="origin-top"
                 variants={reduceMotion ? undefined : panelSlideVariants}
@@ -261,7 +269,7 @@ export function Header() {
             animate={reduceMotion ? undefined : "open"}
             exit={reduceMotion ? undefined : "exit"}
           >
-            <div className="min-h-0 overflow-hidden">
+            <div className={chromeTouch ? "overflow-hidden" : "min-h-0 overflow-hidden"}>
               <motion.div
                 className="origin-top"
                 variants={reduceMotion ? undefined : panelSlideVariants}
@@ -287,39 +295,77 @@ export function Header() {
             exit={reduceMotion ? undefined : "exit"}
           >
             <MobileNavMenu>
-              {site.nav.map((item) => (
-                <motion.a
-                  key={item.href}
-                  href={item.href}
-                  className="text-cream/90 hover:text-gold"
-                  variants={reduceMotion || chromeTouch ? undefined : mobileNavItemVariants}
-                  onClick={closeNav}
-                >
-                  {item.label}
-                </motion.a>
-              ))}
-              <motion.button
-                type="button"
-                className="text-left text-cream/90 hover:text-gold"
-                variants={reduceMotion || chromeTouch ? undefined : mobileNavItemVariants}
-                onClick={() => {
-                  closeNav();
-                  setLoginOpen(true);
-                }}
-              >
-                Log in
-              </motion.button>
-              <motion.button
-                type="button"
-                className="text-left text-cream/90 hover:text-gold"
-                variants={reduceMotion || chromeTouch ? undefined : mobileNavItemVariants}
-                onClick={() => {
-                  closeNav();
-                  setCartOpen(true);
-                }}
-              >
-                Cart
-              </motion.button>
+              {site.nav.map((item) =>
+                chromeTouch ? (
+                  <a
+                    key={item.href}
+                    href={item.href}
+                    className="text-cream/90 hover:text-gold"
+                    onClick={closeNav}
+                  >
+                    {item.label}
+                  </a>
+                ) : (
+                  <motion.a
+                    key={item.href}
+                    href={item.href}
+                    className="text-cream/90 hover:text-gold"
+                    variants={reduceMotion ? undefined : mobileNavItemVariants}
+                    onClick={closeNav}
+                  >
+                    {item.label}
+                  </motion.a>
+                ),
+              )}
+              {chromeTouch ? (
+                <>
+                  <button
+                    type="button"
+                    className="text-left text-cream/90 hover:text-gold"
+                    onClick={() => {
+                      closeNav();
+                      setLoginOpen(true);
+                    }}
+                  >
+                    Log in
+                  </button>
+                  <button
+                    type="button"
+                    className="text-left text-cream/90 hover:text-gold"
+                    onClick={() => {
+                      closeNav();
+                      setCartOpen(true);
+                    }}
+                  >
+                    Cart
+                  </button>
+                </>
+              ) : (
+                <>
+                  <motion.button
+                    type="button"
+                    className="text-left text-cream/90 hover:text-gold"
+                    variants={reduceMotion ? undefined : mobileNavItemVariants}
+                    onClick={() => {
+                      closeNav();
+                      setLoginOpen(true);
+                    }}
+                  >
+                    Log in
+                  </motion.button>
+                  <motion.button
+                    type="button"
+                    className="text-left text-cream/90 hover:text-gold"
+                    variants={reduceMotion ? undefined : mobileNavItemVariants}
+                    onClick={() => {
+                      closeNav();
+                      setCartOpen(true);
+                    }}
+                  >
+                    Cart
+                  </motion.button>
+                </>
+              )}
             </MobileNavMenu>
           </motion.div>
         )}

@@ -44,20 +44,33 @@ export function MobileNavMenu({ children }: MobileNavMenuProps) {
   const chromeTouch = useCompositorProfile() === "chrome-touch";
   const staticMotion = reduceMotion || chromeTouch;
 
+  if (staticMotion) {
+    return (
+      <div
+        className="relative origin-top lg:hidden"
+        style={{ width: `${MOBILE_NAV_WIDTH_PERCENT}%` }}
+      >
+        <nav className="mobile-nav-menu flex flex-col gap-4 p-5" aria-label="Mobile">
+          {children}
+        </nav>
+      </div>
+    );
+  }
+
   return (
     <motion.div
       className="relative origin-top lg:hidden"
       style={{ width: `${MOBILE_NAV_WIDTH_PERCENT}%` }}
-      variants={staticMotion ? undefined : panelVariants}
-      initial={staticMotion ? undefined : "closed"}
-      animate={staticMotion ? undefined : "open"}
+      variants={panelVariants}
+      initial="closed"
+      animate="open"
     >
       <motion.nav
         className="mobile-nav-menu flex flex-col gap-4 p-5"
         aria-label="Mobile"
-        variants={staticMotion ? undefined : listVariants}
-        initial={staticMotion ? undefined : "closed"}
-        animate={staticMotion ? undefined : "open"}
+        variants={listVariants}
+        initial="closed"
+        animate="open"
       >
         {children}
       </motion.nav>
