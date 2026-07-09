@@ -7,6 +7,8 @@ import { useRef } from "react";
 import { CartIcon } from "@/components/ui/CartIcon";
 import { CoursesSpaceBackground } from "@/components/sections/CoursesSpaceBackground";
 import { useAnimationsActive } from "@/hooks/useAnimationsActive";
+import { useScrollPause } from "@/hooks/useScrollPause";
+import { useCompositorProfile } from "@/lib/compositor-profile";
 import { coursesIntro, formatCad, onlineCourses } from "@/lib/site";
 
 const ease: [number, number, number, number] = [0.22, 1, 0.36, 1];
@@ -15,7 +17,7 @@ const springEase: [number, number, number, number] = [0.34, 1.56, 0.64, 1];
 const upcomingHover = {
   y: -14,
   scale: 1.045,
-  zIndex: 20,
+  zIndex: 2,
   x: [0, -6, 6, -5, 5, -3, 3, -1, 1, 0],
   rotate: [0, -1.4, 1.4, -1, 1, -0.5, 0.5, 0],
   transition: {
@@ -461,10 +463,12 @@ function UpcomingCourseCardContent({ course }: { course: (typeof onlineCourses)[
 export function CoursesSection() {
   const reduceMotion = useReducedMotion();
   const sectionRef = useRef<HTMLElement>(null);
+  const compositorProfile = useCompositorProfile();
   const animationsActive = useAnimationsActive(sectionRef, "0px 0px -5% 0px", {
     once: true,
     amount: 0.25,
   });
+  useScrollPause(sectionRef, compositorProfile === "chrome-touch");
   const cosmosEnabled = !reduceMotion;
   const gridCourses = upcoming.slice(0, 3);
 
@@ -487,7 +491,7 @@ export function CoursesSection() {
           className="courses-cosmos-content grid gap-12 px-5 py-6 sm:px-8 md:p-10 lg:grid-cols-12 lg:gap-10 lg:px-12 xl:px-14 xl:py-14"
         >
           <motion.div
-            className="lg:col-span-4 lg:self-start xl:sticky xl:top-8"
+            className="lg:col-span-4 lg:z-[1] lg:self-start xl:sticky xl:top-8"
             initial={reduceMotion ? false : { opacity: 0, y: 28 }}
             whileInView={reduceMotion ? undefined : { opacity: 1, y: 0 }}
             viewport={{ once: true, margin: "-60px" }}

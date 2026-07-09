@@ -68,6 +68,7 @@ export function CoursesSpaceBackground({ animationsActive, cosmosEnabled }: Cour
   const layersMounted = cosmosEnabled && !reduceMotion;
 
   return (
+    <>
     <div className="courses-cosmos-backdrop pointer-events-none absolute inset-0 z-0 overflow-hidden" aria-hidden>
       {layersMounted && <div className="courses-cosmos-night-veil absolute inset-0" />}
 
@@ -125,8 +126,6 @@ export function CoursesSpaceBackground({ animationsActive, cosmosEnabled }: Cour
         </div>
       </div>
 
-      {motionEnabled && <CoursesShootingStars />}
-
       {layersMounted && (
         <div className="courses-cosmos-night-stars absolute inset-0 overflow-hidden">
           {NIGHT_STARFIELD.map((star, index) => (
@@ -152,5 +151,12 @@ export function CoursesSpaceBackground({ animationsActive, cosmosEnabled }: Cour
         className={`courses-cosmos-depth-fog absolute inset-0${layersMounted ? " courses-cosmos-depth-fog-cycle" : ""}`}
       />
     </div>
+
+    {motionEnabled && (
+      <div className="courses-cosmos-shooting-layer pointer-events-none absolute inset-0 z-[1] overflow-hidden" aria-hidden>
+        <CoursesShootingStars />
+      </div>
+    )}
+  </>
   );
 }

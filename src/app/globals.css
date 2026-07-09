@@ -741,6 +741,13 @@ body {
 
 .site-scroll-panel {
   isolation: isolate;
+  z-index: 10;
+}
+
+.site-scroll-main {
+  position: relative;
+  z-index: 0;
+  isolation: isolate;
 }
 
 .site-header-layer {
@@ -748,14 +755,135 @@ body {
   pointer-events: none;
 }
 
+.site-header-shield {
+  background-color: #28085c;
+  background-image: linear-gradient(
+    155deg,
+    #28085c 0%,
+    #3a1258 28%,
+    #501868 52%,
+    #4b0082 72%,
+    #3a1048 100%
+  );
+}
+
+.site-header-layer::before {
+  content: "";
+  position: absolute;
+  inset: 0;
+  background-color: #28085c;
+  background-image: linear-gradient(
+    155deg,
+    #28085c 0%,
+    #3a1258 28%,
+    #501868 52%,
+    #4b0082 72%,
+    #3a1048 100%
+  );
+  z-index: -1;
+  pointer-events: none;
+}
+
 .site-header-layer > * {
   pointer-events: auto;
+  position: relative;
+  z-index: 1;
 }
 
 .site-scroll-section {
   position: relative;
   overflow: hidden;
   contain: paint;
+}
+
+.site-panel-frame {
+  isolation: isolate;
+  z-index: 45;
+}
+
+/* Keep scroll content below header — Firefox/TOR clip-path stacking */
+.site-scroll-panel .workshop-upcoming {
+  z-index: 0;
+}
+
+.site-scroll-panel .workshop-upcoming:hover,
+.site-scroll-panel .workshop-upcoming:focus-within {
+  z-index: 2;
+}
+
+.site-scroll-panel :is([class*="sticky"]) {
+  z-index: 1;
+}
+
+/*
+ * Chrome mobile — clip-path + header frame + many full-layer opacity animations
+ * repaints the entire fixed shell. Keep visuals; limit conflicting compositor work.
+ */
+[data-compositor="chrome-touch"] .site-scroll-panel {
+  transform: translate3d(0, 0, 0);
+  -webkit-backface-visibility: hidden;
+  backface-visibility: hidden;
+}
+
+[data-compositor="chrome-touch"] .site-panel-frame {
+  transform: translate3d(0, 0, 0);
+  -webkit-backface-visibility: hidden;
+  backface-visibility: hidden;
+}
+
+[data-compositor="chrome-touch"] .site-header-layer,
+[data-compositor="chrome-touch"] .site-header-shield {
+  transform: translate3d(0, 0, 0);
+  -webkit-backface-visibility: hidden;
+  backface-visibility: hidden;
+}
+
+[data-compositor="chrome-touch"] #courses .courses-cosmos-stage,
+[data-compositor="chrome-touch"] #courses .courses-cosmos-backdrop {
+  contain: paint;
+  overflow: hidden;
+}
+
+[data-compositor="chrome-touch"] #courses .courses-cosmos-day-layer,
+[data-compositor="chrome-touch"] #courses.courses-cosmos-daynight .workshop-stage-shine,
+[data-compositor="chrome-touch"] #courses .courses-cosmos-night-glow,
+[data-compositor="chrome-touch"] #courses .courses-cosmos-noise-layer,
+[data-compositor="chrome-touch"] #courses .courses-cosmos-depth-fog-cycle,
+[data-compositor="chrome-touch"] #courses.courses-cosmos-daynight .courses-space-nebula {
+  animation: none !important;
+}
+
+[data-compositor="chrome-touch"] #courses.courses-cosmos-daynight .courses-space-planet-a {
+  animation: courses-planet-drift-a 20s ease-in-out infinite !important;
+}
+
+[data-compositor="chrome-touch"] #courses.courses-cosmos-daynight .courses-space-planet-b {
+  animation: courses-planet-drift-b 24s ease-in-out infinite !important;
+}
+
+[data-compositor="chrome-touch"] #courses.courses-scrolling .courses-cosmos-backdrop,
+[data-compositor="chrome-touch"] #courses.courses-scrolling .courses-cosmos-day-layer,
+[data-compositor="chrome-touch"] #courses.courses-scrolling .courses-cosmos-noise-layer,
+[data-compositor="chrome-touch"] #courses.courses-scrolling .courses-cosmos-stage,
+[data-compositor="chrome-touch"] #courses.courses-scrolling .courses-cosmos-night-veil,
+[data-compositor="chrome-touch"] #courses.courses-scrolling .courses-cosmos-night-glow,
+[data-compositor="chrome-touch"] #courses.courses-scrolling .courses-cosmos-night-stars,
+[data-compositor="chrome-touch"] #courses.courses-scrolling .courses-cosmos-celestial,
+[data-compositor="chrome-touch"] #courses.courses-scrolling .courses-cosmos-depth-fog,
+[data-compositor="chrome-touch"] #courses.courses-scrolling .courses-space-planet,
+[data-compositor="chrome-touch"] #courses.courses-scrolling .courses-space-star,
+[data-compositor="chrome-touch"] #courses.courses-scrolling .courses-night-star {
+  animation-play-state: paused !important;
+}
+
+[data-compositor="chrome-touch"] #courses.courses-scrolling .courses-cosmos-shooting-layer,
+[data-compositor="chrome-touch"] #courses.courses-scrolling .courses-space-shooting-star {
+  animation-play-state: running !important;
+}
+
+[data-compositor="chrome-touch"] #courses.courses-cosmos-daynight .courses-space-planet-c,
+[data-compositor="chrome-touch"] #courses .courses-space-planet-drift-c {
+  animation: courses-planet-drift-c 18s ease-in-out infinite !important;
 }
 
 /* Courses section — cosmic space background */

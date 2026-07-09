@@ -8,6 +8,7 @@ type PanelBorderStarProps = {
   height: number;
   outlinePath: string;
   tracePath: string;
+  simplified?: boolean;
 };
 
 const STROKE = {
@@ -21,6 +22,7 @@ export function PanelBorderStar({
   height,
   outlinePath,
   tracePath,
+  simplified = false,
 }: PanelBorderStarProps) {
   const reduceMotion = useReducedMotion();
   const uid = useId().replace(/:/g, "");
@@ -99,11 +101,11 @@ export function PanelBorderStar({
         fill="none"
         stroke={`url(#${ridgeId})`}
         strokeWidth="1.55"
-        filter={`url(#${depthFilterId})`}
+        filter={simplified ? undefined : `url(#${depthFilterId})`}
         {...STROKE}
       />
 
-      {!reduceMotion && tracePath && (
+      {!reduceMotion && !simplified && tracePath && (
         <path
           d={tracePath}
           fill="none"

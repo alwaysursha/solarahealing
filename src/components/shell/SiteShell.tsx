@@ -1,7 +1,8 @@
 "use client";
 
 import { useCallback, useEffect, useRef, useState, type ReactNode } from "react";
-import { buildPanelPath, buildBorderTracePath } from "@/lib/panel-path";
+import { TOP_RADIUS, buildPanelPath, buildBorderTracePath } from "@/lib/panel-path";
+import { detectCompositorProfile, useCompositorProfile } from "@/lib/compositor-profile";
 import { PanelBorderStar } from "./PanelBorderStar";
 import { SpiritualBackground } from "./SpiritualBackground";
 
@@ -24,18 +25,15 @@ const PANEL_POSITION = [
   "lg:bottom-2.5 lg:left-2",
 ].join(" ");
 
-const TOUCH_QUERY = "(hover: none) and (pointer: coarse)";
-
-function isTouchDevice(): boolean {
-  return typeof window !== "undefined" && window.matchMedia(TOUCH_QUERY).matches;
-}
-
 export function SiteShell({ header, children }: SiteShellProps) {
   const panelRef = useRef<HTMLDivElement>(null);
   const headerRef = useRef<HTMLDivElement>(null);
   const [geometry, setGeometry] = useState<PanelGeometry>();
-  const clipKeyRef = useRef<string>("");
-  const debounceRef = useRef<ReturnType<typeof setTimeout> | null>(null);
+  const [headerShieldY, setHeaderShieldY] = useState(96);
+  const clipKeyRef = useRef("");
+  const frozenPanelHeightRef = useRef<number | null>(null);
+  const compositorProfile = useCompositorProfile();
+  const chromeTouch = compositorProfile === "chrome-touch";
 
   const updateClip = useCallback(() => {
     const panel = panelRef.current;
@@ -43,12 +41,22 @@ export function SiteShell({ header, children }: SiteShellProps) {
     if (!panel) return;
 
     const lineY = (header?.offsetHeight ?? 68) + 6;
-    const { width, height } = panel.getBoundingClientRect();
+    const { width } = panel.getBoundingClientRect();
     const headerH = header?.offsetHeight ?? 68;
     const clipKey = `${Math.round(width)}:${Math.round(headerH)}`;
 
-    /* Mobile browsers resize the panel when the URL bar hides — skip height-only churn */
-    if (isTouchDevice() && clipKeyRef.current && clipKeyRef.current === clipKey) {
+    setHeaderShieldY(lineY + TOP_RADIUS);
+
+    let height = panel.getBoundingClientRect().height;
+    if (chromeTouch || detectCompositorProfile() === "chrome-touch") {
+      if (frozenPanelHeightRef.current === null) {
+        frozenPanelHeightRef.current = height;
+      } else {
+        height = frozenPanelHeightRef.current;
+      }
+    }
+
+    if (chromeTouch && clipKeyRef.current === clipKey) {
       return;
     }
 
@@ -65,41 +73,37 @@ export function SiteShell({ header, children }: SiteShellProps) {
         clipPath: `path('${outlinePath}')`,
       });
     }
-  }, []);
+  }, [chromeTouch]);
 
   useEffect(() => {
     updateClip();
+
+    if (chromeTouch) {
+      const onResize = () => updateClip();
+      window.addEventListener("resize", onResize);
+      return () => window.removeEventListener("resize", onResize);
+    }
+
     const panel = panelRef.current;
     if (!panel) return;
 
     let frame = 0;
     const scheduleUpdate = () => {
       cancelAnimationFrame(frame);
-      if (debounceRef.current) clearTimeout(debounceRef.current);
-
-      const run = () => {
-        frame = requestAnimationFrame(updateClip);
-      };
-
-      if (isTouchDevice()) {
-        debounceRef.current = setTimeout(run, 280);
-        return;
-      }
-
-      run();
+      frame = requestAnimationFrame(updateClip);
     };
 
     const observer = new ResizeObserver(scheduleUpdate);
     observer.observe(panel);
     if (headerRef.current) observer.observe(headerRef.current);
     window.addEventListener("resize", scheduleUpdate);
+
     return () => {
       cancelAnimationFrame(frame);
-      if (debounceRef.current) clearTimeout(debounceRef.current);
       observer.disconnect();
       window.removeEventListener("resize", scheduleUpdate);
     };
-  }, [updateClip]);
+  }, [chromeTouch, updateClip]);
 
   return (
     <div className="site-shell fixed inset-0 overflow-hidden">
@@ -122,18 +126,25 @@ export function SiteShell({ header, children }: SiteShellProps) {
         {children}
       </div>
 
-      <div className={`${PANEL_POSITION} pointer-events-none absolute z-20 overflow-visible`} aria-hidden>
+      <div
+        className="site-header-shield pointer-events-none absolute inset-x-0 top-0 z-[15]"
+        style={{ height: headerShieldY }}
+        aria-hidden
+      />
+
+      <div className={`site-panel-frame ${PANEL_POSITION} pointer-events-none absolute z-[45] overflow-visible`} aria-hidden>
         {geometry ? (
           <PanelBorderStar
             width={geometry.width}
             height={geometry.height}
             outlinePath={geometry.outlinePath}
             tracePath={geometry.tracePath}
+            simplified={chromeTouch}
           />
         ) : null}
       </div>
 
-      <div ref={headerRef} className="site-header-layer absolute inset-x-0 top-0 z-40 px-5 pt-4 pb-4 md:px-10 md:pt-5 md:pb-4.5 lg:px-14">
+      <div ref={headerRef} className="site-header-layer absolute inset-x-0 top-0 z-[100] px-5 pt-4 pb-4 md:px-10 md:pt-5 md:pb-4.5 lg:px-14">
         {header}
       </div>
     </div>
