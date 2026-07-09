@@ -19,13 +19,13 @@ export function usePageVisible() {
 export function useAnimationsActive(
   ref: RefObject<Element | null>,
   margin = "-10% 0px -10% 0px",
-  options?: { once?: boolean },
+  options?: { once?: boolean; amount?: number },
 ) {
   const reduceMotion = useReducedMotion();
   const pageVisible = usePageVisible();
   const isInView = useInView(ref, {
     margin: margin as `${number}% ${number}px ${number}% ${number}px`,
-    amount: 0.05,
+    amount: options?.amount ?? 0.05,
   });
   const [latched, setLatched] = useState(false);
 

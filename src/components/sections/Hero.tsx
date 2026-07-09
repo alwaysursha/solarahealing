@@ -31,13 +31,13 @@ type SlideMotionCustom = {
 const heroSlideTextVariants = {
   enter: ({ direction, isSlideChange }: SlideMotionCustom) =>
     isSlideChange
-      ? { opacity: 0, x: direction * 26, filter: "blur(6px)" }
-      : { opacity: 0, y: 20, filter: "blur(0px)" },
-  center: { opacity: 1, x: 0, y: 0, filter: "blur(0px)" },
+      ? { opacity: 0, x: direction * 26 }
+      : { opacity: 0, y: 20 },
+  center: { opacity: 1, x: 0, y: 0 },
   exit: ({ direction, isSlideChange }: SlideMotionCustom) =>
     isSlideChange
-      ? { opacity: 0, x: direction * -26, filter: "blur(6px)" }
-      : { opacity: 0, y: -12, filter: "blur(0px)" },
+      ? { opacity: 0, x: direction * -26 }
+      : { opacity: 0, y: -12 },
 };
 
 function getSlideDirection(from: number, to: number, count: number) {
@@ -203,7 +203,7 @@ export function Hero() {
 
   return (
     <section
-      className="relative w-full overflow-hidden"
+      className="site-scroll-section relative w-full overflow-hidden"
       aria-roledescription="carousel"
       aria-label="Hero highlights"
     >
@@ -249,9 +249,9 @@ export function Hero() {
           </motion.div>
         ))}
 
-        <div className="absolute inset-x-0 bottom-0 z-10 h-20 bg-gradient-to-t from-canvas to-transparent" />
+        <div className="absolute inset-x-0 bottom-0 z-[1] h-20 bg-gradient-to-t from-canvas to-transparent" />
 
-        <div className="relative z-20 grid h-full w-full grid-rows-[1fr_auto] px-6 pb-16 md:px-12 md:pb-20 lg:px-16 lg:pb-24">
+        <div className="relative z-[1] grid h-full w-full grid-rows-[1fr_auto] px-6 pb-16 md:px-12 md:pb-20 lg:px-16 lg:pb-24">
           <div className="flex min-h-0 flex-col pt-28 sm:pt-32 md:pt-36 lg:pt-40 xl:pt-44">
             <div className="mt-auto w-full min-h-0">
             <AnimatePresence mode="wait" custom={slideDirection}>
