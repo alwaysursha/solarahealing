@@ -22,7 +22,7 @@ export default async function HomePage() {
   await getSiteSettings();
 
   return (
-    <main>
+    <main className="site-scroll-main">
       <Hero />
       <AboutSection />
       <WorkshopsSection />

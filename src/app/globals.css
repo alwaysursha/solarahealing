@@ -741,6 +741,13 @@ body {
 
 .site-scroll-panel {
   isolation: isolate;
+  z-index: 10;
+}
+
+.site-scroll-main {
+  position: relative;
+  z-index: 0;
+  isolation: isolate;
 }
 
 .site-header-layer {
@@ -748,8 +755,25 @@ body {
   pointer-events: none;
 }
 
+.site-header-layer::before {
+  content: "";
+  position: absolute;
+  inset: 0 0 auto;
+  height: max(100%, 6.5rem);
+  background: linear-gradient(
+    180deg,
+    rgba(40, 8, 92, 0.98) 0%,
+    rgba(40, 8, 92, 0.94) 50%,
+    rgba(40, 8, 92, 0) 100%
+  );
+  z-index: -1;
+  pointer-events: none;
+}
+
 .site-header-layer > * {
   pointer-events: auto;
+  position: relative;
+  z-index: 1;
 }
 
 .site-scroll-section {
@@ -760,6 +784,21 @@ body {
 
 .site-panel-frame {
   isolation: isolate;
+  z-index: 45;
+}
+
+/* Keep scroll content below header — Firefox/TOR clip-path stacking */
+.site-scroll-panel .workshop-upcoming {
+  z-index: 0;
+}
+
+.site-scroll-panel .workshop-upcoming:hover,
+.site-scroll-panel .workshop-upcoming:focus-within {
+  z-index: 2;
+}
+
+.site-scroll-panel :is([class*="sticky"]) {
+  z-index: 1;
 }
 
 /*

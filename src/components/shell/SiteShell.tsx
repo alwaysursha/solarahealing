@@ -123,7 +123,7 @@ export function SiteShell({ header, children }: SiteShellProps) {
         {children}
       </div>
 
-      <div className={`site-panel-frame ${PANEL_POSITION} pointer-events-none absolute z-[35] overflow-visible`} aria-hidden>
+      <div className={`site-panel-frame ${PANEL_POSITION} pointer-events-none absolute z-[45] overflow-visible`} aria-hidden>
         {geometry ? (
           <PanelBorderStar
             width={geometry.width}
@@ -135,7 +135,7 @@ export function SiteShell({ header, children }: SiteShellProps) {
         ) : null}
       </div>
 
-      <div ref={headerRef} className="site-header-layer absolute inset-x-0 top-0 z-40 px-5 pt-4 pb-4 md:px-10 md:pt-5 md:pb-4.5 lg:px-14">
+      <div ref={headerRef} className="site-header-layer absolute inset-x-0 top-0 z-[100] px-5 pt-4 pb-4 md:px-10 md:pt-5 md:pb-4.5 lg:px-14">
         {header}
       </div>
     </div>
