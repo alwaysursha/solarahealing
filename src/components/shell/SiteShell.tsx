@@ -2,6 +2,7 @@
 
 import { useCallback, useEffect, useRef, useState, type ReactNode } from "react";
 import { buildPanelPath, buildBorderTracePath } from "@/lib/panel-path";
+import { useChromeMobile } from "@/hooks/useChromeMobile";
 import { PanelBorderStar } from "./PanelBorderStar";
 import { SpiritualBackground } from "./SpiritualBackground";
 
@@ -28,6 +29,7 @@ export function SiteShell({ header, children }: SiteShellProps) {
   const panelRef = useRef<HTMLDivElement>(null);
   const headerRef = useRef<HTMLDivElement>(null);
   const [geometry, setGeometry] = useState<PanelGeometry>();
+  const chromeMobile = useChromeMobile();
 
   const updateClip = useCallback(() => {
     const panel = panelRef.current;
@@ -73,7 +75,7 @@ export function SiteShell({ header, children }: SiteShellProps) {
   }, [updateClip]);
 
   return (
-    <div className="fixed inset-0 overflow-hidden">
+    <div className={`fixed inset-0 overflow-hidden${chromeMobile ? " site-chrome-fix" : ""}`}>
       <SpiritualBackground />
 
       <div
@@ -88,6 +90,7 @@ export function SiteShell({ header, children }: SiteShellProps) {
         className={[
           "absolute z-10 overflow-y-auto overscroll-contain bg-canvas",
           PANEL_POSITION,
+          chromeMobile ? "site-chrome-scroll-panel" : "",
         ].join(" ")}
         style={
           geometry
