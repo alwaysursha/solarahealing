@@ -29,4 +29,3 @@ function buildNightStarfield(count: number): NightStar[] {
 }
 
 export const NIGHT_STARFIELD = buildNightStarfield(380);
-export const NIGHT_STARFIELD_LITE = buildNightStarfield(72);

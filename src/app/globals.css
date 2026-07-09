@@ -754,6 +754,86 @@ body {
   overflow: hidden;
 }
 
+/*
+ * Chrome mobile compositor fix — keeps full visuals, stabilises GPU layers.
+ * Firefox/Safari/desktop Chrome are unaffected.
+ */
+#courses.courses-chrome-fix {
+  transform: translate3d(0, 0, 0);
+  backface-visibility: hidden;
+}
+
+#courses.courses-chrome-fix .courses-cosmos-stage,
+#courses.courses-chrome-fix .courses-cosmos-backdrop,
+#courses.courses-chrome-fix .courses-cosmos-celestial,
+#courses.courses-chrome-fix .courses-cosmos-night-stars,
+#courses.courses-chrome-fix .courses-cosmos-content {
+  transform: translate3d(0, 0, 0);
+  backface-visibility: hidden;
+}
+
+#courses.courses-chrome-fix .courses-cosmos-night-veil,
+#courses.courses-chrome-fix .courses-cosmos-night-glow,
+#courses.courses-chrome-fix .courses-cosmos-depth-fog,
+#courses.courses-chrome-fix .courses-cosmos-day-layer {
+  backface-visibility: hidden;
+}
+
+#courses.courses-chrome-fix .courses-cosmos-night-stars {
+  contain: paint;
+}
+
+/* backdrop-filter + clip-path scroll panel = Chrome mobile flicker */
+#courses.courses-chrome-fix .backdrop-blur-xl {
+  -webkit-backdrop-filter: none !important;
+  backdrop-filter: none !important;
+  background-color: rgba(42, 16, 80, 0.94) !important;
+}
+
+#courses.courses-chrome-fix .backdrop-blur-md {
+  -webkit-backdrop-filter: none !important;
+  backdrop-filter: none !important;
+  background-color: rgba(0, 0, 0, 0.46) !important;
+}
+
+#courses.courses-chrome-fix .backdrop-blur-sm {
+  -webkit-backdrop-filter: none !important;
+  backdrop-filter: none !important;
+}
+
+#courses.courses-chrome-fix .bg-white\/5.backdrop-blur-sm {
+  background-color: rgba(255, 255, 255, 0.1) !important;
+}
+
+#courses.courses-chrome-fix .border-gold\/40.bg-white\/5.backdrop-blur-sm {
+  background-color: rgba(255, 255, 255, 0.1) !important;
+}
+
+#courses.courses-chrome-fix .border-white\/15.bg-white\/5.backdrop-blur-sm {
+  background-color: rgba(255, 255, 255, 0.1) !important;
+}
+
+/* SVG feTurbulence opacity animation flickers in Chrome mobile */
+#courses.courses-chrome-fix .courses-cosmos-noise-layer {
+  animation: none !important;
+  opacity: 0.025 !important;
+}
+
+#courses.courses-chrome-fix .courses-space-shooting-star::after {
+  filter: none !important;
+  height: 12px;
+}
+
+#courses.courses-chrome-fix .courses-space-star-deep {
+  filter: none !important;
+}
+
+/* Chrome mobile — stabilise clip-path scroll shell (whole-page flicker) */
+.site-chrome-fix .site-chrome-scroll-panel {
+  -webkit-backface-visibility: hidden;
+  backface-visibility: hidden;
+}
+
 /* Day → night → day cycle (courses section only) */
 .courses-cosmos-daynight {
   --courses-daynight-cycle: 50s;
@@ -807,88 +887,6 @@ body {
   50% {
     opacity: 0.006;
   }
-}
-
-/* Real phones/tablets — lighter GPU load (also applied via .courses-cosmos-lite) */
-@media (hover: none) and (pointer: coarse) {
-  .courses-cosmos-daynight {
-    --courses-daynight-cycle: 90s;
-  }
-
-  .courses-cosmos-noise-layer {
-    display: none !important;
-  }
-
-  .courses-cosmos-day-layer,
-  .courses-cosmos-daynight .workshop-stage-shine,
-  .courses-cosmos-night-glow,
-  .courses-cosmos-depth-fog-cycle,
-  .courses-cosmos-daynight .courses-space-nebula,
-  .courses-space-parallax-deep,
-  .courses-space-parallax-mid,
-  .courses-space-dust-drift,
-  .courses-space-star-twinkle,
-  .courses-night-star-twinkle,
-  .courses-space-planet-drift-a,
-  .courses-space-planet-drift-b,
-  .courses-space-planet-drift-c,
-  .courses-space-shooting-star,
-  .courses-cosmos-daynight .courses-space-planet-a,
-  .courses-cosmos-daynight .courses-space-planet-b {
-    animation: none !important;
-  }
-
-  .courses-space-star,
-  .courses-space-star-deep,
-  .courses-night-star {
-    box-shadow: none !important;
-    filter: none !important;
-  }
-
-  .courses-space-shooting-star::after {
-    filter: none !important;
-  }
-
-  #courses .backdrop-blur-xl,
-  #courses .backdrop-blur-sm,
-  #courses .backdrop-blur-md {
-    -webkit-backdrop-filter: none !important;
-    backdrop-filter: none !important;
-  }
-}
-
-.courses-cosmos-lite {
-  --courses-daynight-cycle: 90s;
-}
-
-.courses-cosmos-lite .courses-cosmos-noise-layer {
-  display: none !important;
-}
-
-.courses-cosmos-lite .courses-cosmos-day-layer,
-.courses-cosmos-lite.courses-cosmos-daynight .workshop-stage-shine,
-.courses-cosmos-lite .courses-cosmos-night-glow,
-.courses-cosmos-lite .courses-cosmos-depth-fog-cycle,
-.courses-cosmos-lite.courses-cosmos-daynight .courses-space-nebula,
-.courses-cosmos-lite .courses-space-parallax-deep,
-.courses-cosmos-lite .courses-space-parallax-mid,
-.courses-cosmos-lite .courses-space-dust-drift,
-.courses-cosmos-lite .courses-space-star-twinkle,
-.courses-cosmos-lite .courses-night-star-twinkle,
-.courses-cosmos-lite .courses-space-planet-drift-a,
-.courses-cosmos-lite .courses-space-planet-drift-b,
-.courses-cosmos-lite .courses-space-planet-drift-c,
-.courses-cosmos-lite .courses-space-shooting-star,
-.courses-cosmos-lite.courses-cosmos-daynight .courses-space-planet-a,
-.courses-cosmos-lite.courses-cosmos-daynight .courses-space-planet-b {
-  animation: none !important;
-}
-
-.courses-cosmos-lite .courses-space-star,
-.courses-cosmos-lite .courses-space-star-deep,
-.courses-cosmos-lite .courses-night-star {
-  box-shadow: none !important;
-  filter: none !important;
 }
 
 @keyframes courses-night-veil {
