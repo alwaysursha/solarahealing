@@ -1,8 +1,9 @@
 "use client";
 
 import { useReducedMotion } from "framer-motion";
-import { NIGHT_STARFIELD } from "@/lib/courses-night-stars";
+import { NIGHT_STARFIELD, NIGHT_STARFIELD_LITE } from "@/lib/courses-night-stars";
 import { CoursesShootingStars } from "@/components/sections/CoursesShootingStars";
+import { useCosmosProfile } from "@/hooks/useCosmosProfile";
 
 const STARS = [
   { x: "5%", y: "10%", size: 2, delay: 0, opacity: 0.55 },
@@ -64,16 +65,22 @@ type CoursesSpaceBackgroundProps = {
 
 export function CoursesSpaceBackground({ animationsActive, cosmosEnabled }: CoursesSpaceBackgroundProps) {
   const reduceMotion = useReducedMotion();
+  const cosmosProfile = useCosmosProfile();
+  const liteMode = cosmosProfile === "lite";
   const motionEnabled = animationsActive && cosmosEnabled && !reduceMotion;
-  const layersMounted = cosmosEnabled && !reduceMotion;
+  const layersMounted = cosmosEnabled && !reduceMotion && cosmosProfile !== null;
+  const nightStars = liteMode ? NIGHT_STARFIELD_LITE : NIGHT_STARFIELD;
 
   return (
-    <div className="courses-cosmos-backdrop pointer-events-none absolute inset-0 z-[1] overflow-hidden" aria-hidden>
+    <div
+      className={`courses-cosmos-backdrop pointer-events-none absolute inset-0 z-[1] overflow-hidden${liteMode ? " courses-cosmos-lite" : ""}`}
+      aria-hidden
+    >
       {layersMounted && <div className="courses-cosmos-night-veil absolute inset-0" />}
 
       <div className="courses-cosmos-celestial absolute inset-0 overflow-hidden">
         <div
-          className={`courses-space courses-space-deep absolute inset-0 overflow-hidden${layersMounted ? " courses-space-parallax-deep" : ""}`}
+          className={`courses-space courses-space-deep absolute inset-0 overflow-hidden${layersMounted && !liteMode ? " courses-space-parallax-deep" : ""}`}
         >
           <div className="courses-space-nebula absolute inset-0" />
           <div className="courses-space-void absolute inset-0" />
@@ -81,7 +88,7 @@ export function CoursesSpaceBackground({ animationsActive, cosmosEnabled }: Cour
           {DEEP_STARS.map((star, index) => (
             <span
               key={`deep-star-${index}`}
-              className={`courses-space-star courses-space-star-deep absolute rounded-full bg-white ${layersMounted ? "courses-space-star-twinkle" : ""}`}
+              className={`courses-space-star courses-space-star-deep absolute rounded-full bg-white ${layersMounted && !liteMode ? "courses-space-star-twinkle" : ""}`}
               style={{
                 left: star.x,
                 top: star.y,
@@ -95,12 +102,12 @@ export function CoursesSpaceBackground({ animationsActive, cosmosEnabled }: Cour
         </div>
 
         <div
-          className={`courses-space courses-space-mid absolute inset-0 overflow-hidden${layersMounted ? " courses-space-parallax-mid" : ""}`}
+          className={`courses-space courses-space-mid absolute inset-0 overflow-hidden${layersMounted && !liteMode ? " courses-space-parallax-mid" : ""}`}
         >
           {STARS.map((star, index) => (
             <span
               key={`star-${index}`}
-              className={`courses-space-star absolute rounded-full bg-white ${layersMounted ? "courses-space-star-twinkle" : ""}`}
+              className={`courses-space-star absolute rounded-full bg-white ${layersMounted && !liteMode ? "courses-space-star-twinkle" : ""}`}
               style={{
                 left: star.x,
                 top: star.y,
@@ -112,27 +119,27 @@ export function CoursesSpaceBackground({ animationsActive, cosmosEnabled }: Cour
             />
           ))}
 
-          <div className={`courses-space-dust absolute inset-0${layersMounted ? " courses-space-dust-drift" : ""}`} />
+          <div className={`courses-space-dust absolute inset-0${layersMounted && !liteMode ? " courses-space-dust-drift" : ""}`} />
         </div>
 
         <div className="courses-space-planets-arc absolute inset-0">
           {PLANETS.map((planet) => (
             <div
               key={planet.id}
-              className={`courses-space-planet courses-space-planet-${planet.id} absolute ${layersMounted ? planet.drift : ""}`}
+              className={`courses-space-planet courses-space-planet-${planet.id} absolute ${layersMounted && !liteMode ? planet.drift : ""}`}
             />
           ))}
         </div>
       </div>
 
-      {motionEnabled && <CoursesShootingStars />}
+      {motionEnabled && !liteMode && <CoursesShootingStars />}
 
       {layersMounted && (
         <div className="courses-cosmos-night-stars absolute inset-0 overflow-hidden">
-          {NIGHT_STARFIELD.map((star, index) => (
+          {nightStars.map((star, index) => (
             <span
               key={`night-star-${index}`}
-              className={`courses-night-star absolute rounded-full bg-white ${index % 14 === 0 ? "courses-night-star-twinkle" : ""}`}
+              className={`courses-night-star absolute rounded-full bg-white ${!liteMode && index % 14 === 0 ? "courses-night-star-twinkle" : ""}`}
               style={{
                 left: `${star.x}%`,
                 top: `${star.y}%`,
@@ -146,10 +153,10 @@ export function CoursesSpaceBackground({ animationsActive, cosmosEnabled }: Cour
         </div>
       )}
 
-      {layersMounted && <div className="courses-cosmos-night-glow absolute inset-0" />}
+      {layersMounted && !liteMode && <div className="courses-cosmos-night-glow absolute inset-0" />}
 
       <div
-        className={`courses-cosmos-depth-fog absolute inset-0${layersMounted ? " courses-cosmos-depth-fog-cycle" : ""}`}
+        className={`courses-cosmos-depth-fog absolute inset-0${layersMounted && !liteMode ? " courses-cosmos-depth-fog-cycle" : ""}`}
       />
     </div>
   );
