@@ -742,8 +742,7 @@ body {
 .courses-cosmos-stage {
   isolation: isolate;
   contain: paint;
-  clip-path: inset(0);
-  transform: translateZ(0);
+  overflow: hidden;
 }
 
 .courses-cosmos-stage::after {
@@ -751,9 +750,8 @@ body {
 }
 
 .courses-cosmos-backdrop {
-  contain: strict;
-  clip-path: inset(0);
-  backface-visibility: hidden;
+  contain: paint;
+  overflow: hidden;
 }
 
 /* Day → night → day cycle (courses section only) */
@@ -772,7 +770,6 @@ body {
       rgba(1, 0, 6, 0.98) 100%
     );
   opacity: 0;
-  will-change: opacity;
   animation: courses-night-veil var(--courses-daynight-cycle) var(--courses-daynight-ease) infinite;
 }
 
@@ -782,7 +779,6 @@ body {
     radial-gradient(ellipse 40% 22% at 28% 68%, rgba(99, 102, 241, 0.12) 0%, transparent 65%),
     radial-gradient(ellipse 70% 18% at 50% 12%, rgba(255, 255, 255, 0.03) 0%, transparent 72%);
   opacity: 0;
-  will-change: opacity;
   animation: courses-night-glow var(--courses-daynight-cycle) var(--courses-daynight-ease) infinite;
 }
 
@@ -935,19 +931,15 @@ body {
   0%,
   100% {
     opacity: 0;
-    visibility: hidden;
   }
   36% {
     opacity: 0.55;
-    visibility: visible;
   }
   50% {
     opacity: 1;
-    visibility: visible;
   }
   64% {
     opacity: 0.55;
-    visibility: visible;
   }
 }
 
@@ -972,22 +964,18 @@ body {
   100% {
     opacity: 0.55;
     transform: scale(1);
-    box-shadow: 0 0 5px rgba(255, 255, 255, 0.4);
   }
   36% {
     opacity: 0.72;
     transform: scale(1.05);
-    box-shadow: 0 0 7px rgba(255, 255, 255, 0.5);
   }
   50% {
     opacity: 0.35;
     transform: scale(0.95);
-    box-shadow: 0 0 4px rgba(255, 255, 255, 0.35);
   }
   64% {
     opacity: 0.72;
     transform: scale(1.05);
-    box-shadow: 0 0 7px rgba(255, 255, 255, 0.5);
   }
 }
 
@@ -1145,7 +1133,6 @@ body {
 .courses-space-planet {
   position: absolute;
   border-radius: 50%;
-  will-change: transform, opacity;
 }
 
 .courses-space-planet::before {
@@ -1413,7 +1400,6 @@ body {
   opacity: 0;
   transform: translate3d(0, 0, 0) rotate(var(--shoot-angle));
   transform-origin: center center;
-  will-change: transform, opacity;
   box-shadow:
     0 0 12px 3px rgba(255, 255, 255, 0.98),
     0 0 28px 6px rgba(255, 255, 255, 0.5);

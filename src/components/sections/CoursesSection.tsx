@@ -461,8 +461,8 @@ function UpcomingCourseCardContent({ course }: { course: (typeof onlineCourses)[
 export function CoursesSection() {
   const reduceMotion = useReducedMotion();
   const sectionRef = useRef<HTMLElement>(null);
-  const animationsActive = useAnimationsActive(sectionRef);
-  const motionEnabled = animationsActive && !reduceMotion;
+  const animationsActive = useAnimationsActive(sectionRef, "-10% 0px -10% 0px", { once: true });
+  const cosmosEnabled = !reduceMotion;
   const gridCourses = upcoming.slice(0, 3);
 
   return (
@@ -472,16 +472,16 @@ export function CoursesSection() {
       className={`relative overflow-hidden${animationsActive ? "" : " animations-paused"}`}
     >
       <div
-        className={`workshop-stage courses-cosmos-stage relative w-full overflow-hidden rounded-none${motionEnabled ? " courses-cosmos-daynight" : ""}`}
+        className={`workshop-stage courses-cosmos-stage relative w-full overflow-hidden rounded-none${cosmosEnabled ? " courses-cosmos-daynight" : ""}`}
       >
         <div className="workshop-stage-mesh courses-cosmos-day-layer pointer-events-none absolute inset-0" aria-hidden />
         <div className="workshop-stage-gloss courses-cosmos-day-layer pointer-events-none absolute inset-0" aria-hidden />
         <div className="workshop-stage-shine workshop-gloss-sweep pointer-events-none absolute inset-0" aria-hidden />
         <div className="workshop-stage-noise courses-cosmos-noise-layer pointer-events-none absolute inset-0" aria-hidden />
-        <CoursesSpaceBackground animationsActive={animationsActive} />
+        <CoursesSpaceBackground animationsActive={animationsActive} cosmosEnabled={cosmosEnabled} />
 
         <div
-          className={`courses-cosmos-content relative z-[3] grid gap-12 px-5 py-6 sm:px-8 md:p-10 lg:grid-cols-12 lg:gap-10 lg:px-12 xl:px-14 xl:py-14${motionEnabled ? " courses-cosmos-content-float" : ""}`}
+          className="courses-cosmos-content relative z-[3] grid gap-12 px-5 py-6 sm:px-8 md:p-10 lg:grid-cols-12 lg:gap-10 lg:px-12 xl:px-14 xl:py-14"
         >
           <motion.div
             className="lg:col-span-4 lg:self-start xl:sticky xl:top-8"
