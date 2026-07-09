@@ -755,16 +755,30 @@ body {
   pointer-events: none;
 }
 
+.site-header-shield {
+  background-color: #28085c;
+  background-image: linear-gradient(
+    155deg,
+    #28085c 0%,
+    #3a1258 28%,
+    #501868 52%,
+    #4b0082 72%,
+    #3a1048 100%
+  );
+}
+
 .site-header-layer::before {
   content: "";
   position: absolute;
-  inset: 0 0 auto;
-  height: max(100%, 6.5rem);
-  background: linear-gradient(
-    180deg,
-    rgba(40, 8, 92, 0.98) 0%,
-    rgba(40, 8, 92, 0.94) 50%,
-    rgba(40, 8, 92, 0) 100%
+  inset: 0;
+  background-color: #28085c;
+  background-image: linear-gradient(
+    155deg,
+    #28085c 0%,
+    #3a1258 28%,
+    #501868 52%,
+    #4b0082 72%,
+    #3a1048 100%
   );
   z-index: -1;
   pointer-events: none;
@@ -817,7 +831,8 @@ body {
   backface-visibility: hidden;
 }
 
-[data-compositor="chrome-touch"] .site-header-layer {
+[data-compositor="chrome-touch"] .site-header-layer,
+[data-compositor="chrome-touch"] .site-header-shield {
   transform: translate3d(0, 0, 0);
   -webkit-backface-visibility: hidden;
   backface-visibility: hidden;

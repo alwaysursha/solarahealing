@@ -1,7 +1,7 @@
 "use client";
 
 import { useCallback, useEffect, useRef, useState, type ReactNode } from "react";
-import { buildPanelPath, buildBorderTracePath } from "@/lib/panel-path";
+import { TOP_RADIUS, buildPanelPath, buildBorderTracePath } from "@/lib/panel-path";
 import { detectCompositorProfile, useCompositorProfile } from "@/lib/compositor-profile";
 import { PanelBorderStar } from "./PanelBorderStar";
 import { SpiritualBackground } from "./SpiritualBackground";
@@ -29,6 +29,7 @@ export function SiteShell({ header, children }: SiteShellProps) {
   const panelRef = useRef<HTMLDivElement>(null);
   const headerRef = useRef<HTMLDivElement>(null);
   const [geometry, setGeometry] = useState<PanelGeometry>();
+  const [headerShieldY, setHeaderShieldY] = useState(96);
   const clipKeyRef = useRef("");
   const frozenPanelHeightRef = useRef<number | null>(null);
   const compositorProfile = useCompositorProfile();
@@ -43,6 +44,8 @@ export function SiteShell({ header, children }: SiteShellProps) {
     const { width } = panel.getBoundingClientRect();
     const headerH = header?.offsetHeight ?? 68;
     const clipKey = `${Math.round(width)}:${Math.round(headerH)}`;
+
+    setHeaderShieldY(lineY + TOP_RADIUS);
 
     let height = panel.getBoundingClientRect().height;
     if (chromeTouch || detectCompositorProfile() === "chrome-touch") {
@@ -122,6 +125,12 @@ export function SiteShell({ header, children }: SiteShellProps) {
       >
         {children}
       </div>
+
+      <div
+        className="site-header-shield pointer-events-none absolute inset-x-0 top-0 z-[15]"
+        style={{ height: headerShieldY }}
+        aria-hidden
+      />
 
       <div className={`site-panel-frame ${PANEL_POSITION} pointer-events-none absolute z-[45] overflow-visible`} aria-hidden>
         {geometry ? (
