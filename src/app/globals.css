@@ -334,57 +334,6 @@ body {
   border-bottom: 1px solid;
 }
 
-/* Online courses slider — matte gold (Book a Session palette) */
-.courses-section {
-  width: 100%;
-  background: linear-gradient(
-    155deg,
-    #967018 0%,
-    #a67c1a 28%,
-    #b8921f 52%,
-    #a67f18 78%,
-    #967018 100%
-  );
-  color: var(--cream);
-}
-
-.courses-slider-viewport {
-  --courses-edge-pad: 1.25rem;
-  touch-action: pan-y;
-  width: 100%;
-  padding-inline: var(--courses-edge-pad);
-  overflow: hidden;
-  isolation: isolate;
-}
-
-@media (min-width: 640px) {
-  .courses-slider-viewport {
-    --courses-edge-pad: 2rem;
-  }
-}
-
-@media (min-width: 768px) {
-  .courses-slider-viewport {
-    --courses-edge-pad: 2.5rem;
-  }
-}
-
-@media (min-width: 1024px) {
-  .courses-slider-viewport {
-    --courses-edge-pad: 3rem;
-  }
-}
-
-@media (min-width: 1280px) {
-  .courses-slider-viewport {
-    --courses-edge-pad: 3.5rem;
-  }
-}
-
-.courses-track {
-  will-change: transform;
-}
-
 /* Schedule a healing session */
 .schedule-section {
   background: linear-gradient(125deg, #1e1038 0%, #2d1b4e 42%, #241048 100%);
@@ -460,104 +409,6 @@ body {
 }
 
 .animations-paused .schedule-aura-ring {
-  animation-play-state: paused;
-}
-
-.courses-card-inner {
-  border: 1px solid rgba(75, 0, 130, 0.14);
-  background: linear-gradient(165deg, #2d1b4e 0%, #221040 52%, #150828 100%);
-  box-shadow: 0 28px 70px -30px rgba(45, 27, 78, 0.38);
-  transition: box-shadow 0.6s ease, border-color 0.6s ease;
-}
-
-.courses-card:hover .courses-card-inner,
-.courses-card:focus-within .courses-card-inner {
-  border-color: rgba(201, 162, 39, 0.42);
-  box-shadow:
-    0 32px 84px -26px rgba(45, 27, 78, 0.48),
-    0 0 0 1px rgba(201, 162, 39, 0.14);
-}
-
-.courses-card-shine {
-  background: linear-gradient(
-    125deg,
-    transparent 28%,
-    rgba(255, 255, 255, 0.05) 46%,
-    rgba(255, 255, 255, 0.12) 52%,
-    transparent 70%
-  );
-}
-
-.courses-card-image-overlay {
-  background:
-    linear-gradient(180deg, rgba(21, 8, 40, 0.05) 0%, rgba(21, 8, 40, 0.15) 40%, rgba(21, 8, 40, 0.88) 100%),
-    linear-gradient(135deg, rgba(75, 0, 130, 0.2) 0%, transparent 55%);
-}
-
-.courses-price {
-  text-shadow: 0 2px 24px rgba(201, 162, 39, 0.35);
-}
-
-.courses-cart-shimmer {
-  background: linear-gradient(
-    105deg,
-    transparent 35%,
-    rgba(219, 185, 74, 0.28) 50%,
-    transparent 65%
-  );
-  transform: translateX(-120%);
-  animation: courses-cart-shimmer 3.2s ease-in-out infinite;
-}
-
-@keyframes courses-cart-shimmer {
-  0%,
-  72%,
-  100% {
-    transform: translateX(-120%);
-  }
-  88% {
-    transform: translateX(120%);
-  }
-}
-
-.courses-nav-btn {
-  display: inline-flex;
-  align-items: center;
-  justify-content: center;
-  width: 2.75rem;
-  height: 2.75rem;
-  border-radius: 9999px;
-  border: 1px solid rgba(75, 0, 130, 0.18);
-  background: rgba(253, 252, 250, 0.5);
-  color: var(--purple-deep);
-  backdrop-filter: blur(10px);
-  box-shadow:
-    inset 0 1px 0 rgba(255, 255, 255, 0.55),
-    0 8px 22px -14px rgba(75, 0, 130, 0.2);
-  transition:
-    border-color 0.35s ease,
-    background-color 0.35s ease,
-    color 0.35s ease,
-    transform 0.35s ease;
-}
-
-.courses-nav-btn:hover:not(:disabled) {
-  border-color: rgba(75, 0, 130, 0.32);
-  background: rgba(253, 252, 250, 0.82);
-  color: var(--purple-deep);
-  transform: translateY(-1px);
-}
-
-.courses-nav-btn:disabled {
-  opacity: 0.28;
-  cursor: not-allowed;
-}
-
-.courses-dot-active {
-  box-shadow: 0 0 18px rgba(75, 0, 130, 0.3);
-}
-
-.animations-paused .courses-cart-shimmer {
   animation-play-state: paused;
 }
 
@@ -883,6 +734,755 @@ body {
   background-image: url("data:image/svg+xml,%3Csvg viewBox='0 0 256 256' xmlns='http://www.w3.org/2000/svg'%3E%3Cfilter id='n'%3E%3CfeTurbulence type='fractalNoise' baseFrequency='0.85' numOctaves='4' stitchTiles='stitch'/%3E%3C/filter%3E%3Crect width='100%25' height='100%25' filter='url(%23n)'/%3E%3C/svg%3E");
 }
 
+/* Courses section — cosmic space background */
+#courses {
+  isolation: isolate;
+}
+
+.courses-cosmos-stage {
+  isolation: isolate;
+  contain: paint;
+  clip-path: inset(0);
+  transform: translateZ(0);
+}
+
+.courses-cosmos-stage::after {
+  content: none;
+}
+
+.courses-cosmos-backdrop {
+  contain: strict;
+  clip-path: inset(0);
+  backface-visibility: hidden;
+}
+
+/* Day → night → day cycle (courses section only) */
+.courses-cosmos-daynight {
+  --courses-daynight-cycle: 50s;
+  --courses-daynight-ease: cubic-bezier(0.45, 0.05, 0.25, 1);
+}
+
+.courses-cosmos-night-veil {
+  background:
+    radial-gradient(ellipse 80% 55% at 50% 38%, rgba(4, 2, 16, 0.35) 0%, transparent 62%),
+    linear-gradient(
+      165deg,
+      rgba(2, 1, 8, 0.98) 0%,
+      rgba(4, 2, 14, 0.97) 48%,
+      rgba(1, 0, 6, 0.98) 100%
+    );
+  opacity: 0;
+  will-change: opacity;
+  animation: courses-night-veil var(--courses-daynight-cycle) var(--courses-daynight-ease) infinite;
+}
+
+.courses-cosmos-night-glow {
+  background:
+    radial-gradient(ellipse 55% 28% at 62% 24%, rgba(67, 56, 202, 0.18) 0%, transparent 68%),
+    radial-gradient(ellipse 40% 22% at 28% 68%, rgba(99, 102, 241, 0.12) 0%, transparent 65%),
+    radial-gradient(ellipse 70% 18% at 50% 12%, rgba(255, 255, 255, 0.03) 0%, transparent 72%);
+  opacity: 0;
+  will-change: opacity;
+  animation: courses-night-glow var(--courses-daynight-cycle) var(--courses-daynight-ease) infinite;
+}
+
+.courses-cosmos-day-layer {
+  animation: courses-day-layers-fade var(--courses-daynight-cycle) var(--courses-daynight-ease) infinite;
+}
+
+.courses-cosmos-daynight .workshop-stage-shine {
+  animation: courses-day-layers-fade var(--courses-daynight-cycle) var(--courses-daynight-ease) infinite;
+}
+
+.courses-cosmos-daynight .workshop-gloss-sweep {
+  animation: none;
+}
+
+.courses-cosmos-noise-layer {
+  opacity: 0.035;
+  animation: courses-noise-fade var(--courses-daynight-cycle) var(--courses-daynight-ease) infinite;
+}
+
+@keyframes courses-noise-fade {
+  0%,
+  100% {
+    opacity: 0.035;
+  }
+  50% {
+    opacity: 0.006;
+  }
+}
+
+@keyframes courses-night-veil {
+  0%,
+  100% {
+    opacity: 0;
+  }
+  40% {
+    opacity: 0.62;
+  }
+  50% {
+    opacity: 0.96;
+  }
+  60% {
+    opacity: 0.62;
+  }
+}
+
+@keyframes courses-night-glow {
+  0%,
+  100% {
+    opacity: 0;
+  }
+  45% {
+    opacity: 0.18;
+  }
+  50% {
+    opacity: 0.32;
+  }
+  55% {
+    opacity: 0.18;
+  }
+}
+
+@keyframes courses-day-layers-fade {
+  0%,
+  100% {
+    opacity: 1;
+  }
+  42% {
+    opacity: 0.35;
+  }
+  50% {
+    opacity: 0.04;
+  }
+  58% {
+    opacity: 0.35;
+  }
+}
+
+.courses-cosmos-daynight .courses-space-planet-drift-a:not(.courses-space-planet-a) {
+  animation: courses-planet-drift-a 20s ease-in-out infinite, courses-planet-night-prominence var(--courses-daynight-cycle) var(--courses-daynight-ease) infinite;
+}
+
+.courses-cosmos-daynight .courses-space-planet-drift-b:not(.courses-space-planet-b) {
+  animation: courses-planet-drift-b 24s ease-in-out infinite, courses-planet-night-prominence var(--courses-daynight-cycle) var(--courses-daynight-ease) infinite;
+}
+
+.courses-cosmos-daynight .courses-space-planet-drift-c {
+  animation: courses-planet-drift-c 18s ease-in-out infinite, courses-planet-night-prominence var(--courses-daynight-cycle) var(--courses-daynight-ease) infinite;
+}
+
+.courses-cosmos-daynight .courses-space-planet-drift-d {
+  animation: courses-planet-drift-d 32s ease-in-out infinite, courses-planet-night-prominence var(--courses-daynight-cycle) var(--courses-daynight-ease) infinite;
+}
+
+.courses-cosmos-daynight .courses-space-planet-drift-e {
+  animation: courses-planet-drift-e 21s ease-in-out infinite, courses-planet-night-prominence var(--courses-daynight-cycle) var(--courses-daynight-ease) infinite;
+}
+
+.courses-cosmos-daynight .courses-space-planet-drift-f {
+  animation: courses-planet-drift-f 28s ease-in-out infinite, courses-planet-night-prominence var(--courses-daynight-cycle) var(--courses-daynight-ease) infinite;
+}
+
+.courses-cosmos-daynight .courses-space-planet-drift-g {
+  animation: courses-planet-drift-g 16s ease-in-out infinite, courses-planet-night-prominence var(--courses-daynight-cycle) var(--courses-daynight-ease) infinite;
+}
+
+@keyframes courses-planet-night-prominence {
+  0%,
+  100% {
+    opacity: 0.2;
+  }
+  50% {
+    opacity: 0.92;
+  }
+}
+
+.courses-cosmos-daynight .courses-space-planet-deep.courses-space-planet-drift-d {
+  animation: courses-planet-drift-d 32s ease-in-out infinite, courses-planet-night-prominence-deep var(--courses-daynight-cycle) var(--courses-daynight-ease) infinite;
+}
+
+.courses-cosmos-daynight .courses-space-planet-deep.courses-space-planet-drift-f {
+  animation: courses-planet-drift-f 28s ease-in-out infinite, courses-planet-night-prominence-deep var(--courses-daynight-cycle) var(--courses-daynight-ease) infinite;
+}
+
+@keyframes courses-planet-night-prominence-deep {
+  0%,
+  100% {
+    opacity: 0.1;
+  }
+  50% {
+    opacity: 0.62;
+  }
+}
+
+.courses-cosmos-night-stars {
+  opacity: 0;
+  pointer-events: none;
+  animation: courses-night-stars-reveal var(--courses-daynight-cycle) var(--courses-daynight-ease) infinite;
+}
+
+.courses-night-star {
+  box-shadow: 0 0 4px rgba(255, 255, 255, 0.55);
+}
+
+.courses-night-star-twinkle {
+  animation: courses-night-star-twinkle 3.8s ease-in-out infinite;
+}
+
+@keyframes courses-night-stars-reveal {
+  0%,
+  100% {
+    opacity: 0;
+    visibility: hidden;
+  }
+  36% {
+    opacity: 0.55;
+    visibility: visible;
+  }
+  50% {
+    opacity: 1;
+    visibility: visible;
+  }
+  64% {
+    opacity: 0.55;
+    visibility: visible;
+  }
+}
+
+@keyframes courses-night-star-twinkle {
+  0%,
+  100% {
+    opacity: 0.55;
+    transform: scale(0.92);
+  }
+  50% {
+    opacity: 1;
+    transform: scale(1.15);
+  }
+}
+
+.courses-cosmos-daynight .courses-space-star-twinkle {
+  animation: courses-star-twinkle-night var(--courses-daynight-cycle) var(--courses-daynight-ease) infinite;
+}
+
+@keyframes courses-star-twinkle-night {
+  0%,
+  100% {
+    opacity: 0.55;
+    transform: scale(1);
+    box-shadow: 0 0 5px rgba(255, 255, 255, 0.4);
+  }
+  36% {
+    opacity: 0.72;
+    transform: scale(1.05);
+    box-shadow: 0 0 7px rgba(255, 255, 255, 0.5);
+  }
+  50% {
+    opacity: 0.35;
+    transform: scale(0.95);
+    box-shadow: 0 0 4px rgba(255, 255, 255, 0.35);
+  }
+  64% {
+    opacity: 0.72;
+    transform: scale(1.05);
+    box-shadow: 0 0 7px rgba(255, 255, 255, 0.5);
+  }
+}
+
+.courses-cosmos-depth-fog-cycle {
+  animation: courses-depth-fog-night var(--courses-daynight-cycle) var(--courses-daynight-ease) infinite;
+}
+
+@keyframes courses-depth-fog-night {
+  0%,
+  100% {
+    opacity: 1;
+  }
+  50% {
+    opacity: 0.12;
+  }
+}
+
+.courses-cosmos-daynight .courses-space-nebula {
+  animation: courses-nebula-night var(--courses-daynight-cycle) var(--courses-daynight-ease) infinite;
+}
+
+@keyframes courses-nebula-night {
+  0%,
+  100% {
+    opacity: 1;
+  }
+  50% {
+    opacity: 0.2;
+  }
+}
+
+.courses-cosmos-content {
+  position: relative;
+  z-index: 3;
+}
+
+.courses-cosmos-content-float {
+  animation: courses-content-float 16s ease-in-out infinite;
+}
+
+@keyframes courses-content-float {
+  0%,
+  100% {
+    transform: translateY(0);
+  }
+  50% {
+    transform: translateY(-8px);
+  }
+}
+
+.courses-cosmos-depth-fog {
+  background:
+    radial-gradient(ellipse 72% 58% at 50% 42%, transparent 0%, rgba(12, 4, 28, 0.42) 72%, rgba(8, 2, 18, 0.55) 100%),
+    linear-gradient(180deg, rgba(20, 6, 40, 0.22) 0%, transparent 28%, transparent 100%);
+}
+
+.courses-space-deep,
+.courses-space-mid {
+  transform: none;
+}
+
+.courses-space-parallax-deep {
+  animation: courses-space-parallax-deep 22s ease-in-out infinite;
+}
+
+.courses-space-parallax-mid {
+  animation: courses-space-parallax-mid 18s ease-in-out infinite;
+}
+
+@keyframes courses-space-parallax-deep {
+  0%,
+  100% {
+    transform: translate(0, 0);
+  }
+  50% {
+    transform: translate(10px, 8px);
+  }
+}
+
+@keyframes courses-space-parallax-mid {
+  0%,
+  100% {
+    transform: translate(0, 0);
+  }
+  50% {
+    transform: translate(-8px, -6px);
+  }
+}
+
+.courses-space-nebula {
+  background:
+    radial-gradient(ellipse 48% 42% at 78% 20%, rgba(99, 102, 241, 0.2) 0%, transparent 58%),
+    radial-gradient(ellipse 40% 34% at 14% 64%, rgba(201, 162, 39, 0.12) 0%, transparent 55%),
+    radial-gradient(ellipse 55% 44% at 50% 92%, rgba(139, 58, 154, 0.14) 0%, transparent 60%),
+    radial-gradient(ellipse 30% 28% at 32% 28%, rgba(67, 56, 202, 0.1) 0%, transparent 62%);
+}
+
+.courses-space-void {
+  background: radial-gradient(ellipse 90% 70% at 50% 50%, transparent 35%, rgba(4, 0, 12, 0.35) 100%);
+}
+
+.courses-space-star {
+  box-shadow: 0 0 5px rgba(255, 255, 255, 0.4);
+}
+
+.courses-space-star-deep {
+  filter: blur(0.4px);
+  box-shadow: 0 0 3px rgba(255, 255, 255, 0.2);
+}
+
+.courses-space-star-twinkle {
+  animation: courses-star-twinkle 4.5s ease-in-out infinite;
+}
+
+@keyframes courses-star-twinkle {
+  0%,
+  100% {
+    opacity: 0.25;
+    transform: scale(0.85);
+  }
+  50% {
+    opacity: 1;
+    transform: scale(1.2);
+  }
+}
+
+.courses-space-dust {
+  background-image:
+    radial-gradient(1px 1px at 12% 24%, rgba(255, 255, 255, 0.14) 0%, transparent 100%),
+    radial-gradient(1px 1px at 28% 68%, rgba(255, 255, 255, 0.1) 0%, transparent 100%),
+    radial-gradient(1px 1px at 44% 38%, rgba(255, 255, 255, 0.12) 0%, transparent 100%),
+    radial-gradient(1px 1px at 62% 72%, rgba(255, 255, 255, 0.1) 0%, transparent 100%),
+    radial-gradient(1px 1px at 78% 28%, rgba(255, 255, 255, 0.13) 0%, transparent 100%),
+    radial-gradient(1px 1px at 88% 58%, rgba(255, 255, 255, 0.09) 0%, transparent 100%);
+  opacity: 0.65;
+}
+
+.courses-space-dust-drift {
+  animation: courses-space-dust-drift 26s linear infinite;
+}
+
+@keyframes courses-space-dust-drift {
+  0% {
+    transform: translate(0, 0);
+  }
+  100% {
+    transform: translate(-24px, -18px);
+  }
+}
+
+.courses-space-planets-arc {
+  pointer-events: none;
+}
+
+.courses-space-planet {
+  position: absolute;
+  border-radius: 50%;
+  will-change: transform, opacity;
+}
+
+.courses-space-planet::before {
+  content: "";
+  position: absolute;
+  inset: 0;
+  border-radius: 50%;
+  background: radial-gradient(circle at 68% 62%, rgba(0, 0, 0, 0.62) 0%, rgba(0, 0, 0, 0.18) 38%, transparent 58%);
+  pointer-events: none;
+}
+
+/* Closest — bottom-left */
+.courses-space-planet-a {
+  bottom: 6%;
+  left: 3%;
+  z-index: 3;
+  width: min(18vw, 10rem);
+  height: min(18vw, 10rem);
+  opacity: 0.28;
+  background:
+    radial-gradient(circle at 28% 24%, rgba(255, 248, 220, 0.7) 0%, rgba(219, 185, 74, 0.45) 12%, transparent 28%),
+    radial-gradient(circle at 38% 32%, rgba(201, 162, 39, 0.55) 0%, rgba(120, 90, 30, 0.35) 42%, rgba(50, 30, 80, 0.5) 72%, rgba(20, 10, 40, 0.85) 100%);
+  box-shadow:
+    inset -16px -12px 32px rgba(10, 4, 24, 0.55),
+    0 0 52px rgba(99, 102, 241, 0.2);
+}
+
+.courses-cosmos-daynight .courses-space-planet-a {
+  animation: courses-planet-drift-a 20s ease-in-out infinite, courses-planet-night-prominence var(--courses-daynight-cycle) var(--courses-daynight-ease) infinite, courses-planet-a-glow var(--courses-daynight-cycle) var(--courses-daynight-ease) infinite;
+}
+
+@keyframes courses-planet-a-glow {
+  0%,
+  100% {
+    box-shadow:
+      inset -16px -12px 32px rgba(10, 4, 24, 0.55),
+      0 0 52px rgba(99, 102, 241, 0.2);
+  }
+  50% {
+    box-shadow:
+      inset -16px -12px 32px rgba(10, 4, 24, 0.45),
+      0 0 64px rgba(150, 170, 255, 0.45),
+      0 0 120px rgba(99, 102, 241, 0.22);
+  }
+}
+
+/* Mid-distance — center of diagonal */
+.courses-space-planet-b {
+  bottom: 38%;
+  left: 34%;
+  z-index: 2;
+  width: min(12vw, 6.25rem);
+  height: min(12vw, 6.25rem);
+  opacity: 0.26;
+  background:
+    radial-gradient(circle at 30% 26%, rgba(230, 200, 255, 0.55) 0%, transparent 22%),
+    radial-gradient(circle at 40% 34%, rgba(184, 104, 200, 0.6) 0%, rgba(100, 40, 120, 0.45) 48%, rgba(30, 8, 50, 0.9) 100%);
+  box-shadow: 0 0 44px rgba(139, 58, 154, 0.18);
+}
+
+.courses-space-planet-b::after {
+  content: "";
+  position: absolute;
+  top: 50%;
+  left: 50%;
+  width: 180%;
+  height: 42%;
+  border: 1.5px solid rgba(220, 200, 255, 0.22);
+  border-radius: 50%;
+  transform: translate(-50%, -50%) rotate(-18deg);
+  opacity: 0.75;
+  box-shadow: 0 0 12px rgba(180, 140, 220, 0.15);
+}
+
+.courses-cosmos-daynight .courses-space-planet-b {
+  animation: courses-planet-drift-b 24s ease-in-out infinite, courses-planet-night-prominence var(--courses-daynight-cycle) var(--courses-daynight-ease) infinite, courses-planet-b-glow var(--courses-daynight-cycle) var(--courses-daynight-ease) infinite;
+}
+
+@keyframes courses-planet-b-glow {
+  0%,
+  100% {
+    box-shadow: 0 0 44px rgba(139, 58, 154, 0.18);
+  }
+  50% {
+    box-shadow:
+      0 0 56px rgba(180, 120, 220, 0.42),
+      0 0 100px rgba(139, 58, 154, 0.2);
+  }
+}
+
+/* Farthest — top-right area */
+.courses-space-planet-c {
+  bottom: 68%;
+  left: 62%;
+  z-index: 1;
+  width: min(7vw, 3.5rem);
+  height: min(7vw, 3.5rem);
+  opacity: 0.22;
+  background:
+    radial-gradient(circle at 32% 28%, rgba(255, 255, 255, 0.65) 0%, transparent 18%),
+    radial-gradient(circle at 40% 36%, rgba(220, 200, 160, 0.4) 0%, rgba(80, 60, 120, 0.35) 55%, rgba(25, 12, 45, 0.88) 100%);
+  box-shadow: 0 0 28px rgba(201, 162, 39, 0.12);
+}
+
+@media (max-width: 767px) {
+  .courses-space-planets-arc {
+    clip-path: inset(0 0 0 28%);
+  }
+
+  /* Diagonal arc: bottom-right → top-left (closest to farthest) */
+  .courses-space-planet-a {
+    bottom: auto;
+    left: auto;
+    top: 38vh;
+    right: 12%;
+    width: 3.35rem;
+    height: 3.35rem;
+    opacity: 0.24;
+    box-shadow:
+      inset -10px -8px 20px rgba(10, 4, 24, 0.55),
+      0 0 32px rgba(99, 102, 241, 0.16);
+  }
+
+  .courses-space-planet-a::before {
+    background: radial-gradient(circle at 68% 62%, rgba(0, 0, 0, 0.58) 0%, rgba(0, 0, 0, 0.16) 38%, transparent 58%);
+  }
+
+  .courses-space-planet-b {
+    bottom: auto;
+    left: auto;
+    top: 24vh;
+    right: 28%;
+    width: 2.5rem;
+    height: 2.5rem;
+    opacity: 0.22;
+    box-shadow: 0 0 24px rgba(139, 58, 154, 0.14);
+  }
+
+  .courses-space-planet-b::after {
+    width: 168%;
+    height: 38%;
+    border-width: 1px;
+  }
+
+  .courses-space-planet-c {
+    bottom: auto;
+    left: auto;
+    top: 10vh;
+    right: 44%;
+    width: 1.55rem;
+    height: 1.55rem;
+    opacity: 0.2;
+    box-shadow: 0 0 16px rgba(201, 162, 39, 0.1);
+  }
+}
+
+.courses-space-planet-drift-a {
+  animation: courses-planet-drift-a 20s ease-in-out infinite;
+}
+
+.courses-space-planet-drift-b {
+  animation: courses-planet-drift-b 24s ease-in-out infinite;
+}
+
+.courses-space-planet-drift-c {
+  animation: courses-planet-drift-c 18s ease-in-out infinite;
+}
+
+.courses-space-planet-drift-d {
+  animation: courses-planet-drift-d 32s ease-in-out infinite;
+}
+
+.courses-space-planet-drift-e {
+  animation: courses-planet-drift-e 21s ease-in-out infinite;
+}
+
+.courses-space-planet-drift-f {
+  animation: courses-planet-drift-f 28s ease-in-out infinite;
+}
+
+.courses-space-planet-drift-g {
+  animation: courses-planet-drift-g 16s ease-in-out infinite;
+}
+
+@keyframes courses-planet-drift-a {
+  0%,
+  100% {
+    transform: translate(0, 0) rotate(0deg);
+  }
+  50% {
+    transform: translate(8px, 6px) rotate(1deg);
+  }
+}
+
+@keyframes courses-planet-drift-b {
+  0%,
+  100% {
+    transform: translate(0, 0) rotate(0deg);
+  }
+  50% {
+    transform: translate(-10px, 8px) rotate(-2deg);
+  }
+}
+
+@keyframes courses-planet-drift-c {
+  0%,
+  100% {
+    transform: translate(0, 0);
+  }
+  50% {
+    transform: translate(6px, -8px);
+  }
+}
+
+@keyframes courses-planet-drift-d {
+  0%,
+  100% {
+    transform: translate(0, 0);
+  }
+  50% {
+    transform: translate(-8px, 6px);
+  }
+}
+
+@keyframes courses-planet-drift-e {
+  0%,
+  100% {
+    transform: translate(0, 0) rotate(0deg);
+  }
+  50% {
+    transform: translate(10px, -6px) rotate(2deg);
+  }
+}
+
+@keyframes courses-planet-drift-f {
+  0%,
+  100% {
+    transform: translate(0, 0);
+  }
+  50% {
+    transform: translate(-6px, -8px);
+  }
+}
+
+@keyframes courses-planet-drift-g {
+  0%,
+  100% {
+    transform: translate(0, 0);
+  }
+  50% {
+    transform: translate(8px, 10px);
+  }
+}
+
+.courses-space-shooting-star {
+  --shoot-angle: 38deg;
+  --shoot-duration: 4.5s;
+  --shoot-delay: 0s;
+  --shoot-distance-x: 560px;
+  --shoot-distance-y: 400px;
+  width: 5px;
+  height: 5px;
+  border-radius: 50%;
+  background: #fff;
+  opacity: 0;
+  transform: translate3d(0, 0, 0) rotate(var(--shoot-angle));
+  transform-origin: center center;
+  will-change: transform, opacity;
+  box-shadow:
+    0 0 12px 3px rgba(255, 255, 255, 0.98),
+    0 0 28px 6px rgba(255, 255, 255, 0.5);
+  animation: courses-shooting-star-fall var(--shoot-duration) linear forwards;
+}
+
+/* Tail trails top-left behind head moving bottom-right */
+.courses-space-shooting-star::before {
+  content: "";
+  position: absolute;
+  top: 50%;
+  right: calc(100% - 1px);
+  width: 300px;
+  height: 3px;
+  transform: translateY(-50%);
+  border-radius: 3px;
+  background: linear-gradient(
+    90deg,
+    transparent 0%,
+    rgba(255, 255, 255, 0.05) 10%,
+    rgba(255, 255, 255, 0.2) 28%,
+    rgba(255, 255, 255, 0.5) 52%,
+    rgba(255, 255, 255, 0.82) 78%,
+    #fff 100%
+  );
+}
+
+.courses-space-shooting-star::after {
+  content: "";
+  position: absolute;
+  top: 50%;
+  right: calc(100% - 2px);
+  width: 380px;
+  height: 10px;
+  transform: translateY(-50%);
+  border-radius: 10px;
+  background: linear-gradient(
+    90deg,
+    transparent 0%,
+    rgba(255, 255, 255, 0.04) 18%,
+    rgba(255, 255, 255, 0.14) 45%,
+    rgba(255, 255, 255, 0.22) 72%,
+    transparent 100%
+  );
+  filter: blur(5px);
+}
+
+@keyframes courses-shooting-star-fall {
+  0% {
+    opacity: 0;
+    transform: translate3d(0, 0, 0) rotate(var(--shoot-angle));
+  }
+  6% {
+    opacity: 1;
+  }
+  82% {
+    opacity: 0.95;
+    transform: translate3d(var(--shoot-distance-x), var(--shoot-distance-y), 0) rotate(var(--shoot-angle));
+  }
+  100% {
+    opacity: 0;
+    transform: translate3d(
+      calc(var(--shoot-distance-x) * 1.06),
+      calc(var(--shoot-distance-y) * 1.06),
+      0
+    ) rotate(var(--shoot-angle));
+  }
+}
+
 .workshop-featured {
   box-shadow:
     0 20px 60px -20px rgba(0, 0, 0, 0.45),
@@ -1124,7 +1724,44 @@ body {
 .animations-paused .workshop-crystal-prism::before,
 .animations-paused .workshop-crystal-prism::after,
 .animations-paused .workshop-crystal-price::after,
-.animations-paused .workshop-crystal-btn-gleam {
+.animations-paused .workshop-crystal-btn-gleam,
+.animations-paused .courses-space-star-twinkle,
+.animations-paused .courses-space-planet-drift-a,
+.animations-paused .courses-space-planet-drift-b,
+.animations-paused .courses-space-planet-drift-c,
+.animations-paused .courses-space-planet-drift-d,
+.animations-paused .courses-space-planet-drift-e,
+.animations-paused .courses-space-planet-drift-f,
+.animations-paused .courses-space-planet-drift-g,
+.animations-paused .courses-space-shooting-star,
+.animations-paused .courses-space-parallax-deep,
+.animations-paused .courses-space-parallax-mid,
+.animations-paused .courses-space-dust-drift,
+.animations-paused .courses-cosmos-content-float,
+.animations-paused .courses-cosmos-night-veil,
+.animations-paused .courses-cosmos-night-glow,
+.animations-paused .courses-cosmos-day-layer,
+.animations-paused .courses-cosmos-daynight .workshop-stage-shine,
+.animations-paused .courses-cosmos-noise-layer,
+.animations-paused .courses-cosmos-depth-fog-cycle,
+.animations-paused .courses-star-twinkle-night,
+.animations-paused .courses-cosmos-night-stars,
+.animations-paused .courses-night-star-twinkle,
+.animations-paused .courses-cosmos-daynight .courses-space-nebula {
+  animation-play-state: paused !important;
+}
+
+.animations-paused .courses-cosmos-daynight .courses-space-planet-a,
+.animations-paused .courses-cosmos-daynight .courses-space-planet-b,
+.animations-paused .courses-cosmos-daynight .courses-space-planet-drift-a:not(.courses-space-planet-a),
+.animations-paused .courses-cosmos-daynight .courses-space-planet-drift-b:not(.courses-space-planet-b),
+.animations-paused .courses-cosmos-daynight .courses-space-planet-drift-c,
+.animations-paused .courses-cosmos-daynight .courses-space-planet-drift-d,
+.animations-paused .courses-cosmos-daynight .courses-space-planet-drift-e,
+.animations-paused .courses-cosmos-daynight .courses-space-planet-drift-f,
+.animations-paused .courses-cosmos-daynight .courses-space-planet-drift-g,
+.animations-paused .courses-cosmos-daynight .courses-space-planet-deep.courses-space-planet-drift-d,
+.animations-paused .courses-cosmos-daynight .courses-space-planet-deep.courses-space-planet-drift-f {
   animation-play-state: paused !important;
 }
 

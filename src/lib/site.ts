@@ -311,6 +311,11 @@ export const onlineCourses = [
   {
     id: "reiki-level-1",
     title: "Reiki Level I Certification",
+    description:
+      "Master sacred hand positions, energy sensing, and self-healing rituals through guided video modules you can revisit anytime.",
+    date: "Start anytime",
+    duration: "8 modules · self-paced",
+    badge: "On Demand",
     priceCad: 299,
     image:
       "https://images.unsplash.com/photo-1545389336-cf090694435e?auto=format&fit=crop&w=1200&q=90",
@@ -320,15 +325,25 @@ export const onlineCourses = [
   {
     id: "reiki-level-2",
     title: "Reiki Level II Advanced",
+    description:
+      "Expand your practice with distance healing symbols, emotional release techniques, and advanced energetic protocols.",
+    date: "Lifetime access",
+    duration: "10 modules · self-paced",
+    badge: "On Demand",
     priceCad: 449,
     image:
-      "https://images.unsplash.com/photo-1518199336456-b69c30b1516c?auto=format&fit=crop&w=1200&q=90",
+      "https://images.unsplash.com/photo-1599901860904-17e6d708b348?auto=format&fit=crop&w=1200&q=90",
     imageAlt: "Advanced Reiki Level II online training",
     level: "Intermediate",
   },
   {
     id: "chakra-mastery",
     title: "Chakra Mastery Program",
+    description:
+      "Deep-dive into all seven chakras with guided scans, balancing practices, and integration exercises for daily life.",
+    date: "Lifetime access",
+    duration: "12 modules · self-paced",
+    badge: "On Demand",
     priceCad: 329,
     image:
       "https://images.unsplash.com/photo-1506126613408-eca07ce68773?auto=format&fit=crop&w=1200&q=90",
@@ -338,6 +353,11 @@ export const onlineCourses = [
   {
     id: "distance-practitioner",
     title: "Distance Healing Practitioner",
+    description:
+      "Learn to send healing across space with confidence — protocols, intention setting, and client-ready distance sessions.",
+    date: "Lifetime access",
+    duration: "9 modules · self-paced",
+    badge: "On Demand",
     priceCad: 279,
     image:
       "https://images.unsplash.com/photo-1573496359142-b8d87734a5a2?auto=format&fit=crop&w=1200&q=90",
@@ -347,6 +367,11 @@ export const onlineCourses = [
   {
     id: "master-teacher",
     title: "Reiki Master Teacher Path",
+    description:
+      "The complete attunement and teaching pathway for those called to guide others — lineage, ethics, and mastery curriculum.",
+    date: "Lifetime access",
+    duration: "16 modules · certification",
+    badge: "Certified",
     priceCad: 899,
     image:
       "https://images.unsplash.com/photo-1544367567-0f2fcb009e0b?auto=format&fit=crop&w=1200&q=90",
@@ -356,6 +381,11 @@ export const onlineCourses = [
   {
     id: "energy-anatomy",
     title: "Energy Anatomy & Aura",
+    description:
+      "Understand the subtle body, aura layers, and energetic anatomy — essential knowledge for any serious healing practice.",
+    date: "Lifetime access",
+    duration: "7 modules · self-paced",
+    badge: "On Demand",
     priceCad: 199,
     image:
       "https://images.unsplash.com/photo-1507003211169-0a1dd7228f2d?auto=format&fit=crop&w=1200&q=90",
@@ -365,6 +395,11 @@ export const onlineCourses = [
   {
     id: "sacred-symbols",
     title: "Sacred Symbols & Attunement",
+    description:
+      "Study the sacred Reiki symbols with reverence — their meaning, application, and role in attunement and healing work.",
+    date: "Lifetime access",
+    duration: "11 modules · self-paced",
+    badge: "On Demand",
     priceCad: 379,
     image:
       "https://images.unsplash.com/photo-1499205798772-66a89db83f24?auto=format&fit=crop&w=1200&q=90",
