@@ -491,7 +491,7 @@ export function CoursesSection() {
           className="courses-cosmos-content grid gap-12 px-5 py-6 sm:px-8 md:p-10 lg:grid-cols-12 lg:gap-10 lg:px-12 xl:px-14 xl:py-14"
         >
           <motion.div
-            className="lg:col-span-4 lg:z-[1] lg:self-start xl:sticky xl:top-8"
+            className="z-0 lg:col-span-4 lg:self-start xl:sticky xl:top-8"
             initial={reduceMotion ? false : { opacity: 0, y: 28 }}
             whileInView={reduceMotion ? undefined : { opacity: 1, y: 0 }}
             viewport={{ once: true, margin: "-60px" }}

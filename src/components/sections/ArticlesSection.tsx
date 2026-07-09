@@ -37,7 +37,7 @@ function FeaturedArticleCard() {
   return (
     <Link
       href={`/blog/${article.slug}`}
-      className="article-featured group relative block min-h-[26rem] overflow-hidden rounded-[1.75rem] md:min-h-[30rem]"
+      className="article-featured group relative z-0 block min-h-[26rem] overflow-hidden rounded-[1.75rem] md:min-h-[30rem]"
     >
       <Image
         src={article.image}

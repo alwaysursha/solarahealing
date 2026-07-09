@@ -755,39 +755,26 @@ body {
   pointer-events: none;
 }
 
-.site-header-shield {
-  background-color: #28085c;
-  background-image: linear-gradient(
-    155deg,
-    #28085c 0%,
-    #3a1258 28%,
-    #501868 52%,
-    #4b0082 72%,
-    #3a1048 100%
-  );
-}
-
-.site-header-layer::before {
-  content: "";
-  position: absolute;
-  inset: 0;
-  background-color: #28085c;
-  background-image: linear-gradient(
-    155deg,
-    #28085c 0%,
-    #3a1258 28%,
-    #501868 52%,
-    #4b0082 72%,
-    #3a1048 100%
-  );
-  z-index: -1;
-  pointer-events: none;
-}
-
 .site-header-layer > * {
   pointer-events: auto;
-  position: relative;
-  z-index: 1;
+}
+
+/* Keep listed scroll elements behind the fixed header (z-40) */
+.site-scroll-panel .about-quote-shadow,
+.site-scroll-panel .workshop-view-all,
+.site-scroll-panel .workshop-upcoming,
+.site-scroll-panel .workshop-featured,
+.site-scroll-panel .article-featured {
+  z-index: 0;
+}
+
+.site-scroll-panel .workshop-upcoming:hover,
+.site-scroll-panel .workshop-upcoming:focus-within {
+  z-index: 2;
+}
+
+.site-scroll-panel :is([class*="sticky"]) {
+  z-index: 0;
 }
 
 .site-scroll-section {
@@ -798,21 +785,6 @@ body {
 
 .site-panel-frame {
   isolation: isolate;
-  z-index: 45;
-}
-
-/* Keep scroll content below header — Firefox/TOR clip-path stacking */
-.site-scroll-panel .workshop-upcoming {
-  z-index: 0;
-}
-
-.site-scroll-panel .workshop-upcoming:hover,
-.site-scroll-panel .workshop-upcoming:focus-within {
-  z-index: 2;
-}
-
-.site-scroll-panel :is([class*="sticky"]) {
-  z-index: 1;
 }
 
 /*
@@ -831,8 +803,7 @@ body {
   backface-visibility: hidden;
 }
 
-[data-compositor="chrome-touch"] .site-header-layer,
-[data-compositor="chrome-touch"] .site-header-shield {
+[data-compositor="chrome-touch"] .site-header-layer {
   transform: translate3d(0, 0, 0);
   -webkit-backface-visibility: hidden;
   backface-visibility: hidden;
