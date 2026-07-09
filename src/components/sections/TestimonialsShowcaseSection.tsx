@@ -86,7 +86,6 @@ export function TestimonialsShowcaseSection() {
       className={`testimonial-showcase relative overflow-hidden bg-canvas px-5 py-20 sm:px-8 md:py-24 lg:px-12 lg:py-28 xl:px-14 ${animationsActive ? "" : "animations-paused"}`}
     >
       <div className="testimonial-showcase-ornament pointer-events-none absolute left-1/2 top-12 h-px w-[min(90%,48rem)] -translate-x-1/2 bg-gradient-to-r from-transparent via-gold/35 to-transparent" aria-hidden />
-      <div className="testimonial-showcase-glow pointer-events-none absolute left-1/2 top-0 h-64 w-[min(100%,36rem)] -translate-x-1/2 rounded-full bg-gold/[0.06] blur-3xl" aria-hidden />
 
       <div className="relative mx-auto max-w-7xl">
         <motion.div
