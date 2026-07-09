@@ -758,6 +758,71 @@ body {
   contain: paint;
 }
 
+.site-panel-frame {
+  isolation: isolate;
+}
+
+/*
+ * Chrome mobile — clip-path + header frame + many full-layer opacity animations
+ * repaints the entire fixed shell. Keep visuals; limit conflicting compositor work.
+ */
+[data-compositor="chrome-touch"] .site-scroll-panel {
+  transform: translate3d(0, 0, 0);
+  -webkit-backface-visibility: hidden;
+  backface-visibility: hidden;
+}
+
+[data-compositor="chrome-touch"] .site-panel-frame {
+  transform: translate3d(0, 0, 0);
+  -webkit-backface-visibility: hidden;
+  backface-visibility: hidden;
+}
+
+[data-compositor="chrome-touch"] .site-header-layer {
+  transform: translate3d(0, 0, 0);
+  -webkit-backface-visibility: hidden;
+  backface-visibility: hidden;
+}
+
+[data-compositor="chrome-touch"] #courses .courses-cosmos-stage,
+[data-compositor="chrome-touch"] #courses .courses-cosmos-backdrop {
+  contain: paint;
+  overflow: hidden;
+}
+
+[data-compositor="chrome-touch"] #courses .courses-cosmos-day-layer,
+[data-compositor="chrome-touch"] #courses.courses-cosmos-daynight .workshop-stage-shine,
+[data-compositor="chrome-touch"] #courses .courses-cosmos-night-glow,
+[data-compositor="chrome-touch"] #courses .courses-cosmos-noise-layer,
+[data-compositor="chrome-touch"] #courses .courses-cosmos-depth-fog-cycle,
+[data-compositor="chrome-touch"] #courses.courses-cosmos-daynight .courses-space-nebula {
+  animation: none !important;
+}
+
+[data-compositor="chrome-touch"] #courses.courses-cosmos-daynight .courses-space-planet-a {
+  animation: courses-planet-drift-a 20s ease-in-out infinite !important;
+}
+
+[data-compositor="chrome-touch"] #courses.courses-cosmos-daynight .courses-space-planet-b {
+  animation: courses-planet-drift-b 24s ease-in-out infinite !important;
+}
+
+[data-compositor="chrome-touch"] #courses.courses-scrolling .courses-cosmos-backdrop,
+[data-compositor="chrome-touch"] #courses.courses-scrolling .courses-cosmos-day-layer,
+[data-compositor="chrome-touch"] #courses.courses-scrolling .courses-cosmos-noise-layer,
+[data-compositor="chrome-touch"] #courses.courses-scrolling .courses-cosmos-stage {
+  animation-play-state: paused !important;
+}
+
+[data-compositor="chrome-touch"] #courses.courses-scrolling .courses-cosmos-backdrop * {
+  animation-play-state: paused !important;
+}
+
+[data-compositor="chrome-touch"] #courses.courses-cosmos-daynight .courses-space-planet-c,
+[data-compositor="chrome-touch"] #courses .courses-space-planet-drift-c {
+  animation: courses-planet-drift-c 18s ease-in-out infinite !important;
+}
+
 /* Courses section — cosmic space background */
 #courses {
   position: relative;

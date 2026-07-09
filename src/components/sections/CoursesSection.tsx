@@ -7,6 +7,8 @@ import { useRef } from "react";
 import { CartIcon } from "@/components/ui/CartIcon";
 import { CoursesSpaceBackground } from "@/components/sections/CoursesSpaceBackground";
 import { useAnimationsActive } from "@/hooks/useAnimationsActive";
+import { useScrollPause } from "@/hooks/useScrollPause";
+import { useCompositorProfile } from "@/lib/compositor-profile";
 import { coursesIntro, formatCad, onlineCourses } from "@/lib/site";
 
 const ease: [number, number, number, number] = [0.22, 1, 0.36, 1];
@@ -461,10 +463,12 @@ function UpcomingCourseCardContent({ course }: { course: (typeof onlineCourses)[
 export function CoursesSection() {
   const reduceMotion = useReducedMotion();
   const sectionRef = useRef<HTMLElement>(null);
+  const compositorProfile = useCompositorProfile();
   const animationsActive = useAnimationsActive(sectionRef, "0px 0px -5% 0px", {
     once: true,
     amount: 0.25,
   });
+  useScrollPause(sectionRef, compositorProfile === "chrome-touch");
   const cosmosEnabled = !reduceMotion;
   const gridCourses = upcoming.slice(0, 3);
 
