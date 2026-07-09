@@ -189,7 +189,7 @@ export function Header() {
           ))}
         </nav>
 
-        <div className="relative z-[1] flex shrink-0 items-center gap-1.5 sm:gap-2">
+        <div className="relative z-40 flex shrink-0 items-center gap-1.5 sm:gap-2">
           <HeaderIconButton
             label={loginOpen ? "Close sign in" : "Open sign in"}
             icon="login"

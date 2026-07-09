@@ -304,7 +304,7 @@ function PracticeQuote() {
   const reduceMotion = useReducedMotion();
 
   return (
-    <div className="about-quote-shadow relative overflow-hidden rounded-lg bg-white/35 p-3 backdrop-blur-[2px]">
+    <div className="about-quote-shadow relative z-0 overflow-hidden rounded-lg bg-white/35 p-3 backdrop-blur-[2px]">
       <div
         className="about-quote-glow pointer-events-none absolute inset-0 rounded-xl bg-[radial-gradient(circle_at_50%_50%,rgba(201,162,39,0.12),transparent_72%)]"
         aria-hidden
@@ -367,7 +367,7 @@ export function AboutSection() {
           </p>
         </Reveal>
 
-        <Reveal delay={0.1} className="lg:col-span-3">
+        <Reveal delay={0.1} className="z-0 lg:col-span-3">
           <PracticeQuote />
           <p className="mt-6 text-sm leading-[1.85] text-purple-deep/68 md:text-[0.98rem]">
             {second}
