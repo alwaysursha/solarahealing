@@ -2,6 +2,7 @@
 
 import { motion, useReducedMotion } from "framer-motion";
 import type { ReactNode } from "react";
+import { useCompositorProfile } from "@/lib/compositor-profile";
 import { MOBILE_NAV_WIDTH_PERCENT } from "@/lib/panel-path";
 
 type MobileNavMenuProps = {
@@ -40,21 +41,23 @@ const listVariants = {
 
 export function MobileNavMenu({ children }: MobileNavMenuProps) {
   const reduceMotion = useReducedMotion();
+  const chromeTouch = useCompositorProfile() === "chrome-touch";
+  const staticMotion = reduceMotion || chromeTouch;
 
   return (
     <motion.div
       className="relative origin-top lg:hidden"
       style={{ width: `${MOBILE_NAV_WIDTH_PERCENT}%` }}
-      variants={reduceMotion ? undefined : panelVariants}
-      initial={reduceMotion ? undefined : "closed"}
-      animate={reduceMotion ? undefined : "open"}
+      variants={staticMotion ? undefined : panelVariants}
+      initial={staticMotion ? undefined : "closed"}
+      animate={staticMotion ? undefined : "open"}
     >
       <motion.nav
         className="mobile-nav-menu flex flex-col gap-4 p-5"
         aria-label="Mobile"
-        variants={reduceMotion ? undefined : listVariants}
-        initial={reduceMotion ? undefined : "closed"}
-        animate={reduceMotion ? undefined : "open"}
+        variants={staticMotion ? undefined : listVariants}
+        initial={staticMotion ? undefined : "closed"}
+        animate={staticMotion ? undefined : "open"}
       >
         {children}
       </motion.nav>

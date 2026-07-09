@@ -752,6 +752,7 @@ body {
 
 .site-header-layer {
   isolation: isolate;
+  overflow: visible;
   pointer-events: none;
 }
 
@@ -798,12 +799,6 @@ body {
 }
 
 [data-compositor="chrome-touch"] .site-panel-frame {
-  transform: translate3d(0, 0, 0);
-  -webkit-backface-visibility: hidden;
-  backface-visibility: hidden;
-}
-
-[data-compositor="chrome-touch"] .site-header-layer {
   transform: translate3d(0, 0, 0);
   -webkit-backface-visibility: hidden;
   backface-visibility: hidden;

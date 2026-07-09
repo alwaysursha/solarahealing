@@ -75,12 +75,6 @@ export function SiteShell({ header, children }: SiteShellProps) {
   useEffect(() => {
     updateClip();
 
-    if (chromeTouch) {
-      const onResize = () => updateClip();
-      window.addEventListener("resize", onResize);
-      return () => window.removeEventListener("resize", onResize);
-    }
-
     const panel = panelRef.current;
     if (!panel) return;
 
@@ -100,7 +94,7 @@ export function SiteShell({ header, children }: SiteShellProps) {
       observer.disconnect();
       window.removeEventListener("resize", scheduleUpdate);
     };
-  }, [chromeTouch, updateClip]);
+  }, [updateClip]);
 
   return (
     <div className="site-shell fixed inset-0 overflow-hidden">
