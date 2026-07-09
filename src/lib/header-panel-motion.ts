@@ -1,6 +1,8 @@
 export const HEADER_PANEL_SHELL_EXPAND_MS = 360;
 export const HEADER_PANEL_EXIT_MS = 240;
 
+const shellEase: [number, number, number, number] = [0.4, 0, 0.2, 1];
+
 export const headerPanelShellVariants = {
   closed: {
     gridTemplateRows: "0fr",
@@ -12,8 +14,8 @@ export const headerPanelShellVariants = {
     marginTop: 14,
     opacity: 1,
     transition: {
-      gridTemplateRows: { duration: 0.36, ease: [0.4, 0, 0.2, 1] },
-      marginTop: { duration: 0.36, ease: [0.4, 0, 0.2, 1] },
+      gridTemplateRows: { duration: 0.36, ease: shellEase },
+      marginTop: { duration: 0.36, ease: shellEase },
       opacity: { duration: 0.2 },
     },
   },
@@ -24,15 +26,96 @@ export const headerPanelShellVariants = {
     transition: {
       gridTemplateRows: {
         duration: 0.3,
-        ease: [0.4, 0, 0.2, 1],
+        ease: shellEase,
         delay: HEADER_PANEL_EXIT_MS / 1000,
       },
       marginTop: {
         duration: 0.3,
-        ease: [0.4, 0, 0.2, 1],
+        ease: shellEase,
         delay: HEADER_PANEL_EXIT_MS / 1000,
       },
       opacity: { duration: 0.16, delay: HEADER_PANEL_EXIT_MS / 1000 },
+    },
+  },
+} as const;
+
+/** Chrome mobile — grid 0fr/1fr + transformed ancestors fail to expand the header shell */
+export const headerPanelShellVariantsChrome = {
+  closed: {
+    maxHeight: 0,
+    marginTop: 0,
+    opacity: 0,
+    overflow: "hidden",
+  },
+  open: {
+    maxHeight: 360,
+    marginTop: 14,
+    opacity: 1,
+    overflow: "hidden",
+    transition: {
+      maxHeight: { duration: 0.36, ease: shellEase },
+      marginTop: { duration: 0.36, ease: shellEase },
+      opacity: { duration: 0.2 },
+    },
+  },
+  exit: {
+    maxHeight: 0,
+    marginTop: 0,
+    opacity: 0,
+    overflow: "hidden",
+    transition: {
+      maxHeight: {
+        duration: 0.3,
+        ease: shellEase,
+        delay: HEADER_PANEL_EXIT_MS / 1000,
+      },
+      marginTop: {
+        duration: 0.3,
+        ease: shellEase,
+        delay: HEADER_PANEL_EXIT_MS / 1000,
+      },
+      opacity: { duration: 0.16, delay: HEADER_PANEL_EXIT_MS / 1000 },
+    },
+  },
+} as const;
+
+export const mobileNavExpandVariantsChrome = {
+  closed: {
+    maxHeight: 0,
+    opacity: 0,
+    marginTop: 0,
+    overflow: "hidden",
+  },
+  open: {
+    maxHeight: 520,
+    opacity: 1,
+    marginTop: 16,
+    overflow: "hidden",
+    transition: {
+      maxHeight: {
+        type: "spring",
+        stiffness: 380,
+        damping: 36,
+        mass: 0.9,
+      },
+      opacity: { duration: 0.28, delay: 0.04 },
+      marginTop: {
+        type: "spring",
+        stiffness: 380,
+        damping: 36,
+        mass: 0.9,
+      },
+    },
+  },
+  exit: {
+    maxHeight: 0,
+    opacity: 0,
+    marginTop: 0,
+    overflow: "hidden",
+    transition: {
+      maxHeight: { duration: 0.26, ease: shellEase },
+      opacity: { duration: 0.18 },
+      marginTop: { duration: 0.26, ease: shellEase },
     },
   },
 } as const;
@@ -57,5 +140,17 @@ export const headerPanelSlideVariants = {
       duration: 0.2,
       ease: [0.4, 0, 0.2, 1],
     },
+  },
+} as const;
+
+export const headerPanelSlideVariantsChrome = {
+  closed: { opacity: 0 },
+  open: {
+    opacity: 1,
+    transition: { duration: 0.2, ease: [0.22, 1, 0.36, 1] },
+  },
+  exit: {
+    opacity: 0,
+    transition: { duration: 0.16, ease: [0.4, 0, 0.2, 1] },
   },
 } as const;

@@ -7,8 +7,12 @@ import {
   HEADER_PANEL_EXIT_MS,
   HEADER_PANEL_SHELL_EXPAND_MS,
   headerPanelShellVariants,
+  headerPanelShellVariantsChrome,
   headerPanelSlideVariants,
+  headerPanelSlideVariantsChrome,
+  mobileNavExpandVariantsChrome,
 } from "@/lib/header-panel-motion";
+import { useCompositorProfile } from "@/lib/compositor-profile";
 import { Logo } from "@/components/ui/Logo";
 import { HeaderIconButton } from "@/components/ui/HeaderIconButton";
 import { MenuToggleIcon } from "@/components/ui/MenuToggleIcon";
@@ -56,6 +60,11 @@ const expandVariants = {
 
 export function Header() {
   const reduceMotion = useReducedMotion();
+  const compositorProfile = useCompositorProfile();
+  const chromeTouch = compositorProfile === "chrome-touch";
+  const panelShellVariants = chromeTouch ? headerPanelShellVariantsChrome : headerPanelShellVariants;
+  const panelSlideVariants = chromeTouch ? headerPanelSlideVariantsChrome : headerPanelSlideVariants;
+  const navExpandVariants = chromeTouch ? mobileNavExpandVariantsChrome : expandVariants;
   const [navOpen, setNavOpen] = useState(false);
   const [loginOpen, setLoginOpen] = useState(false);
   const [loginPanelReady, setLoginPanelReady] = useState(false);
@@ -122,14 +131,14 @@ export function Header() {
       return;
     }
 
-    if (reduceMotion) {
+    if (reduceMotion || chromeTouch) {
       setLoginPanelReady(true);
       return;
     }
 
     const timer = window.setTimeout(() => setLoginPanelReady(true), HEADER_PANEL_SHELL_EXPAND_MS);
     return () => window.clearTimeout(timer);
-  }, [loginOpen, reduceMotion]);
+  }, [chromeTouch, loginOpen, reduceMotion]);
 
   useEffect(() => {
     if (!cartOpen) {
@@ -137,14 +146,14 @@ export function Header() {
       return;
     }
 
-    if (reduceMotion) {
+    if (reduceMotion || chromeTouch) {
       setCartPanelReady(true);
       return;
     }
 
     const timer = window.setTimeout(() => setCartPanelReady(true), HEADER_PANEL_SHELL_EXPAND_MS);
     return () => window.clearTimeout(timer);
-  }, [cartOpen, reduceMotion]);
+  }, [cartOpen, chromeTouch, reduceMotion]);
 
   useEffect(() => {
     if (!loginOpen && !cartOpen && !navOpen) return;
@@ -221,8 +230,8 @@ export function Header() {
         {loginOpen && (
           <motion.div
             key="header-login-expand"
-            className="grid overflow-hidden"
-            variants={reduceMotion ? undefined : headerPanelShellVariants}
+            className={chromeTouch ? "overflow-hidden" : "grid overflow-hidden"}
+            variants={reduceMotion ? undefined : panelShellVariants}
             initial={reduceMotion ? undefined : "closed"}
             animate={reduceMotion ? undefined : "open"}
             exit={reduceMotion ? undefined : "exit"}
@@ -230,7 +239,7 @@ export function Header() {
             <div className="min-h-0 overflow-hidden">
               <motion.div
                 className="origin-top"
-                variants={reduceMotion ? undefined : headerPanelSlideVariants}
+                variants={reduceMotion ? undefined : panelSlideVariants}
                 initial={reduceMotion ? undefined : "closed"}
                 animate={reduceMotion ? undefined : loginPanelReady ? "open" : "closed"}
                 exit={reduceMotion ? undefined : "exit"}
@@ -246,8 +255,8 @@ export function Header() {
         {cartOpen && (
           <motion.div
             key="header-cart-expand"
-            className="grid overflow-hidden"
-            variants={reduceMotion ? undefined : headerPanelShellVariants}
+            className={chromeTouch ? "overflow-hidden" : "grid overflow-hidden"}
+            variants={reduceMotion ? undefined : panelShellVariants}
             initial={reduceMotion ? undefined : "closed"}
             animate={reduceMotion ? undefined : "open"}
             exit={reduceMotion ? undefined : "exit"}
@@ -255,7 +264,7 @@ export function Header() {
             <div className="min-h-0 overflow-hidden">
               <motion.div
                 className="origin-top"
-                variants={reduceMotion ? undefined : headerPanelSlideVariants}
+                variants={reduceMotion ? undefined : panelSlideVariants}
                 initial={reduceMotion ? undefined : "closed"}
                 animate={reduceMotion ? undefined : cartPanelReady ? "open" : "closed"}
                 exit={reduceMotion ? undefined : "exit"}
@@ -272,7 +281,7 @@ export function Header() {
           <motion.div
             key="header-nav-expand"
             className="overflow-hidden lg:hidden"
-            variants={reduceMotion ? undefined : expandVariants}
+            variants={reduceMotion ? undefined : navExpandVariants}
             initial={reduceMotion ? undefined : "closed"}
             animate={reduceMotion ? undefined : "open"}
             exit={reduceMotion ? undefined : "exit"}
@@ -283,7 +292,7 @@ export function Header() {
                   key={item.href}
                   href={item.href}
                   className="text-cream/90 hover:text-gold"
-                  variants={reduceMotion ? undefined : mobileNavItemVariants}
+                  variants={reduceMotion || chromeTouch ? undefined : mobileNavItemVariants}
                   onClick={closeNav}
                 >
                   {item.label}
@@ -292,7 +301,7 @@ export function Header() {
               <motion.button
                 type="button"
                 className="text-left text-cream/90 hover:text-gold"
-                variants={reduceMotion ? undefined : mobileNavItemVariants}
+                variants={reduceMotion || chromeTouch ? undefined : mobileNavItemVariants}
                 onClick={() => {
                   closeNav();
                   setLoginOpen(true);
@@ -303,7 +312,7 @@ export function Header() {
               <motion.button
                 type="button"
                 className="text-left text-cream/90 hover:text-gold"
-                variants={reduceMotion ? undefined : mobileNavItemVariants}
+                variants={reduceMotion || chromeTouch ? undefined : mobileNavItemVariants}
                 onClick={() => {
                   closeNav();
                   setCartOpen(true);
