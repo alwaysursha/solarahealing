@@ -8,11 +8,14 @@ import {
 import Image from "next/image";
 import { useCallback, useEffect, useRef, useState } from "react";
 import { GlowButton } from "@/components/ui/GlowButton";
+import { useHorizontalSwipe } from "@/hooks/useHorizontalSwipe";
 import {
   HERO_CAPTION_DELAY_S,
   HERO_CONTROLS_DELAY_S,
   HERO_ENTRANCE_DURATION_S,
+  HERO_FIRST_SLIDE_DWELL_MS,
   HERO_IMAGE_DELAY_S,
+  HOME_HERO_ENTRANCE_MS,
   HERO_REVEAL_EASE,
   HERO_SLIDE_BG_DURATION_S,
   HERO_SLIDE_CHANGE_DURATION_S,
@@ -156,12 +159,26 @@ export function Hero() {
   const reduceMotion = useReducedMotion();
   const [active, setActive] = useState(0);
   const [paused, setPaused] = useState(false);
-  const [entranceComplete, setEntranceComplete] = useState(reduceMotion === true);
+  const [autoplayReady, setAutoplayReady] = useState(reduceMotion === true);
+  const [hasSlideChanged, setHasSlideChanged] = useState(false);
   const [slideDirection, setSlideDirection] = useState(1);
   const activeRef = useRef(active);
+  const entranceFinishedRef = useRef(reduceMotion === true);
+  const autoplayDwellTimerRef = useRef<number | undefined>(undefined);
   const slideCount = heroSlides.length;
+  const nextSlideIndex = (active + 1) % slideCount;
 
   activeRef.current = active;
+
+  const scheduleAutoplayReady = useCallback(() => {
+    if (entranceFinishedRef.current || reduceMotion) return;
+    entranceFinishedRef.current = true;
+    clearTimeout(autoplayDwellTimerRef.current);
+    autoplayDwellTimerRef.current = window.setTimeout(
+      () => setAutoplayReady(true),
+      HERO_FIRST_SLIDE_DWELL_MS,
+    );
+  }, [reduceMotion]);
 
   const togglePause = useCallback(() => {
     setPaused((current) => !current);
@@ -170,7 +187,10 @@ export function Hero() {
   const goTo = useCallback(
     (index: number) => {
       const normalized = (index + slideCount) % slideCount;
+      if (normalized === activeRef.current) return;
+
       setSlideDirection(getSlideDirection(activeRef.current, normalized, slideCount));
+      setHasSlideChanged(true);
       setActive(normalized);
     },
     [slideCount],
@@ -179,25 +199,32 @@ export function Hero() {
   const next = useCallback(() => goTo(active + 1), [active, goTo]);
   const prev = useCallback(() => goTo(active - 1), [active, goTo]);
 
-  useEffect(() => {
-    if (reduceMotion) {
-      setEntranceComplete(true);
-      return;
-    }
+  const swipe = useHorizontalSwipe({
+    enabled: slideCount > 1,
+    onSwipeLeft: next,
+    onSwipeRight: prev,
+  });
 
-    const timer = window.setTimeout(
-      () => setEntranceComplete(true),
-      (HERO_IMAGE_DELAY_S + HERO_ENTRANCE_DURATION_S) * 1000,
+  useEffect(() => {
+    return () => clearTimeout(autoplayDwellTimerRef.current);
+  }, []);
+
+  useEffect(() => {
+    if (reduceMotion) return;
+
+    const fallback = window.setTimeout(
+      scheduleAutoplayReady,
+      HOME_HERO_ENTRANCE_MS + HERO_FIRST_SLIDE_DWELL_MS,
     );
-    return () => window.clearTimeout(timer);
-  }, [reduceMotion]);
+    return () => window.clearTimeout(fallback);
+  }, [reduceMotion, scheduleAutoplayReady]);
 
   useEffect(() => {
-    if (reduceMotion || paused || !entranceComplete) return;
+    if (reduceMotion || paused || !autoplayReady) return;
 
     const timer = window.setInterval(next, AUTO_PLAY_MS);
     return () => window.clearInterval(timer);
-  }, [next, paused, reduceMotion, entranceComplete]);
+  }, [next, paused, reduceMotion, autoplayReady]);
 
   const slide = heroSlides[active];
 
@@ -207,47 +234,64 @@ export function Hero() {
       aria-roledescription="carousel"
       aria-label="Hero highlights"
     >
-      <div className="relative h-[min(72vh,640px)] w-full md:h-[min(78vh,720px)]">
+      <div
+        className={`relative h-[min(72vh,640px)] w-full md:h-[min(78vh,720px)] ${swipe.className}`}
+        onPointerDown={swipe.onPointerDown}
+        onPointerUp={swipe.onPointerUp}
+        onPointerCancel={swipe.onPointerCancel}
+      >
         <div className="absolute inset-0 bg-hero-light" aria-hidden />
 
-        {heroSlides.map((item, index) => (
+        {heroSlides.map((item, index) => {
+          const isActive = index === active;
+          const isEntrance = !entranceFinishedRef.current && index === 0 && active === 0;
+
+          return (
           <motion.div
             key={item.id}
             className="absolute inset-0"
-            initial={entranceComplete ? false : { opacity: 0 }}
-            animate={{ opacity: index === active ? 1 : 0 }}
+            initial={{ opacity: 0 }}
+            animate={{ opacity: isActive ? 1 : 0 }}
             transition={
-              entranceComplete
-                ? {
-                    duration: reduceMotion ? 0 : HERO_SLIDE_BG_DURATION_S,
-                    ease: HERO_SLIDE_CHANGE_EASE,
-                  }
-                : {
-                    duration: reduceMotion ? 0 : HERO_ENTRANCE_DURATION_S,
-                    delay: reduceMotion || index !== active ? 0 : HERO_IMAGE_DELAY_S,
-                    ease: HERO_REVEAL_EASE,
-                  }
+              reduceMotion
+                ? { duration: 0 }
+                : isEntrance
+                  ? {
+                      duration: HERO_ENTRANCE_DURATION_S,
+                      delay: HERO_IMAGE_DELAY_S,
+                      ease: HERO_REVEAL_EASE,
+                    }
+                  : {
+                      duration: HERO_SLIDE_BG_DURATION_S,
+                      ease: HERO_SLIDE_CHANGE_EASE,
+                    }
             }
-            style={{ zIndex: index === active ? 1 : 0 }}
-            aria-hidden={index !== active}
+            onAnimationComplete={() => {
+              if (isEntrance && isActive) {
+                scheduleAutoplayReady();
+              }
+            }}
+            style={{ zIndex: isActive ? 1 : 0 }}
+            aria-hidden={!isActive}
           >
             {item.variant === "illustrated" ? (
               <IllustratedSlideBackground
                 image={"image" in item ? item.image : undefined}
                 imageAlt={"imageAlt" in item ? item.imageAlt : undefined}
                 imagePosition={"imagePosition" in item ? item.imagePosition : undefined}
-                priority={index === 0}
+                priority={index === active || index === nextSlideIndex}
               />
             ) : (
               <PhotoSlideBackground
                 image={item.image}
                 imageAlt={item.imageAlt}
                 imagePosition={"imagePosition" in item ? item.imagePosition : undefined}
-                priority={index === 0}
+                priority={index === active || index === nextSlideIndex}
               />
             )}
           </motion.div>
-        ))}
+          );
+        })}
 
         <div className="absolute inset-x-0 bottom-0 z-[1] h-20 bg-gradient-to-t from-canvas to-transparent" />
 
@@ -260,22 +304,16 @@ export function Hero() {
                 className="w-full max-w-3xl"
                 custom={{
                   direction: slideDirection,
-                  isSlideChange: entranceComplete,
+                  isSlideChange: hasSlideChanged,
                 }}
                 variants={heroSlideTextVariants}
                 initial={reduceMotion ? false : "enter"}
                 animate={reduceMotion ? undefined : "center"}
                 exit={reduceMotion ? undefined : "exit"}
                 transition={{
-                  duration: entranceComplete
-                    ? HERO_SLIDE_CHANGE_DURATION_S
-                    : 0.55,
-                  delay: reduceMotion
-                    ? 0
-                    : entranceComplete
-                      ? 0.06
-                      : HERO_TEXT_DELAY_S,
-                  ease: entranceComplete ? HERO_SLIDE_CHANGE_EASE : HERO_REVEAL_EASE,
+                  duration: hasSlideChanged ? HERO_SLIDE_CHANGE_DURATION_S : 0.55,
+                  delay: reduceMotion ? 0 : hasSlideChanged ? 0.06 : HERO_TEXT_DELAY_S,
+                  ease: hasSlideChanged ? HERO_SLIDE_CHANGE_EASE : HERO_REVEAL_EASE,
                 }}
               >
                 <p className="mb-5 text-xs font-semibold uppercase tracking-[0.22em] text-gold">
@@ -317,11 +355,7 @@ export function Hero() {
                     exit={reduceMotion ? undefined : { opacity: 0, y: -8 }}
                     transition={{
                       duration: 0.55,
-                      delay: reduceMotion
-                        ? 0
-                        : entranceComplete
-                          ? 0.08
-                          : HERO_CAPTION_DELAY_S,
+                      delay: reduceMotion ? 0 : hasSlideChanged ? 0.08 : HERO_CAPTION_DELAY_S,
                       ease: HERO_REVEAL_EASE,
                     }}
                   >

@@ -6,10 +6,10 @@ export const site = {
   description:
     "Experience the transformative power of Reiki — a sacred Japanese-Indian healing practice that channels universal life energy to restore balance, peace, and vitality.",
   nav: [
-    { label: "About", href: "#about" },
-    { label: "Sessions", href: "#sessions" },
-    { label: "Blog", href: "/blog" },
-    { label: "Contact", href: "#contact" },
+    { label: "REIKI", href: "#courses", icon: "reiki" },
+    { label: "HEALING", href: "#schedule", icon: "healing" },
+    { label: "NUTRITION", href: "#insights", icon: "nutrition" },
+    { label: "TRANSFORMATION", href: "#testimonials", icon: "transformation" },
   ],
   cta: "Book a Session",
   contact: {

@@ -644,6 +644,33 @@ body {
   white-space: nowrap;
 }
 
+.nav-link-icon {
+  color: rgba(201, 162, 39, 0.72);
+  transition: color 0.35s ease, transform 0.35s ease;
+  shape-rendering: geometricPrecision;
+}
+
+.nav-link-desktop:hover .nav-link-icon,
+.nav-link-desktop:focus-visible .nav-link-icon,
+.nav-link-desktop-active .nav-link-icon,
+.mobile-nav-link:hover .mobile-nav-link-icon,
+.mobile-nav-link:focus-visible .mobile-nav-link-icon,
+.mobile-nav-link-active .mobile-nav-link-icon {
+  color: var(--gold-light);
+}
+
+.mobile-nav-link-icon-wrap {
+  display: inline-flex;
+  height: 2.25rem;
+  width: 2.25rem;
+  flex-shrink: 0;
+  align-items: center;
+  justify-content: center;
+  border-radius: 9999px;
+  border: 1px solid rgba(201, 162, 39, 0.18);
+  background: rgba(255, 255, 255, 0.05);
+}
+
 .nav-link-desktop:hover .nav-link-desktop-label,
 .nav-link-desktop:focus-visible .nav-link-desktop-label,
 .mobile-nav-link:hover .nav-link-desktop-label,

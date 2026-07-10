@@ -4,6 +4,7 @@ import { motion, useReducedMotion } from "framer-motion";
 import Link from "next/link";
 import { useRef, type ReactNode } from "react";
 import { MobileNavLink } from "@/components/sections/nav/NavLink";
+import type { NavIconId } from "@/components/sections/nav/NavIcon";
 import { useCompositorProfile } from "@/lib/compositor-profile";
 import {
   mobileNavFooterVariants,
@@ -17,6 +18,7 @@ import { site } from "@/lib/site";
 type NavItem = {
   label: string;
   href: string;
+  icon: NavIconId;
 };
 
 type MobileNavMenuProps = {
