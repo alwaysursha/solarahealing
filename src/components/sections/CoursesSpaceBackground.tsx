@@ -61,14 +61,20 @@ const PLANETS = [
 type CoursesSpaceBackgroundProps = {
   animationsActive: boolean;
   cosmosEnabled: boolean;
+  staticNight?: boolean;
 };
 
-export function CoursesSpaceBackground({ animationsActive, cosmosEnabled }: CoursesSpaceBackgroundProps) {
+export function CoursesSpaceBackground({
+  animationsActive,
+  cosmosEnabled,
+  staticNight = false,
+}: CoursesSpaceBackgroundProps) {
   const reduceMotion = useReducedMotion();
   const chromeTouch = useCompositorProfile() === "chrome-touch";
   const motionEnabled = animationsActive && cosmosEnabled && !reduceMotion;
   const shootingStarsEnabled = motionEnabled && !chromeTouch;
   const layersMounted = cosmosEnabled && !reduceMotion;
+  const chromeStaticNight = staticNight && layersMounted;
 
   return (
     <>
@@ -77,81 +83,89 @@ export function CoursesSpaceBackground({ animationsActive, cosmosEnabled }: Cour
 
       <div className="courses-cosmos-celestial absolute inset-0 overflow-hidden">
         <div
-          className={`courses-space courses-space-deep absolute inset-0 overflow-hidden${layersMounted ? " courses-space-parallax-deep" : ""}`}
+          className={`courses-space courses-space-deep absolute inset-0 overflow-hidden${layersMounted && !chromeStaticNight ? " courses-space-parallax-deep" : ""}`}
         >
           <div className="courses-space-nebula absolute inset-0" />
           <div className="courses-space-void absolute inset-0" />
 
-          {DEEP_STARS.map((star, index) => (
-            <span
-              key={`deep-star-${index}`}
-              className={`courses-space-star courses-space-star-deep absolute rounded-full bg-white ${layersMounted ? "courses-space-star-twinkle" : ""}`}
-              style={{
-                left: star.x,
-                top: star.y,
-                width: star.size,
-                height: star.size,
-                opacity: star.opacity,
-                animationDelay: `${star.delay}s`,
-              }}
-            />
-          ))}
+          {!chromeStaticNight &&
+            DEEP_STARS.map((star, index) => (
+              <span
+                key={`deep-star-${index}`}
+                className={`courses-space-star courses-space-star-deep absolute rounded-full bg-white ${layersMounted ? "courses-space-star-twinkle" : ""}`}
+                style={{
+                  left: star.x,
+                  top: star.y,
+                  width: star.size,
+                  height: star.size,
+                  opacity: star.opacity,
+                  animationDelay: `${star.delay}s`,
+                }}
+              />
+            ))}
         </div>
 
-        <div
-          className={`courses-space courses-space-mid absolute inset-0 overflow-hidden${layersMounted ? " courses-space-parallax-mid" : ""}`}
-        >
-          {STARS.map((star, index) => (
-            <span
-              key={`star-${index}`}
-              className={`courses-space-star absolute rounded-full bg-white ${layersMounted ? "courses-space-star-twinkle" : ""}`}
-              style={{
-                left: star.x,
-                top: star.y,
-                width: star.size,
-                height: star.size,
-                opacity: star.opacity,
-                animationDelay: `${star.delay}s`,
-              }}
-            />
-          ))}
+        {!chromeStaticNight && (
+          <div
+            className={`courses-space courses-space-mid absolute inset-0 overflow-hidden${layersMounted ? " courses-space-parallax-mid" : ""}`}
+          >
+            {STARS.map((star, index) => (
+              <span
+                key={`star-${index}`}
+                className={`courses-space-star absolute rounded-full bg-white ${layersMounted ? "courses-space-star-twinkle" : ""}`}
+                style={{
+                  left: star.x,
+                  top: star.y,
+                  width: star.size,
+                  height: star.size,
+                  opacity: star.opacity,
+                  animationDelay: `${star.delay}s`,
+                }}
+              />
+            ))}
 
-          <div className={`courses-space-dust absolute inset-0${layersMounted ? " courses-space-dust-drift" : ""}`} />
-        </div>
+            <div className={`courses-space-dust absolute inset-0${layersMounted ? " courses-space-dust-drift" : ""}`} />
+          </div>
+        )}
 
-        <div className="courses-space-planets-arc absolute inset-0">
-          {PLANETS.map((planet) => (
-            <div
-              key={planet.id}
-              className={`courses-space-planet courses-space-planet-${planet.id} absolute ${layersMounted ? planet.drift : ""}`}
-            />
-          ))}
-        </div>
+        {!chromeStaticNight && (
+          <div className="courses-space-planets-arc absolute inset-0">
+            {PLANETS.map((planet) => (
+              <div
+                key={planet.id}
+                className={`courses-space-planet courses-space-planet-${planet.id} absolute ${layersMounted ? planet.drift : ""}`}
+              />
+            ))}
+          </div>
+        )}
       </div>
 
       {layersMounted && (
         <div className="courses-cosmos-night-stars absolute inset-0 overflow-hidden">
-          {NIGHT_STARFIELD.map((star, index) => (
-            <span
-              key={`night-star-${index}`}
-              className={`courses-night-star absolute rounded-full bg-white ${index % 14 === 0 ? "courses-night-star-twinkle" : ""}`}
-              style={{
-                left: `${star.x}%`,
-                top: `${star.y}%`,
-                width: star.size,
-                height: star.size,
-                opacity: star.opacity,
-                animationDelay: index % 14 === 0 ? `${(index % 56) * 0.12}s` : undefined,
-              }}
-            />
-          ))}
+          {NIGHT_STARFIELD.map((star, index) => {
+            const twinkles = chromeStaticNight ? index % 5 === 0 || index % 7 === 2 : index % 14 === 0;
+            return (
+              <span
+                key={`night-star-${index}`}
+                className={`courses-night-star absolute rounded-full bg-white ${twinkles ? "courses-night-star-twinkle" : ""}`}
+                style={{
+                  left: `${star.x}%`,
+                  top: `${star.y}%`,
+                  width: star.size,
+                  height: star.size,
+                  opacity: star.opacity,
+                  animationDelay: twinkles ? `${((index * 0.17) % 4.2) + (index % 11) * 0.19}s` : undefined,
+                }}
+              />
+            );
+          })}
         </div>
       )}
 
       {layersMounted && <div className="courses-cosmos-night-glow absolute inset-0" />}
 
       <div
-        className={`courses-cosmos-depth-fog absolute inset-0${layersMounted ? " courses-cosmos-depth-fog-cycle" : ""}`}
+        className={`courses-cosmos-depth-fog absolute inset-0${layersMounted && !chromeStaticNight ? " courses-cosmos-depth-fog-cycle" : ""}`}
       />
     </div>
 

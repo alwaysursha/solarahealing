@@ -467,6 +467,11 @@ export function CoursesSection() {
   const cosmosEnabled = !reduceMotion;
   const gridCourses = upcoming.slice(0, 3);
   const staticCards = Boolean(reduceMotion || chromeTouch);
+  const cosmosModeClass = cosmosEnabled
+    ? chromeTouch
+      ? " courses-cosmos-static-night"
+      : " courses-cosmos-daynight"
+    : "";
 
   return (
     <section
@@ -475,13 +480,21 @@ export function CoursesSection() {
       className={`site-scroll-section relative overflow-hidden${animationsActive ? "" : " animations-paused"}`}
     >
       <div
-        className={`workshop-stage courses-cosmos-stage relative w-full overflow-hidden rounded-none${cosmosEnabled ? " courses-cosmos-daynight" : ""}`}
+        className={`workshop-stage courses-cosmos-stage relative w-full overflow-hidden rounded-none${cosmosModeClass}`}
       >
-        <div className="workshop-stage-mesh courses-cosmos-day-layer pointer-events-none absolute inset-0" aria-hidden />
-        <div className="workshop-stage-gloss courses-cosmos-day-layer pointer-events-none absolute inset-0" aria-hidden />
-        <div className="workshop-stage-shine workshop-gloss-sweep pointer-events-none absolute inset-0" aria-hidden />
-        <div className="workshop-stage-noise courses-cosmos-noise-layer pointer-events-none absolute inset-0" aria-hidden />
-        <CoursesSpaceBackground animationsActive={animationsActive} cosmosEnabled={cosmosEnabled} />
+        {!chromeTouch && (
+          <>
+            <div className="workshop-stage-mesh courses-cosmos-day-layer pointer-events-none absolute inset-0" aria-hidden />
+            <div className="workshop-stage-gloss courses-cosmos-day-layer pointer-events-none absolute inset-0" aria-hidden />
+            <div className="workshop-stage-shine workshop-gloss-sweep pointer-events-none absolute inset-0" aria-hidden />
+            <div className="workshop-stage-noise courses-cosmos-noise-layer pointer-events-none absolute inset-0" aria-hidden />
+          </>
+        )}
+        <CoursesSpaceBackground
+          animationsActive={animationsActive}
+          cosmosEnabled={cosmosEnabled}
+          staticNight={chromeTouch}
+        />
 
         <div
           className="courses-cosmos-content grid gap-12 px-5 py-6 sm:px-8 md:p-10 lg:grid-cols-12 lg:gap-10 lg:px-12 xl:px-14 xl:py-14"
