@@ -1077,7 +1077,9 @@ body {
 [data-compositor="chrome-touch"] .site-scroll-panel.site-scrolling .bg-spiritual-shimmer-secondary,
 [data-compositor="chrome-touch"] .site-scroll-panel.site-scrolling .workshop-gloss-sweep,
 [data-compositor="chrome-touch"] .site-scroll-panel.site-scrolling .schedule-aura-ring,
-[data-compositor="chrome-touch"] .site-scroll-panel.site-scrolling #workshops .workshop-gloss-sweep {
+[data-compositor="chrome-touch"] .site-scroll-panel.site-scrolling #workshops .workshop-gloss-sweep,
+[data-compositor="chrome-touch"] .site-scroll-panel.site-scrolling #courses .courses-cosmos-daynight,
+[data-compositor="chrome-touch"] .site-scroll-panel.site-scrolling #courses .courses-cosmos-daynight * {
   animation-play-state: paused !important;
 }
 
@@ -1104,12 +1106,6 @@ body {
 /* Courses section — cosmic space background */
 #courses {
   position: relative;
-}
-
-/* Pause every CSS animation inside Courses while scrolling — cosmos, stars, day/night, etc. */
-#courses.courses-scroll-paused,
-#courses.courses-scroll-paused * {
-  animation-play-state: paused !important;
 }
 
 .courses-cosmos-stage {
