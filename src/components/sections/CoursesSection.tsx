@@ -1,6 +1,6 @@
 "use client";
 
-import { motion, useReducedMotion, type TargetAndTransition } from "framer-motion";
+import { motion, useReducedMotion } from "framer-motion";
 import Image from "next/image";
 import Link from "next/link";
 import { useRef } from "react";
@@ -14,20 +14,6 @@ import { coursesIntro, formatCad, onlineCourses } from "@/lib/site";
 const ease: [number, number, number, number] = [0.22, 1, 0.36, 1];
 const revealEase: [number, number, number, number] = [0.65, 0, 0.35, 1];
 const springEase: [number, number, number, number] = [0.34, 1.56, 0.64, 1];
-const upcomingHover = {
-  y: -14,
-  scale: 1.045,
-  zIndex: 2,
-  x: [0, -6, 6, -5, 5, -3, 3, -1, 1, 0],
-  rotate: [0, -1.4, 1.4, -1, 1, -0.5, 0.5, 0],
-  transition: {
-    y: { duration: 0.32, ease },
-    scale: { duration: 0.32, ease },
-    zIndex: { delay: 0 },
-    x: { duration: 0.62, ease: "easeInOut" },
-    rotate: { duration: 0.62, ease: "easeInOut" },
-  },
-};
 
 const coursesStagger = {
   hidden: {},
@@ -189,7 +175,7 @@ function PriceTag({
   large?: boolean;
 }) {
   return (
-    <div className={large ? "workshop-price-large workshop-crystal-price" : "workshop-price-tag workshop-crystal-price"}>
+    <div className={large ? "workshop-price-large" : "workshop-price-tag"}>
       <span className={large ? "font-serif text-4xl text-gold md:text-5xl" : "font-serif text-2xl text-gold"}>
         {formatCad(priceCad)}
       </span>
@@ -199,16 +185,6 @@ function PriceTag({
         </span>
       )}
     </div>
-  );
-}
-
-function CrystalOverlay() {
-  return (
-    <>
-      <div className="workshop-crystal-ring pointer-events-none absolute inset-0 z-[2] rounded-[inherit]" aria-hidden />
-      <div className="workshop-crystal-sweep pointer-events-none absolute inset-0 z-[2] rounded-[inherit]" aria-hidden />
-      <div className="workshop-crystal-prism pointer-events-none absolute inset-0 z-[2] rounded-[inherit]" aria-hidden />
-    </>
   );
 }
 
@@ -230,11 +206,10 @@ function AddToCartButton({
   return (
     <motion.a
       href={`/checkout?course=${courseId}`}
-      className={`workshop-register-btn workshop-crystal-btn relative inline-flex shrink-0 items-center justify-center gap-2 overflow-hidden whitespace-nowrap rounded-full px-4 py-2 text-[0.62rem] font-semibold uppercase tracking-[0.1em] transition-colors md:px-5 md:text-[0.65rem] ${styles} ${className}`}
+      className={`workshop-register-btn relative inline-flex shrink-0 items-center justify-center gap-2 overflow-hidden whitespace-nowrap rounded-full px-4 py-2 text-[0.62rem] font-semibold uppercase tracking-[0.1em] transition-colors md:px-5 md:text-[0.65rem] ${styles} ${className}`}
       whileHover={reduceMotion ? undefined : { scale: 1.04 }}
       whileTap={reduceMotion ? undefined : { scale: 0.97 }}
     >
-      <span className="workshop-crystal-btn-gleam pointer-events-none absolute inset-0" aria-hidden />
       <span className="workshop-register-shimmer pointer-events-none absolute inset-0" aria-hidden />
       <CartIcon className="relative h-3.5 w-3.5" />
       <span className="relative">Add to Cart</span>
@@ -249,11 +224,10 @@ function FeaturedCourse({ reduceMotion }: { reduceMotion: boolean | null }) {
 
   return (
     <motion.article
-      className="workshop-featured workshop-crystal group relative overflow-hidden rounded-[1.75rem] border border-white/15"
+      className="workshop-featured group relative overflow-hidden rounded-[1.75rem] border border-white/15"
       variants={featuredReveal}
       style={{ transformPerspective: 1200 }}
     >
-      <CrystalOverlay />
       <div className="grid lg:grid-cols-12">
         <motion.div
           className="relative min-h-[260px] lg:col-span-7 lg:min-h-[340px]"
@@ -326,8 +300,7 @@ function FeaturedCourse({ reduceMotion }: { reduceMotion: boolean | null }) {
 
 function FeaturedCourseStatic() {
   return (
-    <article className="workshop-featured workshop-crystal group relative overflow-hidden rounded-[1.75rem] border border-white/15">
-      <CrystalOverlay />
+    <article className="workshop-featured group relative overflow-hidden rounded-[1.75rem] border border-white/15">
       <div className="grid lg:grid-cols-12">
         <div className="relative min-h-[260px] lg:col-span-7 lg:min-h-[340px]">
           <Image
@@ -379,8 +352,7 @@ function UpcomingCourseCard({
 
   if (reduceMotion) {
     return (
-      <article className="workshop-upcoming workshop-crystal group relative min-h-[420px] overflow-hidden rounded-[1.5rem] border border-white/15">
-        <CrystalOverlay />
+      <article className="workshop-upcoming group relative min-h-[420px] overflow-hidden rounded-[1.5rem] border border-white/15">
         <UpcomingCourseCardContent course={course} />
       </article>
     );
@@ -388,12 +360,10 @@ function UpcomingCourseCard({
 
   return (
     <motion.article
-      className="workshop-upcoming workshop-crystal group relative z-0 min-h-[420px] overflow-hidden rounded-[1.5rem] border border-white/15"
+      className="workshop-upcoming group relative z-0 min-h-[420px] overflow-hidden rounded-[1.5rem] border border-white/15"
       variants={variants}
       style={{ transformPerspective: 1000 }}
-      whileHover={upcomingHover as TargetAndTransition}
     >
-      <CrystalOverlay />
       <motion.div
         className="absolute inset-0"
         initial={{ scale: 1.12 }}
