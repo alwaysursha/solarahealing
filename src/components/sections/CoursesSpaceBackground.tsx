@@ -3,6 +3,7 @@
 import { useReducedMotion } from "framer-motion";
 import { NIGHT_STARFIELD } from "@/lib/courses-night-stars";
 import { CoursesShootingStars } from "@/components/sections/CoursesShootingStars";
+import { useCompositorProfile } from "@/lib/compositor-profile";
 
 const STARS = [
   { x: "5%", y: "10%", size: 2, delay: 0, opacity: 0.55 },
@@ -64,7 +65,9 @@ type CoursesSpaceBackgroundProps = {
 
 export function CoursesSpaceBackground({ animationsActive, cosmosEnabled }: CoursesSpaceBackgroundProps) {
   const reduceMotion = useReducedMotion();
+  const chromeTouch = useCompositorProfile() === "chrome-touch";
   const motionEnabled = animationsActive && cosmosEnabled && !reduceMotion;
+  const shootingStarsEnabled = motionEnabled && !chromeTouch;
   const layersMounted = cosmosEnabled && !reduceMotion;
 
   return (
@@ -152,7 +155,7 @@ export function CoursesSpaceBackground({ animationsActive, cosmosEnabled }: Cour
       />
     </div>
 
-    {motionEnabled && (
+    {shootingStarsEnabled && (
       <div className="courses-cosmos-shooting-layer pointer-events-none absolute inset-0 z-[1] overflow-hidden" aria-hidden>
         <CoursesShootingStars />
       </div>
