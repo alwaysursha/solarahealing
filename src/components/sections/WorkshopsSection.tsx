@@ -434,7 +434,7 @@ export function WorkshopsSection() {
     <section
       id="workshops"
       ref={sectionRef}
-      className={`relative${animationsActive ? "" : " animations-paused"}`}
+      className={`site-scroll-section relative overflow-hidden${animationsActive ? "" : " animations-paused"}`}
     >
       <div className="workshop-stage relative w-full overflow-hidden rounded-none">
         <div className="workshop-stage-mesh pointer-events-none absolute inset-0" aria-hidden />

@@ -3,6 +3,7 @@
 import { useCallback, useEffect, useRef, useState, type ReactNode } from "react";
 import { buildPanelPath, buildBorderTracePath } from "@/lib/panel-path";
 import { detectCompositorProfile, useCompositorProfile } from "@/lib/compositor-profile";
+import { useSiteScrollPause } from "@/hooks/useSiteScrollPause";
 import { PanelBorderStar } from "./PanelBorderStar";
 import { SpiritualBackground } from "./SpiritualBackground";
 
@@ -33,6 +34,7 @@ export function SiteShell({ header, children }: SiteShellProps) {
   const frozenPanelHeightRef = useRef<number | null>(null);
   const compositorProfile = useCompositorProfile();
   const chromeTouch = compositorProfile === "chrome-touch";
+  useSiteScrollPause(chromeTouch);
 
   const updateClip = useCallback(() => {
     const panel = panelRef.current;
@@ -124,7 +126,7 @@ export function SiteShell({ header, children }: SiteShellProps) {
             height={geometry.height}
             outlinePath={geometry.outlinePath}
             tracePath={geometry.tracePath}
-            simplified={chromeTouch}
+            liteFilters={chromeTouch}
           />
         ) : null}
       </div>

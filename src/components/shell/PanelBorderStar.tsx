@@ -8,7 +8,8 @@ type PanelBorderStarProps = {
   height: number;
   outlinePath: string;
   tracePath: string;
-  simplified?: boolean;
+  /** Skip heavy SVG filters on Chrome mobile — shimmer stays enabled. */
+  liteFilters?: boolean;
 };
 
 const STROKE = {
@@ -22,7 +23,7 @@ export function PanelBorderStar({
   height,
   outlinePath,
   tracePath,
-  simplified = false,
+  liteFilters = false,
 }: PanelBorderStarProps) {
   const reduceMotion = useReducedMotion();
   const uid = useId().replace(/:/g, "");
@@ -101,11 +102,11 @@ export function PanelBorderStar({
         fill="none"
         stroke={`url(#${ridgeId})`}
         strokeWidth="1.55"
-        filter={simplified ? undefined : `url(#${depthFilterId})`}
+        filter={liteFilters ? undefined : `url(#${depthFilterId})`}
         {...STROKE}
       />
 
-      {!reduceMotion && !simplified && tracePath && (
+      {!reduceMotion && tracePath && (
         <path
           d={tracePath}
           fill="none"

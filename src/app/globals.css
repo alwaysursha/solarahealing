@@ -1064,6 +1064,35 @@ body {
   transform: translate3d(0, 0, 0);
   -webkit-backface-visibility: hidden;
   backface-visibility: hidden;
+  -webkit-overflow-scrolling: touch;
+  overscroll-behavior: contain;
+}
+
+[data-compositor="chrome-touch"] .panel-border-shimmer {
+  will-change: auto;
+}
+
+[data-compositor="chrome-touch"] .site-scroll-panel.site-scrolling .panel-border-shimmer,
+[data-compositor="chrome-touch"] .site-scroll-panel.site-scrolling .bg-spiritual-shimmer,
+[data-compositor="chrome-touch"] .site-scroll-panel.site-scrolling .bg-spiritual-shimmer-secondary,
+[data-compositor="chrome-touch"] .site-scroll-panel.site-scrolling .workshop-gloss-sweep,
+[data-compositor="chrome-touch"] .site-scroll-panel.site-scrolling .schedule-aura-ring,
+[data-compositor="chrome-touch"] .site-scroll-panel.site-scrolling #courses .courses-cosmos-backdrop,
+[data-compositor="chrome-touch"] .site-scroll-panel.site-scrolling #courses .courses-cosmos-day-layer,
+[data-compositor="chrome-touch"] .site-scroll-panel.site-scrolling #courses .courses-cosmos-noise-layer,
+[data-compositor="chrome-touch"] .site-scroll-panel.site-scrolling #courses .courses-cosmos-stage,
+[data-compositor="chrome-touch"] .site-scroll-panel.site-scrolling #courses .courses-cosmos-night-veil,
+[data-compositor="chrome-touch"] .site-scroll-panel.site-scrolling #courses .courses-cosmos-night-glow,
+[data-compositor="chrome-touch"] .site-scroll-panel.site-scrolling #courses .courses-cosmos-night-stars,
+[data-compositor="chrome-touch"] .site-scroll-panel.site-scrolling #courses .courses-cosmos-celestial,
+[data-compositor="chrome-touch"] .site-scroll-panel.site-scrolling #courses .courses-cosmos-depth-fog,
+[data-compositor="chrome-touch"] .site-scroll-panel.site-scrolling #courses .courses-space-planet,
+[data-compositor="chrome-touch"] .site-scroll-panel.site-scrolling #courses .courses-space-star,
+[data-compositor="chrome-touch"] .site-scroll-panel.site-scrolling #courses .courses-night-star,
+[data-compositor="chrome-touch"] .site-scroll-panel.site-scrolling #courses .courses-cosmos-shooting-layer,
+[data-compositor="chrome-touch"] .site-scroll-panel.site-scrolling #courses .courses-space-shooting-star,
+[data-compositor="chrome-touch"] .site-scroll-panel.site-scrolling #workshops .workshop-gloss-sweep {
+  animation-play-state: paused !important;
 }
 
 [data-compositor="chrome-touch"] .site-panel-frame {
