@@ -1097,7 +1097,7 @@ body {
 [data-compositor="chrome-touch"] #courses .courses-cosmos-stage,
 [data-compositor="chrome-touch"] #courses .courses-cosmos-backdrop,
 [data-compositor="chrome-touch"] #courses .courses-cosmos-celestial {
-  contain: strict;
+  contain: paint;
   isolation: isolate;
   overflow: hidden;
   transform: translateZ(0);
