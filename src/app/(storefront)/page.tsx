@@ -25,9 +25,9 @@ export default async function HomePage() {
     <main className="site-scroll-main">
       <Hero />
       <AboutSection />
-      <WorkshopsSection />
-      <ArticlesSection />
       <CoursesSection />
+      <ArticlesSection />
+      <WorkshopsSection />
       <TestimonialsShowcaseSection />
       <ScheduleSection />
     </main>

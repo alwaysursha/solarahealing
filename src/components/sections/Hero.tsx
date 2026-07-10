@@ -251,7 +251,7 @@ export function Hero() {
 
         <div className="absolute inset-x-0 bottom-0 z-[1] h-20 bg-gradient-to-t from-canvas to-transparent" />
 
-        <div className="relative z-[1] grid h-full w-full grid-rows-[1fr_auto] px-6 pb-16 md:px-12 md:pb-20 lg:px-16 lg:pb-24">
+        <div className="relative z-[1] grid h-full w-full grid-rows-[1fr_auto] px-6 pb-6 md:px-12 md:pb-20 lg:px-16 lg:pb-24">
           <div className="flex min-h-0 flex-col pt-28 sm:pt-32 md:pt-36 lg:pt-40 xl:pt-44">
             <div className="mt-auto w-full min-h-0">
             <AnimatePresence mode="wait" custom={slideDirection}>
