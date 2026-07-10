@@ -1135,13 +1135,13 @@ body {
 /* Day → night → day cycle (courses section only) — single driver avoids Chrome clip-path opacity conflicts */
 @property --courses-night-mix {
   syntax: "<number>";
-  inherits: false;
+  inherits: true;
   initial-value: 0;
 }
 
 @property --courses-stars-mix {
   syntax: "<number>";
-  inherits: false;
+  inherits: true;
   initial-value: 0;
 }
 
@@ -1193,7 +1193,7 @@ body {
       rgba(4, 2, 14, 0.97) 48%,
       rgba(1, 0, 6, 0.98) 100%
     );
-  opacity: calc(var(--courses-night-mix) * 0.96);
+  opacity: calc(var(--courses-night-mix) * 1);
 }
 
 .courses-cosmos-night-glow {
@@ -1201,15 +1201,15 @@ body {
     radial-gradient(ellipse 55% 28% at 62% 24%, rgba(67, 56, 202, 0.18) 0%, transparent 68%),
     radial-gradient(ellipse 40% 22% at 28% 68%, rgba(99, 102, 241, 0.12) 0%, transparent 65%),
     radial-gradient(ellipse 70% 18% at 50% 12%, rgba(255, 255, 255, 0.03) 0%, transparent 72%);
-  opacity: calc(var(--courses-night-mix) * 0.32);
+  opacity: calc(var(--courses-night-mix) * 0.38);
 }
 
 .courses-cosmos-day-layer {
-  opacity: calc(1 - var(--courses-night-mix) * 0.96);
+  opacity: calc(1 - var(--courses-night-mix));
 }
 
 .courses-cosmos-daynight .workshop-stage-shine {
-  opacity: calc(1 - var(--courses-night-mix) * 0.96);
+  opacity: calc(1 - var(--courses-night-mix));
 }
 
 .courses-cosmos-daynight .workshop-gloss-sweep {
@@ -1409,7 +1409,7 @@ body {
 }
 
 .courses-cosmos-depth-fog-cycle {
-  opacity: calc(1 - var(--courses-night-mix) * 0.88);
+  opacity: calc(1 - var(--courses-night-mix) * 0.9);
 }
 
 @keyframes courses-depth-fog-night {
@@ -1423,7 +1423,7 @@ body {
 }
 
 .courses-cosmos-daynight .courses-space-nebula {
-  opacity: calc(1 - var(--courses-night-mix) * 0.8);
+  opacity: calc(1 - var(--courses-night-mix) * 0.82);
 }
 
 @keyframes courses-nebula-night {
