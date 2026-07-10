@@ -1,12 +1,13 @@
 "use client";
 
-import { motion, useReducedMotion } from "framer-motion";
+import { motion, MotionConfig, useReducedMotion } from "framer-motion";
 import Image from "next/image";
 import Link from "next/link";
 import { useRef } from "react";
 import { CartIcon } from "@/components/ui/CartIcon";
 import { CoursesSpaceBackground } from "@/components/sections/CoursesSpaceBackground";
 import { useAnimationsActive } from "@/hooks/useAnimationsActive";
+import { useSectionScrollPause } from "@/hooks/useSectionScrollPause";
 import { coursesIntro, formatCad, onlineCourses } from "@/lib/site";
 
 const ease: [number, number, number, number] = [0.22, 1, 0.36, 1];
@@ -341,10 +342,12 @@ function UpcomingCourseCard({
   course,
   index,
   reduceMotion,
+  scrollPaused,
 }: {
   course: (typeof onlineCourses)[number];
   index: number;
   reduceMotion: boolean | null;
+  scrollPaused: boolean;
 }) {
   const variants = upcomingReveals[index] ?? upcomingReveals[1];
 
@@ -365,7 +368,7 @@ function UpcomingCourseCard({
       <motion.div
         className="absolute inset-0"
         initial={{ scale: 1.12 }}
-        whileInView={{ scale: 1 }}
+        whileInView={scrollPaused ? undefined : { scale: 1 }}
         viewport={{ once: true }}
         transition={{ duration: 1.2, ease }}
       >
@@ -431,12 +434,14 @@ function UpcomingCourseCardContent({ course }: { course: (typeof onlineCourses)[
 export function CoursesSection() {
   const reduceMotion = useReducedMotion();
   const sectionRef = useRef<HTMLElement>(null);
+  const scrollPaused = useSectionScrollPause(sectionRef, "courses-scroll-paused");
   const animationsActive = useAnimationsActive(sectionRef, "0px 0px -5% 0px", {
     once: true,
     amount: 0.25,
   });
   const cosmosEnabled = !reduceMotion;
   const gridCourses = upcoming.slice(0, 3);
+  const motionEnabled = !reduceMotion && !scrollPaused;
 
   return (
     <section
@@ -444,6 +449,7 @@ export function CoursesSection() {
       ref={sectionRef}
       className={`site-scroll-section relative overflow-hidden${animationsActive ? "" : " animations-paused"}`}
     >
+      <MotionConfig reducedMotion={scrollPaused ? "always" : "user"}>
       <div
         className={`workshop-stage courses-cosmos-stage relative w-full overflow-hidden rounded-none${cosmosEnabled ? " courses-cosmos-daynight" : ""}`}
       >
@@ -458,8 +464,8 @@ export function CoursesSection() {
         >
           <motion.div
             className="z-0 lg:col-span-4 lg:self-start xl:sticky xl:top-8"
-            initial={reduceMotion ? false : { opacity: 0, y: 28 }}
-            whileInView={reduceMotion ? undefined : { opacity: 1, y: 0 }}
+            initial={motionEnabled ? { opacity: 0, y: 28 } : false}
+            whileInView={motionEnabled ? { opacity: 1, y: 0 } : undefined}
             viewport={{ once: true, margin: "-60px" }}
             transition={{ duration: 0.85, ease }}
           >
@@ -514,7 +520,13 @@ export function CoursesSection() {
               <FeaturedCourseStatic />
               <div className="grid gap-6 overflow-visible md:grid-cols-3">
                 {gridCourses.map((course, index) => (
-                  <UpcomingCourseCard key={course.id} course={course} index={index} reduceMotion={reduceMotion} />
+                  <UpcomingCourseCard
+                    key={course.id}
+                    course={course}
+                    index={index}
+                    reduceMotion={reduceMotion}
+                    scrollPaused={scrollPaused}
+                  />
                 ))}
               </div>
             </div>
@@ -523,19 +535,26 @@ export function CoursesSection() {
               className="space-y-6 lg:col-span-8"
               variants={coursesStagger}
               initial="hidden"
-              whileInView="visible"
+              whileInView={motionEnabled ? "visible" : undefined}
               viewport={{ once: true, amount: 0.12, margin: "-40px" }}
             >
               <FeaturedCourse reduceMotion={reduceMotion} />
               <motion.div className="grid gap-6 overflow-visible md:grid-cols-3" variants={coursesStagger}>
                 {gridCourses.map((course, index) => (
-                  <UpcomingCourseCard key={course.id} course={course} index={index} reduceMotion={reduceMotion} />
+                  <UpcomingCourseCard
+                    key={course.id}
+                    course={course}
+                    index={index}
+                    reduceMotion={reduceMotion}
+                    scrollPaused={scrollPaused}
+                  />
                 ))}
               </motion.div>
             </motion.div>
           )}
         </div>
       </div>
+      </MotionConfig>
     </section>
   );
 }
