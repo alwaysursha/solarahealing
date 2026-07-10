@@ -355,6 +355,83 @@ body {
   );
 }
 
+.schedule-content-bg-image {
+  opacity: 0.42;
+  transition:
+    transform 1.25s cubic-bezier(0.22, 1, 0.36, 1),
+    opacity 0.75s ease;
+  will-change: transform;
+}
+
+.schedule-content-bg-overlay {
+  background: linear-gradient(
+    165deg,
+    rgba(30, 16, 56, 0.78) 0%,
+    rgba(45, 27, 78, 0.62) 45%,
+    rgba(36, 16, 72, 0.72) 100%
+  );
+  transition: opacity 0.75s ease;
+}
+
+.schedule-portrait-image {
+  transition: transform 1.4s cubic-bezier(0.22, 1, 0.36, 1);
+  will-change: transform;
+}
+
+.schedule-portrait-overlay {
+  background: linear-gradient(
+    90deg,
+    rgba(30, 16, 56, 0.55) 0%,
+    rgba(30, 16, 56, 0.12) 32%,
+    transparent 52%
+  );
+  transition: opacity 0.75s ease;
+}
+
+@media (hover: hover) {
+  .schedule-content-panel:hover .schedule-content-bg-image {
+    opacity: 0.54;
+    transform: scale(1.07);
+  }
+
+  .schedule-content-panel:hover .schedule-content-bg-overlay {
+    opacity: 0.82;
+  }
+
+  .schedule-portrait-panel:hover .schedule-portrait-image {
+    transform: scale(1.08);
+  }
+
+  .schedule-portrait-panel:hover .schedule-portrait-overlay {
+    opacity: 0.72;
+  }
+
+  .schedule-portrait-panel:hover .schedule-aura-ring {
+    border-color: rgba(219, 185, 74, 0.28);
+    box-shadow:
+      0 0 80px rgba(184, 104, 200, 0.48),
+      inset 0 0 50px rgba(139, 58, 154, 0.28);
+  }
+}
+
+@media (prefers-reduced-motion: reduce) {
+  .schedule-content-bg-image,
+  .schedule-portrait-image,
+  .schedule-aura-ring {
+    transition: none;
+  }
+}
+
+@media (max-width: 1023px) {
+  .schedule-section-mist {
+    background: linear-gradient(
+      180deg,
+      rgba(30, 16, 56, 0.35) 0%,
+      rgba(30, 16, 56, 0.15) 100%
+    );
+  }
+}
+
 .schedule-aura {
   background: radial-gradient(
     circle at 58% 38%,
@@ -379,6 +456,7 @@ body {
     inset 0 0 40px rgba(139, 58, 154, 0.2);
   z-index: 2;
   animation: schedule-aura-pulse 6s ease-in-out infinite;
+  transition: box-shadow 1.1s ease, border-color 0.75s ease;
 }
 
 @keyframes schedule-aura-pulse {
@@ -391,15 +469,6 @@ body {
     opacity: 1;
     transform: translate(-50%, -50%) scale(1.06);
   }
-}
-
-.schedule-portrait-overlay {
-  background: linear-gradient(
-    90deg,
-    rgba(30, 16, 56, 0.55) 0%,
-    rgba(30, 16, 56, 0.12) 32%,
-    transparent 52%
-  );
 }
 
 .schedule-cta-btn {
@@ -426,9 +495,208 @@ body {
   animation: panel-border-shimmer 18s linear infinite;
 }
 
-/* Mobile nav — clip-path + SVG stroke applied in MobileNavMenu */
+/* Mobile nav — luxury glass panel with clip-path from MobileNavMenu */
 .mobile-nav-menu {
   isolation: isolate;
+}
+
+.mobile-nav-shell {
+  background: transparent;
+  box-shadow: none;
+}
+
+.mobile-nav-panel-bg,
+.mobile-nav-panel-glow,
+.mobile-nav-panel-shine,
+.mobile-nav-panel-noise,
+.mobile-nav-panel-border {
+  display: none;
+}
+
+.mobile-nav-link {
+  color: rgba(250, 247, 242, 0.88);
+  border-radius: 0.85rem;
+  padding-inline: 0.75rem;
+  transition: color 0.35s ease;
+}
+
+.mobile-nav-link:hover,
+.mobile-nav-link:focus-visible {
+  background: transparent;
+  color: var(--gold-light);
+  outline: none;
+}
+
+.mobile-nav-link-active {
+  background: transparent;
+}
+
+.mobile-nav-link-active .mobile-nav-link-label {
+  color: var(--gold-light);
+  letter-spacing: 0.28em;
+}
+
+.mobile-nav-link-active .nav-link-desktop-glow {
+  opacity: 1;
+  transform: scaleX(1);
+  width: 100%;
+}
+
+.mobile-nav-link-index {
+  font-family: var(--font-jakarta), system-ui, sans-serif;
+  font-size: 0.58rem;
+  font-weight: 600;
+  letter-spacing: 0.24em;
+  text-transform: uppercase;
+  color: rgba(201, 162, 39, 0.55);
+  min-width: 1.75rem;
+}
+
+.mobile-nav-link-label {
+  display: block;
+}
+
+.mobile-nav-utility-btn {
+  border-radius: 9999px;
+  border: 1px solid rgba(250, 247, 242, 0.14);
+  background: rgba(255, 255, 255, 0.04);
+  padding: 0.65rem 1rem;
+  font-family: var(--font-jakarta), system-ui, sans-serif;
+  font-size: 0.72rem;
+  font-weight: 600;
+  letter-spacing: 0.24em;
+  text-transform: uppercase;
+  color: rgba(250, 247, 242, 0.82);
+  transition: border-color 0.3s ease, background-color 0.3s ease, color 0.3s ease;
+}
+
+.mobile-nav-utility-btn:hover,
+.mobile-nav-utility-btn:focus-visible {
+  border-color: rgba(201, 162, 39, 0.42);
+  background: rgba(201, 162, 39, 0.08);
+  color: var(--gold-light);
+  outline: none;
+}
+
+.mobile-nav-cta {
+  position: relative;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  gap: 0.65rem;
+  overflow: hidden;
+  border-radius: 9999px;
+  background: linear-gradient(135deg, var(--gold) 0%, var(--gold-light) 100%);
+  padding: 0.9rem 1.25rem;
+  font-family: var(--font-jakarta), system-ui, sans-serif;
+  font-size: 0.72rem;
+  font-weight: 600;
+  letter-spacing: 0.24em;
+  text-transform: uppercase;
+  color: var(--purple-deep);
+  box-shadow: 0 12px 32px -16px rgba(201, 162, 39, 0.65);
+  transition: transform 0.3s ease, box-shadow 0.3s ease;
+}
+
+.mobile-nav-cta:hover,
+.mobile-nav-cta:focus-visible {
+  transform: translateY(-1px);
+  box-shadow: 0 16px 36px -14px rgba(201, 162, 39, 0.75);
+  outline: none;
+}
+
+.mobile-nav-cta-inline {
+  flex: 1.4 1 0;
+  gap: 0.35rem;
+  padding: 0.65rem 0.75rem;
+  font-size: 0.62rem;
+  letter-spacing: 0.1em;
+  white-space: nowrap;
+}
+
+.mobile-nav-footer-actions .mobile-nav-utility-btn {
+  flex: 0.85 1 0;
+  white-space: nowrap;
+}
+
+.mobile-nav-footer {
+  padding-bottom: 0.5rem;
+}
+
+.mobile-nav-cta-shine {
+  background: linear-gradient(
+    105deg,
+    transparent 30%,
+    rgba(255, 255, 255, 0.42) 50%,
+    transparent 70%
+  );
+  animation: mobile-nav-cta-shine 5s ease-in-out infinite;
+}
+
+.nav-link-desktop-label {
+  font-family: var(--font-jakarta), system-ui, sans-serif;
+  font-size: 0.72rem;
+  font-weight: 600;
+  letter-spacing: 0.24em;
+  text-transform: uppercase;
+  color: rgba(250, 247, 242, 0.86);
+  transition: color 0.35s ease, letter-spacing 0.45s ease;
+  white-space: nowrap;
+}
+
+.nav-link-desktop:hover .nav-link-desktop-label,
+.nav-link-desktop:focus-visible .nav-link-desktop-label,
+.mobile-nav-link:hover .nav-link-desktop-label,
+.mobile-nav-link:focus-visible .nav-link-desktop-label {
+  color: var(--gold-light);
+  letter-spacing: 0.28em;
+}
+
+.nav-link-desktop-active .nav-link-desktop-label {
+  color: var(--gold-light);
+}
+
+.nav-link-desktop-active .nav-link-desktop-glow {
+  opacity: 1;
+  transform: scaleX(1);
+}
+
+.nav-link-desktop-active .nav-link-desktop-dot {
+  opacity: 1;
+}
+
+@keyframes mobile-nav-panel-shine {
+  0%,
+  100% {
+    opacity: 0.35;
+    transform: translateX(-8%);
+  }
+  50% {
+    opacity: 0.75;
+    transform: translateX(8%);
+  }
+}
+
+@keyframes mobile-nav-cta-shine {
+  0%,
+  100% {
+    transform: translateX(-120%);
+  }
+  50% {
+    transform: translateX(120%);
+  }
+}
+
+.animations-paused .mobile-nav-panel-shine,
+.animations-paused .mobile-nav-cta-shine {
+  animation-play-state: paused;
+}
+
+@media (prefers-reduced-motion: reduce) {
+  .mobile-nav-panel-shine,
+  .mobile-nav-cta-shine {
+    animation: none;
+  }
 }
 
 .header-login-panel-inner {
@@ -808,6 +1076,11 @@ body {
 [data-compositor="chrome-touch"] #courses .courses-cosmos-backdrop {
   contain: paint;
   overflow: hidden;
+}
+
+[data-compositor="chrome-touch"] .mobile-nav-panel-shine,
+[data-compositor="chrome-touch"] .mobile-nav-cta-shine {
+  animation: none !important;
 }
 
 [data-compositor="chrome-touch"] #courses .courses-cosmos-day-layer,

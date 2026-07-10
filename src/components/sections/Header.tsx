@@ -18,7 +18,8 @@ import { HeaderIconButton } from "@/components/ui/HeaderIconButton";
 import { MenuToggleIcon } from "@/components/ui/MenuToggleIcon";
 import { HeaderCartPanel } from "@/components/sections/HeaderCartPanel";
 import { HeaderLoginPanel } from "@/components/sections/HeaderLoginPanel";
-import { MobileNavMenu, mobileNavItemVariants } from "@/components/sections/MobileNavMenu";
+import { MobileNavMenu } from "@/components/sections/MobileNavMenu";
+import { DesktopNav } from "@/components/sections/nav/DesktopNav";
 
 const expandVariants = {
   closed: {
@@ -191,20 +192,7 @@ export function Header() {
       <div className="flex items-center justify-between gap-4 sm:gap-6 lg:gap-10">
         <Logo variant="light" className="ml-2 min-w-0 max-w-[68%] sm:ml-3 sm:max-w-none md:ml-4" />
 
-        <nav
-          className="hidden flex-1 items-center justify-center gap-7 lg:flex xl:gap-10"
-          aria-label="Main"
-        >
-          {site.nav.map((item) => (
-            <a
-              key={item.href}
-              href={item.href}
-              className="whitespace-nowrap text-sm font-medium text-cream/92 transition-colors hover:text-gold"
-            >
-              {item.label}
-            </a>
-          ))}
-        </nav>
+        <DesktopNav />
 
         <div className="relative z-40 flex shrink-0 items-center gap-1.5 sm:gap-2">
           <HeaderIconButton
@@ -222,7 +210,12 @@ export function Header() {
 
           <motion.button
             type="button"
-            className="flex h-10 w-10 items-center justify-center text-gold transition-colors hover:text-gold-light lg:hidden"
+            className={[
+              "flex h-10 w-10 items-center justify-center rounded-full border transition-colors duration-300 lg:hidden",
+              navOpen
+                ? "border-gold/50 bg-cream/10 text-gold"
+                : "border-transparent text-gold hover:border-gold/35 hover:text-gold-light",
+            ].join(" ")}
             aria-label={navOpen ? "Close menu" : "Open menu"}
             aria-expanded={navOpen}
             onClick={toggleNav}
@@ -294,79 +287,11 @@ export function Header() {
             animate={reduceMotion ? undefined : "open"}
             exit={reduceMotion ? undefined : "exit"}
           >
-            <MobileNavMenu>
-              {site.nav.map((item) =>
-                chromeTouch ? (
-                  <a
-                    key={item.href}
-                    href={item.href}
-                    className="text-cream/90 hover:text-gold"
-                    onClick={closeNav}
-                  >
-                    {item.label}
-                  </a>
-                ) : (
-                  <motion.a
-                    key={item.href}
-                    href={item.href}
-                    className="text-cream/90 hover:text-gold"
-                    variants={reduceMotion ? undefined : mobileNavItemVariants}
-                    onClick={closeNav}
-                  >
-                    {item.label}
-                  </motion.a>
-                ),
-              )}
-              {chromeTouch ? (
-                <>
-                  <button
-                    type="button"
-                    className="text-left text-cream/90 hover:text-gold"
-                    onClick={() => {
-                      closeNav();
-                      setLoginOpen(true);
-                    }}
-                  >
-                    Log in
-                  </button>
-                  <button
-                    type="button"
-                    className="text-left text-cream/90 hover:text-gold"
-                    onClick={() => {
-                      closeNav();
-                      setCartOpen(true);
-                    }}
-                  >
-                    Cart
-                  </button>
-                </>
-              ) : (
-                <>
-                  <motion.button
-                    type="button"
-                    className="text-left text-cream/90 hover:text-gold"
-                    variants={reduceMotion ? undefined : mobileNavItemVariants}
-                    onClick={() => {
-                      closeNav();
-                      setLoginOpen(true);
-                    }}
-                  >
-                    Log in
-                  </motion.button>
-                  <motion.button
-                    type="button"
-                    className="text-left text-cream/90 hover:text-gold"
-                    variants={reduceMotion ? undefined : mobileNavItemVariants}
-                    onClick={() => {
-                      closeNav();
-                      setCartOpen(true);
-                    }}
-                  >
-                    Cart
-                  </motion.button>
-                </>
-              )}
-            </MobileNavMenu>
+            <MobileNavMenu
+              items={site.nav}
+              onClose={closeNav}
+              onLogin={() => setLoginOpen(true)}
+            />
           </motion.div>
         )}
       </AnimatePresence>

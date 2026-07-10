@@ -304,7 +304,7 @@ function PracticeQuote() {
   const reduceMotion = useReducedMotion();
 
   return (
-    <div className="about-quote-shadow relative z-0 overflow-hidden rounded-lg bg-white/35 p-3 backdrop-blur-[2px]">
+    <div className="about-quote-shadow relative z-0 mx-auto w-full max-w-[17.5rem] overflow-hidden rounded-lg bg-white/35 p-3 backdrop-blur-[2px] sm:max-w-sm lg:mx-0 lg:max-w-none">
       <div
         className="about-quote-glow pointer-events-none absolute inset-0 rounded-xl bg-[radial-gradient(circle_at_50%_50%,rgba(201,162,39,0.12),transparent_72%)]"
         aria-hidden
@@ -344,16 +344,16 @@ export function AboutSection() {
     <section
       id="about"
       ref={sectionRef}
-      className={`bg-canvas px-6 pb-12 pt-20 md:px-10 md:pb-16 md:pt-24 lg:px-14 lg:pb-20 lg:pt-28${animationsActive ? "" : " animations-paused"}`}
+      className={`bg-canvas px-6 pb-12 pt-6 md:px-10 md:pb-16 md:pt-10 lg:px-14 lg:pb-20 lg:pt-28${animationsActive ? "" : " animations-paused"}`}
     >
-      <div className="mx-auto grid max-w-7xl gap-10 md:gap-8 lg:grid-cols-12 lg:items-start lg:gap-6 xl:gap-10">
-        <Reveal delay={0.05} className="lg:col-span-3">
+      <div className="mx-auto grid max-w-7xl gap-6 md:gap-8 lg:grid-cols-12 lg:items-start lg:gap-6 xl:gap-10">
+        <Reveal delay={0.05} className="order-2 lg:order-none lg:col-span-3">
           <div className="relative aspect-[16/10] lg:aspect-[4/5]">
             <AboutEnergyVisual animationsActive={animationsActive} />
           </div>
         </Reveal>
 
-        <Reveal className="lg:col-span-3">
+        <Reveal className="order-3 lg:order-none lg:col-span-3">
           <p className="text-[0.68rem] font-semibold uppercase tracking-[0.34em] text-gold">
             Our Philosophy
           </p>
@@ -362,19 +362,25 @@ export function AboutSection() {
             <span className="italic text-purple-mid">Soulara Healing,</span>
           </h2>
           <div className="mt-5 h-px w-16 bg-gradient-to-r from-gold/70 to-transparent" />
-          <p className="mt-6 text-base leading-[1.85] text-purple-deep/75 md:text-[1.02rem]">
+          <p className="mt-6 text-sm leading-[1.85] text-purple-deep/68 md:text-[0.98rem] lg:text-[1.02rem] lg:text-purple-deep/75">
             {first}
           </p>
         </Reveal>
 
-        <Reveal delay={0.1} className="z-0 lg:col-span-3">
+        <Reveal delay={0.1} className="order-1 z-0 max-lg:mb-6 lg:order-none lg:col-span-3">
           <PracticeQuote />
-          <p className="mt-6 text-sm leading-[1.85] text-purple-deep/68 md:text-[0.98rem]">
+          <p className="mt-6 hidden text-sm leading-[1.85] text-purple-deep/68 md:text-[0.98rem] lg:block">
             {second}
           </p>
         </Reveal>
 
-        <Reveal delay={0.15} className="lg:col-span-3">
+        <Reveal delay={0.1} className="order-4 lg:hidden">
+          <p className="text-sm leading-[1.85] text-purple-deep/68 md:text-[0.98rem]">
+            {second}
+          </p>
+        </Reveal>
+
+        <Reveal delay={0.15} className="order-5 lg:order-none lg:col-span-3">
           <p className="text-sm leading-[1.85] text-purple-deep/68 md:text-[0.98rem]">
             {third}
           </p>

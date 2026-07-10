@@ -74,7 +74,7 @@ export const mobileNavExpandVariantsChrome = {
     overflow: "hidden",
   },
   open: {
-    maxHeight: 480,
+    maxHeight: 580,
     marginTop: 16,
     overflow: "hidden",
     transition: {
