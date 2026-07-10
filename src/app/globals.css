@@ -1077,21 +1077,9 @@ body {
 [data-compositor="chrome-touch"] .site-scroll-panel.site-scrolling .bg-spiritual-shimmer-secondary,
 [data-compositor="chrome-touch"] .site-scroll-panel.site-scrolling .workshop-gloss-sweep,
 [data-compositor="chrome-touch"] .site-scroll-panel.site-scrolling .schedule-aura-ring,
-[data-compositor="chrome-touch"] .site-scroll-panel.site-scrolling #courses .courses-cosmos-backdrop,
-[data-compositor="chrome-touch"] .site-scroll-panel.site-scrolling #courses .courses-cosmos-day-layer,
-[data-compositor="chrome-touch"] .site-scroll-panel.site-scrolling #courses .courses-cosmos-noise-layer,
-[data-compositor="chrome-touch"] .site-scroll-panel.site-scrolling #courses .courses-cosmos-stage,
-[data-compositor="chrome-touch"] .site-scroll-panel.site-scrolling #courses .courses-cosmos-night-veil,
-[data-compositor="chrome-touch"] .site-scroll-panel.site-scrolling #courses .courses-cosmos-night-glow,
-[data-compositor="chrome-touch"] .site-scroll-panel.site-scrolling #courses .courses-cosmos-night-stars,
-[data-compositor="chrome-touch"] .site-scroll-panel.site-scrolling #courses .courses-cosmos-celestial,
-[data-compositor="chrome-touch"] .site-scroll-panel.site-scrolling #courses .courses-cosmos-depth-fog,
-[data-compositor="chrome-touch"] .site-scroll-panel.site-scrolling #courses .courses-space-planet,
-[data-compositor="chrome-touch"] .site-scroll-panel.site-scrolling #courses .courses-space-star,
-[data-compositor="chrome-touch"] .site-scroll-panel.site-scrolling #courses .courses-night-star,
-[data-compositor="chrome-touch"] .site-scroll-panel.site-scrolling #courses .courses-cosmos-shooting-layer,
-[data-compositor="chrome-touch"] .site-scroll-panel.site-scrolling #courses .courses-space-shooting-star,
-[data-compositor="chrome-touch"] .site-scroll-panel.site-scrolling #workshops .workshop-gloss-sweep {
+[data-compositor="chrome-touch"] .site-scroll-panel.site-scrolling #workshops .workshop-gloss-sweep,
+[data-compositor="chrome-touch"] .site-scroll-panel.site-scrolling #courses .courses-cosmos-daynight,
+[data-compositor="chrome-touch"] .site-scroll-panel.site-scrolling #courses .courses-cosmos-daynight * {
   animation-play-state: paused !important;
 }
 
@@ -1101,57 +1089,18 @@ body {
   backface-visibility: hidden;
 }
 
-[data-compositor="chrome-touch"] #courses .courses-cosmos-stage,
-[data-compositor="chrome-touch"] #courses .courses-cosmos-backdrop {
-  contain: paint;
-  overflow: hidden;
-}
-
 [data-compositor="chrome-touch"] .mobile-nav-panel-shine,
 [data-compositor="chrome-touch"] .mobile-nav-cta-shine {
   animation: none !important;
 }
 
-[data-compositor="chrome-touch"] #courses .courses-cosmos-day-layer,
-[data-compositor="chrome-touch"] #courses.courses-cosmos-daynight .workshop-stage-shine,
-[data-compositor="chrome-touch"] #courses .courses-cosmos-night-glow,
-[data-compositor="chrome-touch"] #courses .courses-cosmos-noise-layer,
-[data-compositor="chrome-touch"] #courses .courses-cosmos-depth-fog-cycle,
-[data-compositor="chrome-touch"] #courses.courses-cosmos-daynight .courses-space-nebula {
-  animation: none !important;
-}
-
-[data-compositor="chrome-touch"] #courses.courses-cosmos-daynight .courses-space-planet-a {
-  animation: courses-planet-drift-a 20s ease-in-out infinite !important;
-}
-
-[data-compositor="chrome-touch"] #courses.courses-cosmos-daynight .courses-space-planet-b {
-  animation: courses-planet-drift-b 24s ease-in-out infinite !important;
-}
-
-[data-compositor="chrome-touch"] #courses.courses-scrolling .courses-cosmos-backdrop,
-[data-compositor="chrome-touch"] #courses.courses-scrolling .courses-cosmos-day-layer,
-[data-compositor="chrome-touch"] #courses.courses-scrolling .courses-cosmos-noise-layer,
-[data-compositor="chrome-touch"] #courses.courses-scrolling .courses-cosmos-stage,
-[data-compositor="chrome-touch"] #courses.courses-scrolling .courses-cosmos-night-veil,
-[data-compositor="chrome-touch"] #courses.courses-scrolling .courses-cosmos-night-glow,
-[data-compositor="chrome-touch"] #courses.courses-scrolling .courses-cosmos-night-stars,
-[data-compositor="chrome-touch"] #courses.courses-scrolling .courses-cosmos-celestial,
-[data-compositor="chrome-touch"] #courses.courses-scrolling .courses-cosmos-depth-fog,
-[data-compositor="chrome-touch"] #courses.courses-scrolling .courses-space-planet,
-[data-compositor="chrome-touch"] #courses.courses-scrolling .courses-space-star,
-[data-compositor="chrome-touch"] #courses.courses-scrolling .courses-night-star {
-  animation-play-state: paused !important;
-}
-
-[data-compositor="chrome-touch"] #courses.courses-scrolling .courses-cosmos-shooting-layer,
-[data-compositor="chrome-touch"] #courses.courses-scrolling .courses-space-shooting-star {
-  animation-play-state: running !important;
-}
-
-[data-compositor="chrome-touch"] #courses.courses-cosmos-daynight .courses-space-planet-c,
-[data-compositor="chrome-touch"] #courses .courses-space-planet-drift-c {
-  animation: courses-planet-drift-c 18s ease-in-out infinite !important;
+[data-compositor="chrome-touch"] #courses .courses-cosmos-stage,
+[data-compositor="chrome-touch"] #courses .courses-cosmos-backdrop,
+[data-compositor="chrome-touch"] #courses .courses-cosmos-celestial {
+  contain: strict;
+  isolation: isolate;
+  overflow: hidden;
+  transform: translateZ(0);
 }
 
 /* Courses section — cosmic space background */
@@ -1183,10 +1132,56 @@ body {
   z-index: 1;
 }
 
-/* Day → night → day cycle (courses section only) */
+/* Day → night → day cycle (courses section only) — single driver avoids Chrome clip-path opacity conflicts */
+@property --courses-night-mix {
+  syntax: "<number>";
+  inherits: false;
+  initial-value: 0;
+}
+
+@property --courses-stars-mix {
+  syntax: "<number>";
+  inherits: false;
+  initial-value: 0;
+}
+
 .courses-cosmos-daynight {
   --courses-daynight-cycle: 50s;
   --courses-daynight-ease: cubic-bezier(0.45, 0.05, 0.25, 1);
+  --courses-night-mix: 0;
+  --courses-stars-mix: 0;
+  animation: courses-night-mix-driver var(--courses-daynight-cycle) var(--courses-daynight-ease) infinite;
+}
+
+@keyframes courses-night-mix-driver {
+  0%,
+  100% {
+    --courses-night-mix: 0;
+    --courses-stars-mix: 0;
+  }
+  36% {
+    --courses-stars-mix: 0.55;
+    --courses-night-mix: 0.55;
+  }
+  40% {
+    --courses-night-mix: 0.62;
+  }
+  45% {
+    --courses-night-mix: 0.78;
+  }
+  50% {
+    --courses-night-mix: 1;
+    --courses-stars-mix: 1;
+  }
+  55% {
+    --courses-night-mix: 0.78;
+  }
+  60% {
+    --courses-night-mix: 0.62;
+  }
+  64% {
+    --courses-stars-mix: 0.55;
+  }
 }
 
 .courses-cosmos-night-veil {
@@ -1198,8 +1193,7 @@ body {
       rgba(4, 2, 14, 0.97) 48%,
       rgba(1, 0, 6, 0.98) 100%
     );
-  opacity: 0;
-  animation: courses-night-veil var(--courses-daynight-cycle) var(--courses-daynight-ease) infinite;
+  opacity: calc(var(--courses-night-mix) * 0.96);
 }
 
 .courses-cosmos-night-glow {
@@ -1207,16 +1201,15 @@ body {
     radial-gradient(ellipse 55% 28% at 62% 24%, rgba(67, 56, 202, 0.18) 0%, transparent 68%),
     radial-gradient(ellipse 40% 22% at 28% 68%, rgba(99, 102, 241, 0.12) 0%, transparent 65%),
     radial-gradient(ellipse 70% 18% at 50% 12%, rgba(255, 255, 255, 0.03) 0%, transparent 72%);
-  opacity: 0;
-  animation: courses-night-glow var(--courses-daynight-cycle) var(--courses-daynight-ease) infinite;
+  opacity: calc(var(--courses-night-mix) * 0.32);
 }
 
 .courses-cosmos-day-layer {
-  animation: courses-day-layers-fade var(--courses-daynight-cycle) var(--courses-daynight-ease) infinite;
+  opacity: calc(1 - var(--courses-night-mix) * 0.96);
 }
 
 .courses-cosmos-daynight .workshop-stage-shine {
-  animation: courses-day-layers-fade var(--courses-daynight-cycle) var(--courses-daynight-ease) infinite;
+  opacity: calc(1 - var(--courses-night-mix) * 0.96);
 }
 
 .courses-cosmos-daynight .workshop-gloss-sweep {
@@ -1224,8 +1217,7 @@ body {
 }
 
 .courses-cosmos-noise-layer {
-  opacity: 0.035;
-  animation: courses-noise-fade var(--courses-daynight-cycle) var(--courses-daynight-ease) infinite;
+  opacity: calc(0.035 - var(--courses-night-mix) * 0.029);
 }
 
 @keyframes courses-noise-fade {
@@ -1287,31 +1279,38 @@ body {
 }
 
 .courses-cosmos-daynight .courses-space-planet-drift-a:not(.courses-space-planet-a) {
-  animation: courses-planet-drift-a 20s ease-in-out infinite, courses-planet-night-prominence var(--courses-daynight-cycle) var(--courses-daynight-ease) infinite;
+  animation: courses-planet-drift-a 20s ease-in-out infinite;
+  opacity: calc(0.2 + var(--courses-night-mix) * 0.72);
 }
 
 .courses-cosmos-daynight .courses-space-planet-drift-b:not(.courses-space-planet-b) {
-  animation: courses-planet-drift-b 24s ease-in-out infinite, courses-planet-night-prominence var(--courses-daynight-cycle) var(--courses-daynight-ease) infinite;
+  animation: courses-planet-drift-b 24s ease-in-out infinite;
+  opacity: calc(0.2 + var(--courses-night-mix) * 0.72);
 }
 
 .courses-cosmos-daynight .courses-space-planet-drift-c {
-  animation: courses-planet-drift-c 18s ease-in-out infinite, courses-planet-night-prominence var(--courses-daynight-cycle) var(--courses-daynight-ease) infinite;
+  animation: courses-planet-drift-c 18s ease-in-out infinite;
+  opacity: calc(0.2 + var(--courses-night-mix) * 0.72);
 }
 
 .courses-cosmos-daynight .courses-space-planet-drift-d {
-  animation: courses-planet-drift-d 32s ease-in-out infinite, courses-planet-night-prominence var(--courses-daynight-cycle) var(--courses-daynight-ease) infinite;
+  animation: courses-planet-drift-d 32s ease-in-out infinite;
+  opacity: calc(0.2 + var(--courses-night-mix) * 0.72);
 }
 
 .courses-cosmos-daynight .courses-space-planet-drift-e {
-  animation: courses-planet-drift-e 21s ease-in-out infinite, courses-planet-night-prominence var(--courses-daynight-cycle) var(--courses-daynight-ease) infinite;
+  animation: courses-planet-drift-e 21s ease-in-out infinite;
+  opacity: calc(0.2 + var(--courses-night-mix) * 0.72);
 }
 
 .courses-cosmos-daynight .courses-space-planet-drift-f {
-  animation: courses-planet-drift-f 28s ease-in-out infinite, courses-planet-night-prominence var(--courses-daynight-cycle) var(--courses-daynight-ease) infinite;
+  animation: courses-planet-drift-f 28s ease-in-out infinite;
+  opacity: calc(0.2 + var(--courses-night-mix) * 0.72);
 }
 
 .courses-cosmos-daynight .courses-space-planet-drift-g {
-  animation: courses-planet-drift-g 16s ease-in-out infinite, courses-planet-night-prominence var(--courses-daynight-cycle) var(--courses-daynight-ease) infinite;
+  animation: courses-planet-drift-g 16s ease-in-out infinite;
+  opacity: calc(0.2 + var(--courses-night-mix) * 0.72);
 }
 
 @keyframes courses-planet-night-prominence {
@@ -1325,11 +1324,13 @@ body {
 }
 
 .courses-cosmos-daynight .courses-space-planet-deep.courses-space-planet-drift-d {
-  animation: courses-planet-drift-d 32s ease-in-out infinite, courses-planet-night-prominence-deep var(--courses-daynight-cycle) var(--courses-daynight-ease) infinite;
+  animation: courses-planet-drift-d 32s ease-in-out infinite;
+  opacity: calc(0.1 + var(--courses-night-mix) * 0.52);
 }
 
 .courses-cosmos-daynight .courses-space-planet-deep.courses-space-planet-drift-f {
-  animation: courses-planet-drift-f 28s ease-in-out infinite, courses-planet-night-prominence-deep var(--courses-daynight-cycle) var(--courses-daynight-ease) infinite;
+  animation: courses-planet-drift-f 28s ease-in-out infinite;
+  opacity: calc(0.1 + var(--courses-night-mix) * 0.52);
 }
 
 @keyframes courses-planet-night-prominence-deep {
@@ -1343,9 +1344,8 @@ body {
 }
 
 .courses-cosmos-night-stars {
-  opacity: 0;
+  opacity: var(--courses-stars-mix);
   pointer-events: none;
-  animation: courses-night-stars-reveal var(--courses-daynight-cycle) var(--courses-daynight-ease) infinite;
 }
 
 .courses-night-star {
@@ -1409,7 +1409,7 @@ body {
 }
 
 .courses-cosmos-depth-fog-cycle {
-  animation: courses-depth-fog-night var(--courses-daynight-cycle) var(--courses-daynight-ease) infinite;
+  opacity: calc(1 - var(--courses-night-mix) * 0.88);
 }
 
 @keyframes courses-depth-fog-night {
@@ -1423,7 +1423,7 @@ body {
 }
 
 .courses-cosmos-daynight .courses-space-nebula {
-  animation: courses-nebula-night var(--courses-daynight-cycle) var(--courses-daynight-ease) infinite;
+  opacity: calc(1 - var(--courses-night-mix) * 0.8);
 }
 
 @keyframes courses-nebula-night {
@@ -1590,7 +1590,8 @@ body {
 }
 
 .courses-cosmos-daynight .courses-space-planet-a {
-  animation: courses-planet-drift-a 20s ease-in-out infinite, courses-planet-night-prominence var(--courses-daynight-cycle) var(--courses-daynight-ease) infinite, courses-planet-a-glow var(--courses-daynight-cycle) var(--courses-daynight-ease) infinite;
+  animation: courses-planet-drift-a 20s ease-in-out infinite, courses-planet-a-glow var(--courses-daynight-cycle) var(--courses-daynight-ease) infinite;
+  opacity: calc(0.2 + var(--courses-night-mix) * 0.72);
 }
 
 @keyframes courses-planet-a-glow {
@@ -1637,7 +1638,8 @@ body {
 }
 
 .courses-cosmos-daynight .courses-space-planet-b {
-  animation: courses-planet-drift-b 24s ease-in-out infinite, courses-planet-night-prominence var(--courses-daynight-cycle) var(--courses-daynight-ease) infinite, courses-planet-b-glow var(--courses-daynight-cycle) var(--courses-daynight-ease) infinite;
+  animation: courses-planet-drift-b 24s ease-in-out infinite, courses-planet-b-glow var(--courses-daynight-cycle) var(--courses-daynight-ease) infinite;
+  opacity: calc(0.2 + var(--courses-night-mix) * 0.72);
 }
 
 @keyframes courses-planet-b-glow {
@@ -2126,6 +2128,7 @@ body {
   background: radial-gradient(circle, rgba(219, 185, 74, 0.18) 0%, transparent 72%);
 }
 
+.animations-paused .courses-cosmos-daynight,
 .animations-paused .bg-spiritual-shimmer,
 .animations-paused .bg-spiritual-shimmer-secondary,
 .animations-paused .panel-border-shimmer,
