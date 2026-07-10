@@ -12,10 +12,13 @@
     "cf-typegen": "wrangler types --env-interface CloudflareEnv cloudflare-env.d.ts",
     "start": "next start",
     "lint": "eslint",
-    "db:seed": "tsx scripts/seed-db.ts"
+    "db:migrate:local": "wrangler d1 execute solarahealing --local --file=./scripts/schema.sql",
+    "db:migrate:remote": "wrangler d1 execute solarahealing --remote --file=./scripts/schema.sql",
+    "db:seed": "tsx scripts/seed-db.ts",
+    "db:setup:local": "pnpm db:migrate:local && pnpm db:seed",
+    "db:setup:remote": "pnpm db:migrate:remote && pnpm db:seed"
   },
   "dependencies": {
-    "@libsql/client": "^0.17.4",
     "bcryptjs": "^3.0.3",
     "drizzle-orm": "^0.45.2",
     "framer-motion": "^12.42.2",
