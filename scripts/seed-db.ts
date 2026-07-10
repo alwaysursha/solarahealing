@@ -1,8 +1,9 @@
 import { seedDatabase } from "../src/db/seed";
-import { db } from "../src/db";
+import { getDb } from "../src/db";
 import { sql } from "drizzle-orm";
 
 async function migrate() {
+  const db = await getDb();
   await db.run(sql`
     CREATE TABLE IF NOT EXISTS users (
       id TEXT PRIMARY KEY,

@@ -2,7 +2,7 @@ import bcrypt from "bcryptjs";
 import { eq } from "drizzle-orm";
 import {
   articles,
-  db,
+  getDb,
   onlineCourses,
   pageSections,
   siteSettings,
@@ -29,6 +29,7 @@ import {
 import { SITE_DESCRIPTION, SITE_NAME } from "@/lib/constants";
 
 async function seedArticlesFromSite() {
+  const db = await getDb();
   const blogBodies: Record<string, string> = {
     "sacred-art-of-reiki":
       "Reiki is a gentle yet powerful practice of channeling universal life energy. In this guide, we explore its origins, principles, and how you can begin your own healing journey with intention and grace.",
@@ -173,6 +174,7 @@ function sectionEntries() {
 }
 
 export async function seedDatabase() {
+  const db = await getDb();
   const ts = nowIso();
 
   await db

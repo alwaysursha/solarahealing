@@ -5,7 +5,7 @@ import { eq } from "drizzle-orm";
 import bcrypt from "bcryptjs";
 import {
   articles,
-  db,
+  getDb,
   onlineCourses,
   orderItems,
   orders,
@@ -26,6 +26,7 @@ function revalidateAll() {
 
 export async function updateSiteSettingsAction(formData: FormData) {
   await requireAdmin();
+  const db = await getDb();
   const ts = nowIso();
 
   await db
@@ -52,6 +53,7 @@ export async function updateSiteSettingsAction(formData: FormData) {
 
 export async function upsertCourseAction(formData: FormData) {
   await requireAdmin();
+  const db = await getDb();
   const id = formData.get("id")?.toString() || createId();
   const ts = nowIso();
   const payload = {
@@ -81,12 +83,14 @@ export async function upsertCourseAction(formData: FormData) {
 
 export async function deleteCourseAction(id: string) {
   await requireAdmin();
+  const db = await getDb();
   await db.delete(onlineCourses).where(eq(onlineCourses.id, id));
   revalidateAll();
 }
 
 export async function upsertWorkshopAction(formData: FormData) {
   await requireAdmin();
+  const db = await getDb();
   const id = formData.get("id")?.toString() || createId();
   const ts = nowIso();
   const payload = {
@@ -116,12 +120,14 @@ export async function upsertWorkshopAction(formData: FormData) {
 
 export async function deleteWorkshopAction(id: string) {
   await requireAdmin();
+  const db = await getDb();
   await db.delete(workshops).where(eq(workshops.id, id));
   revalidateAll();
 }
 
 export async function upsertArticleAction(formData: FormData) {
   await requireAdmin();
+  const db = await getDb();
   const id = formData.get("id")?.toString() || createId();
   const ts = nowIso();
   const payload = {
@@ -150,12 +156,14 @@ export async function upsertArticleAction(formData: FormData) {
 
 export async function deleteArticleAction(id: string) {
   await requireAdmin();
+  const db = await getDb();
   await db.delete(articles).where(eq(articles.id, id));
   revalidateAll();
 }
 
 export async function updatePageSectionAction(formData: FormData) {
   await requireAdmin();
+  const db = await getDb();
   const id = formData.get("id")?.toString() ?? "";
   const content = formData.get("content")?.toString() ?? "{}";
   const ts = nowIso();
@@ -166,6 +174,7 @@ export async function updatePageSectionAction(formData: FormData) {
 
 export async function updateOrderStatusAction(orderId: string, status: string) {
   await requireAdmin();
+  const db = await getDb();
   await db
     .update(orders)
     .set({ status: status as "pending" | "paid" | "cancelled" | "refunded" | "completed", updatedAt: nowIso() })
@@ -175,6 +184,7 @@ export async function updateOrderStatusAction(orderId: string, status: string) {
 
 export async function updateAdminProfileAction(formData: FormData) {
   const session = await requireUser();
+  const db = await getDb();
   const ts = nowIso();
   const name = formData.get("name")?.toString() ?? session.user.name;
   const phone = formData.get("phone")?.toString() ?? "";
@@ -189,6 +199,7 @@ export async function updateAdminProfileAction(formData: FormData) {
 
 export async function updateAdminPasswordAction(formData: FormData) {
   const session = await requireUser();
+  const db = await getDb();
   const current = formData.get("currentPassword")?.toString() ?? "";
   const next = formData.get("newPassword")?.toString() ?? "";
 
@@ -210,6 +221,7 @@ export async function updateAdminPasswordAction(formData: FormData) {
 }
 
 export async function registerUserAction(formData: FormData) {
+  const db = await getDb();
   const email = formData.get("email")?.toString().trim().toLowerCase() ?? "";
   const name = formData.get("name")?.toString().trim() ?? "";
   const password = formData.get("password")?.toString() ?? "";
@@ -239,6 +251,7 @@ export async function registerUserAction(formData: FormData) {
 
 export async function createDemoOrderAction(formData: FormData) {
   await requireAdmin();
+  const db = await getDb();
   const ts = nowIso();
   const orderId = createId();
   const userId = formData.get("userId")?.toString() ?? "";

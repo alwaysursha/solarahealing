@@ -1,5 +1,5 @@
 import { asc, eq } from "drizzle-orm";
-import { db, pageSections } from "@/db";
+import { getDb, pageSections } from "@/db";
 import { AdminPanel, AdminShell, AdminSubmit } from "@/components/admin/AdminShell";
 import { updatePageSectionAction } from "@/lib/admin/actions";
 import Link from "next/link";
@@ -7,6 +7,7 @@ import Link from "next/link";
 export const dynamic = "force-dynamic";
 
 export default async function AdminWebPage() {
+  const db = await getDb();
   const sections = await db
     .select()
     .from(pageSections)

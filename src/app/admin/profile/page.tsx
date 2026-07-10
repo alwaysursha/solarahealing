@@ -1,6 +1,6 @@
 import { eq } from "drizzle-orm";
 import { auth } from "@/auth";
-import { db, users } from "@/db";
+import { getDb, users } from "@/db";
 import { AdminField, AdminPanel, AdminShell, AdminSubmit } from "@/components/admin/AdminShell";
 import { updateAdminPasswordAction, updateAdminProfileAction } from "@/lib/admin/actions";
 
@@ -8,6 +8,7 @@ export const dynamic = "force-dynamic";
 
 export default async function AdminProfilePage() {
   const session = await auth();
+  const db = await getDb();
   const rows = await db.select().from(users).where(eq(users.id, session!.user.id)).limit(1);
   const user = rows[0];
 

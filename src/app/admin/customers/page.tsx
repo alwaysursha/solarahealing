@@ -1,5 +1,5 @@
 import { eq } from "drizzle-orm";
-import { db, users } from "@/db";
+import { getDb, users } from "@/db";
 import { AdminPanel, AdminShell } from "@/components/admin/AdminShell";
 import { getAllCustomers } from "@/lib/content";
 
@@ -7,6 +7,8 @@ export const dynamic = "force-dynamic";
 
 export default async function AdminCustomersPage() {
   const customers = await getAllCustomers();
+  const db = await getDb();
+  const admins = await db.select().from(users).where(eq(users.role, "admin"));
 
   return (
     <AdminShell
@@ -49,9 +51,7 @@ export default async function AdminCustomersPage() {
           To promote a trusted account, update their role to admin directly in the database for now.
         </p>
         <p className="mt-2 text-xs text-purple-deep/45">
-          Admins: {(
-            await db.select().from(users).where(eq(users.role, "admin"))
-          ).map((u) => u.email).join(", ") || "None"}
+          Admins: {admins.map((u) => u.email).join(", ") || "None"}
         </p>
       </AdminPanel>
     </AdminShell>

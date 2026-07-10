@@ -1,5 +1,5 @@
 import { asc } from "drizzle-orm";
-import { db, onlineCourses, workshops } from "@/db";
+import { getDb, onlineCourses, workshops } from "@/db";
 import {
   AdminField,
   AdminPanel,
@@ -16,6 +16,7 @@ import {
 export const dynamic = "force-dynamic";
 
 export default async function AdminCoursesPage() {
+  const db = await getDb();
   const [courses, workshopRows] = await Promise.all([
     db.select().from(onlineCourses).orderBy(asc(onlineCourses.sortOrder)),
     db.select().from(workshops).orderBy(asc(workshops.sortOrder)),
