@@ -74,7 +74,13 @@ function TestimonialCard({
   );
 }
 
-export function TestimonialsShowcaseSection() {
+export function TestimonialsShowcaseSection({
+  intro = testimonialsIntro,
+  items = testimonials,
+}: {
+  intro?: typeof testimonialsIntro;
+  items?: typeof testimonials;
+}) {
   const reduceMotion = useReducedMotion();
   const sectionRef = useRef<HTMLElement>(null);
   const animationsActive = useAnimationsActive(sectionRef);
@@ -96,12 +102,12 @@ export function TestimonialsShowcaseSection() {
           transition={{ duration: 0.85, ease }}
         >
           <p className="text-[0.68rem] font-semibold uppercase tracking-[0.34em] text-gold">
-            {testimonialsIntro.eyebrow}
+            {intro.eyebrow}
           </p>
           <h2 className="font-serif mt-4 text-[2.2rem] font-normal leading-[1.06] tracking-[-0.02em] text-purple-deep md:text-5xl">
-            {testimonialsIntro.title}
+            {intro.title}
             <span className="mt-1 block bg-gradient-to-r from-purple-deep via-purple-mid to-gold bg-clip-text italic text-transparent">
-              {testimonialsIntro.titleAccent}
+              {intro.titleAccent}
             </span>
           </h2>
           <div className="mx-auto mt-6 flex items-center justify-center gap-3">
@@ -110,19 +116,19 @@ export function TestimonialsShowcaseSection() {
             <span className="h-px w-10 bg-gradient-to-l from-transparent to-gold/70" />
           </div>
           <p className="mt-6 text-base leading-relaxed text-purple-deep/60 md:text-[1.02rem]">
-            {testimonialsIntro.description}
+            {intro.description}
           </p>
         </motion.div>
 
         <div className="mt-14 grid gap-6 md:mt-16 lg:grid-cols-3 lg:items-center lg:gap-8">
-          <TestimonialCard item={testimonials[0]} index={0} reduceMotion={!!reduceMotion} />
+          <TestimonialCard item={items[0]} index={0} reduceMotion={!!reduceMotion} />
           <TestimonialCard
-            item={testimonials[1]}
+            item={items[1]}
             index={1}
             featured
             reduceMotion={!!reduceMotion}
           />
-          <TestimonialCard item={testimonials[2]} index={2} reduceMotion={!!reduceMotion} />
+          <TestimonialCard item={items[2]} index={2} reduceMotion={!!reduceMotion} />
         </div>
 
         <motion.p

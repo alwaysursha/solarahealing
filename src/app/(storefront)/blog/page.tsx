@@ -1,30 +1,27 @@
 import Link from "next/link";
 import { InnerPage } from "@/components/storefront/InnerPage";
+import { getPublishedArticles } from "@/lib/content";
 
 export const dynamic = "force-dynamic";
 
-const PLACEHOLDER_POSTS = [
-  { slug: "what-is-reiki", title: "What is Reiki?", excerpt: "An introduction to universal life energy." },
-  { slug: "chakra-balancing", title: "Chakra balancing guide", excerpt: "Aligning your seven energy centers." },
-];
-
 export default async function BlogIndexPage() {
+  const posts = await getPublishedArticles();
+
   return (
     <InnerPage
-      title="Healing insights"
-      description="Articles on Reiki, chakras, and spiritual wellness — loaded dynamically from the server."
+      title="Healing Insights"
+      description="Articles on Reiki, energy healing, and conscious living."
     >
       <ul className="space-y-4">
-        {PLACEHOLDER_POSTS.map((post) => (
-          <li key={post.slug}>
+        {posts.map((post) => (
+          <li key={post.id}>
             <Link
               href={`/blog/${post.slug}`}
-              className="block rounded-2xl border border-purple-deep/10 bg-canvas p-6 transition-colors hover:border-gold/40"
+              className="block rounded-2xl border border-purple-deep/10 bg-cream/40 p-5 transition hover:border-gold/35"
             >
-              <h2 className="font-display text-xl font-semibold text-purple-deep">
-                {post.title}
-              </h2>
-              <p className="mt-2 text-sm text-purple-deep/60">{post.excerpt}</p>
+              <p className="text-xs uppercase tracking-[0.18em] text-purple-deep/45">{post.category}</p>
+              <h2 className="mt-2 font-serif text-2xl text-purple-deep">{post.title}</h2>
+              <p className="mt-2 text-sm text-purple-deep/65">{post.excerpt}</p>
             </Link>
           </li>
         ))}

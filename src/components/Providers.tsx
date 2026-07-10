@@ -1,8 +1,8 @@
 "use client";
 
+import { SessionProvider } from "next-auth/react";
 import type { ReactNode } from "react";
 
-/** Root client providers — extend with SessionProvider, cart, etc. */
 export function Providers({ children }: { children: ReactNode }) {
-  return children;
+  return <SessionProvider>{children}</SessionProvider>;
 }

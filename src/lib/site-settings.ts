@@ -1,4 +1,4 @@
-import { SITE_DESCRIPTION, SITE_NAME } from "@/lib/constants";
+import { getSiteSettingsFromDb } from "@/lib/content";
 import { site } from "@/lib/site";
 
 export type SiteSettings = {
@@ -9,21 +9,36 @@ export type SiteSettings = {
   description: string;
   nav: typeof site.nav;
   cta: string;
-  contact: typeof site.contact;
+  contact: {
+    email: string;
+    phone: string;
+    whatsapp: string;
+    location: string;
+  };
+  seoTitle: string;
+  metaDescription: string;
   fetchedAt: string;
 };
 
-/** Server-only site content — replace with DB/CMS reads as features grow */
+/** Server-only site content from database with static fallback */
 export async function getSiteSettings(): Promise<SiteSettings> {
+  const settings = await getSiteSettingsFromDb();
   return {
-    name: SITE_NAME,
-    tagline: site.tagline,
-    sanskrit: site.sanskrit,
-    sanskritMeaning: site.sanskritMeaning,
-    description: SITE_DESCRIPTION,
-    nav: site.nav,
-    cta: site.cta,
-    contact: site.contact,
-    fetchedAt: new Date().toISOString(),
+    name: settings.name,
+    tagline: settings.tagline,
+    sanskrit: settings.sanskrit,
+    sanskritMeaning: settings.sanskritMeaning,
+    description: settings.description,
+    nav: settings.nav,
+    cta: settings.cta,
+    contact: {
+      email: settings.email,
+      phone: settings.phone,
+      whatsapp: settings.whatsapp,
+      location: settings.address,
+    },
+    seoTitle: settings.seoTitle,
+    metaDescription: settings.metaDescription,
+    fetchedAt: settings.fetchedAt,
   };
 }

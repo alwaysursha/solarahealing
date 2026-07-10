@@ -10,6 +10,27 @@ import {
   articlesSecondary,
 } from "@/lib/site";
 
+type FeaturedArticle = {
+  slug: string;
+  category: string;
+  title: string;
+  excerpt: string;
+  image: string;
+  imageAlt: string;
+  cta: string;
+};
+
+type SecondaryArticle = FeaturedArticle;
+
+type ListArticle = {
+  slug: string;
+  title: string;
+  description: string;
+  linkLabel: string;
+  image: string;
+  imageAlt: string;
+};
+
 const ease = [0.22, 1, 0.36, 1] as const;
 
 const listStagger = {
@@ -31,9 +52,7 @@ function ReadLink({ label }: { label: string }) {
   );
 }
 
-function FeaturedArticleCard() {
-  const article = articlesFeatured;
-
+function FeaturedArticleCard({ article }: { article: FeaturedArticle }) {
   return (
     <Link
       href={`/blog/${article.slug}`}
@@ -71,7 +90,7 @@ function FeaturedArticleCard() {
 function SecondaryArticleCard({
   article,
 }: {
-  article: (typeof articlesSecondary)[number];
+  article: SecondaryArticle;
 }) {
   return (
     <Link
@@ -110,7 +129,7 @@ function ArticleListItem({
   article,
   index,
 }: {
-  article: (typeof articlesList)[number];
+  article: ListArticle;
   index: number;
 }) {
   return (
@@ -149,7 +168,17 @@ function ArticleListItem({
   );
 }
 
-export function ArticlesSection() {
+export function ArticlesSection({
+  intro = articlesIntro,
+  featured = articlesFeatured,
+  secondary = [...articlesSecondary],
+  list = [...articlesList],
+}: {
+  intro?: typeof articlesIntro;
+  featured?: FeaturedArticle;
+  secondary?: SecondaryArticle[];
+  list?: ListArticle[];
+}) {
   const reduceMotion = useReducedMotion();
 
   return (
@@ -163,17 +192,17 @@ export function ArticlesSection() {
           transition={{ duration: 0.8, ease }}
         >
           <p className="text-[0.68rem] font-semibold uppercase tracking-[0.34em] text-gold">
-            {articlesIntro.eyebrow}
+            {intro.eyebrow}
           </p>
           <h2 className="font-serif mt-4 text-[2.2rem] font-normal leading-[1.06] tracking-[-0.02em] text-purple-deep md:text-5xl">
-            {articlesIntro.title}
+            {intro.title}
             <span className="mt-1 block bg-gradient-to-r from-purple-mid via-gold to-purple-mid bg-clip-text italic text-transparent">
-              {articlesIntro.titleAccent}
+              {intro.titleAccent}
             </span>
           </h2>
           <div className="mt-6 h-px w-16 bg-gradient-to-r from-gold/70 to-transparent" />
           <p className="mt-6 max-w-2xl text-base leading-relaxed text-purple-deep/65 md:text-[1.02rem]">
-            {articlesIntro.description}
+            {intro.description}
           </p>
         </motion.div>
 
@@ -185,9 +214,9 @@ export function ArticlesSection() {
             viewport={{ once: true, margin: "-40px" }}
             transition={{ duration: 0.85, ease }}
           >
-            <FeaturedArticleCard />
+            <FeaturedArticleCard article={featured} />
             <div className="grid gap-5 sm:grid-cols-2">
-              {articlesSecondary.map((article) => (
+              {secondary.map((article) => (
                 <SecondaryArticleCard key={article.slug} article={article} />
               ))}
             </div>
@@ -196,7 +225,7 @@ export function ArticlesSection() {
           <div className="lg:col-span-7">
             {reduceMotion ? (
               <ul className="article-list divide-y divide-purple-deep/8">
-                {articlesList.map((article, index) => (
+                {list.map((article, index) => (
                   <li key={article.slug}>
                     <Link
                       href={`/blog/${article.slug}`}
@@ -237,7 +266,7 @@ export function ArticlesSection() {
                 whileInView="visible"
                 viewport={{ once: true, amount: 0.15, margin: "-40px" }}
               >
-                {articlesList.map((article, index) => (
+                {list.map((article, index) => (
                   <ArticleListItem key={article.slug} article={article} index={index} />
                 ))}
               </motion.ul>

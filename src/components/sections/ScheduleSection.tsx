@@ -9,7 +9,11 @@ import { scheduleBooking } from "@/lib/site";
 
 const ease: [number, number, number, number] = [0.22, 1, 0.36, 1];
 
-export function ScheduleSection() {
+export function ScheduleSection({
+  booking = scheduleBooking,
+}: {
+  booking?: typeof scheduleBooking;
+}) {
   const reduceMotion = useReducedMotion();
   const sectionRef = useRef<HTMLElement>(null);
   const animationsActive = useAnimationsActive(sectionRef);
@@ -33,7 +37,7 @@ export function ScheduleSection() {
         >
           <div className="schedule-content-bg pointer-events-none absolute inset-0 lg:hidden" aria-hidden>
             <Image
-              src={scheduleBooking.image}
+              src={booking.image}
               alt=""
               fill
               sizes="100vw"
@@ -44,23 +48,23 @@ export function ScheduleSection() {
 
           <div className="relative z-[1]">
             <p className="text-[0.68rem] font-semibold uppercase tracking-[0.34em] text-gray-50/75">
-              {scheduleBooking.eyebrow}
+              {booking.eyebrow}
             </p>
             <h2 className="font-serif mt-5 max-w-md text-[2.15rem] font-normal leading-[1.08] tracking-[-0.02em] text-gray-50 md:text-[2.65rem] lg:text-[2.85rem]">
-              {scheduleBooking.title}
+              {booking.title}
             </h2>
 
             <div className="mt-10 flex flex-col gap-8 sm:flex-row sm:flex-wrap sm:items-center">
               <Link
-                href={scheduleBooking.ctaHref}
+                href={booking.ctaHref}
                 className="schedule-cta-btn inline-flex w-fit items-center justify-center rounded-full bg-purple-deep px-8 py-4 text-[0.72rem] font-semibold uppercase tracking-[0.22em] text-gray-50 shadow-lg shadow-purple-deep/35 transition-colors hover:bg-purple-mid"
               >
-                {scheduleBooking.cta}
+                {booking.cta}
               </Link>
 
               <div className="flex items-center gap-4">
                 <div className="flex items-center">
-                  {scheduleBooking.socialProof.avatars.map((avatar, index) => (
+                  {booking.socialProof.avatars.map((avatar, index) => (
                     <div
                       key={avatar.src}
                       className="schedule-avatar relative h-11 w-11 overflow-hidden rounded-full border-2 border-purple-deep/80 bg-purple-deep/40"
@@ -79,11 +83,11 @@ export function ScheduleSection() {
                     className="relative flex h-11 w-11 items-center justify-center rounded-full border-2 border-gray-50/30 bg-purple-mid/60 text-[0.62rem] font-bold text-gray-50"
                     style={{ marginLeft: -12, zIndex: 0 }}
                   >
-                    {scheduleBooking.socialProof.count}
+                    {booking.socialProof.count}
                   </div>
                 </div>
                 <p className="max-w-[9rem] text-[0.68rem] font-medium leading-snug text-gray-50/70">
-                  {scheduleBooking.socialProof.label}
+                  {booking.socialProof.label}
                 </p>
               </div>
             </div>
@@ -102,8 +106,8 @@ export function ScheduleSection() {
 
           <div className="absolute inset-0 z-[3] overflow-hidden">
             <Image
-              src={scheduleBooking.image}
-              alt={scheduleBooking.imageAlt}
+              src={booking.image}
+              alt={booking.imageAlt}
               fill
               sizes="(max-width: 1024px) 100vw, 58vw"
               className="schedule-portrait-image object-cover object-[center_15%]"
