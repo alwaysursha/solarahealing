@@ -3,7 +3,7 @@ import Credentials from "next-auth/providers/credentials";
 import Google from "next-auth/providers/google";
 import bcrypt from "bcryptjs";
 import { eq } from "drizzle-orm";
-import { db, users } from "@/db";
+import { getDb, users } from "@/db";
 import { createId, nowIso } from "@/lib/id";
 
 declare module "next-auth" {
@@ -51,6 +51,7 @@ export const { handlers, auth, signIn, signOut } = NextAuth({
           return null;
         }
 
+        const db = await getDb();
         const rows = await db.select().from(users).where(eq(users.email, email)).limit(1);
         const user = rows[0];
 
@@ -84,6 +85,7 @@ export const { handlers, auth, signIn, signOut } = NextAuth({
         return false;
       }
 
+      const db = await getDb();
       const existing = await db.select().from(users).where(eq(users.email, email)).limit(1);
       if (existing[0]) {
         return true;
@@ -103,6 +105,7 @@ export const { handlers, auth, signIn, signOut } = NextAuth({
       return true;
     },
     async jwt({ token, user, account }) {
+      const db = await getDb();
       if (user?.id) {
         token.id = user.id;
         token.role = user.role ?? "user";

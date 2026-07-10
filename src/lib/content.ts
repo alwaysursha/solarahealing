@@ -1,7 +1,7 @@
 import { asc, desc, eq } from "drizzle-orm";
 import {
   articles,
-  db,
+  getDb,
   onlineCourses,
   pageSections,
   siteSettings,
@@ -29,6 +29,7 @@ import {
 import { SITE_DESCRIPTION, SITE_NAME } from "@/lib/constants";
 
 export async function getDbSiteSettings() {
+  const db = await getDb();
   const rows = await db.select().from(siteSettings).where(eq(siteSettings.id, 1)).limit(1);
   const row = rows[0];
   if (!row) {
@@ -77,6 +78,7 @@ export async function getSiteSettingsFromDb() {
 }
 
 export async function getPublishedCourses() {
+  const db = await getDb();
   const rows = await db
     .select()
     .from(onlineCourses)
@@ -113,6 +115,7 @@ export async function getPublishedCourses() {
 }
 
 export async function getPublishedWorkshops() {
+  const db = await getDb();
   const rows = await db
     .select()
     .from(workshops)
@@ -147,6 +150,7 @@ export async function getCoursesIntro() {
 }
 
 export async function getPageSection(pageKey: string, sectionKey: string) {
+  const db = await getDb();
   const rows = await db
     .select()
     .from(pageSections)
@@ -157,6 +161,7 @@ export async function getPageSection(pageKey: string, sectionKey: string) {
 }
 
 export async function getHomePageContent() {
+  const db = await getDb();
   const sections = await db
     .select()
     .from(pageSections)
@@ -178,6 +183,7 @@ export async function getHomePageContent() {
 }
 
 export async function getPublishedArticles() {
+  const db = await getDb();
   const rows = await db
     .select()
     .from(articles)
@@ -188,6 +194,7 @@ export async function getPublishedArticles() {
 }
 
 export async function getArticleBySlug(slug: string) {
+  const db = await getDb();
   const rows = await db.select().from(articles).where(eq(articles.slug, slug)).limit(1);
   return rows[0] ?? null;
 }
@@ -245,14 +252,17 @@ export async function getHomeArticlesDisplay() {
 }
 
 export async function getAllCustomers() {
+  const db = await getDb();
   return db.select().from(users).where(eq(users.role, "user")).orderBy(desc(users.createdAt));
 }
 
 export async function getAllOrders() {
+  const db = await getDb();
   return db.select().from(orders).orderBy(desc(orders.createdAt));
 }
 
 export async function getOrderWithItems(orderId: string) {
+  const db = await getDb();
   const orderRows = await db.select().from(orders).where(eq(orders.id, orderId)).limit(1);
   const order = orderRows[0];
   if (!order) return null;
@@ -261,6 +271,7 @@ export async function getOrderWithItems(orderId: string) {
 }
 
 export async function getAdminStats() {
+  const db = await getDb();
   const [courseCount, workshopCount, articleCount, customerRows, orderRows] = await Promise.all([
     db.select().from(onlineCourses),
     db.select().from(workshops),

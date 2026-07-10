@@ -1,5 +1,5 @@
 import { eq } from "drizzle-orm";
-import { db, siteSettings } from "@/db";
+import { getDb, siteSettings } from "@/db";
 import { AdminField, AdminPanel, AdminShell, AdminSubmit } from "@/components/admin/AdminShell";
 import { updateSiteSettingsAction } from "@/lib/admin/actions";
 import { getDbSiteSettings } from "@/lib/content";
@@ -11,6 +11,7 @@ export const dynamic = "force-dynamic";
 export default async function AdminSettingsPage() {
   let settings = await getDbSiteSettings();
   if (!settings) {
+    const db = await getDb();
     await db
       .insert(siteSettings)
       .values({

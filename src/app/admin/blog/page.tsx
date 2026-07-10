@@ -1,5 +1,5 @@
 import { asc } from "drizzle-orm";
-import { db, articles } from "@/db";
+import { getDb, articles } from "@/db";
 import { AdminField, AdminPanel, AdminShell, AdminSubmit } from "@/components/admin/AdminShell";
 import { deleteArticleAction, upsertArticleAction } from "@/lib/admin/actions";
 import Link from "next/link";
@@ -7,6 +7,7 @@ import Link from "next/link";
 export const dynamic = "force-dynamic";
 
 export default async function AdminBlogPage() {
+  const db = await getDb();
   const rows = await db.select().from(articles).orderBy(asc(articles.sortOrder));
 
   return (
