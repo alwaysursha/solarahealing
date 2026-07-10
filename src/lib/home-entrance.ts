@@ -12,6 +12,9 @@ export const HOME_HERO_ENTRANCE_MS = Math.round(
   (HERO_IMAGE_DELAY_S + HERO_ENTRANCE_DURATION_S) * 1000,
 );
 
+/** Extra time on slide 1 after entrance before autoplay begins */
+export const HERO_FIRST_SLIDE_DWELL_MS = 2000;
+
 /** Slide-to-slide transitions (after initial entrance) */
 export const HERO_SLIDE_CHANGE_DURATION_S = 0.72;
 export const HERO_SLIDE_BG_DURATION_S = 0.95;

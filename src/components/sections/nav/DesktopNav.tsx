@@ -10,7 +10,7 @@ export function DesktopNav() {
 
   if (reduceMotion) {
     return (
-      <nav className="hidden flex-1 items-center justify-center gap-8 lg:flex xl:gap-11" aria-label="Main">
+      <nav className="hidden flex-1 items-center justify-center gap-5 lg:flex xl:gap-7" aria-label="Main">
         {site.nav.map((item) => (
           <DesktopNavLink key={item.href} item={item} animated={false} />
         ))}
@@ -20,7 +20,7 @@ export function DesktopNav() {
 
   return (
     <motion.nav
-      className="hidden flex-1 items-center justify-center gap-8 lg:flex xl:gap-11"
+      className="hidden flex-1 items-center justify-center gap-5 lg:flex xl:gap-7"
       aria-label="Main"
       variants={desktopNavStagger}
       initial="hidden"
