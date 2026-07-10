@@ -8,7 +8,7 @@ type PanelBorderStarProps = {
   height: number;
   outlinePath: string;
   tracePath: string;
-  /** Skip heavy SVG filters on Chrome mobile — shimmer stays enabled. */
+  /** Chrome mobile — skip SVG depth filter and traveling white highlight. */
   liteFilters?: boolean;
 };
 
@@ -106,7 +106,7 @@ export function PanelBorderStar({
         {...STROKE}
       />
 
-      {!reduceMotion && tracePath && (
+      {!reduceMotion && tracePath && !liteFilters && (
         <path
           d={tracePath}
           fill="none"

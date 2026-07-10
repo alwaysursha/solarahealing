@@ -1069,7 +1069,7 @@ body {
 }
 
 [data-compositor="chrome-touch"] .panel-border-shimmer {
-  will-change: auto;
+  display: none;
 }
 
 [data-compositor="chrome-touch"] .site-scroll-panel.site-scrolling .panel-border-shimmer,
