@@ -1204,6 +1204,33 @@ body {
   }
 }
 
+/* Chrome mobile — locked dark night, twinkling stars only (no day/night cycle) */
+.courses-cosmos-static-night {
+  --courses-night-mix: 1;
+  --courses-stars-mix: 1;
+  background: linear-gradient(165deg, rgb(2, 1, 8) 0%, rgb(1, 0, 6) 100%);
+}
+
+.courses-cosmos-static-night .courses-cosmos-night-veil {
+  opacity: 1;
+}
+
+.courses-cosmos-static-night .courses-cosmos-night-glow {
+  opacity: 0.38;
+}
+
+.courses-cosmos-static-night .courses-cosmos-night-stars {
+  opacity: 1;
+}
+
+.courses-cosmos-static-night .courses-space-nebula {
+  opacity: 0.18;
+}
+
+.courses-cosmos-static-night .courses-cosmos-depth-fog {
+  opacity: 0.1;
+}
+
 .courses-cosmos-night-veil {
   background:
     radial-gradient(ellipse 80% 55% at 50% 38%, rgba(4, 2, 16, 0.35) 0%, transparent 62%),
