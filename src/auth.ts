@@ -1,10 +1,12 @@
 import NextAuth from "next-auth";
+import { PrismaAdapter } from "@auth/prisma-adapter";
 import Credentials from "next-auth/providers/credentials";
 import Google from "next-auth/providers/google";
 import bcrypt from "bcryptjs";
-import { eq } from "drizzle-orm";
-import { getDb, users } from "@/db";
-import { createId, nowIso } from "@/lib/id";
+import type { Provider } from "next-auth/providers";
+import { Role } from "@prisma/client";
+import { authConfig } from "@/lib/auth.config";
+import { prisma } from "@/lib/prisma";
 
 declare module "next-auth" {
   interface Session {
@@ -13,135 +15,85 @@ declare module "next-auth" {
       email: string;
       name: string;
       image?: string | null;
-      role: "user" | "admin";
+      role: Role;
     };
   }
 
   interface User {
-    role: "user" | "admin";
+    role: Role;
   }
 }
 
-export const { handlers, auth, signIn, signOut } = NextAuth({
-  trustHost: true,
-  session: { strategy: "jwt" },
-  pages: {
-    signIn: "/auth/sign-in",
-  },
-  providers: [
-    ...(process.env.GOOGLE_CLIENT_ID && process.env.GOOGLE_CLIENT_SECRET
-      ? [
-          Google({
-            clientId: process.env.GOOGLE_CLIENT_ID,
-            clientSecret: process.env.GOOGLE_CLIENT_SECRET,
-          }),
-        ]
-      : []),
-    Credentials({
-      name: "Email and password",
-      credentials: {
-        email: { label: "Email", type: "email" },
-        password: { label: "Password", type: "password" },
-      },
-      async authorize(credentials) {
-        const email = credentials?.email?.toString().trim().toLowerCase();
-        const password = credentials?.password?.toString() ?? "";
+const providers: Provider[] = [
+  Credentials({
+    name: "Email and password",
+    credentials: {
+      email: { label: "Email", type: "email" },
+      password: { label: "Password", type: "password" },
+    },
+    async authorize(credentials) {
+      const email = credentials?.email?.toString().trim().toLowerCase();
+      const password = credentials?.password?.toString() ?? "";
 
-        if (!email || !password) {
-          return null;
-        }
-
-        const db = await getDb();
-        const rows = await db.select().from(users).where(eq(users.email, email)).limit(1);
-        const user = rows[0];
-
-        if (!user?.passwordHash) {
-          return null;
-        }
-
-        const valid = await bcrypt.compare(password, user.passwordHash);
-        if (!valid) {
-          return null;
-        }
-
-        return {
-          id: user.id,
-          email: user.email,
-          name: user.name,
-          image: user.image,
-          role: user.role,
-        };
-      },
-    }),
-  ],
-  callbacks: {
-    async signIn({ user, account, profile }) {
-      if (account?.provider !== "google") {
-        return true;
+      if (!email || !password) {
+        return null;
       }
 
-      const email = user.email?.toLowerCase();
-      if (!email) {
-        return false;
-      }
-
-      const db = await getDb();
-      const existing = await db.select().from(users).where(eq(users.email, email)).limit(1);
-      if (existing[0]) {
-        return true;
-      }
-
-      const ts = nowIso();
-      await db.insert(users).values({
-        id: createId(),
-        email,
-        name: user.name ?? profile?.name ?? email.split("@")[0] ?? "Member",
-        image: user.image ?? null,
-        role: "user",
-        createdAt: ts,
-        updatedAt: ts,
+      const user = await prisma.user.findUnique({
+        where: { email },
       });
 
-      return true;
-    },
-    async jwt({ token, user, account }) {
-      const db = await getDb();
-      if (user?.id) {
-        token.id = user.id;
-        token.role = user.role ?? "user";
-      } else if (token.email) {
-        const rows = await db
-          .select()
-          .from(users)
-          .where(eq(users.email, token.email.toLowerCase()))
-          .limit(1);
-        const dbUser = rows[0];
-        if (dbUser) {
-          token.id = dbUser.id;
-          token.role = dbUser.role;
-        }
+      if (!user?.password) {
+        return null;
       }
 
-      if (account?.provider === "google" && token.email && !token.id) {
-        const rows = await db
-          .select()
-          .from(users)
-          .where(eq(users.email, token.email.toLowerCase()))
-          .limit(1);
-        const dbUser = rows[0];
-        if (dbUser) {
-          token.id = dbUser.id;
-          token.role = dbUser.role;
-        }
+      const valid = await bcrypt.compare(password, user.password);
+      if (!valid) {
+        return null;
       }
 
-      return token;
+      return user;
     },
+  }),
+];
+
+if (process.env.GOOGLE_CLIENT_ID && process.env.GOOGLE_CLIENT_SECRET) {
+  providers.unshift(
+    Google({
+      clientId: process.env.GOOGLE_CLIENT_ID,
+      clientSecret: process.env.GOOGLE_CLIENT_SECRET,
+      allowDangerousEmailAccountLinking: true,
+    }),
+  );
+}
+
+export const { handlers, auth, signIn, signOut } = NextAuth({
+  ...authConfig,
+  adapter: PrismaAdapter(prisma),
+  providers,
+  callbacks: {
+    ...authConfig.callbacks,
     async session({ session, token }) {
       if (session.user) {
-        session.user.id = String(token.id ?? "");
-        session.user.role = (token.role as "user" | "admin") ?? "user";
+        session.user.id = token.sub as string;
+        session.user.role = (token.role as Role) ?? Role.USER;
       }
+
+      if (session.user?.email) {
+        const dbUser = await prisma.user.findUnique({
+          where: { email: session.user.email },
+          select: { id: true, role: true, name: true },
+        });
+
+        if (dbUser) {
+          session.user.id = dbUser.id;
+          session.user.role = dbUser.role;
+          if (dbUser.name) {
+            session.user.name = dbUser.name;
+          }
+        }
+      }
+
       return session;
     },
   },
@@ -149,7 +101,7 @@ export const { handlers, auth, signIn, signOut } = NextAuth({
 
 export async function requireAdmin() {
   const session = await auth();
-  if (!session?.user || session.user.role !== "admin") {
+  if (!session?.user || session.user.role !== Role.ADMIN) {
     throw new Error("Unauthorized");
   }
   return session;

@@ -1,16 +1,15 @@
-import { eq } from "drizzle-orm";
 import { auth } from "@/auth";
-import { getDb, users } from "@/db";
 import { AdminField, AdminPanel, AdminShell, AdminSubmit } from "@/components/admin/AdminShell";
 import { updateAdminPasswordAction, updateAdminProfileAction } from "@/lib/admin/actions";
+import { prisma } from "@/lib/prisma";
 
 export const dynamic = "force-dynamic";
 
 export default async function AdminProfilePage() {
   const session = await auth();
-  const db = await getDb();
-  const rows = await db.select().from(users).where(eq(users.id, session!.user.id)).limit(1);
-  const user = rows[0];
+  const user = await prisma.user.findUnique({
+    where: { id: session!.user.id },
+  });
 
   return (
     <AdminShell
@@ -37,7 +36,7 @@ export default async function AdminProfilePage() {
             <AdminField label="New password" name="newPassword" type="password" />
             <AdminSubmit label="Update password" />
           </form>
-          {!user?.passwordHash ? (
+          {!user?.password ? (
             <p className="mt-4 text-sm text-purple-deep/60">
               You signed in with Google. Password login is not enabled for this account.
             </p>

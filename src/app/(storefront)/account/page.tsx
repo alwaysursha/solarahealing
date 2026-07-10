@@ -1,3 +1,4 @@
+import { Role } from "@prisma/client";
 import { auth, signOut } from "@/auth";
 import { InnerPage } from "@/components/storefront/InnerPage";
 import { GlowButton } from "@/components/ui/GlowButton";
@@ -22,7 +23,7 @@ export default async function AccountPage() {
       </div>
 
       <div className="mt-6 flex flex-wrap gap-3">
-        {session.user.role === "admin" ? (
+        {session.user.role === Role.ADMIN ? (
           <GlowButton href="/admin" variant="primary">
             Open admin dashboard
           </GlowButton>

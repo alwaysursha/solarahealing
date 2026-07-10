@@ -1,14 +1,13 @@
-import { eq } from "drizzle-orm";
-import { getDb, users } from "@/db";
+import { Role } from "@prisma/client";
 import { AdminPanel, AdminShell } from "@/components/admin/AdminShell";
 import { getAllCustomers } from "@/lib/content";
+import { prisma } from "@/lib/prisma";
 
 export const dynamic = "force-dynamic";
 
 export default async function AdminCustomersPage() {
   const customers = await getAllCustomers();
-  const db = await getDb();
-  const admins = await db.select().from(users).where(eq(users.role, "admin"));
+  const admins = await prisma.user.findMany({ where: { role: Role.ADMIN } });
 
   return (
     <AdminShell

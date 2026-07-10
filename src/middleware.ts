@@ -1,4 +1,5 @@
 import { auth } from "@/auth";
+import { Role } from "@prisma/client";
 import { NextResponse } from "next/server";
 import type { NextRequest } from "next/server";
 
@@ -12,7 +13,7 @@ export async function middleware(request: NextRequest) {
       signInUrl.searchParams.set("callbackUrl", pathname);
       return NextResponse.redirect(signInUrl);
     }
-    if (session.user.role !== "admin") {
+    if (session.user.role !== Role.ADMIN) {
       return NextResponse.redirect(new URL("/account", request.url));
     }
   }

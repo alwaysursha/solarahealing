@@ -57,12 +57,18 @@ echo "Create an API token for CI:"
 echo "  https://dash.cloudflare.com/profile/api-tokens"
 echo "  Template: Edit Cloudflare Workers"
 echo
+echo "One-time database setup (from your machine, not CI):"
+echo "  pnpm db:setup"
+echo
 echo "Add GitHub repository secrets:"
 echo "  CLOUDFLARE_API_TOKEN"
-echo "  CLOUDFLARE_ACCOUNT_ID"
+echo "  DATABASE_URL"
+echo "  AUTH_SECRET"
+echo "  GOOGLE_CLIENT_ID (optional)"
+echo "  GOOGLE_CLIENT_SECRET (optional)"
 echo
 echo "Local deploy:"
-echo "  pnpm run deploy"
+echo "  pnpm run deploy:cf"
 echo
 echo "Optional: connect the repo in Cloudflare dashboard for Git-based deploys:"
 echo "  https://dash.cloudflare.com/?to=/:account/workers-and-pages"

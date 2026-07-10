@@ -1,5 +1,3 @@
-import { asc } from "drizzle-orm";
-import { getDb, onlineCourses, workshops } from "@/db";
 import {
   AdminField,
   AdminPanel,
@@ -12,14 +10,14 @@ import {
   upsertCourseAction,
   upsertWorkshopAction,
 } from "@/lib/admin/actions";
+import { prisma } from "@/lib/prisma";
 
 export const dynamic = "force-dynamic";
 
 export default async function AdminCoursesPage() {
-  const db = await getDb();
   const [courses, workshopRows] = await Promise.all([
-    db.select().from(onlineCourses).orderBy(asc(onlineCourses.sortOrder)),
-    db.select().from(workshops).orderBy(asc(workshops.sortOrder)),
+    prisma.onlineCourse.findMany({ orderBy: { sortOrder: "asc" } }),
+    prisma.workshop.findMany({ orderBy: { sortOrder: "asc" } }),
   ]);
 
   return (
