@@ -155,7 +155,7 @@ function PhotoSlideBackground({
   );
 }
 
-export function Hero() {
+export function Hero({ slides = heroSlides }: { slides?: typeof heroSlides }) {
   const reduceMotion = useReducedMotion();
   const [active, setActive] = useState(0);
   const [paused, setPaused] = useState(false);
@@ -165,7 +165,7 @@ export function Hero() {
   const activeRef = useRef(active);
   const entranceFinishedRef = useRef(reduceMotion === true);
   const autoplayDwellTimerRef = useRef<number | undefined>(undefined);
-  const slideCount = heroSlides.length;
+  const slideCount = slides.length;
   const nextSlideIndex = (active + 1) % slideCount;
 
   activeRef.current = active;
@@ -226,7 +226,7 @@ export function Hero() {
     return () => window.clearInterval(timer);
   }, [next, paused, reduceMotion, autoplayReady]);
 
-  const slide = heroSlides[active];
+  const slide = slides[active];
 
   return (
     <section
@@ -242,7 +242,7 @@ export function Hero() {
       >
         <div className="absolute inset-0 bg-hero-light" aria-hidden />
 
-        {heroSlides.map((item, index) => {
+        {slides.map((item, index) => {
           const isActive = index === active;
           const isEntrance = !entranceFinishedRef.current && index === 0 && active === 0;
 
@@ -379,7 +379,7 @@ export function Hero() {
               }}
             >
             <div className="flex items-center gap-2" role="tablist" aria-label="Choose slide">
-              {heroSlides.map((item, index) => (
+              {slides.map((item, index) => (
                 <button
                   key={item.id}
                   type="button"

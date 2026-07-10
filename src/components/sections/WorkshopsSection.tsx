@@ -7,6 +7,18 @@ import { useRef } from "react";
 import { useAnimationsActive } from "@/hooks/useAnimationsActive";
 import { formatCad, workshops, workshopsIntro } from "@/lib/site";
 
+type WorkshopItem = {
+  id: string;
+  title: string;
+  description: string;
+  date: string;
+  duration: string;
+  badge: string;
+  priceCad: number;
+  image: string;
+  imageAlt: string;
+};
+
 const ease: [number, number, number, number] = [0.22, 1, 0.36, 1];
 const revealEase: [number, number, number, number] = [0.65, 0, 0.35, 1];
 const springEase: [number, number, number, number] = [0.34, 1.56, 0.64, 1];
@@ -141,8 +153,6 @@ const cardPriceReveal = {
   },
 };
 
-const [featured, ...upcoming] = workshops;
-
 function EnrollingDot({ className = "" }: { className?: string }) {
   return (
     <span
@@ -212,9 +222,15 @@ function RegisterButton({
   );
 }
 
-function FeaturedWorkshop({ reduceMotion }: { reduceMotion: boolean | null }) {
+function FeaturedWorkshop({
+  reduceMotion,
+  workshop,
+}: {
+  reduceMotion: boolean | null;
+  workshop: WorkshopItem;
+}) {
   if (reduceMotion) {
-    return <FeaturedWorkshopStatic />;
+    return <FeaturedWorkshopStatic workshop={workshop} />;
   }
 
   return (
@@ -230,8 +246,8 @@ function FeaturedWorkshop({ reduceMotion }: { reduceMotion: boolean | null }) {
         >
           <motion.div className="absolute inset-0" variants={featuredImageZoom}>
             <Image
-              src={featured.image}
-              alt={featured.imageAlt}
+              src={workshop.image}
+              alt={workshop.imageAlt}
               fill
               sizes="(max-width: 1024px) 100vw, 58vw"
               className="object-cover transition-transform duration-[1.2s] ease-out group-hover:scale-105"
@@ -245,7 +261,7 @@ function FeaturedWorkshop({ reduceMotion }: { reduceMotion: boolean | null }) {
             className="absolute left-5 top-5 z-[3] flex items-center gap-3"
             variants={featuredContentItem}
           >
-            <WorkshopBadge label={featured.badge} />
+            <WorkshopBadge label={workshop.badge} />
             <span className="rounded-full bg-gold/90 px-2.5 py-1 text-[0.58rem] font-bold uppercase tracking-[0.18em] text-purple-deep">
               Featured
             </span>
@@ -263,16 +279,16 @@ function FeaturedWorkshop({ reduceMotion }: { reduceMotion: boolean | null }) {
           <motion.div variants={featuredContentStagger}>
             <motion.div variants={featuredContentItem}>
               <p className="text-[0.65rem] font-medium uppercase tracking-[0.24em] text-gold-light/80">
-                {featured.date}
+                {workshop.date}
               </p>
               <h3 className="font-serif mt-3 text-2xl font-normal leading-tight text-white md:text-3xl">
-                {featured.title}
+                {workshop.title}
               </h3>
               <p className="mt-4 text-sm leading-relaxed text-white/60">
-                {featured.description}
+                {workshop.description}
               </p>
               <p className="mt-3 text-[0.65rem] font-medium uppercase tracking-[0.2em] text-white/35">
-                {featured.duration}
+                {workshop.duration}
               </p>
             </motion.div>
 
@@ -282,9 +298,9 @@ function FeaturedWorkshop({ reduceMotion }: { reduceMotion: boolean | null }) {
             >
               <div>
                 <p className="text-[0.6rem] uppercase tracking-[0.24em] text-white/40">Investment</p>
-                <PriceTag priceCad={featured.priceCad} large />
+                <PriceTag priceCad={workshop.priceCad} large />
               </div>
-              <RegisterButton workshopId={featured.id} className="px-6 py-2.5 text-[0.68rem] md:text-xs" />
+              <RegisterButton workshopId={workshop.id} className="px-6 py-2.5 text-[0.68rem] md:text-xs" />
             </motion.div>
           </motion.div>
         </motion.div>
@@ -293,14 +309,14 @@ function FeaturedWorkshop({ reduceMotion }: { reduceMotion: boolean | null }) {
   );
 }
 
-function FeaturedWorkshopStatic() {
+function FeaturedWorkshopStatic({ workshop }: { workshop: WorkshopItem }) {
   return (
     <article className="workshop-featured group relative overflow-hidden rounded-[1.75rem] border border-white/15">
       <div className="grid lg:grid-cols-12">
         <div className="relative min-h-[260px] lg:col-span-7 lg:min-h-[340px]">
           <Image
-            src={featured.image}
-            alt={featured.imageAlt}
+            src={workshop.image}
+            alt={workshop.imageAlt}
             fill
             sizes="(max-width: 1024px) 100vw, 58vw"
             className="object-cover"
@@ -308,7 +324,7 @@ function FeaturedWorkshopStatic() {
           />
           <div className="absolute inset-0 bg-gradient-to-r from-transparent via-purple-deep/20 to-purple-deep/80 lg:via-purple-deep/10" />
           <div className="absolute left-5 top-5 flex items-center gap-3">
-            <WorkshopBadge label={featured.badge} />
+            <WorkshopBadge label={workshop.badge} />
             <span className="rounded-full bg-gold/90 px-2.5 py-1 text-[0.58rem] font-bold uppercase tracking-[0.18em] text-purple-deep">
               Featured
             </span>
@@ -316,17 +332,17 @@ function FeaturedWorkshopStatic() {
         </div>
         <div className="relative flex flex-col justify-between bg-[#2a1050]/82 p-6 backdrop-blur-xl md:p-8 lg:col-span-5">
           <div>
-            <p className="text-[0.65rem] font-medium uppercase tracking-[0.24em] text-gold-light/80">{featured.date}</p>
-            <h3 className="font-serif mt-3 text-2xl font-normal leading-tight text-white md:text-3xl">{featured.title}</h3>
-            <p className="mt-4 text-sm leading-relaxed text-white/60">{featured.description}</p>
-            <p className="mt-3 text-[0.65rem] font-medium uppercase tracking-[0.2em] text-white/35">{featured.duration}</p>
+            <p className="text-[0.65rem] font-medium uppercase tracking-[0.24em] text-gold-light/80">{workshop.date}</p>
+            <h3 className="font-serif mt-3 text-2xl font-normal leading-tight text-white md:text-3xl">{workshop.title}</h3>
+            <p className="mt-4 text-sm leading-relaxed text-white/60">{workshop.description}</p>
+            <p className="mt-3 text-[0.65rem] font-medium uppercase tracking-[0.2em] text-white/35">{workshop.duration}</p>
           </div>
           <div className="mt-8 flex flex-wrap items-end justify-between gap-4 border-t border-white/10 pt-6">
             <div>
               <p className="text-[0.6rem] uppercase tracking-[0.24em] text-white/40">Investment</p>
-              <PriceTag priceCad={featured.priceCad} large />
+              <PriceTag priceCad={workshop.priceCad} large />
             </div>
-            <RegisterButton workshopId={featured.id} className="px-6 py-2.5 text-[0.68rem] md:text-xs" />
+            <RegisterButton workshopId={workshop.id} className="px-6 py-2.5 text-[0.68rem] md:text-xs" />
           </div>
         </div>
       </div>
@@ -339,7 +355,7 @@ function UpcomingCard({
   index,
   reduceMotion,
 }: {
-  workshop: (typeof workshops)[number];
+  workshop: WorkshopItem;
   index: number;
   reduceMotion: boolean | null;
 }) {
@@ -397,7 +413,7 @@ function UpcomingCard({
   );
 }
 
-function UpcomingCardContent({ workshop }: { workshop: (typeof workshops)[number] }) {
+function UpcomingCardContent({ workshop }: { workshop: WorkshopItem }) {
   return (
     <>
       <Image
@@ -425,7 +441,15 @@ function UpcomingCardContent({ workshop }: { workshop: (typeof workshops)[number
   );
 }
 
-export function WorkshopsSection() {
+export function WorkshopsSection({
+  workshopList,
+  intro = workshopsIntro,
+}: {
+  workshopList?: WorkshopItem[];
+  intro?: string;
+}) {
+  const catalog = workshopList && workshopList.length > 0 ? workshopList : [...workshops];
+  const [featured, ...upcoming] = catalog;
   const reduceMotion = useReducedMotion();
   const sectionRef = useRef<HTMLElement>(null);
   const animationsActive = useAnimationsActive(sectionRef);
@@ -467,7 +491,7 @@ export function WorkshopsSection() {
             <div className="workshop-title-line mt-6 h-px w-20 origin-left bg-gradient-to-r from-gold to-transparent" />
 
             <p className="mt-6 max-w-md text-sm leading-relaxed text-white/55 md:text-[0.95rem] md:leading-7">
-              {workshopsIntro}
+              {intro}
             </p>
 
             <p className="mt-8 font-serif text-6xl font-normal text-white/8">04</p>
@@ -496,7 +520,7 @@ export function WorkshopsSection() {
 
           {reduceMotion ? (
             <div className="space-y-6 lg:col-span-8">
-              <FeaturedWorkshopStatic />
+              <FeaturedWorkshopStatic workshop={featured} />
               <div className="grid gap-6 overflow-visible md:grid-cols-3">
                 {upcoming.map((workshop, index) => (
                   <UpcomingCard key={workshop.id} workshop={workshop} index={index} reduceMotion={reduceMotion} />
@@ -511,7 +535,7 @@ export function WorkshopsSection() {
               whileInView="visible"
               viewport={{ once: true, amount: 0.12, margin: "-40px" }}
             >
-              <FeaturedWorkshop reduceMotion={reduceMotion} />
+              <FeaturedWorkshop reduceMotion={reduceMotion} workshop={featured} />
               <motion.div className="grid gap-6 overflow-visible md:grid-cols-3" variants={coursesStagger}>
                 {upcoming.map((workshop, index) => (
                   <UpcomingCard key={workshop.id} workshop={workshop} index={index} reduceMotion={reduceMotion} />

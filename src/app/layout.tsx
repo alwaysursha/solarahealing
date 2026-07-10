@@ -1,5 +1,6 @@
 import type { Metadata } from "next";
 import { Instrument_Serif, Plus_Jakarta_Sans } from "next/font/google";
+import { Providers } from "@/components/Providers";
 import { SITE_DESCRIPTION, SITE_NAME } from "@/lib/constants";
 import "./globals.css";
 
@@ -38,7 +39,9 @@ export default function RootLayout({
       className={`${jakarta.variable} ${instrumentSerif.variable} h-full antialiased`}
       suppressHydrationWarning
     >
-      <body className="h-full">{children}</body>
+      <body className="h-full">
+        <Providers>{children}</Providers>
+      </body>
     </html>
   );
 }

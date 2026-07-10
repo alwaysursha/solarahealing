@@ -185,16 +185,23 @@ function AboutEnergyVisual({ animationsActive }: { animationsActive: boolean }) 
 }
 
 const QUOTE_LEAD = "Healing begins ";
-const FULL_QUOTE = aboutContent.quote.endsWith(".")
-  ? aboutContent.quote
-  : `${aboutContent.quote}.`;
 const TYPE_INTERVAL_MS = 48;
 const DELETE_INTERVAL_MS = 32;
 const REPEAT_PAUSE_MS = 3000;
 
-function TypewriterQuote({ reduceMotion }: { reduceMotion: boolean | null }) {
+function normalizeQuote(quote: string) {
+  return quote.endsWith(".") ? quote : `${quote}.`;
+}
+
+function TypewriterQuote({
+  reduceMotion,
+  fullQuote,
+}: {
+  reduceMotion: boolean | null;
+  fullQuote: string;
+}) {
   const heroEntranceComplete = useHeroEntranceComplete();
-  const [charCount, setCharCount] = useState(reduceMotion ? FULL_QUOTE.length : 0);
+  const [charCount, setCharCount] = useState(reduceMotion ? fullQuote.length : 0);
   const [isComplete, setIsComplete] = useState(Boolean(reduceMotion));
   const [isActive, setIsActive] = useState(Boolean(reduceMotion));
 
@@ -226,7 +233,7 @@ function TypewriterQuote({ reduceMotion }: { reduceMotion: boolean | null }) {
         index += 1;
         setCharCount(index);
 
-        if (index >= FULL_QUOTE.length) {
+        if (index >= fullQuote.length) {
           window.clearInterval(stepTimer);
           setIsComplete(true);
 
@@ -242,7 +249,7 @@ function TypewriterQuote({ reduceMotion }: { reduceMotion: boolean | null }) {
 
       setIsComplete(false);
 
-      let index = FULL_QUOTE.length;
+      let index = fullQuote.length;
       stepTimer = window.setInterval(() => {
         if (cancelled) return;
 
@@ -268,7 +275,7 @@ function TypewriterQuote({ reduceMotion }: { reduceMotion: boolean | null }) {
     };
   }, [heroEntranceComplete, reduceMotion]);
 
-  const visible = FULL_QUOTE.slice(0, charCount);
+  const visible = fullQuote.slice(0, charCount);
   const lead = visible.slice(0, Math.min(visible.length, QUOTE_LEAD.length));
   const accent =
     visible.length > QUOTE_LEAD.length ? visible.slice(QUOTE_LEAD.length) : "";
@@ -278,7 +285,7 @@ function TypewriterQuote({ reduceMotion }: { reduceMotion: boolean | null }) {
   return (
     <p
       className="font-serif text-lg italic leading-snug text-purple-deep md:text-xl lg:text-[1.15rem] xl:text-xl"
-      aria-label={FULL_QUOTE}
+      aria-label={fullQuote}
     >
       <span aria-hidden="true">
         {lead}
@@ -300,8 +307,9 @@ function TypewriterQuote({ reduceMotion }: { reduceMotion: boolean | null }) {
   );
 }
 
-function PracticeQuote() {
+function PracticeQuote({ quote }: { quote: string }) {
   const reduceMotion = useReducedMotion();
+  const fullQuote = normalizeQuote(quote);
 
   return (
     <div className="about-quote-shadow relative z-0 mx-auto w-full max-w-[17.5rem] overflow-hidden rounded-lg bg-white/35 p-3 backdrop-blur-[2px] sm:max-w-sm lg:mx-0 lg:max-w-none">
@@ -321,7 +329,7 @@ function PracticeQuote() {
         >
           &ldquo;
         </span>
-        <TypewriterQuote reduceMotion={reduceMotion} />
+        <TypewriterQuote reduceMotion={reduceMotion} fullQuote={fullQuote} />
         <div className="mt-2.5 space-y-1.5">
           <div className="h-px w-full max-w-[7rem] bg-gradient-to-r from-gold/55 to-transparent" />
           <p className="text-[0.6rem] font-semibold uppercase tracking-[0.22em] text-gold">
@@ -333,8 +341,8 @@ function PracticeQuote() {
   );
 }
 
-export function AboutSection() {
-  const [first, second, third] = aboutContent.paragraphs;
+export function AboutSection({ content = aboutContent }: { content?: typeof aboutContent }) {
+  const [first, second, third] = content.paragraphs;
   const sectionRef = useRef<HTMLElement>(null);
   const heroEntranceComplete = useHeroEntranceComplete();
   const scrollAnimationsActive = useAnimationsActive(sectionRef);
@@ -368,7 +376,7 @@ export function AboutSection() {
         </Reveal>
 
         <Reveal delay={0.1} className="order-1 z-0 max-lg:mb-6 lg:order-none lg:col-span-3">
-          <PracticeQuote />
+          <PracticeQuote quote={content.quote} />
           <p className="mt-6 hidden text-sm leading-[1.85] text-purple-deep/68 md:text-[0.98rem] lg:block">
             {second}
           </p>
