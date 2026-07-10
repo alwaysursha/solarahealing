@@ -16,8 +16,5 @@
   ],
   "images": {
     "binding": "IMAGES"
-  },
-  "vars": {
-    "NEXT_PUBLIC_SITE_URL": "https://solarahealing.alwaysursha.workers.dev"
   }
 }

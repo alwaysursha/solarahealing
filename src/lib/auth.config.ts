@@ -1,5 +1,5 @@
 import type { NextAuthConfig } from "next-auth";
-import { Role } from "@prisma/client";
+import type { Role } from "@prisma/client";
 
 export const authConfig = {
   trustHost: true,
@@ -16,7 +16,7 @@ export const authConfig = {
       const role = auth?.user?.role as Role | undefined;
 
       if (pathname.startsWith("/admin")) {
-        return isLoggedIn && role === Role.ADMIN;
+        return isLoggedIn && role === "ADMIN";
       }
 
       if (pathname.startsWith("/account")) {
@@ -34,7 +34,7 @@ export const authConfig = {
     async session({ session, token }) {
       if (session.user) {
         session.user.id = token.sub as string;
-        session.user.role = (token.role as Role) ?? Role.USER;
+        session.user.role = (token.role as Role) ?? "USER";
       }
       return session;
     },
