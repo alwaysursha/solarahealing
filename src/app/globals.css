@@ -98,6 +98,31 @@ body {
     radial-gradient(ellipse at 55% 85%, rgba(var(--purple-deep-rgb), 0.38) 0%, transparent 48%);
 }
 
+/* Mobile header theme — lift purple slightly for smaller, higher-contrast screens */
+@media (max-width: 1023px) {
+  :root {
+    --panel-top-rgb: 80, 44, 124;
+    --panel-mid-rgb: 68, 38, 108;
+    --panel-deep-rgb: 56, 32, 92;
+    --panel-accent-rgb: 74, 46, 126;
+  }
+
+  .bg-spiritual-gradient {
+    background: linear-gradient(
+      155deg,
+      #58388C 0%,
+      #684898 28%,
+      #7A58A8 52%,
+      #7030A8 72%,
+      #6C4890 100%
+    );
+  }
+
+  .bg-spiritual-mesh {
+    opacity: 0.44;
+  }
+}
+
 /* Moving shine — overlay only, does not lighten the base */
 .bg-spiritual-shimmer {
   mix-blend-mode: soft-light;
@@ -1411,7 +1436,7 @@ body {
   padding-bottom: clamp(2.5rem, 6vw, 4rem);
 }
 
-.workshop-stage-content .workshop-upcoming {
+#workshops .workshop-stage-content .workshop-upcoming {
   box-shadow:
     0 16px 44px -20px rgba(22, 6, 40, 0.62),
     0 28px 64px -24px rgba(0, 0, 0, 0.4),
@@ -1419,7 +1444,7 @@ body {
     inset 0 1px 0 rgba(255, 255, 255, 0.14);
 }
 
-.workshop-stage-content .workshop-upcoming:hover {
+#workshops .workshop-stage-content .workshop-upcoming:hover {
   box-shadow:
     0 22px 56px -20px rgba(22, 6, 40, 0.68),
     0 34px 76px -26px rgba(0, 0, 0, 0.48),
@@ -1536,41 +1561,21 @@ body {
   isolation: isolate;
 }
 
-/*
- * Chrome mobile — clip-path + header frame + many full-layer opacity animations
- * repaints the entire fixed shell. Keep visuals; limit conflicting compositor work.
- */
-[data-compositor="chrome-touch"] .site-scroll-panel {
-  transform: translate3d(0, 0, 0);
-  -webkit-backface-visibility: hidden;
-  backface-visibility: hidden;
-  -webkit-overflow-scrolling: touch;
-  overscroll-behavior: contain;
-}
-
-[data-compositor="chrome-touch"] .panel-border-shimmer {
-  display: none;
-}
-
-[data-compositor="chrome-touch"] .site-scroll-panel.site-scrolling .panel-border-shimmer,
-[data-compositor="chrome-touch"] .site-scroll-panel.site-scrolling .bg-spiritual-shimmer,
-[data-compositor="chrome-touch"] .site-scroll-panel.site-scrolling .bg-spiritual-shimmer-secondary,
-[data-compositor="chrome-touch"] .site-scroll-panel.site-scrolling .workshop-gloss-sweep,
-[data-compositor="chrome-touch"] .site-scroll-panel.site-scrolling .schedule-aura-ring,
-[data-compositor="chrome-touch"] .site-scroll-panel.site-scrolling #workshops .workshop-gloss-sweep,
-[data-compositor="chrome-touch"] .site-panel-frame {
-  transform: translate3d(0, 0, 0);
-  -webkit-backface-visibility: hidden;
-  backface-visibility: hidden;
-}
-
-[data-compositor="chrome-touch"] .mobile-nav-panel-shine,
-[data-compositor="chrome-touch"] .mobile-nav-cta-shine {
-  animation: none !important;
-}
-
 #courses {
   position: relative;
+}
+
+#courses .workshop-upcoming {
+  box-shadow:
+    0 4px 10px -6px rgba(0, 0, 0, 0.32),
+    inset 0 1px 0 rgba(255, 255, 255, 0.1);
+}
+
+#courses .workshop-upcoming:hover {
+  box-shadow:
+    0 6px 14px -6px rgba(0, 0, 0, 0.38),
+    0 0 10px -6px rgba(201, 162, 39, 0.1),
+    inset 0 1px 0 rgba(255, 255, 255, 0.12);
 }
 
 .workshop-featured {

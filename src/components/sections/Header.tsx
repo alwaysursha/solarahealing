@@ -9,12 +9,8 @@ import {
   HEADER_PANEL_EXIT_MS,
   HEADER_PANEL_SHELL_EXPAND_MS,
   headerPanelShellVariants,
-  headerPanelShellVariantsChrome,
   headerPanelSlideVariants,
-  headerPanelSlideVariantsChrome,
-  mobileNavExpandVariantsChrome,
 } from "@/lib/header-panel-motion";
-import { useCompositorProfile } from "@/lib/compositor-profile";
 import { Logo } from "@/components/ui/Logo";
 import { HeaderIconButton } from "@/components/ui/HeaderIconButton";
 import { MenuToggleIcon } from "@/components/ui/MenuToggleIcon";
@@ -67,11 +63,6 @@ export function Header() {
   const { data: session, status } = useSession();
   const firstName = session?.user?.name ? getFirstName(session.user.name) : null;
   const isLoggedIn = status === "authenticated" && Boolean(session?.user);
-  const compositorProfile = useCompositorProfile();
-  const chromeTouch = compositorProfile === "chrome-touch";
-  const panelShellVariants = chromeTouch ? headerPanelShellVariantsChrome : headerPanelShellVariants;
-  const panelSlideVariants = chromeTouch ? headerPanelSlideVariantsChrome : headerPanelSlideVariants;
-  const navExpandVariants = chromeTouch ? mobileNavExpandVariantsChrome : expandVariants;
   const [navOpen, setNavOpen] = useState(false);
   const [loginOpen, setLoginOpen] = useState(false);
   const [loginPanelReady, setLoginPanelReady] = useState(false);
@@ -90,21 +81,21 @@ export function Header() {
 
   const beginCloseLogin = useCallback(() => {
     setLoginPanelReady(false);
-    if (reduceMotion || chromeTouch) {
+    if (reduceMotion) {
       setLoginOpen(false);
       return;
     }
     window.setTimeout(() => setLoginOpen(false), HEADER_PANEL_EXIT_MS);
-  }, [chromeTouch, reduceMotion]);
+  }, [reduceMotion]);
 
   const beginCloseCart = useCallback(() => {
     setCartPanelReady(false);
-    if (reduceMotion || chromeTouch) {
+    if (reduceMotion) {
       setCartOpen(false);
       return;
     }
     window.setTimeout(() => setCartOpen(false), HEADER_PANEL_EXIT_MS);
-  }, [chromeTouch, reduceMotion]);
+  }, [reduceMotion]);
 
   const closeLogin = useCallback(() => {
     beginCloseLogin();
@@ -152,14 +143,14 @@ export function Header() {
       return;
     }
 
-    if (reduceMotion || chromeTouch) {
+    if (reduceMotion) {
       setLoginPanelReady(true);
       return;
     }
 
     const timer = window.setTimeout(() => setLoginPanelReady(true), HEADER_PANEL_SHELL_EXPAND_MS);
     return () => window.clearTimeout(timer);
-  }, [chromeTouch, loginOpen, reduceMotion]);
+  }, [loginOpen, reduceMotion]);
 
   useEffect(() => {
     if (!cartOpen) {
@@ -167,14 +158,14 @@ export function Header() {
       return;
     }
 
-    if (reduceMotion || chromeTouch) {
+    if (reduceMotion) {
       setCartPanelReady(true);
       return;
     }
 
     const timer = window.setTimeout(() => setCartPanelReady(true), HEADER_PANEL_SHELL_EXPAND_MS);
     return () => window.clearTimeout(timer);
-  }, [cartOpen, chromeTouch, reduceMotion]);
+  }, [cartOpen, reduceMotion]);
 
   useEffect(() => {
     if (isLoggedIn && cartOpen) {
@@ -286,16 +277,16 @@ export function Header() {
         {loginOpen && (
           <motion.div
             key="header-login-expand"
-            className={chromeTouch ? "overflow-hidden" : "grid overflow-hidden"}
-            variants={reduceMotion ? undefined : panelShellVariants}
+            className="grid overflow-hidden"
+            variants={reduceMotion ? undefined : headerPanelShellVariants}
             initial={reduceMotion ? undefined : "closed"}
             animate={reduceMotion ? undefined : "open"}
             exit={reduceMotion ? undefined : "exit"}
           >
-            <div className={chromeTouch ? "overflow-hidden" : "min-h-0 overflow-hidden"}>
+            <div className="min-h-0 overflow-hidden">
               <motion.div
                 className="origin-top"
-                variants={reduceMotion ? undefined : panelSlideVariants}
+                variants={reduceMotion ? undefined : headerPanelSlideVariants}
                 initial={reduceMotion ? undefined : "closed"}
                 animate={reduceMotion ? undefined : loginPanelReady ? "open" : "closed"}
                 exit={reduceMotion ? undefined : "exit"}
@@ -315,16 +306,16 @@ export function Header() {
         {!isLoggedIn && cartOpen && (
           <motion.div
             key="header-cart-expand"
-            className={chromeTouch ? "overflow-hidden" : "grid overflow-hidden"}
-            variants={reduceMotion ? undefined : panelShellVariants}
+            className="grid overflow-hidden"
+            variants={reduceMotion ? undefined : headerPanelShellVariants}
             initial={reduceMotion ? undefined : "closed"}
             animate={reduceMotion ? undefined : "open"}
             exit={reduceMotion ? undefined : "exit"}
           >
-            <div className={chromeTouch ? "overflow-hidden" : "min-h-0 overflow-hidden"}>
+            <div className="min-h-0 overflow-hidden">
               <motion.div
                 className="origin-top"
-                variants={reduceMotion ? undefined : panelSlideVariants}
+                variants={reduceMotion ? undefined : headerPanelSlideVariants}
                 initial={reduceMotion ? undefined : "closed"}
                 animate={reduceMotion ? undefined : cartPanelReady ? "open" : "closed"}
                 exit={reduceMotion ? undefined : "exit"}
@@ -341,7 +332,7 @@ export function Header() {
           <motion.div
             key="header-nav-expand"
             className="overflow-hidden lg:hidden"
-            variants={reduceMotion ? undefined : navExpandVariants}
+            variants={reduceMotion ? undefined : expandVariants}
             initial={reduceMotion ? undefined : "closed"}
             animate={reduceMotion ? undefined : "open"}
             exit={reduceMotion ? undefined : "exit"}
