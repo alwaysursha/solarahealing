@@ -22,7 +22,7 @@ export function GlowButton({
     "relative inline-flex items-center justify-center rounded-full px-6 py-3 text-sm font-medium tracking-wide transition-colors md:px-8 md:py-3.5";
   const styles = {
     primary:
-      "bg-gold text-cream shadow-lg shadow-gold/30 hover:bg-gold-light",
+      "bg-gold text-purple-deep shadow-lg shadow-gold/30 hover:bg-gold-light",
     outline:
       "border border-purple-deep/20 text-purple-deep hover:border-gold hover:text-gold",
     light:

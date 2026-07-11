@@ -84,7 +84,7 @@ export function SignInForm() {
         <button
           type="submit"
           disabled={loading}
-          className="relative inline-flex w-full items-center justify-center rounded-full bg-gold px-6 py-3 text-sm font-medium tracking-wide text-cream shadow-lg shadow-gold/30 transition hover:bg-gold-light disabled:opacity-60"
+          className="relative inline-flex w-full items-center justify-center rounded-full bg-gold px-6 py-3 text-sm font-medium tracking-wide text-purple-deep shadow-lg shadow-gold/30 transition hover:bg-gold-light disabled:opacity-60"
         >
           {loading ? "Signing in…" : "Sign in"}
         </button>
@@ -175,7 +175,7 @@ export function SignUpForm() {
         <button
           type="submit"
           disabled={loading}
-          className="relative inline-flex w-full items-center justify-center rounded-full bg-gold px-6 py-3 text-sm font-medium tracking-wide text-cream shadow-lg shadow-gold/30 transition hover:bg-gold-light disabled:opacity-60"
+          className="relative inline-flex w-full items-center justify-center rounded-full bg-gold px-6 py-3 text-sm font-medium tracking-wide text-purple-deep shadow-lg shadow-gold/30 transition hover:bg-gold-light disabled:opacity-60"
         >
           {loading ? "Creating account…" : "Create account"}
         </button>
