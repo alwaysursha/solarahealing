@@ -5,9 +5,7 @@ import Image from "next/image";
 import Link from "next/link";
 import { useRef } from "react";
 import { CartIcon } from "@/components/ui/CartIcon";
-import { CoursesSpaceBackground } from "@/components/sections/CoursesSpaceBackground";
 import { useAnimationsActive } from "@/hooks/useAnimationsActive";
-import { useCompositorProfile } from "@/lib/compositor-profile";
 import { coursesIntro, formatCad, onlineCourses } from "@/lib/site";
 
 type CourseItem = {
@@ -27,7 +25,7 @@ const ease: [number, number, number, number] = [0.22, 1, 0.36, 1];
 const revealEase: [number, number, number, number] = [0.65, 0, 0.35, 1];
 const springEase: [number, number, number, number] = [0.34, 1.56, 0.64, 1];
 
-const coursesStagger = {
+const catalogStagger = {
   hidden: {},
   visible: {
     transition: { staggerChildren: 0.16, delayChildren: 0.08 },
@@ -202,31 +200,16 @@ function AddToCartButton({
   courseId,
   variant = "gold",
   className = "",
-  disableMotion = false,
 }: {
   courseId: string;
   variant?: "gold" | "outline";
   className?: string;
-  disableMotion?: boolean;
 }) {
   const reduceMotion = useReducedMotion();
-  const motionDisabled = Boolean(reduceMotion || disableMotion);
   const styles =
     variant === "gold"
       ? "bg-gold text-purple-deep shadow-lg shadow-gold/30 hover:bg-gold-light"
       : "border border-gold/45 bg-white/5 text-gold backdrop-blur-sm hover:bg-gold/10";
-
-  if (motionDisabled) {
-    return (
-      <a
-        href={`/checkout?course=${courseId}`}
-        className={`workshop-register-btn relative inline-flex shrink-0 items-center justify-center gap-2 overflow-hidden whitespace-nowrap rounded-full px-4 py-2 text-[0.62rem] font-semibold uppercase tracking-[0.1em] transition-colors md:px-5 md:text-[0.65rem] ${styles} ${className}`}
-      >
-        <CartIcon className="relative h-3.5 w-3.5" />
-        <span className="relative">Add to Cart</span>
-      </a>
-    );
-  }
 
   return (
     <motion.a
@@ -304,9 +287,7 @@ function FeaturedCourse({
               <h3 className="font-serif mt-3 text-2xl font-normal leading-tight text-white md:text-3xl">
                 {course.title}
               </h3>
-              <p className="mt-4 text-sm leading-relaxed text-white/60">
-                {course.description}
-              </p>
+              <p className="mt-4 text-sm leading-relaxed text-white/60">{course.description}</p>
               <p className="mt-3 text-[0.65rem] font-medium uppercase tracking-[0.2em] text-white/35">
                 {course.duration}
               </p>
@@ -329,13 +310,7 @@ function FeaturedCourse({
   );
 }
 
-function FeaturedCourseStatic({
-  course,
-  disableMotion = false,
-}: {
-  course: CourseItem;
-  disableMotion?: boolean;
-}) {
+function FeaturedCourseStatic({ course }: { course: CourseItem }) {
   return (
     <article className="workshop-featured group relative overflow-hidden rounded-[1.75rem] border border-white/15">
       <div className="grid lg:grid-cols-12">
@@ -368,11 +343,7 @@ function FeaturedCourseStatic({
               <p className="text-[0.6rem] uppercase tracking-[0.24em] text-white/40">Investment</p>
               <PriceTag priceCad={course.priceCad} large />
             </div>
-            <AddToCartButton
-              courseId={course.id}
-              className="px-6 py-2.5 text-[0.68rem] md:text-xs"
-              disableMotion={disableMotion}
-            />
+            <AddToCartButton courseId={course.id} className="px-6 py-2.5 text-[0.68rem] md:text-xs" />
           </div>
         </div>
       </div>
@@ -384,19 +355,17 @@ function UpcomingCourseCard({
   course,
   index,
   reduceMotion,
-  disableMotion = false,
 }: {
   course: CourseItem;
   index: number;
   reduceMotion: boolean | null;
-  disableMotion?: boolean;
 }) {
   const variants = upcomingReveals[index] ?? upcomingReveals[1];
 
-  if (reduceMotion || disableMotion) {
+  if (reduceMotion) {
     return (
       <article className="workshop-upcoming group relative min-h-[420px] overflow-hidden rounded-[1.5rem] border border-white/15">
-        <UpcomingCourseCardContent course={course} disableMotion={disableMotion} />
+        <UpcomingCourseCardContent course={course} />
       </article>
     );
   }
@@ -438,20 +407,14 @@ function UpcomingCourseCard({
         <p className="mt-2 line-clamp-2 text-sm leading-relaxed text-white/55">{course.description}</p>
         <div className="mt-5 flex items-center justify-between gap-3">
           <span className="text-[0.62rem] uppercase tracking-[0.18em] text-white/35">{course.duration}</span>
-          <AddToCartButton courseId={course.id} variant="outline" disableMotion={disableMotion} />
+          <AddToCartButton courseId={course.id} variant="outline" />
         </div>
       </motion.div>
     </motion.article>
   );
 }
 
-function UpcomingCourseCardContent({
-  course,
-  disableMotion = false,
-}: {
-  course: CourseItem;
-  disableMotion?: boolean;
-}) {
+function UpcomingCourseCardContent({ course }: { course: CourseItem }) {
   return (
     <>
       <Image
@@ -472,7 +435,7 @@ function UpcomingCourseCardContent({
         <p className="mt-2 line-clamp-2 text-sm leading-relaxed text-white/55">{course.description}</p>
         <div className="mt-5 flex items-center justify-between gap-3">
           <span className="text-[0.62rem] uppercase tracking-[0.18em] text-white/35">{course.duration}</span>
-          <AddToCartButton courseId={course.id} variant="outline" disableMotion={disableMotion} />
+          <AddToCartButton courseId={course.id} variant="outline" />
         </div>
       </div>
     </>
@@ -488,21 +451,14 @@ export function CoursesSection({
 }) {
   const catalog = courses && courses.length > 0 ? courses : [...onlineCourses];
   const [featured, ...upcoming] = catalog;
-  const reduceMotion = useReducedMotion();
-  const chromeTouch = useCompositorProfile() === "chrome-touch";
-  const sectionRef = useRef<HTMLElement>(null);
-  const animationsActive = useAnimationsActive(sectionRef, "0px 0px -5% 0px", {
-    once: true,
-    amount: 0.25,
-  });
-  const cosmosEnabled = !reduceMotion;
   const gridCourses = upcoming.slice(0, 3);
-  const staticCards = Boolean(reduceMotion || chromeTouch);
-  const cosmosModeClass = cosmosEnabled
-    ? chromeTouch
-      ? " courses-cosmos-static-night"
-      : " courses-cosmos-daynight"
-    : "";
+  const reduceMotion = useReducedMotion();
+  const sectionRef = useRef<HTMLElement>(null);
+  const animationsActive = useAnimationsActive(sectionRef);
+
+  if (!featured) {
+    return null;
+  }
 
   return (
     <section
@@ -510,26 +466,13 @@ export function CoursesSection({
       ref={sectionRef}
       className={`site-scroll-section relative overflow-hidden${animationsActive ? "" : " animations-paused"}`}
     >
-      <div
-        className={`workshop-stage courses-cosmos-stage relative w-full overflow-hidden rounded-none${cosmosModeClass}`}
-      >
-        {!chromeTouch && (
-          <>
-            <div className="workshop-stage-mesh courses-cosmos-day-layer pointer-events-none absolute inset-0" aria-hidden />
-            <div className="workshop-stage-gloss courses-cosmos-day-layer pointer-events-none absolute inset-0" aria-hidden />
-            <div className="workshop-stage-shine workshop-gloss-sweep pointer-events-none absolute inset-0" aria-hidden />
-            <div className="workshop-stage-noise courses-cosmos-noise-layer pointer-events-none absolute inset-0" aria-hidden />
-          </>
-        )}
-        <CoursesSpaceBackground
-          animationsActive={animationsActive}
-          cosmosEnabled={cosmosEnabled}
-          staticNight={chromeTouch}
-        />
+      <div className="workshop-stage relative w-full overflow-hidden rounded-none">
+        <div className="workshop-stage-mesh pointer-events-none absolute inset-0" aria-hidden />
+        <div className="workshop-stage-gloss pointer-events-none absolute inset-0" aria-hidden />
+        <div className="workshop-stage-shine workshop-gloss-sweep pointer-events-none absolute inset-0" aria-hidden />
+        <div className="workshop-stage-noise pointer-events-none absolute inset-0 opacity-[0.035]" aria-hidden />
 
-        <div
-          className="courses-cosmos-content grid gap-12 px-5 py-6 sm:px-8 md:p-10 lg:grid-cols-12 lg:gap-10 lg:px-12 xl:px-14 xl:py-14"
-        >
+        <div className="workshop-stage-content relative grid gap-12 px-5 py-6 sm:px-8 md:p-10 lg:grid-cols-12 lg:gap-10 lg:px-12 xl:px-14 xl:py-14">
           <motion.div
             className="z-0 lg:col-span-4 lg:self-start xl:sticky xl:top-8"
             initial={reduceMotion ? false : { opacity: 0, y: 28 }}
@@ -560,9 +503,7 @@ export function CoursesSection({
             <p className="mt-8 font-serif text-6xl font-normal text-white/8">
               {String(catalog.length).padStart(2, "0")}
             </p>
-            <p className="text-[0.62rem] uppercase tracking-[0.28em] text-white/30">
-              Online programs
-            </p>
+            <p className="text-[0.62rem] uppercase tracking-[0.28em] text-white/30">Online programs</p>
 
             <Link
               href="#contact"
@@ -583,9 +524,9 @@ export function CoursesSection({
             </Link>
           </motion.div>
 
-          {staticCards ? (
-            <div className="courses-cards-static space-y-6 lg:col-span-8">
-              <FeaturedCourseStatic course={featured} disableMotion={chromeTouch} />
+          {reduceMotion ? (
+            <div className="space-y-6 lg:col-span-8">
+              <FeaturedCourseStatic course={featured} />
               <div className="grid gap-6 overflow-visible md:grid-cols-3">
                 {gridCourses.map((course, index) => (
                   <UpcomingCourseCard
@@ -593,7 +534,6 @@ export function CoursesSection({
                     course={course}
                     index={index}
                     reduceMotion={reduceMotion}
-                    disableMotion={chromeTouch}
                   />
                 ))}
               </div>
@@ -601,13 +541,13 @@ export function CoursesSection({
           ) : (
             <motion.div
               className="space-y-6 lg:col-span-8"
-              variants={coursesStagger}
+              variants={catalogStagger}
               initial="hidden"
               whileInView="visible"
               viewport={{ once: true, amount: 0.12, margin: "-40px" }}
             >
               <FeaturedCourse reduceMotion={reduceMotion} course={featured} />
-              <motion.div className="grid gap-6 overflow-visible md:grid-cols-3" variants={coursesStagger}>
+              <motion.div className="grid gap-6 overflow-visible md:grid-cols-3" variants={catalogStagger}>
                 {gridCourses.map((course, index) => (
                   <UpcomingCourseCard key={course.id} course={course} index={index} reduceMotion={reduceMotion} />
                 ))}

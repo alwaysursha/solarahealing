@@ -466,7 +466,7 @@ export function WorkshopsSection({
         <div className="workshop-stage-shine workshop-gloss-sweep pointer-events-none absolute inset-0" aria-hidden />
         <div className="workshop-stage-noise pointer-events-none absolute inset-0 opacity-[0.035]" aria-hidden />
 
-        <div className="relative z-0 grid gap-12 px-5 py-6 sm:px-8 md:p-10 lg:grid-cols-12 lg:gap-10 lg:px-12 xl:px-14 xl:py-14">
+        <div className="workshop-stage-content relative grid gap-12 px-5 py-6 sm:px-8 md:p-10 lg:grid-cols-12 lg:gap-10 lg:px-12 xl:px-14 xl:py-14">
           <motion.div
             className="z-0 lg:col-span-4 lg:self-start xl:sticky xl:top-8"
             initial={reduceMotion ? false : { opacity: 0, y: 28 }}
