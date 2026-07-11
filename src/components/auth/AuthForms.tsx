@@ -199,7 +199,14 @@ export function GoogleSignInButton({
       onClick={() => signIn("google", { callbackUrl })}
     >
       <GoogleIcon />
-      {!compact ? <span>Continue with Google</span> : <span className="hidden xl:inline">Google</span>}
+      {!compact ? (
+        <span>Continue with Google</span>
+      ) : (
+        <>
+          <span className="header-login-google-label-full">Continue with Google</span>
+          <span className="header-login-google-label-short">Google</span>
+        </>
+      )}
     </button>
   );
 }

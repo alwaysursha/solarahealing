@@ -76,7 +76,7 @@ function HeroPhotoOverlays() {
   return (
     <>
       <div className="absolute inset-0 bg-gradient-to-r from-canvas/95 via-canvas/82 to-canvas/35" />
-      <div className="absolute inset-0 bg-gradient-to-t from-canvas/90 via-transparent to-accent-soft/20" />
+      <div className="absolute inset-0 bg-gradient-to-t from-canvas/90 via-transparent to-hero-wash/25" />
     </>
   );
 }
@@ -117,11 +117,11 @@ function IllustratedSlideBackground({
         }}
         aria-hidden
       />
-      <div className="pointer-events-none absolute inset-x-0 top-0 z-[1] h-px bg-gradient-to-r from-transparent via-accent/20 to-transparent" />
-      <div className="pointer-events-none absolute -right-[8%] top-[8%] z-[2] hidden text-accent/25 md:block lg:-right-[4%]">
+      <div className="pointer-events-none absolute inset-x-0 top-0 z-[1] h-px bg-gradient-to-r from-transparent via-purple-mid/20 to-transparent" />
+      <div className="pointer-events-none absolute -right-[8%] top-[8%] z-[2] hidden text-purple-mid/25 md:block lg:-right-[4%]">
         <LotusVisual className="h-[min(52vw,420px)] w-[min(52vw,420px)]" />
       </div>
-      <div className="pointer-events-none absolute right-[5%] top-[16%] z-[2] text-accent/20 md:hidden">
+      <div className="pointer-events-none absolute right-[5%] top-[16%] z-[2] text-purple-mid/20 md:hidden">
         <LotusVisual className="h-44 w-44" />
       </div>
     </>
@@ -316,25 +316,25 @@ export function Hero({ slides = heroSlides }: { slides?: typeof heroSlides }) {
                   ease: hasSlideChanged ? HERO_SLIDE_CHANGE_EASE : HERO_REVEAL_EASE,
                 }}
               >
-                <p className="mb-5 text-xs font-semibold uppercase tracking-[0.22em] text-gold">
+                <p className="mb-4 text-[0.65rem] font-medium uppercase tracking-[0.28em] text-gold/78">
                   {slide.eyebrowSub}
                 </p>
 
-                <h1 className="font-display text-4xl font-semibold leading-[1.08] text-accent md:text-5xl lg:text-6xl xl:text-7xl">
+                <h1 className="font-serif text-[2.35rem] font-normal leading-[1.06] tracking-[-0.02em] text-purple-deep md:text-[2.75rem] lg:text-[3.25rem] xl:text-[3.75rem]">
                   {slide.title}{" "}
-                  <span className="text-gold">{slide.titleAccent}</span>
+                  <span className="text-gold/92">{slide.titleAccent}</span>
                 </h1>
 
-                <p className="mt-6 max-w-xl text-base leading-relaxed text-accent/75 md:text-lg">
+                <p className="mt-5 max-w-lg text-[0.95rem] font-normal leading-[1.7] text-foreground/62 md:text-base md:leading-[1.75]">
                   {slide.description}
                 </p>
 
-                <div className="mt-10 flex flex-wrap gap-4">
+                <div className="mt-8 flex flex-wrap gap-3.5">
                   <GlowButton href="#contact">{site.cta}</GlowButton>
                   <GlowButton
                     href="#sessions"
                     variant="outline"
-                    className="border-accent/25 text-accent hover:border-gold hover:text-gold"
+                    className="border-purple-deep/25 text-purple-deep hover:border-gold hover:text-gold"
                   >
                     Explore Sessions
                   </GlowButton>
@@ -359,10 +359,10 @@ export function Hero({ slides = heroSlides }: { slides?: typeof heroSlides }) {
                       ease: HERO_REVEAL_EASE,
                     }}
                   >
-                    <p className="font-display text-lg text-accent/85 md:text-xl">
+                    <p className="font-serif text-base font-normal leading-snug text-purple-deep/72 md:text-lg">
                       {slide.caption}
                     </p>
-                    <p className="mt-1 text-sm text-accent/45">{slide.captionSub}</p>
+                    <p className="mt-1.5 text-[0.8rem] tracking-[0.02em] text-purple-deep/38">{slide.captionSub}</p>
                   </motion.div>
                 )}
               </AnimatePresence>
@@ -391,7 +391,7 @@ export function Hero({ slides = heroSlides }: { slides?: typeof heroSlides }) {
                     "h-2 rounded-full transition-all duration-300",
                     index === active
                       ? "w-8 bg-gold"
-                      : "w-2 bg-accent/25 hover:bg-accent/45",
+                      : "w-2 bg-purple-deep/25 hover:bg-purple-deep/45",
                   ].join(" ")}
                 />
               ))}
@@ -402,7 +402,7 @@ export function Hero({ slides = heroSlides }: { slides?: typeof heroSlides }) {
                 type="button"
                 onClick={prev}
                 aria-label="Previous slide"
-                className="flex h-9 w-9 items-center justify-center rounded-full border border-accent/15 text-accent/70 transition-colors hover:border-gold/50 hover:text-gold"
+                className="flex h-9 w-9 items-center justify-center rounded-full border border-purple-deep/15 text-purple-deep/70 transition-colors hover:border-gold/50 hover:text-gold"
               >
                 <svg viewBox="0 0 20 20" fill="currentColor" className="h-4 w-4" aria-hidden>
                   <path
@@ -418,7 +418,7 @@ export function Hero({ slides = heroSlides }: { slides?: typeof heroSlides }) {
                   onClick={togglePause}
                   aria-label={paused ? "Play slideshow" : "Pause slideshow"}
                   aria-pressed={paused}
-                  className="flex h-9 w-9 items-center justify-center rounded-full border border-accent/15 bg-transparent text-accent/75 transition-colors hover:border-gold/50 hover:text-gold"
+                  className="flex h-9 w-9 items-center justify-center rounded-full border border-purple-deep/15 bg-transparent text-purple-deep/75 transition-colors hover:border-gold/50 hover:text-gold"
                 >
                   {paused ? (
                     <svg viewBox="0 0 20 20" fill="currentColor" className="h-4 w-4" aria-hidden>
@@ -435,7 +435,7 @@ export function Hero({ slides = heroSlides }: { slides?: typeof heroSlides }) {
                 type="button"
                 onClick={next}
                 aria-label="Next slide"
-                className="flex h-9 w-9 items-center justify-center rounded-full border border-accent/15 text-accent/70 transition-colors hover:border-gold/50 hover:text-gold"
+                className="flex h-9 w-9 items-center justify-center rounded-full border border-purple-deep/15 text-purple-deep/70 transition-colors hover:border-gold/50 hover:text-gold"
               >
                 <svg viewBox="0 0 20 20" fill="currentColor" className="h-4 w-4" aria-hidden>
                   <path
