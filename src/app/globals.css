@@ -918,9 +918,14 @@ body {
 
 .header-user-greeting-trigger {
   align-items: flex-end;
-  max-width: 11rem;
-  padding: 0.15rem 0.35rem;
-  transition: opacity 0.25s ease, transform 0.25s ease;
+  max-width: 12rem;
+  padding: 0.35rem 0.9rem;
+  border-radius: 9999px;
+  transition:
+    opacity 0.25s ease,
+    transform 0.25s ease,
+    background-color 0.25s ease,
+    box-shadow 0.25s ease;
 }
 
 .header-user-greeting-trigger:hover {
@@ -928,12 +933,63 @@ body {
   transform: translateY(-1px);
 }
 
+.header-user-greeting-trigger-active {
+  background: rgba(255, 255, 255, 0.06);
+  box-shadow: inset 0 0 0 1px rgba(219, 185, 74, 0.28);
+}
+
 .header-user-greeting {
+  display: block;
+  line-height: 1.05;
+}
+
+.header-user-greeting-row {
+  display: inline-flex;
+  align-items: center;
+  gap: 0.45rem;
+}
+
+.header-user-greeting-text {
   display: flex;
   flex-direction: column;
   align-items: flex-end;
-  line-height: 1.05;
   text-align: right;
+}
+
+.header-user-greeting-chevron {
+  display: inline-flex;
+  align-items: center;
+  justify-content: center;
+  margin-top: 0.15rem;
+  color: rgba(219, 185, 74, 0.78);
+  transition:
+    transform 0.32s cubic-bezier(0.4, 0, 0.2, 1),
+    color 0.25s ease;
+  animation: header-greeting-chevron-bob 2.4s ease-in-out infinite;
+}
+
+.header-user-greeting-chevron-open {
+  transform: rotate(180deg);
+  color: rgba(240, 216, 144, 0.95);
+  animation: none;
+}
+
+.header-user-greeting-trigger:hover .header-user-greeting-chevron:not(.header-user-greeting-chevron-open) {
+  color: rgba(240, 216, 144, 0.92);
+}
+
+@keyframes header-greeting-chevron-bob {
+  0%,
+  100% {
+    transform: translateY(0);
+  }
+  50% {
+    transform: translateY(2px);
+  }
+}
+
+.animations-paused .header-user-greeting-chevron:not(.header-user-greeting-chevron-open) {
+  animation-play-state: paused;
 }
 
 .header-user-greeting-hello {
@@ -1081,6 +1137,13 @@ body {
   color: #f7ecd0;
 }
 
+.header-account-nav-item-active {
+  border-color: rgba(219, 185, 74, 0.42);
+  background: rgba(219, 185, 74, 0.12);
+  color: #f7ecd0;
+  box-shadow: inset 0 0 0 1px rgba(219, 185, 74, 0.14);
+}
+
 .header-account-actions {
   display: flex;
   flex-wrap: wrap;
@@ -1141,6 +1204,44 @@ body {
   color: rgba(250, 247, 242, 0.92);
 }
 
+.header-account-cart-wrap {
+  grid-column: 1 / -1;
+  overflow: hidden;
+}
+
+.header-account-cart-embed {
+  padding-top: 0.15rem;
+}
+
+.header-account-cart-embed-inner {
+  display: flex;
+  flex-wrap: wrap;
+  align-items: center;
+  gap: 0.75rem 1rem;
+  border-top: 1px solid rgba(250, 247, 242, 0.08);
+  padding-top: 0.85rem;
+}
+
+.header-account-cart-embed-actions {
+  display: flex;
+  flex-wrap: wrap;
+  align-items: center;
+  gap: 0.55rem 0.75rem;
+}
+
+.header-account-cart-browse {
+  font-size: 0.66rem;
+  font-weight: 600;
+  letter-spacing: 0.08em;
+  text-transform: uppercase;
+  color: rgba(219, 185, 74, 0.86);
+  transition: color 0.25s ease;
+}
+
+.header-account-cart-browse:hover {
+  color: rgba(240, 216, 144, 0.98);
+}
+
 @media (max-width: 1023px) {
   .header-account-panel-layout {
     grid-template-columns: minmax(0, 1fr);
@@ -1155,27 +1256,66 @@ body {
 
 @media (max-width: 639px) {
   .header-user-greeting-trigger {
-    max-width: 8.5rem;
+    max-width: 10rem;
+    padding: 0.3rem 0.7rem;
+  }
+
+  .header-user-greeting-row {
+    gap: 0.3rem;
+  }
+
+  .header-user-greeting-chevron {
+    margin-top: 0;
+  }
+
+  .header-user-greeting-hello {
+    font-size: 0.46rem;
+    letter-spacing: 0.26em;
   }
 
   .header-user-greeting-name {
-    font-size: 0.98rem;
+    font-size: 0.92rem;
   }
 }
 
+.header-logout-notice-wrap {
+  display: flex;
+  justify-content: flex-end;
+  margin-top: 0.55rem;
+  padding-right: 0.15rem;
+}
+
 .header-logout-notice {
-  max-width: 14rem;
+  width: auto;
+  max-width: 100%;
   border-radius: 9999px;
   border: 1px solid rgba(219, 185, 74, 0.28);
   background: linear-gradient(135deg, rgba(52, 20, 86, 0.92), rgba(34, 12, 58, 0.96));
-  padding: 0.45rem 0.85rem;
+  padding: 0.5rem 0.95rem;
   font-size: 0.62rem;
   font-weight: 600;
   letter-spacing: 0.12em;
   text-transform: uppercase;
   color: rgba(247, 236, 208, 0.92);
   box-shadow: 0 12px 32px -20px rgba(219, 185, 74, 0.45);
-  animation: header-logout-notice-in 0.35s ease;
+  text-align: center;
+  line-height: 1.35;
+}
+
+@media (max-width: 639px) {
+  .header-logout-notice-wrap {
+    justify-content: stretch;
+    padding-right: 0;
+    margin-top: 0.65rem;
+  }
+
+  .header-logout-notice {
+    width: 100%;
+    border-radius: 0.85rem;
+    padding: 0.62rem 0.85rem;
+    font-size: 0.58rem;
+    letter-spacing: 0.1em;
+  }
 }
 
 @keyframes header-logout-notice-in {

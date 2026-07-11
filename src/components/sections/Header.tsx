@@ -64,9 +64,9 @@ const expandVariants = {
 
 export function Header() {
   const reduceMotion = useReducedMotion();
-  const { data: session } = useSession();
+  const { data: session, status } = useSession();
   const firstName = session?.user?.name ? getFirstName(session.user.name) : null;
-  const isLoggedIn = Boolean(session?.user);
+  const isLoggedIn = status === "authenticated" && Boolean(session?.user);
   const compositorProfile = useCompositorProfile();
   const chromeTouch = compositorProfile === "chrome-touch";
   const panelShellVariants = chromeTouch ? headerPanelShellVariantsChrome : headerPanelShellVariants;
@@ -177,6 +177,13 @@ export function Header() {
   }, [cartOpen, chromeTouch, reduceMotion]);
 
   useEffect(() => {
+    if (isLoggedIn && cartOpen) {
+      setCartOpen(false);
+      setCartPanelReady(false);
+    }
+  }, [cartOpen, isLoggedIn]);
+
+  useEffect(() => {
     if (!loginOpen && !cartOpen && !navOpen) return;
 
     const onKeyDown = (event: KeyboardEvent) => {
@@ -207,44 +214,37 @@ export function Header() {
         <DesktopNav />
 
         <div className="relative z-40 flex shrink-0 items-center gap-1.5 sm:gap-2">
-          {logoutMessage ? (
-            <p className="header-logout-notice" role="status" aria-live="polite">
-              {logoutMessage}
-            </p>
-          ) : null}
           <div className="flex items-center gap-1 sm:gap-1.5">
             {isLoggedIn && firstName ? (
               <button
                 type="button"
-                className="header-user-greeting-trigger hidden sm:flex"
+                className={[
+                  "header-user-greeting-trigger flex",
+                  loginOpen ? "header-user-greeting-trigger-active" : "",
+                ].join(" ")}
                 aria-expanded={loginOpen}
                 aria-label={loginOpen ? "Close account menu" : "Open account menu"}
                 onClick={toggleLogin}
               >
-                <HeaderUserGreeting firstName={firstName} />
+                <HeaderUserGreeting firstName={firstName} expanded={loginOpen} />
               </button>
-            ) : null}
-            <HeaderIconButton
-              label={
-                loginOpen
-                  ? isLoggedIn
-                    ? "Close account menu"
-                    : "Close sign in"
-                  : isLoggedIn
-                    ? "Open account menu"
-                    : "Open sign in"
-              }
-              icon="login"
-              active={loginOpen}
-              onClick={toggleLogin}
-            />
+            ) : (
+              <HeaderIconButton
+                label={loginOpen ? "Close sign in" : "Open sign in"}
+                icon="login"
+                active={loginOpen}
+                onClick={toggleLogin}
+              />
+            )}
           </div>
-          <HeaderIconButton
-            label={cartOpen ? "Close cart" : "Open cart"}
-            icon="cart"
-            active={cartOpen}
-            onClick={toggleCart}
-          />
+          {!isLoggedIn ? (
+            <HeaderIconButton
+              label={cartOpen ? "Close cart" : "Open cart"}
+              icon="cart"
+              active={cartOpen}
+              onClick={toggleCart}
+            />
+          ) : null}
 
           <motion.button
             type="button"
@@ -266,6 +266,23 @@ export function Header() {
       </div>
 
       <AnimatePresence initial={false}>
+        {logoutMessage ? (
+          <motion.div
+            key="header-logout-notice"
+            className="header-logout-notice-wrap"
+            initial={reduceMotion ? undefined : { opacity: 0, y: -6 }}
+            animate={reduceMotion ? undefined : { opacity: 1, y: 0 }}
+            exit={reduceMotion ? undefined : { opacity: 0, y: -4 }}
+            transition={{ duration: 0.28 }}
+          >
+            <p className="header-logout-notice" role="status" aria-live="polite">
+              {logoutMessage}
+            </p>
+          </motion.div>
+        ) : null}
+      </AnimatePresence>
+
+      <AnimatePresence initial={false}>
         {loginOpen && (
           <motion.div
             key="header-login-expand"
@@ -283,8 +300,8 @@ export function Header() {
                 animate={reduceMotion ? undefined : loginPanelReady ? "open" : "closed"}
                 exit={reduceMotion ? undefined : "exit"}
               >
-                {isLoggedIn && session ? (
-                  <HeaderAccountPanel session={session} onClose={closeLogin} onLoggedOut={handleLoggedOut} />
+                {isLoggedIn ? (
+                  <HeaderAccountPanel onClose={closeLogin} onLoggedOut={handleLoggedOut} />
                 ) : (
                   <HeaderLoginPanel onClose={closeLogin} />
                 )}
@@ -295,7 +312,7 @@ export function Header() {
       </AnimatePresence>
 
       <AnimatePresence initial={false}>
-        {cartOpen && (
+        {!isLoggedIn && cartOpen && (
           <motion.div
             key="header-cart-expand"
             className={chromeTouch ? "overflow-hidden" : "grid overflow-hidden"}

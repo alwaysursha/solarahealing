@@ -5,9 +5,48 @@ import { CartIcon } from "@/components/ui/CartIcon";
 
 type HeaderCartPanelProps = {
   onClose: () => void;
+  embedded?: boolean;
 };
 
-export function HeaderCartPanel({ onClose }: HeaderCartPanelProps) {
+export function HeaderCartPanel({ onClose, embedded = false }: HeaderCartPanelProps) {
+  if (embedded) {
+    return (
+      <div className="header-account-cart-embed">
+        <div className="header-account-cart-embed-inner">
+          <div className="flex min-w-0 flex-1 items-center gap-3 rounded-[0.9rem] border border-cream/10 bg-cream/[0.04] px-3.5 py-2.5 sm:px-4 sm:py-3">
+            <span className="flex h-8 w-8 shrink-0 items-center justify-center rounded-full border border-gold/25 bg-gold/10 text-gold sm:h-9 sm:w-9">
+              <CartIcon className="h-4 w-4" />
+            </span>
+            <div className="min-w-0">
+              <p className="text-[0.7rem] font-medium text-cream/88">Your cart is empty</p>
+              <p className="mt-0.5 text-[0.64rem] text-cream/48">
+                Add a course or session to begin checkout.
+              </p>
+            </div>
+          </div>
+
+          <div className="header-account-cart-embed-actions">
+            <Link
+              href="/checkout"
+              className="header-login-submit header-login-submit-compact inline-flex items-center justify-center"
+              onClick={onClose}
+            >
+              <span className="header-login-submit-shine pointer-events-none absolute inset-0" />
+              <span className="relative">Checkout</span>
+            </Link>
+            <Link
+              href="/#courses"
+              className="header-account-cart-browse"
+              onClick={onClose}
+            >
+              Browse courses
+            </Link>
+          </div>
+        </div>
+      </div>
+    );
+  }
+
   return (
     <div className="header-login-panel relative mt-2.5 w-full">
       <div className="header-login-panel-inner relative overflow-hidden rounded-[1.1rem] border border-gold/25 px-4 py-3.5 shadow-[0_20px_60px_-28px_rgba(0,0,0,0.55)] sm:rounded-[1.25rem] sm:px-5 sm:py-4">
