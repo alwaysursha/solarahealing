@@ -254,7 +254,7 @@ function FeaturedWorkshop({
               priority
             />
           </motion.div>
-          <div className="absolute inset-0 bg-gradient-to-r from-transparent via-purple-deep/20 to-purple-deep/80 lg:via-purple-deep/10" />
+          <div className="absolute inset-0 bg-gradient-to-r from-transparent via-purple-deep/15 to-purple-deep/55 lg:via-purple-deep/8" />
           <div className="workshop-card-shimmer pointer-events-none absolute inset-0 opacity-0 transition-opacity duration-500 group-hover:opacity-100" />
 
           <motion.div
@@ -322,7 +322,7 @@ function FeaturedWorkshopStatic({ workshop }: { workshop: WorkshopItem }) {
             className="object-cover"
             priority
           />
-          <div className="absolute inset-0 bg-gradient-to-r from-transparent via-purple-deep/20 to-purple-deep/80 lg:via-purple-deep/10" />
+          <div className="absolute inset-0 bg-gradient-to-r from-transparent via-purple-deep/15 to-purple-deep/55 lg:via-purple-deep/8" />
           <div className="absolute left-5 top-5 flex items-center gap-3">
             <WorkshopBadge label={workshop.badge} />
             <span className="rounded-full bg-gold/90 px-2.5 py-1 text-[0.58rem] font-bold uppercase tracking-[0.18em] text-purple-deep">
@@ -390,7 +390,7 @@ function UpcomingCard({
           className="object-cover transition-transform duration-700 group-hover:scale-110"
         />
       </motion.div>
-      <div className="absolute inset-0 bg-gradient-to-t from-[#1e0a38]/95 via-[#281050]/55 to-[#3a1868]/15" />
+      <div className="absolute inset-0 bg-gradient-to-t from-[#352560]/75 via-[#483878]/40 to-[#584890]/10" />
       <div className="workshop-card-shimmer pointer-events-none absolute inset-0 opacity-0 transition-opacity duration-500 group-hover:opacity-100" />
 
       <motion.div className="absolute right-4 top-4 z-[3]" variants={cardPriceReveal}>
@@ -423,7 +423,7 @@ function UpcomingCardContent({ workshop }: { workshop: WorkshopItem }) {
         sizes="(max-width: 768px) 100vw, 33vw"
         className="object-cover"
       />
-      <div className="absolute inset-0 bg-gradient-to-t from-[#1e0a38]/95 via-[#281050]/55 to-[#3a1868]/15" />
+      <div className="absolute inset-0 bg-gradient-to-t from-[#352560]/75 via-[#483878]/40 to-[#584890]/10" />
       <div className="absolute right-4 top-4 z-[3]">
         <PriceTag priceCad={workshop.priceCad} />
       </div>

@@ -51,13 +51,13 @@ function AboutEnergyVisual({ animationsActive }: { animationsActive: boolean }) 
 
   return (
     <div className="relative h-full w-full overflow-hidden rounded-xl lg:rounded-2xl">
-      <div className="absolute inset-0 bg-gradient-to-br from-[#1f0d38] via-purple-deep to-[#120828]" />
+      <div className="absolute inset-0 bg-gradient-to-br from-[#352560] via-purple-deep to-[#2A1848]" />
 
       <div
         className="absolute inset-0 opacity-60"
         style={{
           backgroundImage:
-            "radial-gradient(circle at 30% 35%, rgba(201,162,39,0.35) 0%, transparent 42%), radial-gradient(circle at 72% 68%, rgba(139,58,154,0.45) 0%, transparent 48%), radial-gradient(circle at 50% 50%, rgba(99,102,241,0.15) 0%, transparent 55%)",
+            "radial-gradient(circle at 30% 35%, rgba(212,173,53,0.32) 0%, transparent 42%), radial-gradient(circle at 72% 68%, rgba(157,77,174,0.4) 0%, transparent 48%), radial-gradient(circle at 50% 50%, rgba(116,112,232,0.12) 0%, transparent 55%)",
         }}
         aria-hidden
       />
@@ -82,7 +82,7 @@ function AboutEnergyVisual({ animationsActive }: { animationsActive: boolean }) 
           <radialGradient id="about-core-glow" cx="50%" cy="50%" r="50%">
             <stop offset="0%" stopColor="#dbb94a" stopOpacity="0.9" />
             <stop offset="45%" stopColor="#c9a227" stopOpacity="0.35" />
-            <stop offset="100%" stopColor="#4b0082" stopOpacity="0" />
+            <stop offset="100%" stopColor="#5C1A94" stopOpacity="0" />
           </radialGradient>
           <filter id="about-soft-glow" x="-50%" y="-50%" width="200%" height="200%">
             <feGaussianBlur stdDeviation="8" result="blur" />
@@ -169,7 +169,7 @@ function AboutEnergyVisual({ animationsActive }: { animationsActive: boolean }) 
           />
         ))}
 
-      <div className="absolute inset-0 bg-gradient-to-t from-[#120828]/80 via-transparent to-[#1f0d38]/20" />
+      <div className="absolute inset-0 bg-gradient-to-t from-[#2A1848]/65 via-transparent to-[#352560]/20" />
       <div className="absolute inset-0 ring-1 ring-inset ring-gold/20" />
 
       <div className="absolute bottom-4 left-4 right-4 md:bottom-5 md:left-5 md:right-5">
