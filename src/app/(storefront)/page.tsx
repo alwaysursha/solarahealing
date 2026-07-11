@@ -14,6 +14,9 @@ import {
 } from "@/lib/content";
 import { getSiteSettings } from "@/lib/site-settings";
 
+/** Set to true when workshops should appear on the homepage again. */
+const SHOW_WORKSHOPS_SECTION = false;
+
 export const dynamic = "force-dynamic";
 
 export async function generateMetadata(): Promise<Metadata> {
@@ -25,11 +28,11 @@ export async function generateMetadata(): Promise<Metadata> {
 }
 
 export default async function HomePage() {
-  const [home, courses, workshops, articlesDisplay] = await Promise.all([
+  const [home, courses, articlesDisplay, workshops] = await Promise.all([
     getHomePageContent(),
     getPublishedCourses(),
-    getPublishedWorkshops(),
     getHomeArticlesDisplay(),
+    SHOW_WORKSHOPS_SECTION ? getPublishedWorkshops() : Promise.resolve([]),
   ]);
 
   return (
@@ -43,12 +46,14 @@ export default async function HomePage() {
         secondary={articlesDisplay.secondary}
         list={articlesDisplay.list}
       />
-      <WorkshopsSection workshopList={workshops} intro={home.workshopsIntro} />
+      {SHOW_WORKSHOPS_SECTION ? (
+        <WorkshopsSection workshopList={workshops} intro={home.workshopsIntro} />
+      ) : null}
+      <ScheduleSection booking={home.scheduleBooking} />
       <TestimonialsShowcaseSection
         intro={home.testimonialsIntro}
         items={home.testimonials}
       />
-      <ScheduleSection booking={home.scheduleBooking} />
     </main>
   );
 }
