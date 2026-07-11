@@ -156,7 +156,7 @@ const cardPriceReveal = {
 function EnrollingDot({ className = "" }: { className?: string }) {
   return (
     <span
-      className={`inline-block rounded-full bg-gold shadow-[0_0_8px_rgba(208,42,123,0.6)] ${className}`}
+      className={`inline-block rounded-full bg-gold shadow-[0_0_8px_rgba(102,2,60,0.6)] ${className}`}
       aria-hidden
     />
   );
@@ -390,7 +390,7 @@ function UpcomingCard({
           className="object-cover transition-transform duration-700 group-hover:scale-110"
         />
       </motion.div>
-      <div className="absolute inset-0 bg-gradient-to-t from-[#4A1049]/95 via-[#5E1560]/55 to-[#7A1F78]/15" />
+      <div className="absolute inset-0 bg-gradient-to-t from-[#320032]/95 via-[#480048]/55 to-[#600060]/15" />
       <div className="workshop-card-shimmer pointer-events-none absolute inset-0 opacity-0 transition-opacity duration-500 group-hover:opacity-100" />
 
       <motion.div className="absolute right-4 top-4 z-[3]" variants={cardPriceReveal}>
@@ -423,7 +423,7 @@ function UpcomingCardContent({ workshop }: { workshop: WorkshopItem }) {
         sizes="(max-width: 768px) 100vw, 33vw"
         className="object-cover"
       />
-      <div className="absolute inset-0 bg-gradient-to-t from-[#4A1049]/95 via-[#5E1560]/55 to-[#7A1F78]/15" />
+      <div className="absolute inset-0 bg-gradient-to-t from-[#320032]/95 via-[#480048]/55 to-[#600060]/15" />
       <div className="absolute right-4 top-4 z-[3]">
         <PriceTag priceCad={workshop.priceCad} />
       </div>

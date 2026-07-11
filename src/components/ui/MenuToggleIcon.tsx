@@ -20,7 +20,7 @@ export function MenuToggleIcon({ open }: MenuToggleIconProps) {
   return (
     <span className="relative block h-6 w-6" aria-hidden>
       <motion.span
-        className="absolute left-1/2 h-[1.5px] w-[1.15rem] -translate-x-1/2 rounded-full bg-current shadow-[0_0_8px_rgba(208,42,123,0.35)]"
+        className="absolute left-1/2 h-[1.5px] w-[1.15rem] -translate-x-1/2 rounded-full bg-current shadow-[0_0_8px_rgba(102,2,60,0.35)]"
         initial={false}
         animate={open ? { top: 11, rotate: 45 } : { top: 5, rotate: 0 }}
         transition={transition}
@@ -34,7 +34,7 @@ export function MenuToggleIcon({ open }: MenuToggleIconProps) {
         style={{ originX: "50%", originY: "50%" }}
       />
       <motion.span
-        className="absolute left-1/2 h-[1.5px] w-[1.15rem] -translate-x-1/2 rounded-full bg-current shadow-[0_0_8px_rgba(208,42,123,0.35)]"
+        className="absolute left-1/2 h-[1.5px] w-[1.15rem] -translate-x-1/2 rounded-full bg-current shadow-[0_0_8px_rgba(102,2,60,0.35)]"
         initial={false}
         animate={open ? { top: 11, rotate: -45 } : { top: 17, rotate: 0 }}
         transition={transition}

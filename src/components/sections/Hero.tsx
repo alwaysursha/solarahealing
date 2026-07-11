@@ -113,7 +113,7 @@ function IllustratedSlideBackground({
         className="pointer-events-none absolute inset-0"
         style={{
           backgroundImage:
-            "radial-gradient(ellipse 55% 45% at 12% 75%, rgba(208,42,123,0.08) 0%, transparent 52%), radial-gradient(ellipse 40% 35% at 50% 100%, rgba(177,52,175,0.06) 0%, transparent 60%)",
+            "radial-gradient(ellipse 55% 45% at 12% 75%, rgba(102,2,60,0.08) 0%, transparent 52%), radial-gradient(ellipse 40% 35% at 50% 100%, rgba(128,0,128,0.06) 0%, transparent 60%)",
         }}
         aria-hidden
       />
