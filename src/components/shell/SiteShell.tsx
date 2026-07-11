@@ -4,11 +4,11 @@ import { useCallback, useEffect, useRef, useState, type ReactNode } from "react"
 import { buildPanelPath, buildBorderTracePath } from "@/lib/panel-path";
 import { detectCompositorProfile, useCompositorProfile } from "@/lib/compositor-profile";
 import { useSiteScrollPause } from "@/hooks/useSiteScrollPause";
+import { Header } from "@/components/sections/Header";
 import { PanelBorderStar } from "./PanelBorderStar";
 import { SpiritualBackground } from "./SpiritualBackground";
 
 type SiteShellProps = {
-  header: ReactNode;
   children: ReactNode;
 };
 
@@ -26,7 +26,7 @@ const PANEL_POSITION = [
   "lg:bottom-2.5 lg:left-2",
 ].join(" ");
 
-export function SiteShell({ header, children }: SiteShellProps) {
+export function SiteShell({ children }: SiteShellProps) {
   const panelRef = useRef<HTMLDivElement>(null);
   const headerRef = useRef<HTMLDivElement>(null);
   const [geometry, setGeometry] = useState<PanelGeometry>();
@@ -132,7 +132,7 @@ export function SiteShell({ header, children }: SiteShellProps) {
       </div>
 
       <div ref={headerRef} className="site-header-layer absolute inset-x-0 top-0 z-40 px-5 pt-4 pb-4 md:px-10 md:pt-5 md:pb-4.5 lg:px-14">
-        {header}
+        <Header />
       </div>
     </div>
   );

@@ -1,18 +1,14 @@
-import { Footer } from "@/components/sections/Footer";
-import { Header } from "@/components/sections/Header";
-import { SiteShell } from "@/components/shell/SiteShell";
+import { auth } from "@/auth";
+import { StorefrontShell } from "@/components/storefront/StorefrontShell";
 
 export const dynamic = "force-dynamic";
 
-export default function StorefrontLayout({
+export default async function StorefrontLayout({
   children,
 }: {
   children: React.ReactNode;
 }) {
-  return (
-    <SiteShell header={<Header />}>
-      {children}
-      <Footer />
-    </SiteShell>
-  );
+  const session = await auth();
+
+  return <StorefrontShell session={session}>{children}</StorefrontShell>;
 }

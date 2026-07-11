@@ -2,6 +2,7 @@ import type { NextConfig } from "next";
 import { initOpenNextCloudflareForDev } from "@opennextjs/cloudflare";
 
 const nextConfig: NextConfig = {
+  serverExternalPackages: ["@prisma/client", ".prisma/client"],
   experimental: {
     optimizePackageImports: ["framer-motion"],
   },
@@ -18,4 +19,4 @@ const nextConfig: NextConfig = {
 
 export default nextConfig;
 
-initOpenNextCloudflareForDev();
+initOpenNextCloudflareForDev({ remoteBindings: true });

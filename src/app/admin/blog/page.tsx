@@ -1,14 +1,12 @@
-import { asc } from "drizzle-orm";
-import { getDb, articles } from "@/db";
 import { AdminField, AdminPanel, AdminShell, AdminSubmit } from "@/components/admin/AdminShell";
 import { deleteArticleAction, upsertArticleAction } from "@/lib/admin/actions";
+import { prisma } from "@/lib/prisma";
 import Link from "next/link";
 
 export const dynamic = "force-dynamic";
 
 export default async function AdminBlogPage() {
-  const db = await getDb();
-  const rows = await db.select().from(articles).orderBy(asc(articles.sortOrder));
+  const rows = await prisma.article.findMany({ orderBy: { sortOrder: "asc" } });
 
   return (
     <AdminShell

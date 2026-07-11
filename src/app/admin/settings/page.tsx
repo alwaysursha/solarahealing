@@ -1,8 +1,7 @@
-import { eq } from "drizzle-orm";
-import { getDb, siteSettings } from "@/db";
 import { AdminField, AdminPanel, AdminShell, AdminSubmit } from "@/components/admin/AdminShell";
 import { updateSiteSettingsAction } from "@/lib/admin/actions";
 import { getDbSiteSettings } from "@/lib/content";
+import { prisma } from "@/lib/prisma";
 import { site } from "@/lib/site";
 import { SITE_DESCRIPTION, SITE_NAME } from "@/lib/constants";
 
@@ -11,10 +10,9 @@ export const dynamic = "force-dynamic";
 export default async function AdminSettingsPage() {
   let settings = await getDbSiteSettings();
   if (!settings) {
-    const db = await getDb();
-    await db
-      .insert(siteSettings)
-      .values({
+    await prisma.siteSettings.upsert({
+      where: { id: 1 },
+      create: {
         id: 1,
         name: SITE_NAME,
         tagline: site.tagline,
@@ -28,9 +26,9 @@ export default async function AdminSettingsPage() {
         whatsapp: site.contact.whatsapp,
         address: site.contact.location,
         cta: site.cta,
-        updatedAt: new Date().toISOString(),
-      })
-      .onConflictDoNothing();
+      },
+      update: {},
+    });
     settings = await getDbSiteSettings();
   }
 

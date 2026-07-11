@@ -1,9 +1,10 @@
 "use client";
 
 import Link from "next/link";
-import { useId, useState } from "react";
+import { useEffect, useId, useState } from "react";
 import { signIn } from "next-auth/react";
 import { GoogleSignInButton } from "@/components/auth/AuthForms";
+import { getAuthCallbackUrl } from "@/lib/auth-utils";
 
 type HeaderLoginPanelProps = {
   onClose: () => void;
@@ -14,6 +15,11 @@ export function HeaderLoginPanel({ onClose }: HeaderLoginPanelProps) {
   const passwordId = useId();
   const [showPassword, setShowPassword] = useState(false);
   const [error, setError] = useState<string | null>(null);
+  const [callbackUrl, setCallbackUrl] = useState("/");
+
+  useEffect(() => {
+    setCallbackUrl(getAuthCallbackUrl("/"));
+  }, []);
 
   return (
     <div className="header-login-panel relative mt-2.5 w-full">
@@ -27,19 +33,20 @@ export function HeaderLoginPanel({ onClose }: HeaderLoginPanelProps) {
             onSubmit={async (event) => {
               event.preventDefault();
               setError(null);
+              const returnUrl = getAuthCallbackUrl("/");
               const formData = new FormData(event.currentTarget);
               const result = await signIn("credentials", {
                 email: formData.get("email")?.toString() ?? "",
                 password: formData.get("password")?.toString() ?? "",
                 redirect: false,
-                callbackUrl: "/account",
+                callbackUrl: returnUrl,
               });
               if (result?.error) {
                 setError("Invalid email or password.");
                 return;
               }
               onClose();
-              window.location.href = "/account";
+              window.location.href = returnUrl;
             }}
           >
             <div className="flex flex-wrap items-end gap-2 sm:gap-3 lg:flex-nowrap lg:gap-4">
@@ -98,7 +105,7 @@ export function HeaderLoginPanel({ onClose }: HeaderLoginPanelProps) {
                   <span className="header-login-submit-shine pointer-events-none absolute inset-0" />
                   <span className="relative">Sign in</span>
                 </button>
-                <GoogleSignInButton callbackUrl="/account" compact />
+                <GoogleSignInButton callbackUrl={callbackUrl} compact />
               </div>
             </div>
 
@@ -106,7 +113,7 @@ export function HeaderLoginPanel({ onClose }: HeaderLoginPanelProps) {
 
             <div className="header-login-footer flex flex-wrap items-center justify-between gap-x-4 gap-y-1 md:pl-[8.5rem]">
               <Link
-                href="/auth/sign-in"
+                href={`/auth/sign-in?callbackUrl=${encodeURIComponent(callbackUrl)}`}
                 className="text-[0.68rem] font-medium text-gold/86 transition-colors hover:text-gold-light"
                 onClick={onClose}
               >
@@ -115,7 +122,7 @@ export function HeaderLoginPanel({ onClose }: HeaderLoginPanelProps) {
               <p className="text-[0.68rem] text-cream/52">
                 New here?{" "}
                 <Link
-                  href="/auth/sign-up"
+                  href={`/auth/sign-up?callbackUrl=${encodeURIComponent(callbackUrl)}`}
                   className="font-medium text-gold/88 transition-colors hover:text-gold-light"
                   onClick={onClose}
                 >

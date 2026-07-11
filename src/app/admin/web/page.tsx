@@ -1,18 +1,15 @@
-import { asc, eq } from "drizzle-orm";
-import { getDb, pageSections } from "@/db";
 import { AdminPanel, AdminShell, AdminSubmit } from "@/components/admin/AdminShell";
 import { updatePageSectionAction } from "@/lib/admin/actions";
+import { prisma } from "@/lib/prisma";
 import Link from "next/link";
 
 export const dynamic = "force-dynamic";
 
 export default async function AdminWebPage() {
-  const db = await getDb();
-  const sections = await db
-    .select()
-    .from(pageSections)
-    .where(eq(pageSections.pageKey, "home"))
-    .orderBy(asc(pageSections.sectionKey));
+  const sections = await prisma.pageSection.findMany({
+    where: { pageKey: "home" },
+    orderBy: { sectionKey: "asc" },
+  });
 
   return (
     <AdminShell
