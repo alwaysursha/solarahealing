@@ -29,7 +29,7 @@ export function HeaderLoginPanel({ onClose }: HeaderLoginPanelProps) {
 
         <div className="relative z-[1]">
           <form
-            className="flex flex-col gap-2.5"
+            className="header-login-form flex flex-col gap-2.5"
             onSubmit={async (event) => {
               event.preventDefault();
               setError(null);
@@ -49,8 +49,8 @@ export function HeaderLoginPanel({ onClose }: HeaderLoginPanelProps) {
               window.location.href = returnUrl;
             }}
           >
-            <div className="flex flex-wrap items-end gap-2 sm:gap-3 lg:flex-nowrap lg:gap-4">
-              <div className="header-login-intro hidden shrink-0 md:block">
+            <div className="header-login-form-layout">
+              <div className="header-login-intro">
                 <p className="text-[0.56rem] font-semibold uppercase tracking-[0.3em] text-gold/82">
                   Member access
                 </p>
@@ -59,10 +59,10 @@ export function HeaderLoginPanel({ onClose }: HeaderLoginPanelProps) {
                 </h2>
               </div>
 
-              <div className="grid min-w-0 flex-1 grid-cols-1 gap-2 sm:grid-cols-2 lg:grid-cols-[minmax(0,1.1fr)_minmax(0,1fr)]">
+              <div className="header-login-fields">
                 <div className="min-w-0">
                   <label htmlFor={emailId} className="header-login-label">
-                    Email or ID
+                    Email ID
                   </label>
                   <input
                     id={emailId}
@@ -100,11 +100,14 @@ export function HeaderLoginPanel({ onClose }: HeaderLoginPanelProps) {
                 </div>
               </div>
 
-              <div className="flex shrink-0 items-end gap-2">
-                <button type="submit" className="header-login-submit header-login-submit-compact shrink-0">
+              <div className="header-login-actions">
+                <button type="submit" className="header-login-submit header-login-submit-compact">
                   <span className="header-login-submit-shine pointer-events-none absolute inset-0" />
                   <span className="relative">Sign in</span>
                 </button>
+                <div className="header-login-divider header-login-divider-mobile" aria-hidden>
+                  or
+                </div>
                 <GoogleSignInButton callbackUrl={callbackUrl} compact />
               </div>
             </div>
