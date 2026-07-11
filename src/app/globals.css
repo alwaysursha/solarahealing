@@ -916,6 +916,279 @@ body {
   animation-play-state: paused;
 }
 
+.header-user-greeting-trigger {
+  align-items: flex-end;
+  max-width: 11rem;
+  padding: 0.15rem 0.35rem;
+  transition: opacity 0.25s ease, transform 0.25s ease;
+}
+
+.header-user-greeting-trigger:hover {
+  opacity: 0.92;
+  transform: translateY(-1px);
+}
+
+.header-user-greeting {
+  display: flex;
+  flex-direction: column;
+  align-items: flex-end;
+  line-height: 1.05;
+  text-align: right;
+}
+
+.header-user-greeting-hello {
+  font-size: 0.52rem;
+  font-weight: 600;
+  letter-spacing: 0.32em;
+  text-transform: uppercase;
+  color: rgba(219, 185, 74, 0.72);
+}
+
+.header-user-greeting-name {
+  margin-top: 0.12rem;
+  font-family: var(--font-instrument-serif), serif;
+  font-size: clamp(1rem, 1.6vw, 1.18rem);
+  font-weight: 400;
+  letter-spacing: 0.01em;
+  background: linear-gradient(118deg, #fff7e8 0%, #f0d890 38%, #dbb94a 72%, #c9a227 100%);
+  -webkit-background-clip: text;
+  background-clip: text;
+  color: transparent;
+  text-shadow: 0 0 24px rgba(219, 185, 74, 0.18);
+}
+
+.header-account-panel-inner {
+  background:
+    linear-gradient(152deg, rgba(52, 20, 86, 0.96) 0%, rgba(34, 12, 58, 0.98) 52%, rgba(22, 8, 38, 0.99) 100%);
+  box-shadow:
+    0 24px 70px -34px rgba(0, 0, 0, 0.65),
+    inset 0 1px 0 rgba(255, 255, 255, 0.06);
+  backdrop-filter: blur(20px);
+}
+
+.header-account-panel-glow {
+  background:
+    radial-gradient(circle at 8% 0%, rgba(219, 185, 74, 0.14), transparent 38%),
+    radial-gradient(circle at 92% 100%, rgba(139, 58, 154, 0.16), transparent 42%);
+}
+
+.header-account-panel-shine {
+  background: linear-gradient(
+    118deg,
+    transparent 24%,
+    rgba(255, 255, 255, 0.04) 44%,
+    rgba(255, 255, 255, 0.09) 50%,
+    transparent 66%
+  );
+}
+
+.header-account-panel-layout {
+  display: grid;
+  grid-template-columns: minmax(0, 1.2fr) auto auto;
+  align-items: center;
+  gap: 1rem 1.25rem;
+}
+
+.header-account-identity {
+  display: flex;
+  min-width: 0;
+  align-items: center;
+  gap: 0.85rem;
+}
+
+.header-account-avatar {
+  display: grid;
+  height: 2.85rem;
+  width: 2.85rem;
+  flex-shrink: 0;
+  place-items: center;
+  border-radius: 9999px;
+  border: 1px solid rgba(219, 185, 74, 0.35);
+  background:
+    radial-gradient(circle at 30% 20%, rgba(255, 255, 255, 0.16), transparent 42%),
+    linear-gradient(145deg, rgba(219, 185, 74, 0.22), rgba(139, 58, 154, 0.18));
+  font-family: var(--font-instrument-serif), serif;
+  font-size: 1.15rem;
+  color: #f7ecd0;
+  box-shadow: 0 10px 28px -16px rgba(219, 185, 74, 0.55);
+}
+
+.header-account-eyebrow {
+  font-size: 0.52rem;
+  font-weight: 600;
+  letter-spacing: 0.34em;
+  text-transform: uppercase;
+  color: rgba(219, 185, 74, 0.68);
+}
+
+.header-account-welcome {
+  margin-top: 0.2rem;
+  font-family: var(--font-instrument-serif), serif;
+  font-size: clamp(1.35rem, 2.2vw, 1.65rem);
+  font-weight: 400;
+  line-height: 1.05;
+  letter-spacing: -0.02em;
+  color: rgba(250, 247, 242, 0.96);
+}
+
+.header-account-welcome span {
+  display: inline-block;
+  margin-right: 0.2rem;
+  font-size: 0.92em;
+  font-style: italic;
+  color: rgba(219, 185, 74, 0.88);
+}
+
+.header-account-email {
+  margin-top: 0.35rem;
+  max-width: 14rem;
+  font-size: 0.68rem;
+  letter-spacing: 0.02em;
+  color: rgba(250, 247, 242, 0.46);
+}
+
+.header-account-nav {
+  display: flex;
+  flex-wrap: wrap;
+  justify-content: flex-end;
+  gap: 0.45rem;
+}
+
+.header-account-nav-item {
+  display: inline-flex;
+  width: auto;
+  align-items: center;
+  gap: 0.45rem;
+  border-radius: 9999px;
+  border: 1px solid rgba(250, 247, 242, 0.1);
+  background: rgba(255, 255, 255, 0.04);
+  padding: 0.55rem 0.9rem;
+  font-size: 0.62rem;
+  font-weight: 600;
+  letter-spacing: 0.14em;
+  text-transform: uppercase;
+  color: rgba(250, 247, 242, 0.88);
+  white-space: nowrap;
+  transition:
+    border-color 0.25s ease,
+    background-color 0.25s ease,
+    color 0.25s ease;
+}
+
+.header-account-nav-item:hover {
+  border-color: rgba(219, 185, 74, 0.32);
+  background: rgba(255, 255, 255, 0.07);
+  color: #f7ecd0;
+}
+
+.header-account-actions {
+  display: flex;
+  flex-wrap: wrap;
+  justify-content: flex-end;
+  gap: 0.45rem;
+}
+
+.header-account-primary {
+  position: relative;
+  display: inline-flex;
+  width: auto;
+  align-items: center;
+  gap: 0.45rem;
+  overflow: hidden;
+  border-radius: 9999px;
+  border: 1px solid rgba(201, 162, 39, 0.38);
+  background: linear-gradient(135deg, #eecf78 0%, #dbb94a 48%, #b8922a 100%);
+  padding: 0.58rem 1rem;
+  font-size: 0.62rem;
+  font-weight: 700;
+  letter-spacing: 0.16em;
+  text-transform: uppercase;
+  color: var(--purple-deep);
+  white-space: nowrap;
+  box-shadow: 0 14px 34px -18px rgba(201, 162, 39, 0.65);
+  transition: transform 0.25s ease, box-shadow 0.25s ease;
+}
+
+.header-account-primary:hover {
+  transform: translateY(-1px);
+  box-shadow: 0 16px 38px -16px rgba(201, 162, 39, 0.72);
+}
+
+.header-account-ghost {
+  display: inline-flex;
+  width: auto;
+  align-items: center;
+  justify-content: center;
+  border-radius: 9999px;
+  border: 1px solid rgba(250, 247, 242, 0.12);
+  background: transparent;
+  padding: 0.58rem 0.95rem;
+  font-size: 0.62rem;
+  font-weight: 600;
+  letter-spacing: 0.14em;
+  text-transform: uppercase;
+  color: rgba(250, 247, 242, 0.68);
+  white-space: nowrap;
+  transition:
+    border-color 0.25s ease,
+    color 0.25s ease,
+    background-color 0.25s ease;
+}
+
+.header-account-ghost:hover {
+  border-color: rgba(219, 185, 74, 0.28);
+  background: rgba(255, 255, 255, 0.04);
+  color: rgba(250, 247, 242, 0.92);
+}
+
+@media (max-width: 1023px) {
+  .header-account-panel-layout {
+    grid-template-columns: minmax(0, 1fr);
+    gap: 0.85rem;
+  }
+
+  .header-account-nav,
+  .header-account-actions {
+    justify-content: flex-start;
+  }
+}
+
+@media (max-width: 639px) {
+  .header-user-greeting-trigger {
+    max-width: 8.5rem;
+  }
+
+  .header-user-greeting-name {
+    font-size: 0.98rem;
+  }
+}
+
+.header-logout-notice {
+  max-width: 14rem;
+  border-radius: 9999px;
+  border: 1px solid rgba(219, 185, 74, 0.28);
+  background: linear-gradient(135deg, rgba(52, 20, 86, 0.92), rgba(34, 12, 58, 0.96));
+  padding: 0.45rem 0.85rem;
+  font-size: 0.62rem;
+  font-weight: 600;
+  letter-spacing: 0.12em;
+  text-transform: uppercase;
+  color: rgba(247, 236, 208, 0.92);
+  box-shadow: 0 12px 32px -20px rgba(219, 185, 74, 0.45);
+  animation: header-logout-notice-in 0.35s ease;
+}
+
+@keyframes header-logout-notice-in {
+  from {
+    opacity: 0;
+    transform: translateY(4px);
+  }
+  to {
+    opacity: 1;
+    transform: translateY(0);
+  }
+}
+
 .article-featured-overlay {
   background:
     linear-gradient(180deg, rgba(30, 10, 56, 0.15) 0%, rgba(30, 10, 56, 0.05) 35%, rgba(30, 10, 56, 0.72) 100%),

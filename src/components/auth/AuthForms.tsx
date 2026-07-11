@@ -19,7 +19,7 @@ function GoogleIcon() {
 export function SignInForm() {
   const router = useRouter();
   const searchParams = useSearchParams();
-  const callbackUrl = searchParams.get("callbackUrl") ?? "/account";
+  const callbackUrl = searchParams.get("callbackUrl") ?? "/";
   const [error, setError] = useState<string | null>(null);
   const [loading, setLoading] = useState(false);
 
@@ -102,6 +102,8 @@ export function SignInForm() {
 
 export function SignUpForm() {
   const router = useRouter();
+  const searchParams = useSearchParams();
+  const callbackUrl = searchParams.get("callbackUrl") ?? "/";
   const [error, setError] = useState<string | null>(null);
   const [loading, setLoading] = useState(false);
 
@@ -110,7 +112,7 @@ export function SignUpForm() {
       <button
         type="button"
         className="flex w-full items-center justify-center gap-3 rounded-full border border-purple-deep/10 bg-white px-4 py-3 text-sm font-medium text-purple-deep transition hover:border-gold/40"
-        onClick={() => signIn("google", { callbackUrl: "/account" })}
+        onClick={() => signIn("google", { callbackUrl })}
       >
         <GoogleIcon />
         Sign up with Google
@@ -140,14 +142,14 @@ export function SignUpForm() {
             email: formData.get("email")?.toString() ?? "",
             password: formData.get("password")?.toString() ?? "",
             redirect: false,
-            callbackUrl: "/account",
+            callbackUrl,
           });
           setLoading(false);
           if (signInResult?.error) {
             setError("Account created, but sign-in failed. Please sign in manually.");
             return;
           }
-          router.push("/account");
+          router.push(callbackUrl);
           router.refresh();
         }}
       >

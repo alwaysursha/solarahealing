@@ -265,6 +265,18 @@ export async function getAllCustomers() {
   );
 }
 
+export async function getOrdersForUser(userId: string) {
+  return safeQuery(
+    () =>
+      prisma.order.findMany({
+        where: { userId },
+        orderBy: { createdAt: "desc" },
+        include: { items: true },
+      }),
+    [],
+  );
+}
+
 export async function getAllOrders() {
   return safeQuery(
     () =>

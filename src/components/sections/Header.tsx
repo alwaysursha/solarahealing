@@ -1,8 +1,10 @@
 "use client";
 
 import { AnimatePresence, motion, useReducedMotion } from "framer-motion";
+import { useSession } from "next-auth/react";
 import { useCallback, useEffect, useState } from "react";
 import { site } from "@/lib/site";
+import { getFirstName } from "@/lib/auth-utils";
 import {
   HEADER_PANEL_EXIT_MS,
   HEADER_PANEL_SHELL_EXPAND_MS,
@@ -18,6 +20,7 @@ import { HeaderIconButton } from "@/components/ui/HeaderIconButton";
 import { MenuToggleIcon } from "@/components/ui/MenuToggleIcon";
 import { HeaderCartPanel } from "@/components/sections/HeaderCartPanel";
 import { HeaderLoginPanel } from "@/components/sections/HeaderLoginPanel";
+import { HeaderAccountPanel, HeaderUserGreeting } from "@/components/sections/HeaderAccountPanel";
 import { MobileNavMenu } from "@/components/sections/MobileNavMenu";
 import { DesktopNav } from "@/components/sections/nav/DesktopNav";
 
@@ -61,6 +64,9 @@ const expandVariants = {
 
 export function Header() {
   const reduceMotion = useReducedMotion();
+  const { data: session } = useSession();
+  const firstName = session?.user?.name ? getFirstName(session.user.name) : null;
+  const isLoggedIn = Boolean(session?.user);
   const compositorProfile = useCompositorProfile();
   const chromeTouch = compositorProfile === "chrome-touch";
   const panelShellVariants = chromeTouch ? headerPanelShellVariantsChrome : headerPanelShellVariants;
@@ -71,6 +77,7 @@ export function Header() {
   const [loginPanelReady, setLoginPanelReady] = useState(false);
   const [cartOpen, setCartOpen] = useState(false);
   const [cartPanelReady, setCartPanelReady] = useState(false);
+  const [logoutMessage, setLogoutMessage] = useState<string | null>(null);
 
   const closeNav = useCallback(() => setNavOpen(false), []);
 
@@ -106,6 +113,11 @@ export function Header() {
   const closeCart = useCallback(() => {
     beginCloseCart();
   }, [beginCloseCart]);
+
+  const handleLoggedOut = useCallback(() => {
+    setLogoutMessage("You have signed out successfully.");
+    window.setTimeout(() => setLogoutMessage(null), 4500);
+  }, []);
 
   const toggleLogin = useCallback(() => {
     if (loginOpen) {
@@ -195,12 +207,38 @@ export function Header() {
         <DesktopNav />
 
         <div className="relative z-40 flex shrink-0 items-center gap-1.5 sm:gap-2">
-          <HeaderIconButton
-            label={loginOpen ? "Close sign in" : "Open sign in"}
-            icon="login"
-            active={loginOpen}
-            onClick={toggleLogin}
-          />
+          {logoutMessage ? (
+            <p className="header-logout-notice" role="status" aria-live="polite">
+              {logoutMessage}
+            </p>
+          ) : null}
+          <div className="flex items-center gap-1 sm:gap-1.5">
+            {isLoggedIn && firstName ? (
+              <button
+                type="button"
+                className="header-user-greeting-trigger hidden sm:flex"
+                aria-expanded={loginOpen}
+                aria-label={loginOpen ? "Close account menu" : "Open account menu"}
+                onClick={toggleLogin}
+              >
+                <HeaderUserGreeting firstName={firstName} />
+              </button>
+            ) : null}
+            <HeaderIconButton
+              label={
+                loginOpen
+                  ? isLoggedIn
+                    ? "Close account menu"
+                    : "Close sign in"
+                  : isLoggedIn
+                    ? "Open account menu"
+                    : "Open sign in"
+              }
+              icon="login"
+              active={loginOpen}
+              onClick={toggleLogin}
+            />
+          </div>
           <HeaderIconButton
             label={cartOpen ? "Close cart" : "Open cart"}
             icon="cart"
@@ -245,7 +283,11 @@ export function Header() {
                 animate={reduceMotion ? undefined : loginPanelReady ? "open" : "closed"}
                 exit={reduceMotion ? undefined : "exit"}
               >
-                <HeaderLoginPanel onClose={closeLogin} />
+                {isLoggedIn && session ? (
+                  <HeaderAccountPanel session={session} onClose={closeLogin} onLoggedOut={handleLoggedOut} />
+                ) : (
+                  <HeaderLoginPanel onClose={closeLogin} />
+                )}
               </motion.div>
             </div>
           </motion.div>

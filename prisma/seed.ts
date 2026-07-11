@@ -283,8 +283,8 @@ async function main() {
 
   await seedArticles();
 
-  const adminEmail = process.env.ADMIN_EMAIL ?? "admin@solarahealing.com";
-  const adminPassword = process.env.ADMIN_PASSWORD ?? "SolaraAdmin2026!";
+  const adminEmail = process.env.ADMIN_EMAIL ?? "admin@soularahealing.com";
+  const adminPassword = process.env.ADMIN_PASSWORD ?? "Soularahealing123!";
   const hashed = await bcrypt.hash(adminPassword, 12);
 
   await prisma.user.upsert({

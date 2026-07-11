@@ -57,14 +57,23 @@ const providers: Provider[] = [
   }),
 ];
 
+function cleanEnv(value: string | undefined): string | undefined {
+  return value?.trim().replace(/[\u200b-\u200d\ufeff]/g, "") || undefined;
+}
+
 if (process.env.GOOGLE_CLIENT_ID && process.env.GOOGLE_CLIENT_SECRET) {
-  providers.unshift(
-    Google({
-      clientId: process.env.GOOGLE_CLIENT_ID,
-      clientSecret: process.env.GOOGLE_CLIENT_SECRET,
-      allowDangerousEmailAccountLinking: true,
-    }),
-  );
+  const googleClientId = cleanEnv(process.env.GOOGLE_CLIENT_ID);
+  const googleClientSecret = cleanEnv(process.env.GOOGLE_CLIENT_SECRET);
+
+  if (googleClientId && googleClientSecret) {
+    providers.unshift(
+      Google({
+        clientId: googleClientId,
+        clientSecret: googleClientSecret,
+        allowDangerousEmailAccountLinking: true,
+      }),
+    );
+  }
 }
 
 export const { handlers, auth, signIn, signOut } = NextAuth({
