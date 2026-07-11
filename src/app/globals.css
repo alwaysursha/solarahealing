@@ -2,36 +2,36 @@
 
 :root {
   /*
-   * Brand palette — base #B134AF, secondary #D02A7B
+   * Brand palette — base #800080, secondary #66023C
    * To revert: restore purple-deep #4b0082, purple-mid #8b3a9a, gold #c9a227, gold-light #dbb94a
    */
-  --brand-base: #B134AF;
-  --brand-secondary: #D02A7B;
+  --brand-base: #800080;
+  --brand-secondary: #66023C;
 
-  --base-rgb: 177, 52, 175;
-  --secondary-rgb: 208, 42, 123;
-  --secondary-light-rgb: 245, 140, 185;
-  --base-dark-rgb: 90, 20, 88;
-  --base-deeper-rgb: 58, 12, 56;
-  --base-darkest-rgb: 42, 8, 40;
+  --base-rgb: 128, 0, 128;
+  --secondary-rgb: 102, 2, 60;
+  --secondary-light-rgb: 160, 60, 110;
+  --base-dark-rgb: 80, 0, 80;
+  --base-deeper-rgb: 48, 0, 48;
+  --base-darkest-rgb: 32, 0, 32;
 
-  --purple-deep: #9A2896;
-  --purple-mid: #B134AF;
-  --purple-light: #CC6BCA;
-  --indigo-deep: #5A1458;
-  --violet-glow: #E8A8E6;
-  --gold: #D02A7B;
-  --gold-light: #E8539A;
-  --saffron: #F06BA8;
+  --purple-deep: #600060;
+  --purple-mid: #800080;
+  --purple-light: #A633A6;
+  --indigo-deep: #3D003D;
+  --violet-glow: #D4A0D4;
+  --gold: #66023C;
+  --gold-light: #8A034F;
+  --saffron: #770344;
   --cream: #faf7f2;
   --canvas: #fdfcfa;
-  --foreground: #4A1248;
-  --foreground-rgb: 74, 18, 72;
-  --accent: #D02A7B;
-  --accent-light: #E8559A;
-  --accent-soft: #FDF0F7;
-  --hero-blush: #FDF0F7;
-  --hero-wash: #F8D9EC;
+  --foreground: #400040;
+  --foreground-rgb: 64, 0, 64;
+  --accent: #66023C;
+  --accent-light: #8A034F;
+  --accent-soft: #F8F0F4;
+  --hero-blush: #F8F0F4;
+  --hero-wash: #EDD6E2;
 }
 
 @theme inline {
@@ -87,11 +87,11 @@ body {
   /* Static dark base — never shifts to light lavender */
   background: linear-gradient(
     155deg,
-    #4A1049 0%,
-    #5E1560 28%,
-    #7A1F78 52%,
-    #B134AF 72%,
-    #6B1B69 100%
+    #320032 0%,
+    #480048 28%,
+    #600060 52%,
+    #800080 72%,
+    #500050 100%
   );
 }
 
@@ -161,7 +161,7 @@ body {
     var(--purple-deep) 0%,
     var(--indigo-deep) 40%,
     var(--purple-mid) 70%,
-    #8E2489 100%
+    #600060 100%
   );
   background-size: 200% 200%;
 }
@@ -839,7 +839,7 @@ body {
   overflow: hidden;
   border-radius: 9999px;
   border: 1px solid rgba(var(--secondary-rgb), 0.35);
-  background: linear-gradient(135deg, var(--gold-light) 0%, var(--gold) 52%, #B8246F 100%);
+  background: linear-gradient(135deg, var(--gold-light) 0%, var(--gold) 52%, #4A012C 100%);
   padding: 0.95rem 1.25rem;
   font-size: 0.72rem;
   font-weight: 600;
@@ -1021,7 +1021,7 @@ body {
   font-size: clamp(1rem, 1.6vw, 1.18rem);
   font-weight: 400;
   letter-spacing: 0.01em;
-  background: linear-gradient(118deg, #fff5fa 0%, #f5b8d8 38%, var(--gold-light) 72%, var(--gold) 100%);
+  background: linear-gradient(118deg, #fff5f8 0%, #d4a0b8 38%, var(--gold-light) 72%, var(--gold) 100%);
   -webkit-background-clip: text;
   background-clip: text;
   color: transparent;
@@ -1175,7 +1175,7 @@ body {
   overflow: hidden;
   border-radius: 9999px;
   border: 1px solid rgba(var(--secondary-rgb), 0.38);
-  background: linear-gradient(135deg, #f06ba8 0%, var(--gold) 48%, #B8246F 100%);
+  background: linear-gradient(135deg, #8A034F 0%, var(--gold) 48%, #4A012C 100%);
   padding: 0.58rem 1rem;
   font-size: 0.62rem;
   font-weight: 700;
@@ -2084,7 +2084,7 @@ body {
   height: min(18vw, 10rem);
   opacity: 0.28;
   background:
-    radial-gradient(circle at 28% 24%, rgba(255, 235, 245, 0.7) 0%, rgba(var(--secondary-rgb), 0.45) 12%, transparent 28%),
+    radial-gradient(circle at 28% 24%, rgba(255, 240, 245, 0.7) 0%, rgba(var(--secondary-rgb), 0.45) 12%, transparent 28%),
     radial-gradient(circle at 38% 32%, rgba(var(--secondary-rgb), 0.55) 0%, rgba(var(--base-dark-rgb), 0.35) 42%, rgba(var(--base-deeper-rgb), 0.5) 72%, rgba(var(--base-darkest-rgb), 0.85) 100%);
   box-shadow:
     inset -16px -12px 32px rgba(10, 4, 24, 0.55),

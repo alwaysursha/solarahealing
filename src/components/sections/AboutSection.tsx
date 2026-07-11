@@ -51,13 +51,13 @@ function AboutEnergyVisual({ animationsActive }: { animationsActive: boolean }) 
 
   return (
     <div className="relative h-full w-full overflow-hidden rounded-xl lg:rounded-2xl">
-      <div className="absolute inset-0 bg-gradient-to-br from-[#4A1049] via-purple-deep to-[#3A0D38]" />
+      <div className="absolute inset-0 bg-gradient-to-br from-[#320032] via-purple-deep to-[#280028]" />
 
       <div
         className="absolute inset-0 opacity-60"
         style={{
           backgroundImage:
-            "radial-gradient(circle at 30% 35%, rgba(208,42,123,0.35) 0%, transparent 42%), radial-gradient(circle at 72% 68%, rgba(177,52,175,0.45) 0%, transparent 48%), radial-gradient(circle at 50% 50%, rgba(208,42,123,0.15) 0%, transparent 55%)",
+            "radial-gradient(circle at 30% 35%, rgba(102,2,60,0.35) 0%, transparent 42%), radial-gradient(circle at 72% 68%, rgba(128,0,128,0.45) 0%, transparent 48%), radial-gradient(circle at 50% 50%, rgba(102,2,60,0.15) 0%, transparent 55%)",
         }}
         aria-hidden
       />
@@ -80,9 +80,9 @@ function AboutEnergyVisual({ animationsActive }: { animationsActive: boolean }) 
       >
         <defs>
           <radialGradient id="about-core-glow" cx="50%" cy="50%" r="50%">
-            <stop offset="0%" stopColor="#E8539A" stopOpacity="0.9" />
-            <stop offset="45%" stopColor="#D02A7B" stopOpacity="0.35" />
-            <stop offset="100%" stopColor="#B134AF" stopOpacity="0" />
+            <stop offset="0%" stopColor="#8A034F" stopOpacity="0.9" />
+            <stop offset="45%" stopColor="#66023C" stopOpacity="0.35" />
+            <stop offset="100%" stopColor="#800080" stopOpacity="0" />
           </radialGradient>
           <filter id="about-soft-glow" x="-50%" y="-50%" width="200%" height="200%">
             <feGaussianBlur stdDeviation="8" result="blur" />
@@ -100,7 +100,7 @@ function AboutEnergyVisual({ animationsActive }: { animationsActive: boolean }) 
             cy="200"
             r={radius}
             fill="none"
-            stroke="#D02A7B"
+            stroke="#66023C"
             strokeWidth="0.6"
             opacity={0.12 + index * 0.06}
           />
@@ -119,7 +119,7 @@ function AboutEnergyVisual({ animationsActive }: { animationsActive: boolean }) 
           />
         ))}
 
-        <circle cx="200" cy="200" r="28" fill="#D02A7B" opacity="0.85" filter="url(#about-soft-glow)" />
+        <circle cx="200" cy="200" r="28" fill="#66023C" opacity="0.85" filter="url(#about-soft-glow)" />
         <circle cx="200" cy="200" r="12" fill="#faf7f2" opacity="0.95" />
 
         <motion.g
@@ -138,7 +138,7 @@ function AboutEnergyVisual({ animationsActive }: { animationsActive: boolean }) 
               y1="200"
               x2="200"
               y2="72"
-              stroke="#E8539A"
+              stroke="#8A034F"
               strokeWidth="0.8"
               opacity="0.25"
               transform={`rotate(${angle} 200 200)`}
@@ -151,7 +151,7 @@ function AboutEnergyVisual({ animationsActive }: { animationsActive: boolean }) 
         particles.map((particle) => (
           <motion.span
             key={`${particle.x}-${particle.y}`}
-            className="absolute rounded-full bg-gold-light/80 shadow-[0_0_12px_rgba(208,42,123,0.8)]"
+            className="absolute rounded-full bg-gold-light/80 shadow-[0_0_12px_rgba(102,2,60,0.8)]"
             style={{
               left: particle.x,
               top: particle.y,
@@ -169,7 +169,7 @@ function AboutEnergyVisual({ animationsActive }: { animationsActive: boolean }) 
           />
         ))}
 
-      <div className="absolute inset-0 bg-gradient-to-t from-[#3A0D38]/80 via-transparent to-[#4A1049]/20" />
+      <div className="absolute inset-0 bg-gradient-to-t from-[#280028]/80 via-transparent to-[#320032]/20" />
       <div className="absolute inset-0 ring-1 ring-inset ring-gold/20" />
 
       <div className="absolute bottom-4 left-4 right-4 md:bottom-5 md:left-5 md:right-5">
@@ -314,7 +314,7 @@ function PracticeQuote({ quote }: { quote: string }) {
   return (
     <div className="about-quote-shadow relative z-0 mx-auto w-full max-w-[17.5rem] overflow-hidden rounded-lg bg-white/35 p-3 backdrop-blur-[2px] sm:max-w-sm lg:mx-0 lg:max-w-none">
       <div
-        className="about-quote-glow pointer-events-none absolute inset-0 rounded-xl bg-[radial-gradient(circle_at_50%_50%,rgba(208,42,123,0.12),transparent_72%)]"
+        className="about-quote-glow pointer-events-none absolute inset-0 rounded-xl bg-[radial-gradient(circle_at_50%_50%,rgba(102,2,60,0.12),transparent_72%)]"
         aria-hidden
       />
       <div
