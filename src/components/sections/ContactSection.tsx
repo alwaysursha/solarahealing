@@ -111,7 +111,7 @@ export function ContactSection() {
                 </div>
                 <button
                   type="submit"
-                  className="relative inline-flex w-full items-center justify-center rounded-full bg-gold px-8 py-3.5 text-sm font-medium tracking-wide text-purple-deep shadow-lg shadow-gold/25 transition-colors hover:bg-gold-light"
+                  className="relative inline-flex w-full items-center justify-center rounded-full bg-gold px-8 py-3.5 text-sm font-medium tracking-wide text-cream shadow-lg shadow-gold/25 transition-colors hover:bg-gold-light"
                 >
                   Send Message
                 </button>

@@ -9,7 +9,7 @@ export default function NotFound() {
       <p className="mt-3 text-purple-deep/60">This page could not be found.</p>
       <Link
         href="/"
-        className="mt-8 rounded-full bg-gold px-8 py-3 text-sm font-medium text-purple-deep"
+        className="mt-8 rounded-full bg-gold px-8 py-3 text-sm font-medium text-cream"
       >
         Return home
       </Link>

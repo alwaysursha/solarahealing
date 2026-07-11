@@ -160,7 +160,7 @@ const cardPriceReveal = {
 function EnrollingDot({ className = "" }: { className?: string }) {
   return (
     <span
-      className={`inline-block rounded-full bg-gold shadow-[0_0_8px_rgba(201,162,39,0.6)] ${className}`}
+      className={`inline-block rounded-full bg-gold shadow-[0_0_8px_rgba(208,42,123,0.6)] ${className}`}
       aria-hidden
     />
   );
@@ -213,7 +213,7 @@ function AddToCartButton({
   const motionDisabled = Boolean(reduceMotion || disableMotion);
   const styles =
     variant === "gold"
-      ? "bg-gold text-purple-deep shadow-lg shadow-gold/30 hover:bg-gold-light"
+      ? "bg-gold text-cream shadow-lg shadow-gold/30 hover:bg-gold-light"
       : "border border-gold/45 bg-white/5 text-gold backdrop-blur-sm hover:bg-gold/10";
 
   if (motionDisabled) {
@@ -282,7 +282,7 @@ function FeaturedCourse({
             variants={featuredContentItem}
           >
             <CourseBadge label={course.badge} />
-            <span className="rounded-full bg-gold/90 px-2.5 py-1 text-[0.58rem] font-bold uppercase tracking-[0.18em] text-purple-deep">
+            <span className="rounded-full bg-gold/90 px-2.5 py-1 text-[0.58rem] font-bold uppercase tracking-[0.18em] text-cream">
               Featured
             </span>
           </motion.div>
@@ -351,7 +351,7 @@ function FeaturedCourseStatic({
           <div className="absolute inset-0 bg-gradient-to-r from-transparent via-purple-deep/20 to-purple-deep/80 lg:via-purple-deep/10" />
           <div className="absolute left-5 top-5 flex items-center gap-3">
             <CourseBadge label={course.badge} />
-            <span className="rounded-full bg-gold/90 px-2.5 py-1 text-[0.58rem] font-bold uppercase tracking-[0.18em] text-purple-deep">
+            <span className="rounded-full bg-gold/90 px-2.5 py-1 text-[0.58rem] font-bold uppercase tracking-[0.18em] text-cream">
               Featured
             </span>
           </div>
@@ -422,7 +422,7 @@ function UpcomingCourseCard({
           className="object-cover transition-transform duration-700 group-hover:scale-110"
         />
       </motion.div>
-      <div className="absolute inset-0 bg-gradient-to-t from-[#1e0a38]/95 via-[#281050]/55 to-[#3a1868]/15" />
+      <div className="absolute inset-0 bg-gradient-to-t from-[#4A1049]/95 via-[#5E1560]/55 to-[#7A1F78]/15" />
       <div className="workshop-card-shimmer pointer-events-none absolute inset-0 opacity-0 transition-opacity duration-500 group-hover:opacity-100" />
 
       <motion.div className="absolute right-4 top-4 z-[3]" variants={cardPriceReveal}>
@@ -461,7 +461,7 @@ function UpcomingCourseCardContent({
         sizes="(max-width: 768px) 100vw, 33vw"
         className="object-cover"
       />
-      <div className="absolute inset-0 bg-gradient-to-t from-[#1e0a38]/95 via-[#281050]/55 to-[#3a1868]/15" />
+      <div className="absolute inset-0 bg-gradient-to-t from-[#4A1049]/95 via-[#5E1560]/55 to-[#7A1F78]/15" />
       <div className="absolute right-4 top-4 z-[3]">
         <PriceTag priceCad={course.priceCad} />
       </div>

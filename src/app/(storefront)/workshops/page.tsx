@@ -31,7 +31,7 @@ export default function WorkshopsPage() {
               </p>
               <Link
                 href={`#contact?workshop=${workshop.id}`}
-                className="mt-5 inline-flex rounded-full bg-gold px-6 py-2.5 text-sm font-semibold text-purple-deep transition-colors hover:bg-gold-light"
+                className="mt-5 inline-flex rounded-full bg-gold px-6 py-2.5 text-sm font-semibold text-cream transition-colors hover:bg-gold-light"
               >
                 Register Now
               </Link>
