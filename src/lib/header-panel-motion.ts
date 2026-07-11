@@ -40,59 +40,6 @@ export const headerPanelShellVariants = {
   },
 } as const;
 
-/** Chrome mobile — grid 0fr/1fr + transformed ancestors fail to expand the header shell */
-export const headerPanelShellVariantsChrome = {
-  closed: {
-    maxHeight: 0,
-    marginTop: 0,
-    overflow: "hidden",
-  },
-  open: {
-    maxHeight: 360,
-    marginTop: 14,
-    overflow: "hidden",
-    transition: {
-      maxHeight: { duration: 0.32, ease: shellEase },
-      marginTop: { duration: 0.32, ease: shellEase },
-    },
-  },
-  exit: {
-    maxHeight: 0,
-    marginTop: 0,
-    overflow: "hidden",
-    transition: {
-      maxHeight: { duration: 0.24, ease: shellCloseEase },
-      marginTop: { duration: 0.24, ease: shellCloseEase },
-    },
-  },
-} as const;
-
-export const mobileNavExpandVariantsChrome = {
-  closed: {
-    maxHeight: 0,
-    marginTop: 0,
-    overflow: "hidden",
-  },
-  open: {
-    maxHeight: 580,
-    marginTop: 16,
-    overflow: "hidden",
-    transition: {
-      maxHeight: { duration: 0.32, ease: shellEase },
-      marginTop: { duration: 0.32, ease: shellEase },
-    },
-  },
-  exit: {
-    maxHeight: 0,
-    marginTop: 0,
-    overflow: "hidden",
-    transition: {
-      maxHeight: { duration: 0.22, ease: shellCloseEase },
-      marginTop: { duration: 0.22, ease: shellCloseEase },
-    },
-  },
-} as const;
-
 export const headerPanelSlideVariants = {
   closed: {
     opacity: 0,
@@ -114,10 +61,4 @@ export const headerPanelSlideVariants = {
       ease: [0.4, 0, 0.2, 1],
     },
   },
-} as const;
-
-export const headerPanelSlideVariantsChrome = {
-  closed: { opacity: 1 },
-  open: { opacity: 1 },
-  exit: { opacity: 1 },
 } as const;

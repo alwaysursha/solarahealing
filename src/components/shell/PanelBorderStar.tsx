@@ -8,8 +8,6 @@ type PanelBorderStarProps = {
   height: number;
   outlinePath: string;
   tracePath: string;
-  /** Chrome mobile — skip SVG depth filter and traveling white highlight. */
-  liteFilters?: boolean;
 };
 
 const STROKE = {
@@ -23,7 +21,6 @@ export function PanelBorderStar({
   height,
   outlinePath,
   tracePath,
-  liteFilters = false,
 }: PanelBorderStarProps) {
   const reduceMotion = useReducedMotion();
   const uid = useId().replace(/:/g, "");
@@ -102,11 +99,11 @@ export function PanelBorderStar({
         fill="none"
         stroke={`url(#${ridgeId})`}
         strokeWidth="1.55"
-        filter={liteFilters ? undefined : `url(#${depthFilterId})`}
+        filter={`url(#${depthFilterId})`}
         {...STROKE}
       />
 
-      {!reduceMotion && tracePath && !liteFilters && (
+      {!reduceMotion && tracePath && (
         <path
           d={tracePath}
           fill="none"

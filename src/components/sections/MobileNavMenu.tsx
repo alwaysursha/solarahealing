@@ -5,7 +5,6 @@ import Link from "next/link";
 import { useRef, type ReactNode } from "react";
 import { MobileNavLink } from "@/components/sections/nav/NavLink";
 import type { NavIconId } from "@/components/sections/nav/NavIcon";
-import { useCompositorProfile } from "@/lib/compositor-profile";
 import {
   mobileNavFooterVariants,
   mobileNavItemVariants,
@@ -82,8 +81,7 @@ function MobileNavFooter({
 
 export function MobileNavMenu({ items, onClose, onLogin }: MobileNavMenuProps) {
   const reduceMotion = useReducedMotion();
-  const chromeTouch = useCompositorProfile() === "chrome-touch";
-  const staticMotion = reduceMotion || chromeTouch;
+  const staticMotion = reduceMotion;
   const shellRef = useRef<HTMLDivElement>(null);
 
   const handleLogin = () => {
