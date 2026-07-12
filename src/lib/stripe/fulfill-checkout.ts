@@ -1,5 +1,7 @@
 import { OrderItemType, OrderStatus } from "@prisma/client";
 import type Stripe from "stripe";
+import { sendOrderConfirmationEmail } from "@/lib/email/order-confirmation";
+import { sendAdminNewOrderEmail } from "@/lib/email/admin-new-order";
 import { prisma } from "@/lib/prisma";
 
 /**
@@ -52,6 +54,15 @@ export async function fulfillPaidOrder(params: {
         },
       });
     }
+  });
+
+  // Fire-and-forget emails — never block or fail fulfillment on email errors.
+  const paidOrder = { ...order, status: OrderStatus.PAID };
+  void Promise.all([
+    sendOrderConfirmationEmail(paidOrder),
+    sendAdminNewOrderEmail(paidOrder),
+  ]).catch((error) => {
+    console.error("[email] post-fulfillment unexpected error", order.id, error);
   });
 
   return { ok: true as const, alreadyFulfilled: false, orderId: order.id };

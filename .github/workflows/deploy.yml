@@ -45,6 +45,9 @@ jobs:
           STRIPE_SECRET_KEY: ${{ secrets.STRIPE_SECRET_KEY }}
           NEXT_PUBLIC_STRIPE_PUBLISHABLE_KEY: ${{ secrets.NEXT_PUBLIC_STRIPE_PUBLISHABLE_KEY }}
           STRIPE_WEBHOOK_SECRET: ${{ secrets.STRIPE_WEBHOOK_SECRET }}
+          RESEND_API_KEY: ${{ secrets.RESEND_API_KEY }}
+          EMAIL_FROM: ${{ secrets.EMAIL_FROM }}
+          EMAIL_ADMIN_TO: ${{ secrets.EMAIL_ADMIN_TO }}
           NEXTAUTH_URL: https://soularahealing.com
           NEXT_PUBLIC_SITE_URL: https://soularahealing.com
         run: pnpm run deploy:cf

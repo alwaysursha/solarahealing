@@ -6,6 +6,7 @@ import bcrypt from "bcryptjs";
 import type { Provider } from "next-auth/providers";
 import { Role } from "@prisma/client";
 import { authConfig } from "@/lib/auth.config";
+import { sendWelcomeEmail } from "@/lib/email/welcome";
 import { prisma } from "@/lib/prisma";
 
 declare module "next-auth" {
@@ -80,6 +81,19 @@ export const { handlers, auth, signIn, signOut } = NextAuth({
   ...authConfig,
   adapter: PrismaAdapter(prisma),
   providers,
+  events: {
+    async createUser({ user }) {
+      if (!user.email) {
+        return;
+      }
+      void sendWelcomeEmail({
+        name: user.name ?? "",
+        email: user.email,
+      }).catch((error) => {
+        console.error("[email] welcome (oauth) unexpected error", error);
+      });
+    },
+  },
   callbacks: {
     ...authConfig.callbacks,
     async redirect({ url, baseUrl }) {
