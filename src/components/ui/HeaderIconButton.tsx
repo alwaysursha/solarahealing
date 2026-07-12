@@ -12,6 +12,7 @@ type HeaderIconButtonProps = {
   onClick?: () => void;
   badgeCount?: number;
   pulse?: boolean;
+  targetId?: string;
 };
 
 function LoginIcon() {
@@ -114,6 +115,7 @@ export function HeaderIconButton({
   onClick,
   badgeCount = 0,
   pulse = false,
+  targetId,
 }: HeaderIconButtonProps) {
   const reduceMotion = useReducedMotion();
   const idleIcon =
@@ -139,6 +141,8 @@ export function HeaderIconButton({
   ) : null;
 
   const showBadge = icon === "cart" && badgeCount > 0 && !active;
+  const buttonId =
+    targetId ?? (icon === "cart" ? HEADER_CART_TARGET_ID : undefined);
 
   return (
     <motion.div
@@ -148,7 +152,7 @@ export function HeaderIconButton({
     >
       <button
         type="button"
-        id={icon === "cart" ? HEADER_CART_TARGET_ID : undefined}
+        id={buttonId}
         aria-label={
           icon === "cart" && badgeCount > 0 ? `${label} (${badgeCount} items)` : label
         }

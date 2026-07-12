@@ -172,9 +172,9 @@ export function HeaderAccountPanel({ onClose, onLoggedOut }: HeaderAccountPanelP
                 <span>View Dashboard</span>
               </Link>
             ) : (
-              <Link href="/checkout" className="header-account-primary" onClick={onClose}>
+              <Link href="/courses" className="header-account-primary" onClick={onClose}>
                 <CalendarIcon />
-                <span>Book a Session</span>
+                <span>Browse Courses</span>
               </Link>
             )}
             <button type="button" className="header-account-ghost" onClick={handleLogout}>

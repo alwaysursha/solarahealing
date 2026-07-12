@@ -8,7 +8,7 @@ GITHUB_USER="${GITHUB_USER:-alwaysursha}"
 REPO_NAME="${REPO_NAME:-solarahealing}"
 BRANCH="${BRANCH:-main}"
 
-echo "==> Soulara Healing deploy setup"
+echo "==> Soulara Healing Academy deploy setup"
 echo "    GitHub: ${GITHUB_USER}/${REPO_NAME}"
 echo "    Cloudflare account: soularahealer@gmail.com"
 echo
@@ -35,7 +35,7 @@ else
   fi
 
   if ! gh repo view "${GITHUB_USER}/${REPO_NAME}" >/dev/null 2>&1; then
-    gh repo create "${REPO_NAME}" --private --source=. --remote=origin --description "Soulara Healing website"
+    gh repo create "${REPO_NAME}" --private --source=. --remote=origin --description "Soulara Healing Academy website"
     echo "Created https://github.com/${GITHUB_USER}/${REPO_NAME}"
   else
     echo "Repo already exists: https://github.com/${GITHUB_USER}/${REPO_NAME}"

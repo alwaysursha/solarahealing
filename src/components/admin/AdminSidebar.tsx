@@ -55,7 +55,7 @@ export function AdminSidebar({
         <div className="admin-sidebar-divider flex items-start justify-between gap-3 border-b px-5 py-6">
           <div>
             <p className="admin-sidebar-eyebrow text-[0.62rem] font-semibold uppercase tracking-[0.28em]">
-              Soulara Healing Admin
+              Soulara Healing Academy Admin
             </p>
             <p className="admin-sidebar-welcome mt-2">Welcome back, {adminName}.</p>
           </div>

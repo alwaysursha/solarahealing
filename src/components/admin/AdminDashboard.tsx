@@ -272,7 +272,7 @@ export function AdminDashboard({ stats }: { stats: AdminDashboardStats }) {
             eyebrow="Community"
             title="Total Customers"
             value={stats.customers}
-            detail="Registered customer accounts on Soulara Healing."
+            detail="Registered customer accounts on Soulara Healing Academy."
             href="/admin/customers"
             linkLabel="View customers"
             tone="plum"

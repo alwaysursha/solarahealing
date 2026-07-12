@@ -1,6 +1,7 @@
 "use client";
 
 import { motion, useReducedMotion } from "framer-motion";
+import { normalizeWhatsAppNumber } from "@/lib/whatsapp";
 
 function WhatsAppGlyph({ className = "h-5 w-5" }: { className?: string }) {
   return (
@@ -10,9 +11,7 @@ function WhatsAppGlyph({ className = "h-5 w-5" }: { className?: string }) {
   );
 }
 
-export function normalizeWhatsAppNumber(value: string): string {
-  return value.replace(/\D/g, "");
-}
+export { normalizeWhatsAppNumber } from "@/lib/whatsapp";
 
 export function WhatsAppFloat({ whatsapp }: { whatsapp: string }) {
   const reduceMotion = useReducedMotion();

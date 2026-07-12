@@ -11,6 +11,7 @@ import {
   formatWorkshopScheduleLabel,
   parseWorkshopScheduleInput,
 } from "@/lib/admin/workshop-schedule";
+import { isValidWhatsAppNumber, normalizeWhatsAppNumber } from "@/lib/whatsapp";
 
 function revalidateAll() {
   revalidatePath("/", "layout");
@@ -36,12 +37,12 @@ export async function updateStorefrontSectionVisibilityAction(
     where: { id: 1 },
     create: {
       id: 1,
-      name: "Soulara Healing",
+      name: "Soulara Healing Academy",
       tagline: "",
       sanskrit: "",
       sanskritMeaning: "",
       description: "",
-      seoTitle: "Soulara Healing",
+      seoTitle: "Soulara Healing Academy",
       metaDescription: "",
       phone: "",
       email: "",
@@ -300,14 +301,23 @@ export async function updateOrderStatusAction(orderId: string, status: string) {
 export async function updateAdminProfileAction(formData: FormData) {
   const session = await requireUser();
   const name = formData.get("name")?.toString() ?? session.user.name;
-  const phone = formData.get("phone")?.toString() ?? "";
+  const whatsappRaw = formData.get("whatsapp")?.toString().trim() ?? "";
+
+  if (whatsappRaw && !isValidWhatsAppNumber(whatsappRaw)) {
+    throw new Error("Enter a valid WhatsApp number with country code (8–15 digits).");
+  }
 
   await prisma.user.update({
     where: { id: session.user.id },
-    data: { name, phone },
+    data: {
+      name,
+      whatsapp: whatsappRaw ? normalizeWhatsAppNumber(whatsappRaw) : null,
+    },
   });
 
   revalidatePath("/admin/profile");
+  revalidatePath("/account");
+  revalidatePath("/checkout");
 }
 
 export async function updateAdminPasswordAction(formData: FormData) {
