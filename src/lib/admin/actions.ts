@@ -11,6 +11,8 @@ import {
   formatWorkshopScheduleLabel,
   parseWorkshopScheduleInput,
 } from "@/lib/admin/workshop-schedule";
+import { sendPasswordChangedEmail } from "@/lib/email/password-changed";
+import { sendWelcomeEmail } from "@/lib/email/welcome";
 import { isValidWhatsAppNumber, normalizeWhatsAppNumber } from "@/lib/whatsapp";
 
 function revalidateAll() {
@@ -342,6 +344,13 @@ export async function updateAdminPasswordAction(formData: FormData) {
     where: { id: session.user.id },
     data: { password: await bcrypt.hash(next, 12) },
   });
+
+  void sendPasswordChangedEmail({
+    name: session.user.name ?? "",
+    email: session.user.email,
+  }).catch((error) => {
+    console.error("[email] password-changed unexpected error", error);
+  });
 }
 
 export async function registerUserAction(formData: FormData) {
@@ -365,6 +374,10 @@ export async function registerUserAction(formData: FormData) {
       password: await bcrypt.hash(password, 12),
       role: Role.USER,
     },
+  });
+
+  void sendWelcomeEmail({ name, email }).catch((error) => {
+    console.error("[email] welcome unexpected error", error);
   });
 
   return { ok: true };
