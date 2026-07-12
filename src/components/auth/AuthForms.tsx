@@ -1,5 +1,6 @@
 "use client";
 
+import { getPostLoginRedirectUrl, markPostLoginRedirectPending } from "@/lib/auth-utils";
 import { signIn } from "next-auth/react";
 import Link from "next/link";
 import { useRouter, useSearchParams } from "next/navigation";
@@ -28,7 +29,10 @@ export function SignInForm() {
       <button
         type="button"
         className="flex w-full items-center justify-center gap-3 rounded-full border border-purple-deep/10 bg-white px-4 py-3 text-sm font-medium text-purple-deep transition hover:border-gold/40"
-        onClick={() => signIn("google", { callbackUrl })}
+        onClick={() => {
+          markPostLoginRedirectPending();
+          signIn("google", { callbackUrl });
+        }}
       >
         <GoogleIcon />
         Continue with Google
@@ -46,20 +50,29 @@ export function SignInForm() {
           event.preventDefault();
           setLoading(true);
           setError(null);
-          const formData = new FormData(event.currentTarget);
-          const result = await signIn("credentials", {
-            email: formData.get("email")?.toString() ?? "",
-            password: formData.get("password")?.toString() ?? "",
-            redirect: false,
-            callbackUrl,
-          });
-          setLoading(false);
-          if (result?.error) {
-            setError("Invalid email or password.");
-            return;
+          try {
+            const formData = new FormData(event.currentTarget);
+            const result = await signIn("credentials", {
+              email: formData.get("email")?.toString() ?? "",
+              password: formData.get("password")?.toString() ?? "",
+              redirect: false,
+              callbackUrl,
+            });
+            if (result?.error) {
+              setError("Invalid email or password.");
+              return;
+            }
+            if (!result?.ok) {
+              setError("Could not sign in. Please try again.");
+              return;
+            }
+            router.push(await getPostLoginRedirectUrl(callbackUrl));
+            router.refresh();
+          } catch {
+            setError("Something went wrong. Please try again.");
+          } finally {
+            setLoading(false);
           }
-          router.push(callbackUrl);
-          router.refresh();
         }}
       >
         <label className="block text-sm">
@@ -112,7 +125,10 @@ export function SignUpForm() {
       <button
         type="button"
         className="flex w-full items-center justify-center gap-3 rounded-full border border-purple-deep/10 bg-white px-4 py-3 text-sm font-medium text-purple-deep transition hover:border-gold/40"
-        onClick={() => signIn("google", { callbackUrl })}
+        onClick={() => {
+          markPostLoginRedirectPending();
+          signIn("google", { callbackUrl });
+        }}
       >
         <GoogleIcon />
         Sign up with Google
@@ -149,7 +165,7 @@ export function SignUpForm() {
             setError("Account created, but sign-in failed. Please sign in manually.");
             return;
           }
-          router.push(callbackUrl);
+          router.push(await getPostLoginRedirectUrl(callbackUrl));
           router.refresh();
         }}
       >
@@ -196,7 +212,10 @@ export function GoogleSignInButton({
       type="button"
       className={compact ? "header-login-google header-login-google-compact" : "flex w-full items-center justify-center gap-3 rounded-full border border-purple-deep/10 bg-white px-4 py-3 text-sm"}
       aria-label="Continue with Google"
-      onClick={() => signIn("google", { callbackUrl })}
+      onClick={() => {
+        markPostLoginRedirectPending();
+        signIn("google", { callbackUrl });
+      }}
     >
       <GoogleIcon />
       {!compact ? (

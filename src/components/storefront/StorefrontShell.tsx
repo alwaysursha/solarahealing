@@ -11,7 +11,7 @@ type StorefrontShellProps = {
 
 export function StorefrontShell({ children }: StorefrontShellProps) {
   return (
-    <SessionProvider refetchOnWindowFocus>
+    <SessionProvider refetchOnWindowFocus refetchInterval={60 * 60}>
       <SiteShell>
         {children}
         <Footer />

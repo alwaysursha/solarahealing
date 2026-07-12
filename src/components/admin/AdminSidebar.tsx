@@ -1,10 +1,15 @@
+"use client";
+
 import Link from "next/link";
-import { signOut } from "@/auth";
+import { useEffect } from "react";
+import { useAdminTheme } from "@/components/admin/AdminThemeProvider";
+import { adminSignOutAction } from "@/lib/admin/actions";
 
 const links = [
-  { href: "/admin", label: "Overview" },
+  { href: "/admin", label: "Dashboard" },
   { href: "/admin/settings", label: "Site Settings" },
-  { href: "/admin/courses", label: "Courses & Workshops" },
+  { href: "/admin/courses", label: "Courses" },
+  { href: "/admin/workshops", label: "Workshops" },
   { href: "/admin/web", label: "Web Development" },
   { href: "/admin/blog", label: "Blog & Articles" },
   { href: "/admin/customers", label: "Customers" },
@@ -12,45 +17,93 @@ const links = [
   { href: "/admin/profile", label: "Profile" },
 ];
 
-export function AdminSidebar({ activePath }: { activePath: string }) {
+export function AdminSidebar({
+  activePath,
+  mobileOpen = false,
+  onNavigate,
+}: {
+  activePath: string;
+  mobileOpen?: boolean;
+  onNavigate?: () => void;
+}) {
+  const { adminName } = useAdminTheme();
+
+  useEffect(() => {
+    if (!mobileOpen) return;
+    const previous = document.body.style.overflow;
+    document.body.style.overflow = "hidden";
+    return () => {
+      document.body.style.overflow = previous;
+    };
+  }, [mobileOpen]);
+
   return (
-    <aside className="admin-sidebar flex h-full w-64 shrink-0 flex-col border-r border-white/10 bg-[#1a1228] text-cream">
-      <div className="border-b border-white/10 px-5 py-6">
-        <p className="text-[0.62rem] font-semibold uppercase tracking-[0.28em] text-gold/75">Soulara Admin</p>
-        <h1 className="mt-2 font-serif text-2xl text-cream">Dashboard</h1>
-      </div>
-      <nav className="flex-1 space-y-1 px-3 py-4">
-        {links.map((link) => {
-          const active = activePath === link.href || (link.href !== "/admin" && activePath.startsWith(link.href));
-          return (
-            <Link
-              key={link.href}
-              href={link.href}
-              className={[
-                "block rounded-xl px-3 py-2.5 text-sm transition-colors",
-                active ? "bg-gold/15 text-gold-light" : "text-cream/72 hover:bg-white/5 hover:text-cream",
-              ].join(" ")}
-            >
-              {link.label}
-            </Link>
-          );
-        })}
-      </nav>
-      <div className="space-y-2 border-t border-white/10 px-3 py-4">
-        <Link href="/" className="block rounded-xl px-3 py-2 text-sm text-cream/60 hover:bg-white/5 hover:text-cream">
-          View website
-        </Link>
-        <form
-          action={async () => {
-            "use server";
-            await signOut({ redirectTo: "/" });
-          }}
-        >
-          <button type="submit" className="w-full rounded-xl px-3 py-2 text-left text-sm text-cream/60 hover:bg-white/5 hover:text-cream">
-            Sign out
+    <>
+      <button
+        type="button"
+        aria-label="Close navigation"
+        className={["admin-sidebar-backdrop", mobileOpen ? "admin-sidebar-backdrop-open" : ""].join(" ")}
+        onClick={onNavigate}
+      />
+
+      <aside
+        className={[
+          "admin-sidebar flex h-dvh w-64 shrink-0 flex-col overflow-y-auto overscroll-y-contain border-r",
+          mobileOpen ? "admin-sidebar-open" : "",
+        ].join(" ")}
+      >
+        <div className="admin-sidebar-divider flex items-start justify-between gap-3 border-b px-5 py-6">
+          <div>
+            <p className="admin-sidebar-eyebrow text-[0.62rem] font-semibold uppercase tracking-[0.28em]">
+              Soulara Healing Admin
+            </p>
+            <p className="admin-sidebar-welcome mt-2">Welcome back, {adminName}.</p>
+          </div>
+          <button
+            type="button"
+            aria-label="Close navigation"
+            className="admin-sidebar-close lg:hidden"
+            onClick={onNavigate}
+          >
+            <svg viewBox="0 0 20 20" fill="none" className="h-4 w-4" aria-hidden>
+              <path d="M5 5l10 10M15 5 5 15" stroke="currentColor" strokeWidth="1.6" strokeLinecap="round" />
+            </svg>
           </button>
-        </form>
-      </div>
-    </aside>
+        </div>
+
+        <nav className="flex-1 space-y-1 px-3 py-4">
+          {links.map((link) => {
+            const active = activePath === link.href || (link.href !== "/admin" && activePath.startsWith(link.href));
+            return (
+              <Link
+                key={link.href}
+                href={link.href}
+                onClick={onNavigate}
+                className={[
+                  "admin-sidebar-link block rounded-xl px-3 py-2.5 text-sm transition-colors",
+                  active ? "admin-sidebar-link-active" : "",
+                ].join(" ")}
+              >
+                {link.label}
+              </Link>
+            );
+          })}
+        </nav>
+
+        <div className="admin-sidebar-divider space-y-2 border-t px-3 py-4">
+          <Link href="/" onClick={onNavigate} className="admin-sidebar-footer-link block rounded-xl px-3 py-2 text-sm">
+            View website
+          </Link>
+          <form action={adminSignOutAction}>
+            <button
+              type="submit"
+              className="admin-sidebar-footer-button w-full rounded-xl px-3 py-2 text-left text-sm"
+            >
+              Sign out
+            </button>
+          </form>
+        </div>
+      </aside>
+    </>
   );
 }

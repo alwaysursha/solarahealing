@@ -2,9 +2,10 @@
 
 import { AnimatePresence, motion, useReducedMotion } from "framer-motion";
 import { useSession } from "next-auth/react";
-import { useCallback, useEffect, useState } from "react";
+import { useCallback, useEffect, useRef, useState } from "react";
+import { useRouter } from "next/navigation";
 import { site } from "@/lib/site";
-import { getFirstName } from "@/lib/auth-utils";
+import { consumePostLoginRedirect, getFirstName } from "@/lib/auth-utils";
 import {
   HEADER_PANEL_EXIT_MS,
   HEADER_PANEL_SHELL_EXPAND_MS,
@@ -60,7 +61,9 @@ const expandVariants = {
 
 export function Header() {
   const reduceMotion = useReducedMotion();
+  const router = useRouter();
   const { data: session, status } = useSession();
+  const postLoginRedirectHandled = useRef(false);
   const firstName = session?.user?.name ? getFirstName(session.user.name) : null;
   const isLoggedIn = status === "authenticated" && Boolean(session?.user);
   const [navOpen, setNavOpen] = useState(false);
@@ -69,6 +72,24 @@ export function Header() {
   const [cartOpen, setCartOpen] = useState(false);
   const [cartPanelReady, setCartPanelReady] = useState(false);
   const [logoutMessage, setLogoutMessage] = useState<string | null>(null);
+
+  useEffect(() => {
+    if (status !== "authenticated" || !session?.user || postLoginRedirectHandled.current) {
+      return;
+    }
+
+    const destination = consumePostLoginRedirect(
+      `${window.location.pathname}${window.location.search}${window.location.hash}`,
+      session.user.role,
+    );
+
+    if (!destination || destination === window.location.pathname) {
+      return;
+    }
+
+    postLoginRedirectHandled.current = true;
+    router.replace(destination);
+  }, [router, session, status]);
 
   const closeNav = useCallback(() => setNavOpen(false), []);
 

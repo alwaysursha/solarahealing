@@ -92,6 +92,8 @@ model SiteSettings {
   whatsapp        String
   address         String
   cta             String
+  showCoursesSection   Boolean  @default(true)
+  showWorkshopsSection Boolean  @default(false)
   updatedAt       DateTime @updatedAt
 }
 
@@ -105,6 +107,8 @@ model OnlineCourse {
   priceCad    Int
   image       String
   imageAlt    String
+  imageFocusX Int      @default(50)
+  imageFocusY Int      @default(50)
   level       String
   published   Boolean  @default(true)
   sortOrder   Int      @default(0)
@@ -116,6 +120,7 @@ model Workshop {
   title       String
   description String
   dateLabel   String
+  scheduledAt DateTime @default(now())
   duration    String
   badge       String
   priceCad    Int
@@ -123,6 +128,8 @@ model Workshop {
   seatsBooked Int      @default(0)
   image       String
   imageAlt    String
+  imageFocusX Int      @default(50)
+  imageFocusY Int      @default(50)
   published   Boolean  @default(true)
   sortOrder   Int      @default(0)
   updatedAt   DateTime @updatedAt

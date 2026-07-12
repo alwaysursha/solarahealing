@@ -26,6 +26,8 @@ export default async function AdminSettingsPage() {
         whatsapp: site.contact.whatsapp,
         address: site.contact.location,
         cta: site.cta,
+        showCoursesSection: true,
+        showWorkshopsSection: false,
       },
       update: {},
     });

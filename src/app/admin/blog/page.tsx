@@ -1,7 +1,8 @@
-import { AdminField, AdminPanel, AdminShell, AdminSubmit } from "@/components/admin/AdminShell";
-import { deleteArticleAction, upsertArticleAction } from "@/lib/admin/actions";
-import { prisma } from "@/lib/prisma";
 import Link from "next/link";
+import { AdminDeleteButton } from "@/components/admin/AdminDeleteButton";
+import { AdminField, AdminPanel, AdminShell, AdminSubmit } from "@/components/admin/AdminShell";
+import { deleteArticleFormAction, upsertArticleAction } from "@/lib/admin/actions";
+import { prisma } from "@/lib/prisma";
 
 export const dynamic = "force-dynamic";
 
@@ -17,12 +18,22 @@ export default async function AdminBlogPage() {
       <div className="space-y-6">
         {rows.map((article) => (
           <AdminPanel key={article.id} title={article.title}>
-            <div className="mb-4 flex flex-wrap gap-3 text-sm">
-              <Link href={`/blog/${article.slug}`} target="_blank" className="text-gold hover:text-gold-light">
-                Preview live article
-              </Link>
-              <span className="text-purple-deep/40">·</span>
-              <span className="text-purple-deep/55">{article.category}</span>
+            <div className="mb-4 flex flex-wrap items-center justify-between gap-3">
+              <div className="flex flex-wrap gap-3 text-sm">
+                <Link href={`/blog/${article.slug}`} target="_blank" className="text-gold hover:text-gold-light">
+                  Preview live article
+                </Link>
+                <span className="text-purple-deep/40">·</span>
+                <span className="text-purple-deep/55">{article.category}</span>
+              </div>
+              <AdminDeleteButton
+                action={deleteArticleFormAction}
+                hiddenFields={{ id: article.id }}
+                itemName={article.title}
+                title="Delete article?"
+                description={`This will permanently remove “${article.title}” from your blog and homepage.`}
+                variant="icon"
+              />
             </div>
             <form action={upsertArticleAction} className="grid gap-3 lg:grid-cols-2">
               <input type="hidden" name="id" value={article.id} />
@@ -50,15 +61,6 @@ export default async function AdminBlogPage() {
                 <AdminSubmit label="Save article" />
               </div>
             </form>
-            <form
-              action={async () => {
-                "use server";
-                await deleteArticleAction(article.id);
-              }}
-              className="mt-3"
-            >
-              <button type="submit" className="text-xs text-red-700 underline">Delete article</button>
-            </form>
           </AdminPanel>
         ))}
 
@@ -80,7 +82,7 @@ export default async function AdminBlogPage() {
               <AdminField label="Body" name="body" rows={8} />
             </div>
             <div className="lg:col-span-2">
-              <AdminSubmit label="Create article" />
+              <AdminSubmit label="Create article" savedLabel="Created" />
             </div>
           </form>
         </AdminPanel>

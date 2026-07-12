@@ -11,11 +11,9 @@ import {
   getHomePageContent,
   getPublishedCourses,
   getPublishedWorkshops,
+  getStorefrontSectionVisibility,
 } from "@/lib/content";
 import { getSiteSettings } from "@/lib/site-settings";
-
-/** Set to true when workshops should appear on the homepage again. */
-const SHOW_WORKSHOPS_SECTION = false;
 
 export const dynamic = "force-dynamic";
 
@@ -28,25 +26,31 @@ export async function generateMetadata(): Promise<Metadata> {
 }
 
 export default async function HomePage() {
-  const [home, courses, articlesDisplay, workshops] = await Promise.all([
+  const [home, articlesDisplay, visibility] = await Promise.all([
     getHomePageContent(),
-    getPublishedCourses(),
     getHomeArticlesDisplay(),
-    SHOW_WORKSHOPS_SECTION ? getPublishedWorkshops() : Promise.resolve([]),
+    getStorefrontSectionVisibility(),
+  ]);
+
+  const [courses, workshops] = await Promise.all([
+    visibility.showCoursesSection ? getPublishedCourses() : Promise.resolve([]),
+    visibility.showWorkshopsSection ? getPublishedWorkshops() : Promise.resolve([]),
   ]);
 
   return (
     <main className="site-scroll-main">
       <Hero slides={home.heroSlides} />
       <AboutSection content={home.aboutContent} />
-      <CoursesSection courses={courses} intro={home.coursesIntro} />
+      {visibility.showCoursesSection ? (
+        <CoursesSection courses={courses} intro={home.coursesIntro} />
+      ) : null}
       <ArticlesSection
         intro={home.articlesIntro}
         featured={articlesDisplay.featured}
         secondary={articlesDisplay.secondary}
         list={articlesDisplay.list}
       />
-      {SHOW_WORKSHOPS_SECTION ? (
+      {visibility.showWorkshopsSection ? (
         <WorkshopsSection workshopList={workshops} intro={home.workshopsIntro} />
       ) : null}
       <ScheduleSection booking={home.scheduleBooking} />
