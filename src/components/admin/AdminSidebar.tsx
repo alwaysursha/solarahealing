@@ -2,8 +2,8 @@
 
 import Link from "next/link";
 import { useEffect } from "react";
+import { SignOutButton } from "@/components/auth/SignOutButton";
 import { useAdminTheme } from "@/components/admin/AdminThemeProvider";
-import { adminSignOutAction } from "@/lib/admin/actions";
 
 const links = [
   { href: "/admin", label: "Dashboard" },
@@ -94,14 +94,7 @@ export function AdminSidebar({
           <Link href="/" onClick={onNavigate} className="admin-sidebar-footer-link block rounded-xl px-3 py-2 text-sm">
             View website
           </Link>
-          <form action={adminSignOutAction}>
-            <button
-              type="submit"
-              className="admin-sidebar-footer-button w-full rounded-xl px-3 py-2 text-left text-sm"
-            >
-              Sign out
-            </button>
-          </form>
+          <SignOutButton className="admin-sidebar-footer-button w-full rounded-xl px-3 py-2 text-left text-sm" />
         </div>
       </aside>
     </>

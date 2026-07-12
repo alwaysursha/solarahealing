@@ -3,12 +3,15 @@
 import { AnimatePresence, motion, useReducedMotion } from "framer-motion";
 import type { ReactNode } from "react";
 import { CartIcon } from "@/components/ui/CartIcon";
+import { HEADER_CART_TARGET_ID } from "@/lib/cart/types";
 
 type HeaderIconButtonProps = {
   label: string;
   icon: "login" | "cart";
   active?: boolean;
   onClick?: () => void;
+  badgeCount?: number;
+  pulse?: boolean;
 };
 
 function LoginIcon() {
@@ -98,7 +101,7 @@ function RotatingToggleIcon({
 
 const buttonClassName = (active: boolean) =>
   [
-    "relative flex h-10 w-10 items-center justify-center overflow-hidden rounded-full border transition-colors duration-300",
+    "relative flex h-10 w-10 items-center justify-center overflow-visible rounded-full border transition-colors duration-300",
     active
       ? "border-gold/55 bg-cream/10 text-gold"
       : "border-cream/15 text-cream/90 hover:border-gold/45 hover:text-gold",
@@ -109,6 +112,8 @@ export function HeaderIconButton({
   icon,
   active = false,
   onClick,
+  badgeCount = 0,
+  pulse = false,
 }: HeaderIconButtonProps) {
   const reduceMotion = useReducedMotion();
   const idleIcon =
@@ -133,17 +138,42 @@ export function HeaderIconButton({
     </AnimatePresence>
   ) : null;
 
+  const showBadge = icon === "cart" && badgeCount > 0 && !active;
+
   return (
-    <motion.div whileTap={reduceMotion ? undefined : { scale: 0.92 }}>
+    <motion.div
+      whileTap={reduceMotion ? undefined : { scale: 0.92 }}
+      animate={pulse && !reduceMotion ? { scale: [1, 1.14, 1] } : { scale: 1 }}
+      transition={{ duration: 0.45, ease: [0.22, 1, 0.36, 1] }}
+    >
       <button
         type="button"
-        aria-label={label}
+        id={icon === "cart" ? HEADER_CART_TARGET_ID : undefined}
+        aria-label={
+          icon === "cart" && badgeCount > 0 ? `${label} (${badgeCount} items)` : label
+        }
         aria-expanded={active}
         onClick={onClick}
         className={buttonClassName(active)}
       >
-        <RotatingToggleIcon active={active} idleIcon={idleIcon} />
+        <span className="relative flex h-[1.15rem] w-[1.15rem] items-center justify-center overflow-hidden">
+          <RotatingToggleIcon active={active} idleIcon={idleIcon} />
+        </span>
         {slideIndicator}
+        <AnimatePresence>
+          {showBadge ? (
+            <motion.span
+              key="cart-badge"
+              className="header-cart-badge"
+              initial={reduceMotion ? undefined : { scale: 0.6, opacity: 0 }}
+              animate={reduceMotion ? undefined : { scale: 1, opacity: 1 }}
+              exit={reduceMotion ? undefined : { scale: 0.6, opacity: 0 }}
+              transition={{ type: "spring", stiffness: 480, damping: 28 }}
+            >
+              {badgeCount > 99 ? "99+" : badgeCount}
+            </motion.span>
+          ) : null}
+        </AnimatePresence>
       </button>
     </motion.div>
   );

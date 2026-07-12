@@ -2,11 +2,10 @@
 
 import Link from "next/link";
 import { useRouter } from "next/navigation";
+import { Role } from "@prisma/client";
 import { signOut, useSession } from "next-auth/react";
-import { useCallback, useState } from "react";
-import { AnimatePresence, motion, useReducedMotion } from "framer-motion";
+import { useCallback } from "react";
 import { getFirstName } from "@/lib/auth-utils";
-import { HeaderCartPanel } from "@/components/sections/HeaderCartPanel";
 
 type HeaderAccountPanelProps = {
   onClose: () => void;
@@ -45,25 +44,24 @@ function OrdersIcon() {
   );
 }
 
-function CartNavIcon() {
-  return (
-    <svg viewBox="0 0 20 20" fill="none" className="h-4 w-4" aria-hidden>
-      <path
-        d="M5.25 5.5h11.5l-1.05 7.25H6.3L5.25 5.5Z"
-        stroke="currentColor"
-        strokeWidth="1.4"
-        strokeLinejoin="round"
-      />
-      <path d="M8 4.25v1.25M12 4.25v1.25" stroke="currentColor" strokeWidth="1.4" strokeLinecap="round" />
-    </svg>
-  );
-}
-
 function CalendarIcon() {
   return (
     <svg viewBox="0 0 20 20" fill="none" className="h-4 w-4" aria-hidden>
       <path
         d="M5.5 7.25V5.75c0-.97.78-1.75 1.75-1.75h5.5c.97 0 1.75.78 1.75 1.75v1.5M4.75 8.25h11v7c0 .97-.78 1.75-1.75 1.75h-7.5A1.75 1.75 0 0 1 4.75 15.25v-7Z"
+        stroke="currentColor"
+        strokeWidth="1.4"
+        strokeLinejoin="round"
+      />
+    </svg>
+  );
+}
+
+function DashboardIcon() {
+  return (
+    <svg viewBox="0 0 20 20" fill="none" className="h-4 w-4" aria-hidden>
+      <path
+        d="M4.5 4.5h4.25v4.25H4.5V4.5ZM11.25 4.5H15.5v4.25h-4.25V4.5ZM4.5 11.25h4.25V15.5H4.5v-4.25ZM11.25 11.25H15.5V15.5h-4.25v-4.25Z"
         stroke="currentColor"
         strokeWidth="1.4"
         strokeLinejoin="round"
@@ -116,9 +114,7 @@ export function HeaderUserGreeting({
 
 export function HeaderAccountPanel({ onClose, onLoggedOut }: HeaderAccountPanelProps) {
   const router = useRouter();
-  const reduceMotion = useReducedMotion();
   const { data: session, update } = useSession();
-  const [cartOpen, setCartOpen] = useState(false);
 
   const handleLogout = useCallback(async () => {
     onClose();
@@ -134,6 +130,7 @@ export function HeaderAccountPanel({ onClose, onLoggedOut }: HeaderAccountPanelP
 
   const firstName = getFirstName(session.user.name);
   const initial = firstName.charAt(0).toUpperCase();
+  const isAdmin = session.user.role === Role.ADMIN;
 
   return (
     <div className="header-account-panel relative mt-2.5 w-full">
@@ -155,53 +152,35 @@ export function HeaderAccountPanel({ onClose, onLoggedOut }: HeaderAccountPanelP
             </div>
           </div>
 
-          <div className="header-account-nav">
-            <Link href="/account" className="header-account-nav-item" onClick={onClose}>
-              <ProfileIcon />
-              <span>Profile</span>
-            </Link>
-            <Link href="/account#orders" className="header-account-nav-item" onClick={onClose}>
-              <OrdersIcon />
-              <span>Past Orders</span>
-            </Link>
-            <button
-              type="button"
-              className={[
-                "header-account-nav-item",
-                cartOpen ? "header-account-nav-item-active" : "",
-              ].join(" ")}
-              aria-expanded={cartOpen}
-              onClick={() => setCartOpen((open) => !open)}
-            >
-              <CartNavIcon />
-              <span>Cart</span>
-            </button>
-          </div>
+          {isAdmin ? null : (
+            <div className="header-account-nav">
+              <Link href="/account" className="header-account-nav-item" onClick={onClose}>
+                <ProfileIcon />
+                <span>Profile</span>
+              </Link>
+              <Link href="/account#orders" className="header-account-nav-item" onClick={onClose}>
+                <OrdersIcon />
+                <span>Past Orders</span>
+              </Link>
+            </div>
+          )}
 
           <div className="header-account-actions">
-            <Link href="/checkout" className="header-account-primary" onClick={onClose}>
-              <CalendarIcon />
-              <span>Book a Session</span>
-            </Link>
+            {isAdmin ? (
+              <Link href="/admin" className="header-account-primary" onClick={onClose}>
+                <DashboardIcon />
+                <span>View Dashboard</span>
+              </Link>
+            ) : (
+              <Link href="/checkout" className="header-account-primary" onClick={onClose}>
+                <CalendarIcon />
+                <span>Book a Session</span>
+              </Link>
+            )}
             <button type="button" className="header-account-ghost" onClick={handleLogout}>
               Log out
             </button>
           </div>
-
-          <AnimatePresence initial={false}>
-            {cartOpen ? (
-              <motion.div
-                key="account-cart-embed"
-                className="header-account-cart-wrap"
-                initial={reduceMotion ? undefined : { opacity: 0, height: 0 }}
-                animate={reduceMotion ? undefined : { opacity: 1, height: "auto" }}
-                exit={reduceMotion ? undefined : { opacity: 0, height: 0 }}
-                transition={{ duration: 0.24, ease: [0.4, 0, 0.2, 1] }}
-              >
-                <HeaderCartPanel embedded onClose={onClose} />
-              </motion.div>
-            ) : null}
-          </AnimatePresence>
         </div>
       </div>
     </div>

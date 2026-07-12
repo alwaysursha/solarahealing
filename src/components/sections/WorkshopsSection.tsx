@@ -4,6 +4,7 @@ import { motion, useReducedMotion } from "framer-motion";
 import Image from "next/image";
 import Link from "next/link";
 import { useRef } from "react";
+import { useCart } from "@/components/cart/CartProvider";
 import { useAnimationsActive } from "@/hooks/useAnimationsActive";
 import { toImageObjectPosition } from "@/lib/image-focus";
 import { formatCad, workshops, workshopsIntro } from "@/lib/site";
@@ -202,30 +203,65 @@ function PriceTag({
 }
 
 function RegisterButton({
-  workshopId,
+  workshop,
   variant = "gold",
   className = "",
 }: {
-  workshopId: string;
+  workshop: Pick<WorkshopItem, "id" | "title" | "priceCad" | "image">;
   variant?: "gold" | "outline";
   className?: string;
 }) {
   const reduceMotion = useReducedMotion();
+  const { beginAddFromElement } = useCart();
+  const buttonRef = useRef<HTMLButtonElement>(null);
   const styles =
     variant === "gold"
       ? "bg-gold text-purple-deep shadow-lg shadow-gold/30 hover:bg-gold-light"
       : "border border-gold/45 bg-white/5 text-gold backdrop-blur-sm hover:bg-gold/10";
 
   return (
-    <motion.a
-      href={`#contact?workshop=${workshopId}`}
+    <motion.button
+      ref={buttonRef}
+      type="button"
       className={`workshop-register-btn relative inline-flex shrink-0 items-center justify-center overflow-hidden whitespace-nowrap rounded-full px-4 py-2 text-[0.62rem] font-semibold uppercase tracking-[0.1em] transition-colors md:px-5 md:text-[0.65rem] ${styles} ${className}`}
       whileHover={reduceMotion ? undefined : { scale: 1.04 }}
       whileTap={reduceMotion ? undefined : { scale: 0.97 }}
+      onClick={() =>
+        beginAddFromElement(
+          {
+            id: workshop.id,
+            type: "workshop",
+            title: workshop.title,
+            priceCad: workshop.priceCad,
+            image: workshop.image,
+          },
+          buttonRef.current,
+          Boolean(reduceMotion),
+        )
+      }
     >
       <span className="workshop-register-shimmer pointer-events-none absolute inset-0" aria-hidden />
       <span className="relative">Register Now</span>
-    </motion.a>
+    </motion.button>
+  );
+}
+
+function WorkshopCardActions({
+  workshop,
+  variant = "gold",
+  className = "",
+}: {
+  workshop: WorkshopItem;
+  variant?: "gold" | "outline";
+  className?: string;
+}) {
+  return (
+    <div className="catalog-card-cta">
+      <RegisterButton workshop={workshop} variant={variant} className={className} />
+      <Link href={`/workshops/${workshop.id}`} className="catalog-view-details">
+        View Details
+      </Link>
+    </div>
   );
 }
 
@@ -308,7 +344,7 @@ function FeaturedWorkshop({
                 <p className="text-[0.6rem] uppercase tracking-[0.24em] text-white/40">Investment</p>
                 <PriceTag priceCad={workshop.priceCad} large />
               </div>
-              <RegisterButton workshopId={workshop.id} className="px-6 py-2.5 text-[0.68rem] md:text-xs" />
+              <WorkshopCardActions workshop={workshop} className="px-6 py-2.5 text-[0.68rem] md:text-xs" />
             </motion.div>
           </motion.div>
         </motion.div>
@@ -351,7 +387,7 @@ function FeaturedWorkshopStatic({ workshop }: { workshop: WorkshopItem }) {
               <p className="text-[0.6rem] uppercase tracking-[0.24em] text-white/40">Investment</p>
               <PriceTag priceCad={workshop.priceCad} large />
             </div>
-            <RegisterButton workshopId={workshop.id} className="px-6 py-2.5 text-[0.68rem] md:text-xs" />
+            <WorkshopCardActions workshop={workshop} className="px-6 py-2.5 text-[0.68rem] md:text-xs" />
           </div>
         </div>
       </div>
@@ -416,7 +452,7 @@ function UpcomingCard({
         <p className="mt-2 line-clamp-2 text-sm leading-relaxed text-white/55">{workshop.description}</p>
         <div className="mt-5 flex items-center justify-between gap-3">
           <span className="text-[0.62rem] uppercase tracking-[0.18em] text-white/35">{workshop.duration}</span>
-          <RegisterButton workshopId={workshop.id} variant="outline" />
+          <WorkshopCardActions workshop={workshop} variant="outline" />
         </div>
       </motion.div>
     </motion.article>
@@ -445,7 +481,7 @@ function UpcomingCardContent({ workshop }: { workshop: WorkshopItem }) {
         <p className="mt-2 line-clamp-2 text-sm leading-relaxed text-white/55">{workshop.description}</p>
         <div className="mt-5 flex items-center justify-between gap-3">
           <span className="text-[0.62rem] uppercase tracking-[0.18em] text-white/35">{workshop.duration}</span>
-          <RegisterButton workshopId={workshop.id} variant="outline" />
+          <WorkshopCardActions workshop={workshop} variant="outline" />
         </div>
       </div>
     </>

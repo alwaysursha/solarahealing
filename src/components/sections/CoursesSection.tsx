@@ -4,7 +4,7 @@ import { motion, useReducedMotion } from "framer-motion";
 import Image from "next/image";
 import Link from "next/link";
 import { useRef } from "react";
-import { CartIcon } from "@/components/ui/CartIcon";
+import { useCart } from "@/components/cart/CartProvider";
 import { useAnimationsActive } from "@/hooks/useAnimationsActive";
 import { toImageObjectPosition } from "@/lib/image-focus";
 import { coursesIntro, formatCad, onlineCourses } from "@/lib/site";
@@ -203,32 +203,86 @@ function PriceTag({
   );
 }
 
-function AddToCartButton({
-  courseId,
+function EnrolIcon({ className = "h-3.5 w-3.5" }: { className?: string }) {
+  return (
+    <svg
+      className={className}
+      fill="none"
+      viewBox="0 0 24 24"
+      stroke="currentColor"
+      strokeWidth={1.75}
+      aria-hidden
+    >
+      <path
+        strokeLinecap="round"
+        strokeLinejoin="round"
+        d="M9.813 15.904 9 18.75l-.813-2.846a4.5 4.5 0 0 0-3.09-3.09L2.25 12l2.846-.813a4.5 4.5 0 0 0 3.09-3.09L9 5.25l.813 2.846a4.5 4.5 0 0 0 3.09 3.09L15.75 12l-2.846.813a4.5 4.5 0 0 0-3.09 3.09ZM18.259 8.715 18 9.75l-.259-1.035a3.375 3.375 0 0 0-2.455-2.456L14.25 6l1.036-.259a3.375 3.375 0 0 0 2.455-2.456L18 2.25l.259 1.035a3.375 3.375 0 0 0 2.456 2.456L21.75 6l-1.035.259a3.375 3.375 0 0 0-2.456 2.456ZM16.894 20.567 16.5 21.75l-.394-1.183a2.25 2.25 0 0 0-1.423-1.423L13.5 18.75l1.183-.394a2.25 2.25 0 0 0 1.423-1.423l.394-1.183.394 1.183a2.25 2.25 0 0 0 1.423 1.423l1.183.394-1.183.394a2.25 2.25 0 0 0-1.423 1.423Z"
+      />
+    </svg>
+  );
+}
+
+function EnrollButton({
+  course,
   variant = "gold",
   className = "",
 }: {
-  courseId: string;
+  course: Pick<CourseItem, "id" | "title" | "priceCad" | "image">;
   variant?: "gold" | "outline";
   className?: string;
 }) {
   const reduceMotion = useReducedMotion();
+  const { beginAddFromElement } = useCart();
+  const buttonRef = useRef<HTMLButtonElement>(null);
   const styles =
     variant === "gold"
       ? "bg-gold text-purple-deep shadow-lg shadow-gold/30 hover:bg-gold-light"
       : "border border-gold/45 bg-white/5 text-gold backdrop-blur-sm hover:bg-gold/10";
 
   return (
-    <motion.a
-      href={`/checkout?course=${courseId}`}
+    <motion.button
+      ref={buttonRef}
+      type="button"
       className={`workshop-register-btn relative inline-flex shrink-0 items-center justify-center gap-2 overflow-hidden whitespace-nowrap rounded-full px-4 py-2 text-[0.62rem] font-semibold uppercase tracking-[0.1em] transition-colors md:px-5 md:text-[0.65rem] ${styles} ${className}`}
       whileHover={reduceMotion ? undefined : { scale: 1.04 }}
       whileTap={reduceMotion ? undefined : { scale: 0.97 }}
+      onClick={() =>
+        beginAddFromElement(
+          {
+            id: course.id,
+            type: "course",
+            title: course.title,
+            priceCad: course.priceCad,
+            image: course.image,
+          },
+          buttonRef.current,
+          Boolean(reduceMotion),
+        )
+      }
     >
       <span className="workshop-register-shimmer pointer-events-none absolute inset-0" aria-hidden />
-      <CartIcon className="relative h-3.5 w-3.5" />
-      <span className="relative">Add to Cart</span>
-    </motion.a>
+      <EnrolIcon className="relative h-3.5 w-3.5" />
+      <span className="relative">Enroll Now</span>
+    </motion.button>
+  );
+}
+
+function CourseCardActions({
+  course,
+  variant = "gold",
+  className = "",
+}: {
+  course: CourseItem;
+  variant?: "gold" | "outline";
+  className?: string;
+}) {
+  return (
+    <div className="catalog-card-cta">
+      <EnrollButton course={course} variant={variant} className={className} />
+      <Link href={`/courses/${course.id}`} className="catalog-view-details">
+        View Details
+      </Link>
+    </div>
   );
 }
 
@@ -309,7 +363,7 @@ function FeaturedCourse({
                 <p className="text-[0.6rem] uppercase tracking-[0.24em] text-white/40">Investment</p>
                 <PriceTag priceCad={course.priceCad} large />
               </div>
-              <AddToCartButton courseId={course.id} className="px-6 py-2.5 text-[0.68rem] md:text-xs" />
+              <CourseCardActions course={course} className="px-6 py-2.5 text-[0.68rem] md:text-xs" />
             </motion.div>
           </motion.div>
         </motion.div>
@@ -352,7 +406,7 @@ function FeaturedCourseStatic({ course }: { course: CourseItem }) {
               <p className="text-[0.6rem] uppercase tracking-[0.24em] text-white/40">Investment</p>
               <PriceTag priceCad={course.priceCad} large />
             </div>
-            <AddToCartButton courseId={course.id} className="px-6 py-2.5 text-[0.68rem] md:text-xs" />
+            <CourseCardActions course={course} className="px-6 py-2.5 text-[0.68rem] md:text-xs" />
           </div>
         </div>
       </div>
@@ -417,7 +471,7 @@ function UpcomingCourseCard({
         <p className="mt-2 line-clamp-2 text-sm leading-relaxed text-white/55">{course.description}</p>
         <div className="mt-5 flex items-center justify-between gap-3">
           <span className="text-[0.62rem] uppercase tracking-[0.18em] text-white/35">{course.duration}</span>
-          <AddToCartButton courseId={course.id} variant="outline" />
+          <CourseCardActions course={course} variant="outline" />
         </div>
       </motion.div>
     </motion.article>
@@ -446,7 +500,7 @@ function UpcomingCourseCardContent({ course }: { course: CourseItem }) {
         <p className="mt-2 line-clamp-2 text-sm leading-relaxed text-white/55">{course.description}</p>
         <div className="mt-5 flex items-center justify-between gap-3">
           <span className="text-[0.62rem] uppercase tracking-[0.18em] text-white/35">{course.duration}</span>
-          <AddToCartButton courseId={course.id} variant="outline" />
+          <CourseCardActions course={course} variant="outline" />
         </div>
       </div>
     </>
@@ -517,7 +571,7 @@ export function CoursesSection({
             <p className="text-[0.62rem] uppercase tracking-[0.28em] text-white/30">Online programs</p>
 
             <Link
-              href="#contact"
+              href="/courses"
               className="workshop-view-all group mt-8 inline-flex items-center gap-4 rounded-full border border-gold/40 bg-white/5 px-8 py-4 text-[0.7rem] font-semibold uppercase tracking-[0.28em] text-gold backdrop-blur-sm transition-colors hover:border-gold hover:bg-gold/10"
             >
               View All Courses

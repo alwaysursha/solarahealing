@@ -160,6 +160,16 @@ export async function getPublishedWorkshops() {
   }));
 }
 
+export async function getPublishedCourseById(id: string) {
+  const courses = await getPublishedCourses();
+  return courses.find((course) => course.id === id) ?? null;
+}
+
+export async function getPublishedWorkshopById(id: string) {
+  const workshops = await getPublishedWorkshops();
+  return workshops.find((workshop) => workshop.id === id) ?? null;
+}
+
 export async function getWorkshopsIntro() {
   const section = await getPageSection("home", "workshopsIntro");
   return section ? (JSON.parse(section.content) as typeof workshopsIntro) : workshopsIntro;
