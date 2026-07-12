@@ -1,8 +1,7 @@
 import { OrderItemType, OrderStatus } from "@prisma/client";
 import { auth } from "@/auth";
-import { getSiteUrl } from "@/lib/constants";
 import { prisma } from "@/lib/prisma";
-import { cadToStripeAmount, getStripe } from "@/lib/stripe";
+import { cadToStripeAmount, getStripe, getStripePublishableKey } from "@/lib/stripe";
 import { isValidWhatsAppNumber, normalizeWhatsAppNumber } from "@/lib/whatsapp";
 
 export const dynamic = "force-dynamic";
@@ -155,11 +154,11 @@ export async function POST(request: Request) {
     },
   });
 
-  const siteUrl = getSiteUrl().replace(/\/$/, "");
-
   let stripe: ReturnType<typeof getStripe>;
+  let publishableKey: string;
   try {
     stripe = getStripe();
+    publishableKey = getStripePublishableKey();
   } catch (error) {
     console.error("[stripe] missing configuration", error);
     await prisma.order.update({
@@ -178,55 +177,51 @@ export async function POST(request: Request) {
     );
   }
 
+  const description =
+    resolved.lines.length === 1
+      ? resolved.lines[0]!.title
+      : `Soulara Healing Academy · ${resolved.lines.length} items`;
+
   try {
-    const checkoutSession = await stripe.checkout.sessions.create({
-      mode: "payment",
-      customer_email: session.user.email,
-      line_items: resolved.lines.map((line) => ({
-        quantity: line.quantity,
-        price_data: {
-          currency: "cad",
-          unit_amount: cadToStripeAmount(line.unitPriceCad),
-          product_data: {
-            name: line.title,
-            metadata: {
-              itemId: line.itemId,
-              itemType: line.itemType,
-            },
-          },
-        },
-      })),
-      success_url: `${siteUrl}/checkout/success?session_id={CHECKOUT_SESSION_ID}`,
-      cancel_url: `${siteUrl}/checkout?canceled=1`,
+    const paymentIntent = await stripe.paymentIntents.create({
+      amount: cadToStripeAmount(totalCad),
+      currency: "cad",
+      automatic_payment_methods: { enabled: true },
+      receipt_email: session.user.email,
+      description,
       metadata: {
         orderId: order.id,
         userId: session.user.id,
         whatsapp,
       },
-      payment_intent_data: {
-        metadata: {
-          orderId: order.id,
-          userId: session.user.id,
-        },
-      },
     });
 
-    if (!checkoutSession.url) {
+    if (!paymentIntent.client_secret) {
       await prisma.order.update({
         where: { id: order.id },
-        data: { status: OrderStatus.CANCELLED, notes: `${order.notes ?? ""}\nStripe session missing URL.`.trim() },
+        data: {
+          status: OrderStatus.CANCELLED,
+          notes: `${order.notes ?? ""}\nStripe PaymentIntent missing client secret.`.trim(),
+        },
       });
-      return Response.json({ ok: false, error: "Could not start Stripe Checkout." }, { status: 502 });
+      return Response.json({ ok: false, error: "Could not start payment." }, { status: 502 });
     }
 
     await prisma.order.update({
       where: { id: order.id },
-      data: { stripeCheckoutSessionId: checkoutSession.id },
+      data: { stripeCheckoutSessionId: paymentIntent.id },
     });
 
-    return Response.json({ ok: true, url: checkoutSession.url, orderId: order.id });
+    return Response.json({
+      ok: true,
+      clientSecret: paymentIntent.client_secret,
+      publishableKey,
+      orderId: order.id,
+      paymentIntentId: paymentIntent.id,
+      totalCad,
+    });
   } catch (error) {
-    console.error("[stripe] create checkout session failed", error);
+    console.error("[stripe] create payment intent failed", error);
     const stripeMessage =
       error && typeof error === "object" && "message" in error && typeof error.message === "string"
         ? error.message
@@ -235,13 +230,13 @@ export async function POST(request: Request) {
       where: { id: order.id },
       data: {
         status: OrderStatus.CANCELLED,
-        notes: `${order.notes ?? ""}\nStripe checkout failed to start${stripeMessage ? `: ${stripeMessage}` : ""}.`.trim(),
+        notes: `${order.notes ?? ""}\nStripe payment failed to start${stripeMessage ? `: ${stripeMessage}` : ""}.`.trim(),
       },
     });
     return Response.json(
       {
         ok: false,
-        error: "Could not start Stripe Checkout. Please try again.",
+        error: "Could not start payment. Please try again.",
       },
       { status: 502 },
     );

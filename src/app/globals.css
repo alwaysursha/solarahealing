@@ -5185,6 +5185,67 @@ body:has(.admin-root) {
   animation: none;
 }
 
+.checkout-payment {
+  position: relative;
+  margin-top: 1.15rem;
+  padding-top: 1rem;
+  border-top: 1px solid rgba(250, 247, 242, 0.1);
+}
+
+.checkout-payment-header {
+  display: flex;
+  align-items: flex-start;
+  justify-content: space-between;
+  gap: 0.75rem;
+  margin-bottom: 0.9rem;
+}
+
+.checkout-payment-eyebrow {
+  font-size: 0.6rem;
+  font-weight: 600;
+  letter-spacing: 0.22em;
+  text-transform: uppercase;
+  color: rgba(238, 207, 120, 0.82);
+}
+
+.checkout-payment-title {
+  margin-top: 0.3rem;
+  font-family: var(--font-instrument-serif), Georgia, serif;
+  font-size: 1.2rem;
+  font-weight: 400;
+  letter-spacing: -0.02em;
+  color: #faf7f2;
+}
+
+.checkout-payment-back {
+  flex-shrink: 0;
+  margin-top: 0.15rem;
+  font-size: 0.62rem;
+  font-weight: 600;
+  letter-spacing: 0.14em;
+  text-transform: uppercase;
+  color: rgba(238, 207, 120, 0.88);
+  transition: color 0.2s ease;
+}
+
+.checkout-payment-back:hover:not(:disabled) {
+  color: #f7ecd0;
+}
+
+.checkout-payment-back:disabled {
+  opacity: 0.55;
+  cursor: not-allowed;
+}
+
+.checkout-payment-element {
+  position: relative;
+  margin-bottom: 0.25rem;
+}
+
+.checkout-payment .checkout-pay-button {
+  margin-top: 1rem;
+}
+
 .checkout-summary-secure {
   position: relative;
   display: flex;

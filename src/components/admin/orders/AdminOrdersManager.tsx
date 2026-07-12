@@ -251,7 +251,7 @@ export function AdminOrdersManager({ orders }: { orders: OrderRow[] }) {
                       <p className="admin-order-detail-value admin-order-detail-mono">{order.id}</p>
                     </div>
                     <div className="admin-order-detail sm:col-span-2">
-                      <p className="admin-order-detail-label">Stripe session</p>
+                      <p className="admin-order-detail-label">Stripe payment</p>
                       <p className="admin-order-detail-value admin-order-detail-mono">
                         {order.stripeCheckoutSessionId ?? "Not started"}
                       </p>

@@ -243,7 +243,7 @@ export function AdminCustomerProfile({ customer }: { customer: CustomerProfile }
                         <p className="admin-order-detail-value admin-order-detail-mono">{order.id}</p>
                       </div>
                       <div className="admin-order-detail">
-                        <p className="admin-order-detail-label">Stripe session</p>
+                        <p className="admin-order-detail-label">Stripe payment</p>
                         <p className="admin-order-detail-value admin-order-detail-mono">
                           {order.stripeCheckoutSessionId ?? "Not started"}
                         </p>

@@ -1,5 +1,8 @@
 import { getStripe } from "@/lib/stripe";
-import { fulfillPaidCheckoutSession } from "@/lib/stripe/fulfill-checkout";
+import {
+  fulfillPaidCheckoutSession,
+  fulfillPaidPaymentIntent,
+} from "@/lib/stripe/fulfill-checkout";
 
 export const dynamic = "force-dynamic";
 export const runtime = "nodejs";
@@ -36,6 +39,14 @@ export async function POST(request: Request) {
 
   try {
     switch (event.type) {
+      case "payment_intent.succeeded": {
+        const paymentIntent = event.data.object;
+        const result = await fulfillPaidPaymentIntent(paymentIntent);
+        if (!result.ok && result.reason !== "not_paid") {
+          console.error("[stripe webhook] PaymentIntent fulfillment issue", result);
+        }
+        break;
+      }
       case "checkout.session.completed": {
         const session = event.data.object;
         const result = await fulfillPaidCheckoutSession(session);
