@@ -292,8 +292,31 @@ export async function getAllCustomers() {
       prisma.user.findMany({
         where: { role: Role.USER },
         orderBy: { createdAt: "desc" },
+        include: {
+          _count: { select: { orders: true } },
+          orders: {
+            where: { status: { in: [OrderStatus.PAID, OrderStatus.COMPLETED] } },
+            select: { totalCad: true },
+          },
+        },
       }),
     [],
+  );
+}
+
+export async function getCustomerProfile(customerId: string) {
+  return safeQuery(
+    () =>
+      prisma.user.findFirst({
+        where: { id: customerId, role: Role.USER },
+        include: {
+          orders: {
+            orderBy: { createdAt: "desc" },
+            include: { items: true },
+          },
+        },
+      }),
+    null,
   );
 }
 
@@ -314,6 +337,10 @@ export async function getAllOrders() {
     () =>
       prisma.order.findMany({
         orderBy: { createdAt: "desc" },
+        include: {
+          items: true,
+          user: { select: { id: true, whatsapp: true, email: true, name: true } },
+        },
       }),
     [],
   );
@@ -324,10 +351,13 @@ export async function getOrderWithItems(orderId: string) {
     () =>
       prisma.order.findUnique({
         where: { id: orderId },
-        include: { items: true },
+        include: {
+          items: true,
+          user: { select: { id: true, name: true, email: true, whatsapp: true } },
+        },
       }),
     null,
-  ).then((order) => (order ? { order, items: order.items } : null));
+  );
 }
 
 export async function getAdminStats() {
@@ -342,7 +372,6 @@ export async function getAdminStats() {
   const paidOrders = orderRows.filter(
     (o) => o.status === OrderStatus.PAID || o.status === OrderStatus.COMPLETED,
   ).length;
-  const pendingOrders = orderRows.filter((o) => o.status === OrderStatus.PENDING).length;
 
   const revenue = orderRows
     .filter((o) => o.status === OrderStatus.PAID || o.status === OrderStatus.COMPLETED)
@@ -355,7 +384,30 @@ export async function getAdminStats() {
     customers: customerRows.length,
     orders: orderRows.length,
     paidOrders,
-    pendingOrders,
     revenue,
   };
+}
+
+export async function getRecentAdminOrders(limit = 6) {
+  return safeQuery(
+    () =>
+      prisma.order.findMany({
+        where: {
+          status: { in: [OrderStatus.PAID, OrderStatus.COMPLETED] },
+        },
+        orderBy: { createdAt: "desc" },
+        take: limit,
+        include: {
+          items: {
+            select: {
+              id: true,
+              title: true,
+              itemType: true,
+              quantity: true,
+            },
+          },
+        },
+      }),
+    [],
+  );
 }

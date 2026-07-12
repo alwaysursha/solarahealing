@@ -1,11 +1,11 @@
 import { AdminDashboard } from "@/components/admin/AdminDashboard";
 import { AdminShell } from "@/components/admin/AdminShell";
-import { getAdminStats } from "@/lib/content";
+import { getAdminStats, getRecentAdminOrders } from "@/lib/content";
 
 export const dynamic = "force-dynamic";
 
 export default async function AdminDashboardPage() {
-  const stats = await getAdminStats();
+  const [stats, recentOrders] = await Promise.all([getAdminStats(), getRecentAdminOrders(6)]);
 
   return (
     <AdminShell activePath="/admin" title="Dashboard">
@@ -16,8 +16,8 @@ export default async function AdminDashboardPage() {
           articles: stats.articles,
           customers: stats.customers,
           paidOrders: stats.paidOrders,
-          pendingOrders: stats.pendingOrders,
         }}
+        recentOrders={recentOrders}
       />
     </AdminShell>
   );

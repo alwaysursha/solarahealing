@@ -1,4 +1,5 @@
 import Link from "next/link";
+import { OrderItemType } from "@prisma/client";
 
 type AdminDashboardStats = {
   courses: number;
@@ -6,7 +7,21 @@ type AdminDashboardStats = {
   articles: number;
   customers: number;
   paidOrders: number;
-  pendingOrders: number;
+};
+
+type RecentOrderItem = {
+  id: string;
+  title: string;
+  itemType: OrderItemType;
+  quantity: number;
+};
+
+type RecentOrder = {
+  id: string;
+  userId: string;
+  customerName: string;
+  createdAt: Date;
+  items: RecentOrderItem[];
 };
 
 type DashboardTileProps = {
@@ -107,52 +122,25 @@ function DashboardTile({
   );
 }
 
-function OrderStatTile({
-  label,
-  value,
-  detail,
-  href,
-  tone,
-}: {
-  label: string;
-  value: number;
-  detail: string;
-  href: string;
-  tone: "paid" | "pending";
-}) {
-  const isPaid = tone === "paid";
+function formatOrderDate(date: Date) {
+  return new Intl.DateTimeFormat("en-CA", {
+    month: "short",
+    day: "numeric",
+    year: "numeric",
+  }).format(date);
+}
 
-  return (
-    <Link
-      href={href}
-      className={[
-        "admin-dashboard-order-tile group relative overflow-hidden rounded-[1.25rem] p-5 transition-all duration-300 hover:-translate-y-0.5",
-        isPaid ? "border-[#C9A227]/20" : "",
-      ].join(" ")}
-    >
-      <div
-        className={[
-          "pointer-events-none absolute inset-0 bg-gradient-to-br",
-          isPaid ? "from-[#C9A227]/10 via-transparent to-transparent" : "from-[#5C1A94]/8 via-transparent to-transparent",
-        ].join(" ")}
-        aria-hidden
-      />
-      <div className="relative z-[1]">
-        <p className="admin-dashboard-eyebrow text-[0.62rem] font-semibold uppercase tracking-[0.24em]">{label}</p>
-        <p className="admin-dashboard-value mt-3 font-serif text-[2.15rem] leading-none tracking-[-0.03em] sm:text-[2.6rem]">{value}</p>
-        <p className="admin-dashboard-detail mt-2 text-sm">{detail}</p>
-        <span
-          className={[
-            "admin-dashboard-order-link mt-5 inline-flex items-center gap-2 text-[0.72rem] font-semibold uppercase tracking-[0.16em] transition-colors",
-            isPaid ? "admin-dashboard-order-link-paid" : "admin-dashboard-order-link-pending",
-          ].join(" ")}
-        >
-          View orders
-          <ArrowLinkIcon />
-        </span>
-      </div>
-    </Link>
-  );
+function formatPurchasedItems(items: RecentOrderItem[]): string {
+  if (items.length === 0) {
+    return "No items";
+  }
+  return items
+    .map((item) => {
+      const kind = item.itemType === OrderItemType.WORKSHOP ? "Workshop" : "Course";
+      const qty = item.quantity > 1 ? ` ×${item.quantity}` : "";
+      return `${item.title}${qty} (${kind})`;
+    })
+    .join(" · ");
 }
 
 function CoursesIcon() {
@@ -192,7 +180,13 @@ function CustomersIcon() {
   );
 }
 
-export function AdminDashboard({ stats }: { stats: AdminDashboardStats }) {
+export function AdminDashboard({
+  stats,
+  recentOrders,
+}: {
+  stats: AdminDashboardStats;
+  recentOrders: RecentOrder[];
+}) {
   return (
     <div className="admin-dashboard space-y-10">
       <section>
@@ -200,7 +194,7 @@ export function AdminDashboard({ stats }: { stats: AdminDashboardStats }) {
           <div>
             <p className="admin-dashboard-eyebrow text-[0.62rem] font-semibold uppercase tracking-[0.28em]">Commerce</p>
             <h4 className="admin-dashboard-title mt-1 font-serif text-2xl">Orders</h4>
-            <p className="admin-dashboard-copy mt-2 text-sm">Track paid and pending checkout activity.</p>
+            <p className="admin-dashboard-copy mt-2 text-sm">Paid purchases and your latest enrollments.</p>
           </div>
           <Link
             href="/admin/orders"
@@ -211,21 +205,57 @@ export function AdminDashboard({ stats }: { stats: AdminDashboardStats }) {
           </Link>
         </div>
 
-        <div className="grid gap-5 md:grid-cols-2">
-          <OrderStatTile
-            label="Paid orders"
-            value={stats.paidOrders}
-            detail="Successfully paid and completed purchases."
+        <div className="admin-dashboard-commerce grid gap-5 lg:grid-cols-[minmax(14rem,18rem)_minmax(0,1fr)]">
+          <Link
             href="/admin/orders"
-            tone="paid"
-          />
-          <OrderStatTile
-            label="Pending orders"
-            value={stats.pendingOrders}
-            detail="Orders awaiting payment or confirmation."
-            href="/admin/orders"
-            tone="pending"
-          />
+            className="admin-dashboard-order-tile group relative overflow-hidden rounded-[1.25rem] border-[#C9A227]/20 p-5 transition-all duration-300 hover:-translate-y-0.5"
+          >
+            <div
+              className="pointer-events-none absolute inset-0 bg-gradient-to-br from-[#C9A227]/10 via-transparent to-transparent"
+              aria-hidden
+            />
+            <div className="relative z-[1]">
+              <p className="admin-dashboard-eyebrow text-[0.62rem] font-semibold uppercase tracking-[0.24em]">
+                Paid orders
+              </p>
+              <p className="admin-dashboard-value mt-3 font-serif text-[2.15rem] leading-none tracking-[-0.03em] sm:text-[2.6rem]">
+                {stats.paidOrders}
+              </p>
+              <p className="admin-dashboard-detail mt-2 text-sm">Successfully paid purchases.</p>
+              <span className="admin-dashboard-order-link admin-dashboard-order-link-paid mt-5 inline-flex items-center gap-2 text-[0.72rem] font-semibold uppercase tracking-[0.16em] transition-colors">
+                View orders
+                <ArrowLinkIcon />
+              </span>
+            </div>
+          </Link>
+
+          <div className="admin-dashboard-recent rounded-[1.25rem] p-5">
+            <div className="flex items-center justify-between gap-3">
+              <p className="admin-dashboard-eyebrow text-[0.62rem] font-semibold uppercase tracking-[0.24em]">
+                Recent orders
+              </p>
+            </div>
+
+            {recentOrders.length === 0 ? (
+              <p className="admin-dashboard-detail mt-5 text-sm">No paid orders yet.</p>
+            ) : (
+              <ul className="admin-dashboard-recent-list mt-4">
+                {recentOrders.map((order) => (
+                  <li key={order.id} className="admin-dashboard-recent-row">
+                    <div className="min-w-0">
+                      <p className="admin-dashboard-recent-name">
+                        <Link href={`/admin/customers/${order.userId}`} className="admin-customers-name-link">
+                          {order.customerName}
+                        </Link>
+                      </p>
+                      <p className="admin-dashboard-recent-items">{formatPurchasedItems(order.items)}</p>
+                    </div>
+                    <p className="admin-dashboard-recent-date">{formatOrderDate(order.createdAt)}</p>
+                  </li>
+                ))}
+              </ul>
+            )}
+          </div>
         </div>
       </section>
 

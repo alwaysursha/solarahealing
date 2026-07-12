@@ -115,9 +115,11 @@ function CheckoutLine({
 export function CheckoutClient({
   initialWhatsApp,
   isAuthenticated,
+  canceled = false,
 }: {
   initialWhatsApp: string;
   isAuthenticated: boolean;
+  canceled?: boolean;
 }) {
   const reduceMotion = useReducedMotion();
   const { items, totalCad, totalQuantity, removeItem, updateQuantity } = useCart();
@@ -126,7 +128,9 @@ export function CheckoutClient({
   const isEmpty = items.length === 0;
   const [whatsappValid, setWhatsappValid] = useState(isValidWhatsAppNumber(initialWhatsApp));
   const [whatsappValue, setWhatsappValue] = useState(initialWhatsApp);
-  const [payMessage, setPayMessage] = useState<string | null>(null);
+  const [payMessage, setPayMessage] = useState<string | null>(
+    canceled ? "Payment was canceled. You can try again when you’re ready." : null,
+  );
   const [savingPay, setSavingPay] = useState(false);
 
   async function handleProceed() {
@@ -138,16 +142,42 @@ export function CheckoutClient({
       setPayMessage("Add a valid WhatsApp number to continue.");
       return;
     }
+    if (items.length === 0) {
+      setPayMessage("Your cart is empty.");
+      return;
+    }
 
     setSavingPay(true);
     setPayMessage(null);
     try {
-      const result = await saveCheckoutWhatsAppAction(whatsappValue);
-      if (!result.ok) {
-        setPayMessage(result.error);
+      const whatsappResult = await saveCheckoutWhatsAppAction(whatsappValue);
+      if (!whatsappResult.ok) {
+        setPayMessage(whatsappResult.error);
         return;
       }
-      setPayMessage("Secure Stripe checkout coming soon. Your WhatsApp number is saved.");
+
+      const response = await fetch("/api/checkout/create-session", {
+        method: "POST",
+        headers: { "Content-Type": "application/json" },
+        body: JSON.stringify({
+          whatsapp: whatsappValue,
+          items: items.map((item) => ({
+            id: item.id,
+            type: item.type,
+            quantity: item.quantity,
+          })),
+        }),
+      });
+
+      const payload = (await response.json()) as { ok?: boolean; url?: string; error?: string };
+      if (!response.ok || !payload.ok || !payload.url) {
+        setPayMessage(payload.error ?? "Could not start checkout. Please try again.");
+        return;
+      }
+
+      window.location.assign(payload.url);
+    } catch {
+      setPayMessage("Could not start checkout. Please try again.");
     } finally {
       setSavingPay(false);
     }
@@ -309,7 +339,7 @@ export function CheckoutClient({
                   onClick={handleProceed}
                 >
                   <span className="checkout-pay-shine" aria-hidden />
-                  <span className="relative">{savingPay ? "Saving…" : "Proceed to Payment"}</span>
+                  <span className="relative">{savingPay ? "Redirecting to Stripe…" : "Proceed to Payment"}</span>
                 </button>
 
                 {payMessage ? (
@@ -320,7 +350,7 @@ export function CheckoutClient({
 
                 <p className="checkout-summary-secure">
                   <ShieldIcon />
-                  Secure Stripe checkout coming soon · Cart saved on this device
+                  Secure payment powered by Stripe · Cart saved on this device
                 </p>
 
                 <Link href="/" className="checkout-continue-browsing">
