@@ -66,6 +66,13 @@ echo "  DATABASE_URL"
 echo "  AUTH_SECRET"
 echo "  GOOGLE_CLIENT_ID (optional)"
 echo "  GOOGLE_CLIENT_SECRET (optional)"
+echo "  STRIPE_SECRET_KEY (test sk_test_… for now)"
+echo "  NEXT_PUBLIC_STRIPE_PUBLISHABLE_KEY (test pk_test_…)"
+echo "  STRIPE_WEBHOOK_SECRET (optional until live webhooks)"
+echo
+echo "Also set the same Stripe keys as Cloudflare Worker secrets:"
+echo "  pnpm exec wrangler secret put STRIPE_SECRET_KEY"
+echo "  pnpm exec wrangler secret put NEXT_PUBLIC_STRIPE_PUBLISHABLE_KEY"
 echo
 echo "Local deploy:"
 echo "  pnpm run deploy:cf"

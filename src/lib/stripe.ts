@@ -17,7 +17,10 @@ export function getStripe(): Stripe {
   }
 
   if (!stripeClient) {
-    stripeClient = new Stripe(secretKey);
+    // Cloudflare Workers do not implement node:https — use Fetch.
+    stripeClient = new Stripe(secretKey, {
+      httpClient: Stripe.createFetchHttpClient(),
+    });
   }
 
   return stripeClient;

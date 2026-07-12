@@ -156,7 +156,27 @@ export async function POST(request: Request) {
   });
 
   const siteUrl = getSiteUrl().replace(/\/$/, "");
-  const stripe = getStripe();
+
+  let stripe: ReturnType<typeof getStripe>;
+  try {
+    stripe = getStripe();
+  } catch (error) {
+    console.error("[stripe] missing configuration", error);
+    await prisma.order.update({
+      where: { id: order.id },
+      data: {
+        status: OrderStatus.CANCELLED,
+        notes: `${order.notes ?? ""}\nStripe is not configured on the server.`.trim(),
+      },
+    });
+    return Response.json(
+      {
+        ok: false,
+        error: "Payments are not configured yet. Please try again shortly.",
+      },
+      { status: 503 },
+    );
+  }
 
   try {
     const checkoutSession = await stripe.checkout.sessions.create({
@@ -207,13 +227,23 @@ export async function POST(request: Request) {
     return Response.json({ ok: true, url: checkoutSession.url, orderId: order.id });
   } catch (error) {
     console.error("[stripe] create checkout session failed", error);
+    const stripeMessage =
+      error && typeof error === "object" && "message" in error && typeof error.message === "string"
+        ? error.message
+        : null;
     await prisma.order.update({
       where: { id: order.id },
       data: {
         status: OrderStatus.CANCELLED,
-        notes: `${order.notes ?? ""}\nStripe checkout failed to start.`.trim(),
+        notes: `${order.notes ?? ""}\nStripe checkout failed to start${stripeMessage ? `: ${stripeMessage}` : ""}.`.trim(),
       },
     });
-    return Response.json({ ok: false, error: "Could not start Stripe Checkout. Please try again." }, { status: 502 });
+    return Response.json(
+      {
+        ok: false,
+        error: "Could not start Stripe Checkout. Please try again.",
+      },
+      { status: 502 },
+    );
   }
 }

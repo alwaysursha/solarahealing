@@ -17,11 +17,18 @@ export async function POST(request: Request) {
   }
 
   const payload = await request.text();
-  const stripe = getStripe();
+  let stripe;
+  try {
+    stripe = getStripe();
+  } catch (error) {
+    console.error("[stripe webhook] missing configuration", error);
+    return Response.json({ error: "Webhook not configured." }, { status: 500 });
+  }
 
   let event;
   try {
-    event = stripe.webhooks.constructEvent(payload, signature, webhookSecret);
+    // Async + Web Crypto works on Cloudflare Workers (sync constructEvent may not).
+    event = await stripe.webhooks.constructEventAsync(payload, signature, webhookSecret);
   } catch (error) {
     console.error("[stripe webhook] Signature verification failed", error);
     return Response.json({ error: "Invalid signature." }, { status: 400 });
