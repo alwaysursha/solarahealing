@@ -24,6 +24,8 @@ export default async function CheckoutPage({
   return (
     <CheckoutClient
       initialWhatsApp={initialWhatsApp}
+      customerName={session?.user?.name ?? ""}
+      customerEmail={session?.user?.email ?? ""}
       isAuthenticated={Boolean(session?.user)}
       canceled={params.canceled === "1"}
     />

@@ -9,6 +9,7 @@ import {
 import { loadStripe, type StripeElementsOptions } from "@stripe/stripe-js";
 import { useMemo, useState, type FormEvent } from "react";
 import { formatCad } from "@/lib/site";
+import { formatWhatsAppDisplay, normalizeWhatsAppNumber } from "@/lib/whatsapp";
 
 const stripeAppearance: StripeElementsOptions["appearance"] = {
   theme: "night",
@@ -59,17 +60,39 @@ const stripeAppearance: StripeElementsOptions["appearance"] = {
   },
 };
 
+export type CheckoutCustomerDetails = {
+  name: string;
+  email: string;
+  whatsapp: string;
+};
+
+function toE164Phone(whatsapp: string): string {
+  const digits = normalizeWhatsAppNumber(whatsapp);
+  return digits ? `+${digits}` : "";
+}
+
 function PaymentFormInner({
   totalCad,
+  customer,
   onBack,
 }: {
   totalCad: number;
+  customer: CheckoutCustomerDetails;
   onBack: () => void;
 }) {
   const stripe = useStripe();
   const elements = useElements();
   const [submitting, setSubmitting] = useState(false);
   const [message, setMessage] = useState<string | null>(null);
+
+  const billingDetails = useMemo(
+    () => ({
+      name: customer.name.trim() || undefined,
+      email: customer.email.trim() || undefined,
+      phone: toE164Phone(customer.whatsapp) || undefined,
+    }),
+    [customer.email, customer.name, customer.whatsapp],
+  );
 
   async function handlePay(event: FormEvent) {
     event.preventDefault();
@@ -92,6 +115,9 @@ function PaymentFormInner({
       elements,
       confirmParams: {
         return_url: returnUrl,
+        payment_method_data: {
+          billing_details: billingDetails,
+        },
       },
       redirect: "if_required",
     });
@@ -113,23 +139,43 @@ function PaymentFormInner({
     setSubmitting(false);
   }
 
+  const phoneDisplay = formatWhatsAppDisplay(customer.whatsapp);
+
   return (
     <form className="checkout-payment" onSubmit={handlePay}>
-      <div className="checkout-payment-header">
-        <div>
-          <p className="checkout-payment-eyebrow">Secure payment</p>
-          <h3 className="checkout-payment-title">Pay on this page</h3>
-        </div>
+      <div className="checkout-payment-toolbar">
         <button type="button" className="checkout-payment-back" onClick={onBack} disabled={submitting}>
-          Edit order
+          ← Edit order
         </button>
       </div>
+
+      {(customer.email || phoneDisplay || customer.name) && (
+        <p className="checkout-payment-account">
+          Paying as{" "}
+          <strong>{customer.name || customer.email}</strong>
+          {customer.email && customer.name ? ` · ${customer.email}` : null}
+          {phoneDisplay ? ` · WhatsApp ${phoneDisplay}` : null}
+        </p>
+      )}
 
       <div className="checkout-payment-element">
         <PaymentElement
           options={{
             layout: "tabs",
             business: { name: "Soulara Healing Academy" },
+            defaultValues: {
+              billingDetails,
+            },
+            fields: {
+              billingDetails: {
+                name: "never",
+                email: "never",
+                phone: "never",
+              },
+            },
+            wallets: {
+              link: "never",
+            },
           }}
         />
       </div>
@@ -152,11 +198,13 @@ export function CheckoutPaymentForm({
   clientSecret,
   publishableKey,
   totalCad,
+  customer,
   onBack,
 }: {
   clientSecret: string;
   publishableKey: string;
   totalCad: number;
+  customer: CheckoutCustomerDetails;
   onBack: () => void;
 }) {
   const stripePromise = useMemo(() => loadStripe(publishableKey), [publishableKey]);
@@ -165,13 +213,20 @@ export function CheckoutPaymentForm({
     () => ({
       clientSecret,
       appearance: stripeAppearance,
+      defaultValues: {
+        billingDetails: {
+          name: customer.name.trim() || undefined,
+          email: customer.email.trim() || undefined,
+          phone: toE164Phone(customer.whatsapp) || undefined,
+        },
+      },
     }),
-    [clientSecret],
+    [clientSecret, customer.email, customer.name, customer.whatsapp],
   );
 
   return (
     <Elements stripe={stripePromise} options={options}>
-      <PaymentFormInner totalCad={totalCad} onBack={onBack} />
+      <PaymentFormInner totalCad={totalCad} customer={customer} onBack={onBack} />
     </Elements>
   );
 }
