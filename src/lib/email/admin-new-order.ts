@@ -1,7 +1,8 @@
 import { OrderItemType } from "@prisma/client";
 import type { Order, OrderItem } from "@prisma/client";
 import { SITE_NAME } from "@/lib/constants";
-import { sendEmail, getEmailFrom } from "@/lib/email";
+import { sendEmail } from "@/lib/email";
+import { getEmailFrom } from "@/lib/email-config";
 import {
   EMAIL_BRAND,
   emailCtaButton,

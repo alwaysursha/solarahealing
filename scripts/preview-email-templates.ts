@@ -1,6 +1,6 @@
 import { config } from "dotenv";
 import { OrderItemType, OrderStatus } from "@prisma/client";
-import { Resend } from "resend";
+import { sendEmail } from "../src/lib/email";
 import { buildAdminNewOrderEmail } from "../src/lib/email/admin-new-order";
 import { buildOrderConfirmationEmail } from "../src/lib/email/order-confirmation";
 import { buildPasswordChangedEmail } from "../src/lib/email/password-changed";
@@ -9,16 +9,11 @@ import { buildWelcomeEmail } from "../src/lib/email/welcome";
 config({ path: ".env.local" });
 
 async function main() {
-  const apiKey = process.env.RESEND_API_KEY?.trim() ?? "";
-  const from = process.env.EMAIL_FROM?.trim() ?? "";
   const to =
     process.env.EMAIL_TEST_TO?.trim() ||
     process.env.ADMIN_EMAIL?.trim() ||
+    process.env.EMAIL_ADMIN_TO?.trim() ||
     "admin@soularahealing.com";
-
-  if (!apiKey || !from) {
-    throw new Error("Missing RESEND_API_KEY or EMAIL_FROM in .env.local");
-  }
 
   const name = "Ali";
   const now = new Date();
@@ -62,23 +57,20 @@ async function main() {
     { id: "password", content: buildPasswordChangedEmail({ name, email: to }) },
   ] as const;
 
-  const resend = new Resend(apiKey);
-
   for (const template of templates) {
-    const { data, error } = await resend.emails.send({
-      from,
+    const result = await sendEmail({
       to,
       subject: `[Preview] ${template.content.subject}`,
       html: template.content.html,
       text: template.content.text,
     });
 
-    if (error) {
-      console.error(`FAILED ${template.id}:`, error.message);
+    if (!result.ok) {
+      console.error(`FAILED ${template.id}:`, result.error);
       process.exit(1);
     }
 
-    console.log(`OK ${template.id} → ${to} (${data?.id})`);
+    console.log(`OK ${template.id} → ${to} (${result.id})`);
   }
 }
 

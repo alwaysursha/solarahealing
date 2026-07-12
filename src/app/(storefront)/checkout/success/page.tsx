@@ -6,7 +6,7 @@ import {
 } from "@/components/checkout/CheckoutSuccessClient";
 import { prisma } from "@/lib/prisma";
 import { formatCad } from "@/lib/site";
-import { getStripe } from "@/lib/stripe";
+import { retrieveCheckoutSession, retrievePaymentIntent } from "@/lib/stripe";
 import {
   fulfillPaidCheckoutSession,
   fulfillPaidPaymentIntent,
@@ -72,8 +72,7 @@ export default async function CheckoutSuccessPage({
 
   try {
     if (paymentIntentId) {
-      const stripe = getStripe();
-      const paymentIntent = await stripe.paymentIntents.retrieve(paymentIntentId);
+      const paymentIntent = await retrievePaymentIntent(paymentIntentId);
       await fulfillPaidPaymentIntent(paymentIntent);
       const orderId = paymentIntent.metadata?.orderId;
 
@@ -104,8 +103,7 @@ export default async function CheckoutSuccessPage({
         verifying = true;
       }
     } else if (sessionId) {
-      const stripe = getStripe();
-      const checkoutSession = await stripe.checkout.sessions.retrieve(sessionId);
+      const checkoutSession = await retrieveCheckoutSession(sessionId);
       await fulfillPaidCheckoutSession(checkoutSession);
       const orderId = checkoutSession.metadata?.orderId;
 
