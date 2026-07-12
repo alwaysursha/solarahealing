@@ -1,5 +1,6 @@
 import { Role } from "@prisma/client";
-import { auth, signOut } from "@/auth";
+import { auth } from "@/auth";
+import { SignOutButton } from "@/components/auth/SignOutButton";
 import { InnerPage } from "@/components/storefront/InnerPage";
 import { GlowButton } from "@/components/ui/GlowButton";
 import { getOrdersForUser } from "@/lib/content";
@@ -34,19 +35,7 @@ export default async function AccountPage() {
         <GlowButton href="/checkout" variant="outline">
           Book a session
         </GlowButton>
-        <form
-          action={async () => {
-            "use server";
-            await signOut({ redirectTo: "/" });
-          }}
-        >
-          <button
-            type="submit"
-            className="rounded-full border border-purple-deep/15 px-5 py-2.5 text-sm font-medium text-purple-deep"
-          >
-            Sign out
-          </button>
-        </form>
+        <SignOutButton className="rounded-full border border-purple-deep/15 px-5 py-2.5 text-sm font-medium text-purple-deep" />
         <Link href="/" className="self-center text-sm text-purple-deep/60 hover:text-purple-deep">
           Back home
         </Link>

@@ -4,12 +4,13 @@ type InnerPageProps = {
   title: string;
   description?: string;
   children?: ReactNode;
+  wide?: boolean;
 };
 
-export function InnerPage({ title, description, children }: InnerPageProps) {
+export function InnerPage({ title, description, children, wide = false }: InnerPageProps) {
   return (
     <div className="px-6 py-10 md:px-12 lg:px-16">
-      <div className="mx-auto max-w-2xl">
+      <div className={wide ? "mx-auto max-w-5xl" : "mx-auto max-w-2xl"}>
         <h1 className="font-display text-3xl font-semibold text-purple-deep md:text-4xl">
           {title}
         </h1>

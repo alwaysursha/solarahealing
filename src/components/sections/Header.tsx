@@ -20,6 +20,7 @@ import { HeaderLoginPanel } from "@/components/sections/HeaderLoginPanel";
 import { HeaderAccountPanel, HeaderUserGreeting } from "@/components/sections/HeaderAccountPanel";
 import { MobileNavMenu } from "@/components/sections/MobileNavMenu";
 import { DesktopNav } from "@/components/sections/nav/DesktopNav";
+import { useCart } from "@/components/cart/CartProvider";
 
 const expandVariants = {
   closed: {
@@ -63,6 +64,7 @@ export function Header() {
   const reduceMotion = useReducedMotion();
   const router = useRouter();
   const { data: session, status } = useSession();
+  const { totalQuantity, cartPulse } = useCart();
   const postLoginRedirectHandled = useRef(false);
   const firstName = session?.user?.name ? getFirstName(session.user.name) : null;
   const isLoggedIn = status === "authenticated" && Boolean(session?.user);
@@ -189,13 +191,6 @@ export function Header() {
   }, [cartOpen, reduceMotion]);
 
   useEffect(() => {
-    if (isLoggedIn && cartOpen) {
-      setCartOpen(false);
-      setCartPanelReady(false);
-    }
-  }, [cartOpen, isLoggedIn]);
-
-  useEffect(() => {
     if (!loginOpen && !cartOpen && !navOpen) return;
 
     const onKeyDown = (event: KeyboardEvent) => {
@@ -248,15 +243,15 @@ export function Header() {
                 onClick={toggleLogin}
               />
             )}
-          </div>
-          {!isLoggedIn ? (
             <HeaderIconButton
               label={cartOpen ? "Close cart" : "Open cart"}
               icon="cart"
               active={cartOpen}
               onClick={toggleCart}
+              badgeCount={totalQuantity}
+              pulse={cartPulse}
             />
-          ) : null}
+          </div>
 
           <motion.button
             type="button"
@@ -324,7 +319,7 @@ export function Header() {
       </AnimatePresence>
 
       <AnimatePresence initial={false}>
-        {!isLoggedIn && cartOpen && (
+        {cartOpen && (
           <motion.div
             key="header-cart-expand"
             className="grid overflow-hidden"

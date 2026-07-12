@@ -1,65 +1,36 @@
 "use client";
 
+import Image from "next/image";
 import Link from "next/link";
+import { useCart } from "@/components/cart/CartProvider";
 import { CartIcon } from "@/components/ui/CartIcon";
+import { cartTypeLabel, sortCartItemsWorkshopsFirst } from "@/lib/cart/types";
+import { formatCad } from "@/lib/site";
 
 type HeaderCartPanelProps = {
   onClose: () => void;
-  embedded?: boolean;
 };
 
-function CartEmptyState({ compact = false }: { compact?: boolean }) {
+function CartEmptyState() {
   return (
-    <div
-      className={[
-        "header-cart-empty flex min-w-0 items-center gap-3 rounded-[0.9rem] border border-cream/10 bg-cream/[0.04]",
-        compact ? "px-3.5 py-2.5 sm:px-4 sm:py-3" : "px-4 py-3",
-      ].join(" ")}
-    >
-      <span
-        className={[
-          "flex shrink-0 items-center justify-center rounded-full border border-gold/25 bg-gold/10 text-gold",
-          compact ? "h-8 w-8 sm:h-9 sm:w-9" : "h-9 w-9",
-        ].join(" ")}
-      >
+    <div className="header-cart-empty flex min-w-0 items-center gap-3 rounded-[0.9rem] border border-cream/10 bg-cream/[0.04] px-4 py-3">
+      <span className="flex h-9 w-9 shrink-0 items-center justify-center rounded-full border border-gold/25 bg-gold/10 text-gold">
         <CartIcon className="h-4 w-4" />
       </span>
       <div className="min-w-0">
-        <p className={compact ? "text-[0.7rem] font-medium text-cream/88" : "text-[0.72rem] font-medium text-cream/88"}>
-          Your cart is empty
-        </p>
-        <p className={compact ? "mt-0.5 text-[0.64rem] text-cream/48" : "mt-0.5 text-[0.66rem] text-cream/48"}>
-          Add a course or session to begin checkout.
+        <p className="text-[0.72rem] font-medium text-cream/88">Your cart is empty</p>
+        <p className="mt-0.5 text-[0.66rem] text-cream/48">
+          Enroll in a course or register for a workshop to begin.
         </p>
       </div>
     </div>
   );
 }
 
-export function HeaderCartPanel({ onClose, embedded = false }: HeaderCartPanelProps) {
-  if (embedded) {
-    return (
-      <div className="header-account-cart-embed">
-        <div className="header-account-cart-embed-inner">
-          <CartEmptyState compact />
-
-          <div className="header-account-cart-embed-actions">
-            <Link
-              href="/checkout"
-              className="header-login-submit header-login-submit-compact inline-flex items-center justify-center"
-              onClick={onClose}
-            >
-              <span className="header-login-submit-shine pointer-events-none absolute inset-0" />
-              <span className="relative">Checkout</span>
-            </Link>
-            <Link href="/#courses" className="header-account-cart-browse" onClick={onClose}>
-              Browse courses
-            </Link>
-          </div>
-        </div>
-      </div>
-    );
-  }
+export function HeaderCartPanel({ onClose }: HeaderCartPanelProps) {
+  const { items, totalCad, removeItem } = useCart();
+  const ordered = sortCartItemsWorkshopsFirst(items);
+  const hasItems = ordered.length > 0;
 
   return (
     <div className="header-login-panel relative mt-2.5 w-full">
@@ -67,42 +38,104 @@ export function HeaderCartPanel({ onClose, embedded = false }: HeaderCartPanelPr
         <div className="header-login-panel-glow pointer-events-none absolute inset-0" aria-hidden />
         <div className="header-login-panel-shine pointer-events-none absolute inset-0" aria-hidden />
 
-        <div className="relative z-[1]">
-          <div className="header-login-form flex flex-col gap-2.5">
-            <div className="header-login-form-layout">
-              <div className="header-login-intro">
-                <p className="text-[0.56rem] font-semibold uppercase tracking-[0.3em] text-gold/82">
-                  Your selections
-                </p>
-                <h2 className="mt-1 font-serif text-[1.15rem] font-normal leading-none tracking-[-0.02em] text-cream lg:text-[1.25rem]">
-                  Items in your Cart
-                </h2>
-              </div>
+        <div className="header-cart-panel relative z-[1]">
+          <header className="header-cart-panel-header">
+            <p className="text-[0.56rem] font-semibold uppercase tracking-[0.3em] text-gold/82">
+              Your selections
+            </p>
+            <h2 className="mt-1 font-serif text-[1.15rem] font-normal leading-none tracking-[-0.02em] text-cream lg:text-[1.25rem]">
+              Items in your Cart
+            </h2>
+          </header>
 
-              <div className="header-cart-content">
-                <CartEmptyState />
-              </div>
+          <div className="header-cart-panel-body">
+            {!hasItems ? (
+              <CartEmptyState />
+            ) : (
+              <ul className="header-cart-lines">
+                {ordered.map((item) => (
+                  <li
+                    key={`${item.type}-${item.id}`}
+                    className={[
+                      "header-cart-line",
+                      item.type === "workshop" ? "header-cart-line-workshop" : "",
+                    ].join(" ")}
+                  >
+                    <div className="header-cart-line-thumb">
+                      {item.image ? (
+                        <Image src={item.image} alt="" fill className="object-cover" sizes="48px" />
+                      ) : (
+                        <span className="header-cart-line-thumb-fallback" />
+                      )}
+                    </div>
+                    <div className="min-w-0 flex-1">
+                      <p className="header-cart-line-type">{cartTypeLabel(item.type)}</p>
+                      <p className="header-cart-line-title">{item.title}</p>
+                      <p className="header-cart-line-meta">
+                        Qty {item.quantity} · {formatCad(item.priceCad * item.quantity)}
+                      </p>
+                    </div>
+                    <button
+                      type="button"
+                      className="header-cart-line-remove"
+                      aria-label={`Remove ${item.title}`}
+                      onClick={() => removeItem(item.id, item.type)}
+                    >
+                      Remove
+                    </button>
+                  </li>
+                ))}
+              </ul>
+            )}
+          </div>
 
-              <div className="header-login-actions">
+          <div className="header-cart-panel-footer">
+            {hasItems ? (
+              <div className="header-cart-checkout-row">
+                <div className="header-cart-total-row">
+                  <span className="header-cart-total-label">Total</span>
+                  <span className="header-cart-total-value">{formatCad(totalCad)}</span>
+                </div>
                 <Link
                   href="/checkout"
-                  className="header-login-submit header-login-submit-compact inline-flex items-center justify-center"
+                  className="header-login-submit header-login-submit-compact header-cart-checkout-btn inline-flex items-center justify-center"
                   onClick={onClose}
                 >
                   <span className="header-login-submit-shine pointer-events-none absolute inset-0" />
                   <span className="relative">Checkout</span>
                 </Link>
               </div>
-            </div>
+            ) : (
+              <div className="header-cart-checkout-row">
+                <span />
+                <Link
+                  href="/#courses"
+                  className="header-login-submit header-login-submit-compact header-cart-checkout-btn inline-flex items-center justify-center"
+                  onClick={onClose}
+                >
+                  <span className="header-login-submit-shine pointer-events-none absolute inset-0" />
+                  <span className="relative">Browse catalog</span>
+                </Link>
+              </div>
+            )}
 
-            <div className="header-login-footer flex flex-wrap items-center justify-between gap-x-4 gap-y-1 md:pl-[8.5rem]">
-              <Link
-                href="/#courses"
-                className="text-[0.68rem] font-medium text-gold/86 transition-colors hover:text-gold-light"
-                onClick={onClose}
-              >
-                Browse courses
-              </Link>
+            <div className="header-cart-panel-links">
+              <div className="header-cart-panel-browse">
+                <Link
+                  href="/#workshops"
+                  className="text-[0.68rem] font-medium text-gold/86 transition-colors hover:text-gold-light"
+                  onClick={onClose}
+                >
+                  Browse workshops
+                </Link>
+                <Link
+                  href="/#courses"
+                  className="text-[0.68rem] font-medium text-gold/86 transition-colors hover:text-gold-light"
+                  onClick={onClose}
+                >
+                  Browse courses
+                </Link>
+              </div>
               <p className="text-[0.68rem] text-cream/52">Secure checkout with Stripe</p>
             </div>
           </div>

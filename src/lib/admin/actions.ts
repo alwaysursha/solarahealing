@@ -3,7 +3,7 @@
 import { revalidatePath } from "next/cache";
 import bcrypt from "bcryptjs";
 import { OrderItemType, OrderStatus, Role } from "@prisma/client";
-import { requireAdmin, requireUser, signOut } from "@/auth";
+import { requireAdmin, requireUser } from "@/auth";
 import { prisma } from "@/lib/prisma";
 import { createId } from "@/lib/id";
 import { parseImageFocusValue } from "@/lib/image-focus";
@@ -392,6 +392,3 @@ export async function createDemoOrderAction(formData: FormData) {
   revalidatePath("/admin/orders");
 }
 
-export async function adminSignOutAction() {
-  await signOut({ redirectTo: "/" });
-}
