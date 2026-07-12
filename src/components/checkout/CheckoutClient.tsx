@@ -169,7 +169,18 @@ export function CheckoutClient({
         }),
       });
 
-      const payload = (await response.json()) as { ok?: boolean; url?: string; error?: string };
+      let payload: { ok?: boolean; url?: string; error?: string } = {};
+      try {
+        payload = (await response.json()) as { ok?: boolean; url?: string; error?: string };
+      } catch {
+        setPayMessage(
+          response.ok
+            ? "Could not start checkout. Please try again."
+            : "Checkout service returned an unexpected error. Please try again.",
+        );
+        return;
+      }
+
       if (!response.ok || !payload.ok || !payload.url) {
         setPayMessage(payload.error ?? "Could not start checkout. Please try again.");
         return;
