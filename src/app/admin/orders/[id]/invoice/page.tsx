@@ -170,7 +170,7 @@ export default async function AdminOrderInvoicePage({
           <p>Thank you for choosing Soulara Healing Academy.</p>
           <p>
             This invoice was generated from your order record
-            {order.stripeCheckoutSessionId ? " and Stripe checkout session." : "."}
+            {order.stripeCheckoutSessionId ? " and Stripe payment." : "."}
           </p>
         </footer>
       </article>

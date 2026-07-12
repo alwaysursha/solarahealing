@@ -7,7 +7,10 @@ import {
 import { prisma } from "@/lib/prisma";
 import { formatCad } from "@/lib/site";
 import { getStripe } from "@/lib/stripe";
-import { fulfillPaidCheckoutSession } from "@/lib/stripe/fulfill-checkout";
+import {
+  fulfillPaidCheckoutSession,
+  fulfillPaidPaymentIntent,
+} from "@/lib/stripe/fulfill-checkout";
 
 export const dynamic = "force-dynamic";
 
@@ -49,10 +52,11 @@ function itemTypeLabel(type: OrderItemType): string {
 export default async function CheckoutSuccessPage({
   searchParams,
 }: {
-  searchParams: Promise<{ session_id?: string }>;
+  searchParams: Promise<{ session_id?: string; payment_intent?: string }>;
 }) {
   const params = await searchParams;
   const sessionId = params.session_id?.trim() ?? "";
+  const paymentIntentId = params.payment_intent?.trim() ?? "";
   const userSession = await auth();
 
   let confirmed = false;
@@ -66,13 +70,13 @@ export default async function CheckoutSuccessPage({
     items: SuccessItem[];
   } | null = null;
 
-  if (sessionId) {
-    try {
+  try {
+    if (paymentIntentId) {
       const stripe = getStripe();
-      const checkoutSession = await stripe.checkout.sessions.retrieve(sessionId);
-      await fulfillPaidCheckoutSession(checkoutSession);
+      const paymentIntent = await stripe.paymentIntents.retrieve(paymentIntentId);
+      await fulfillPaidPaymentIntent(paymentIntent);
+      const orderId = paymentIntent.metadata?.orderId;
 
-      const orderId = checkoutSession.metadata?.orderId;
       if (orderId) {
         const order = await prisma.order.findUnique({
           where: { id: orderId },
@@ -96,11 +100,45 @@ export default async function CheckoutSuccessPage({
           confirmed =
             order.status === OrderStatus.PAID || order.status === OrderStatus.COMPLETED;
         }
+      } else {
+        verifying = true;
       }
-    } catch (error) {
-      console.error("[checkout success] Could not verify session", error);
-      verifying = true;
+    } else if (sessionId) {
+      const stripe = getStripe();
+      const checkoutSession = await stripe.checkout.sessions.retrieve(sessionId);
+      await fulfillPaidCheckoutSession(checkoutSession);
+      const orderId = checkoutSession.metadata?.orderId;
+
+      if (orderId) {
+        const order = await prisma.order.findUnique({
+          where: { id: orderId },
+          include: { items: true },
+        });
+        if (order && (!userSession?.user?.id || order.userId === userSession.user.id)) {
+          orderSummary = {
+            id: order.id,
+            totalCad: order.totalCad,
+            status: order.status,
+            email: order.customerEmail,
+            createdAt: order.createdAt,
+            items: order.items.map((item) => ({
+              id: item.id,
+              title: item.title,
+              quantity: item.quantity,
+              unitPriceCad: item.unitPriceCad,
+              itemType: item.itemType,
+            })),
+          };
+          confirmed =
+            order.status === OrderStatus.PAID || order.status === OrderStatus.COMPLETED;
+        }
+      } else {
+        verifying = true;
+      }
     }
+  } catch (error) {
+    console.error("[checkout success] Could not verify payment", error);
+    verifying = Boolean(paymentIntentId || sessionId);
   }
 
   const enrollmentNames = formatEnrollmentNames(orderSummary?.items.map((item) => item.title) ?? []);

@@ -5,6 +5,7 @@ import Image from "next/image";
 import Link from "next/link";
 import { useState } from "react";
 import { useCart } from "@/components/cart/CartProvider";
+import { CheckoutPaymentForm } from "@/components/checkout/CheckoutPaymentForm";
 import { CheckoutWhatsAppField } from "@/components/checkout/CheckoutWhatsAppField";
 import { saveCheckoutWhatsAppAction } from "@/lib/account/actions";
 import { cartTypeLabel, type CartItem } from "@/lib/cart/types";
@@ -29,10 +30,12 @@ function QtyStepper({
   id,
   value,
   onChange,
+  disabled = false,
 }: {
   id: string;
   value: number;
   onChange: (next: number) => void;
+  disabled?: boolean;
 }) {
   return (
     <div className="checkout-qty" role="group" aria-label="Quantity">
@@ -40,6 +43,7 @@ function QtyStepper({
         type="button"
         className="checkout-qty-btn"
         aria-label="Decrease quantity"
+        disabled={disabled}
         onClick={() => onChange(Math.max(1, value - 1))}
       >
         −
@@ -50,6 +54,7 @@ function QtyStepper({
         min={1}
         max={20}
         value={value}
+        disabled={disabled}
         className="checkout-qty-input"
         onChange={(event) => onChange(Math.min(20, Math.max(1, Number(event.target.value) || 1)))}
       />
@@ -57,6 +62,7 @@ function QtyStepper({
         type="button"
         className="checkout-qty-btn"
         aria-label="Increase quantity"
+        disabled={disabled}
         onClick={() => onChange(Math.min(20, value + 1))}
       >
         +
@@ -68,11 +74,13 @@ function QtyStepper({
 function CheckoutLine({
   item,
   featured = false,
+  locked = false,
   onRemove,
   onQty,
 }: {
   item: CartItem;
   featured?: boolean;
+  locked?: boolean;
   onRemove: () => void;
   onQty: (qty: number) => void;
 }) {
@@ -101,16 +109,26 @@ function CheckoutLine({
           <QtyStepper
             id={`qty-${item.type}-${item.id}`}
             value={item.quantity}
+            disabled={locked}
             onChange={onQty}
           />
-          <button type="button" className="checkout-remove" onClick={onRemove}>
-            Remove
-          </button>
+          {!locked ? (
+            <button type="button" className="checkout-remove" onClick={onRemove}>
+              Remove
+            </button>
+          ) : null}
         </div>
       </div>
     </li>
   );
 }
+
+type PaymentSession = {
+  clientSecret: string;
+  publishableKey: string;
+  orderId: string;
+  totalCad: number;
+};
 
 export function CheckoutClient({
   initialWhatsApp,
@@ -132,6 +150,9 @@ export function CheckoutClient({
     canceled ? "Payment was canceled. You can try again when you’re ready." : null,
   );
   const [savingPay, setSavingPay] = useState(false);
+  const [paymentSession, setPaymentSession] = useState<PaymentSession | null>(null);
+
+  const paymentLocked = Boolean(paymentSession);
 
   async function handleProceed() {
     if (!isAuthenticated) {
@@ -169,9 +190,16 @@ export function CheckoutClient({
         }),
       });
 
-      let payload: { ok?: boolean; url?: string; error?: string } = {};
+      let payload: {
+        ok?: boolean;
+        clientSecret?: string;
+        publishableKey?: string;
+        orderId?: string;
+        totalCad?: number;
+        error?: string;
+      } = {};
       try {
-        payload = (await response.json()) as { ok?: boolean; url?: string; error?: string };
+        payload = (await response.json()) as typeof payload;
       } catch {
         setPayMessage(
           response.ok
@@ -181,17 +209,33 @@ export function CheckoutClient({
         return;
       }
 
-      if (!response.ok || !payload.ok || !payload.url) {
+      if (
+        !response.ok ||
+        !payload.ok ||
+        !payload.clientSecret ||
+        !payload.publishableKey ||
+        typeof payload.totalCad !== "number"
+      ) {
         setPayMessage(payload.error ?? "Could not start checkout. Please try again.");
         return;
       }
 
-      window.location.assign(payload.url);
+      setPaymentSession({
+        clientSecret: payload.clientSecret,
+        publishableKey: payload.publishableKey,
+        orderId: payload.orderId ?? "",
+        totalCad: payload.totalCad,
+      });
     } catch {
       setPayMessage("Could not start checkout. Please try again.");
     } finally {
       setSavingPay(false);
     }
+  }
+
+  function handleBackFromPayment() {
+    setPaymentSession(null);
+    setPayMessage(null);
   }
 
   return (
@@ -207,7 +251,9 @@ export function CheckoutClient({
           <p className="checkout-hero-eyebrow">Soulara Healing Academy</p>
           <h1 className="checkout-hero-title">Complete your journey</h1>
           <p className="checkout-hero-copy">
-            Review your live workshops and on-demand courses, then continue to secure payment.
+            {paymentLocked
+              ? "Enter your payment details below — you stay on Soulara the whole way."
+              : "Review your live workshops and on-demand courses, then pay securely on this page."}
           </p>
           {!isEmpty ? (
             <div className="checkout-hero-meta">
@@ -271,6 +317,7 @@ export function CheckoutClient({
                           key={`workshop-${item.id}`}
                           item={item}
                           featured
+                          locked={paymentLocked}
                           onRemove={() => removeItem(item.id, item.type)}
                           onQty={(qty) => updateQuantity(item.id, item.type, qty)}
                         />
@@ -292,6 +339,7 @@ export function CheckoutClient({
                         <CheckoutLine
                           key={`course-${item.id}`}
                           item={item}
+                          locked={paymentLocked}
                           onRemove={() => removeItem(item.id, item.type)}
                           onQty={(qty) => updateQuantity(item.id, item.type, qty)}
                         />
@@ -304,7 +352,9 @@ export function CheckoutClient({
               <aside className="checkout-summary">
                 <div className="checkout-summary-glow" aria-hidden />
                 <p className="checkout-summary-eyebrow">Order summary</p>
-                <h2 className="checkout-summary-title">Ready when you are</h2>
+                <h2 className="checkout-summary-title">
+                  {paymentLocked ? "Complete payment" : "Ready when you are"}
+                </h2>
 
                 <dl className="checkout-summary-list">
                   {workshops.length > 0 ? (
@@ -329,39 +379,52 @@ export function CheckoutClient({
                   ) : null}
                   <div className="checkout-summary-row checkout-summary-total">
                     <dt>Total</dt>
-                    <dd>{formatCad(totalCad)}</dd>
+                    <dd>{formatCad(paymentSession?.totalCad ?? totalCad)}</dd>
                   </div>
                 </dl>
 
-                <CheckoutWhatsAppField
-                  initialWhatsApp={initialWhatsApp}
-                  isAuthenticated={isAuthenticated}
-                  onValidityChange={(valid) => {
-                    setWhatsappValid(valid);
-                    setPayMessage(null);
-                  }}
-                  onValueChange={setWhatsappValue}
-                />
+                {!paymentLocked ? (
+                  <>
+                    <CheckoutWhatsAppField
+                      initialWhatsApp={initialWhatsApp}
+                      isAuthenticated={isAuthenticated}
+                      onValidityChange={(valid) => {
+                        setWhatsappValid(valid);
+                        setPayMessage(null);
+                      }}
+                      onValueChange={setWhatsappValue}
+                    />
 
-                <button
-                  type="button"
-                  className="checkout-pay-button"
-                  disabled={!isAuthenticated || !whatsappValid || savingPay}
-                  onClick={handleProceed}
-                >
-                  <span className="checkout-pay-shine" aria-hidden />
-                  <span className="relative">{savingPay ? "Redirecting to Stripe…" : "Proceed to Payment"}</span>
-                </button>
+                    <button
+                      type="button"
+                      className="checkout-pay-button"
+                      disabled={!isAuthenticated || !whatsappValid || savingPay}
+                      onClick={handleProceed}
+                    >
+                      <span className="checkout-pay-shine" aria-hidden />
+                      <span className="relative">
+                        {savingPay ? "Preparing payment…" : "Continue to payment"}
+                      </span>
+                    </button>
 
-                {payMessage ? (
-                  <p className="checkout-summary-pay-message" role="status">
-                    {payMessage}
-                  </p>
+                    {payMessage ? (
+                      <p className="checkout-summary-pay-message" role="status">
+                        {payMessage}
+                      </p>
+                    ) : null}
+                  </>
+                ) : paymentSession ? (
+                  <CheckoutPaymentForm
+                    clientSecret={paymentSession.clientSecret}
+                    publishableKey={paymentSession.publishableKey}
+                    totalCad={paymentSession.totalCad}
+                    onBack={handleBackFromPayment}
+                  />
                 ) : null}
 
                 <p className="checkout-summary-secure">
                   <ShieldIcon />
-                  Secure payment powered by Stripe · Cart saved on this device
+                  Secure payment powered by Stripe · You never leave this site
                 </p>
 
                 <Link href="/" className="checkout-continue-browsing">
