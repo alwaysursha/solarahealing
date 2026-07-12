@@ -4995,7 +4995,7 @@ body:has(.admin-root) {
   font-size: 0.9rem;
   color: #faf7f2;
   outline: none;
-  transition: border-color 0.2s ease, background 0.2s ease;
+  transition: border-color 0.2s ease, background 0.2s ease, box-shadow 0.2s ease;
 }
 
 .checkout-whatsapp-input::placeholder {
@@ -5009,6 +5009,43 @@ body:has(.admin-root) {
 
 .checkout-whatsapp-input:disabled {
   opacity: 0.7;
+}
+
+.checkout-whatsapp-input-error {
+  border-color: rgba(243, 180, 180, 0.75);
+  background: rgba(243, 180, 180, 0.08);
+}
+
+.checkout-whatsapp-input-flash {
+  animation: checkout-whatsapp-flash 0.85s ease-in-out;
+}
+
+@keyframes checkout-whatsapp-flash {
+  0%,
+  100% {
+    border-color: rgba(243, 180, 180, 0.75);
+    box-shadow: 0 0 0 0 rgba(243, 180, 180, 0);
+  }
+  20%,
+  60% {
+    border-color: #f3b4b4;
+    box-shadow:
+      0 0 0 3px rgba(243, 180, 180, 0.35),
+      0 0 18px rgba(238, 207, 120, 0.28);
+  }
+  40%,
+  80% {
+    border-color: rgba(238, 207, 120, 0.85);
+    box-shadow: 0 0 0 2px rgba(238, 207, 120, 0.22);
+  }
+}
+
+@media (prefers-reduced-motion: reduce) {
+  .checkout-whatsapp-input-flash {
+    animation: none;
+    border-color: #f3b4b4;
+    box-shadow: 0 0 0 2px rgba(243, 180, 180, 0.35);
+  }
 }
 
 .checkout-whatsapp-value {
@@ -5145,9 +5182,21 @@ body:has(.admin-root) {
 }
 
 .checkout-whatsapp-error {
-  margin-top: 0.4rem;
+  margin-top: 0.45rem;
+  margin-bottom: 0;
   font-size: 0.72rem;
+  line-height: 1.4;
   color: #f3b4b4;
+}
+
+.checkout-whatsapp-error-over {
+  margin-top: 0.45rem;
+  margin-bottom: 0.15rem;
+}
+
+.checkout-whatsapp-error-over + .checkout-whatsapp-input,
+.checkout-whatsapp-error-over + .checkout-whatsapp-value {
+  margin-top: 0.25rem;
 }
 
 .checkout-whatsapp-status {

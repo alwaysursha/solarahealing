@@ -3,10 +3,13 @@
 import { AnimatePresence, motion, useReducedMotion } from "framer-motion";
 import Image from "next/image";
 import Link from "next/link";
-import { useState } from "react";
+import { useRef, useState } from "react";
 import { useCart } from "@/components/cart/CartProvider";
 import { CheckoutPaymentForm } from "@/components/checkout/CheckoutPaymentForm";
-import { CheckoutWhatsAppField } from "@/components/checkout/CheckoutWhatsAppField";
+import {
+  CheckoutWhatsAppField,
+  type CheckoutWhatsAppFieldHandle,
+} from "@/components/checkout/CheckoutWhatsAppField";
 import { saveCheckoutWhatsAppAction } from "@/lib/account/actions";
 import { cartTypeLabel, type CartItem } from "@/lib/cart/types";
 import { formatCad } from "@/lib/site";
@@ -155,6 +158,7 @@ export function CheckoutClient({
   );
   const [savingPay, setSavingPay] = useState(false);
   const [paymentSession, setPaymentSession] = useState<PaymentSession | null>(null);
+  const whatsappFieldRef = useRef<CheckoutWhatsAppFieldHandle>(null);
 
   const paymentLocked = Boolean(paymentSession);
 
@@ -164,7 +168,12 @@ export function CheckoutClient({
       return;
     }
     if (!whatsappValid || !isValidWhatsAppNumber(whatsappValue)) {
-      setPayMessage("Add a valid WhatsApp number to continue.");
+      setPayMessage(null);
+      whatsappFieldRef.current?.showRequiredError(
+        whatsappValue.trim()
+          ? "Enter a valid WhatsApp number with country code (8–15 digits)."
+          : "WhatsApp number is required to continue.",
+      );
       return;
     }
     if (items.length === 0) {
@@ -177,7 +186,7 @@ export function CheckoutClient({
     try {
       const whatsappResult = await saveCheckoutWhatsAppAction(whatsappValue);
       if (!whatsappResult.ok) {
-        setPayMessage(whatsappResult.error);
+        whatsappFieldRef.current?.showRequiredError(whatsappResult.error);
         return;
       }
 
@@ -399,6 +408,7 @@ export function CheckoutClient({
                   {!paymentLocked ? (
                     <div className="checkout-summary-prepare">
                       <CheckoutWhatsAppField
+                        ref={whatsappFieldRef}
                         initialWhatsApp={initialWhatsApp}
                         isAuthenticated={isAuthenticated}
                         onValidityChange={(valid) => {
@@ -411,7 +421,7 @@ export function CheckoutClient({
                       <button
                         type="button"
                         className="checkout-pay-button"
-                        disabled={!isAuthenticated || !whatsappValid || savingPay}
+                        disabled={!isAuthenticated || savingPay}
                         onClick={handleProceed}
                       >
                         <span className="checkout-pay-shine" aria-hidden />

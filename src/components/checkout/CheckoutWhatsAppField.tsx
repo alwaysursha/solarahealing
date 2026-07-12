@@ -1,6 +1,13 @@
 "use client";
 
-import { useRef, useState, useTransition } from "react";
+import {
+  forwardRef,
+  useEffect,
+  useImperativeHandle,
+  useRef,
+  useState,
+  useTransition,
+} from "react";
 import Link from "next/link";
 import { saveCheckoutWhatsAppAction } from "@/lib/account/actions";
 import {
@@ -16,22 +23,62 @@ type CheckoutWhatsAppFieldProps = {
   onValueChange: (value: string) => void;
 };
 
-export function CheckoutWhatsAppField({
-  initialWhatsApp,
-  isAuthenticated,
-  onValidityChange,
-  onValueChange,
-}: CheckoutWhatsAppFieldProps) {
+export type CheckoutWhatsAppFieldHandle = {
+  showRequiredError: (message?: string) => void;
+};
+
+export const CheckoutWhatsAppField = forwardRef<
+  CheckoutWhatsAppFieldHandle,
+  CheckoutWhatsAppFieldProps
+>(function CheckoutWhatsAppField(
+  { initialWhatsApp, isAuthenticated, onValidityChange, onValueChange },
+  ref,
+) {
   const [savedDigits, setSavedDigits] = useState(normalizeWhatsAppNumber(initialWhatsApp));
   const [value, setValue] = useState(savedDigits ? formatWhatsAppDisplay(savedDigits) : "");
   const [editing, setEditing] = useState(!savedDigits);
   const [error, setError] = useState<string | null>(null);
   const [status, setStatus] = useState<string | null>(null);
+  const [flashing, setFlashing] = useState(false);
   const [pending, startTransition] = useTransition();
   const inputRef = useRef<HTMLInputElement>(null);
+  const flashTimeoutRef = useRef<ReturnType<typeof setTimeout> | null>(null);
 
   const digits = normalizeWhatsAppNumber(value);
   const isValid = isValidWhatsAppNumber(value);
+
+  useEffect(() => {
+    return () => {
+      if (flashTimeoutRef.current) {
+        clearTimeout(flashTimeoutRef.current);
+      }
+    };
+  }, []);
+
+  function triggerFlash() {
+    setFlashing(false);
+    requestAnimationFrame(() => {
+      setFlashing(true);
+      if (flashTimeoutRef.current) {
+        clearTimeout(flashTimeoutRef.current);
+      }
+      flashTimeoutRef.current = setTimeout(() => setFlashing(false), 900);
+    });
+  }
+
+  useImperativeHandle(ref, () => ({
+    showRequiredError(message = "WhatsApp number is required to continue.") {
+      setEditing(true);
+      setStatus(null);
+      setError(message);
+      onValidityChange(false);
+      triggerFlash();
+      requestAnimationFrame(() => {
+        inputRef.current?.focus();
+        inputRef.current?.scrollIntoView({ behavior: "smooth", block: "center" });
+      });
+    },
+  }));
 
   function updateValue(next: string) {
     setValue(next);
@@ -72,6 +119,7 @@ export function CheckoutWhatsAppField({
         setError(result.error);
         setStatus(null);
         onValidityChange(false);
+        triggerFlash();
         return;
       }
 
@@ -93,18 +141,28 @@ export function CheckoutWhatsAppField({
     if (!value.trim()) {
       setError("WhatsApp number is required to continue.");
       onValidityChange(false);
+      triggerFlash();
       return;
     }
 
     if (!isValid) {
       setError("Enter a valid WhatsApp number with country code (8–15 digits).");
       onValidityChange(false);
+      triggerFlash();
       return;
     }
 
     setError(null);
     persistIfNeeded(value);
   }
+
+  const fieldClassName = [
+    "checkout-whatsapp-input",
+    error ? "checkout-whatsapp-input-error" : "",
+    flashing ? "checkout-whatsapp-input-flash" : "",
+  ]
+    .filter(Boolean)
+    .join(" ");
 
   return (
     <div className="checkout-whatsapp">
@@ -120,6 +178,12 @@ export function CheckoutWhatsAppField({
         ) : null}
       </div>
 
+      {error ? (
+        <p className="checkout-whatsapp-error checkout-whatsapp-error-over" role="alert">
+          {error}
+        </p>
+      ) : null}
+
       {editing ? (
         <input
           ref={inputRef}
@@ -132,7 +196,7 @@ export function CheckoutWhatsAppField({
           placeholder="+1 555 123 4567"
           value={value}
           disabled={pending}
-          className="checkout-whatsapp-input"
+          className={fieldClassName}
           aria-invalid={Boolean(error)}
           aria-describedby="checkout-whatsapp-why-popup"
           onChange={(event) => {
@@ -144,7 +208,16 @@ export function CheckoutWhatsAppField({
           onBlur={handleBlur}
         />
       ) : (
-        <p className="checkout-whatsapp-value">{formatWhatsAppDisplay(digits)}</p>
+        <p
+          className={[
+            "checkout-whatsapp-value",
+            flashing ? "checkout-whatsapp-input-flash" : "",
+          ]
+            .filter(Boolean)
+            .join(" ")}
+        >
+          {formatWhatsAppDisplay(digits)}
+        </p>
       )}
 
       <div className="checkout-whatsapp-why">
@@ -185,11 +258,6 @@ export function CheckoutWhatsAppField({
         </Link>
       ) : null}
 
-      {error ? (
-        <p className="checkout-whatsapp-error" role="alert">
-          {error}
-        </p>
-      ) : null}
       {status && !pending ? (
         <p className="checkout-whatsapp-status" role="status">
           {status}
@@ -198,4 +266,4 @@ export function CheckoutWhatsAppField({
       {pending ? <p className="checkout-whatsapp-status">Saving…</p> : null}
     </div>
   );
-}
+});
