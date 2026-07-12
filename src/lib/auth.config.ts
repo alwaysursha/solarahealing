@@ -1,6 +1,6 @@
 import type { NextAuthConfig } from "next-auth";
 import type { Role } from "@prisma/client";
-import { SESSION_MAX_AGE_SECONDS } from "@/lib/auth-utils";
+import { SESSION_MAX_AGE_SECONDS, SESSION_UPDATE_AGE_SECONDS } from "@/lib/auth-utils";
 
 export const authConfig = {
   trustHost: true,
@@ -10,9 +10,21 @@ export const authConfig = {
   session: {
     strategy: "jwt",
     maxAge: SESSION_MAX_AGE_SECONDS,
+    updateAge: SESSION_UPDATE_AGE_SECONDS,
   },
   jwt: {
     maxAge: SESSION_MAX_AGE_SECONDS,
+  },
+  cookies: {
+    sessionToken: {
+      options: {
+        httpOnly: true,
+        sameSite: "lax",
+        path: "/",
+        maxAge: SESSION_MAX_AGE_SECONDS,
+        secure: process.env.NODE_ENV === "production",
+      },
+    },
   },
   callbacks: {
     authorized({ auth, request }) {

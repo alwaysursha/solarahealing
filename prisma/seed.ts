@@ -19,6 +19,7 @@ import {
   workshops as staticWorkshops,
   workshopsIntro,
 } from "../src/lib/site";
+import { WORKSHOP_SCHEDULE_SEEDS } from "../src/lib/admin/workshop-schedule";
 import { SITE_DESCRIPTION, SITE_NAME } from "../src/lib/constants";
 
 config();
@@ -195,6 +196,8 @@ async function main() {
       whatsapp: site.contact.whatsapp,
       address: site.contact.location,
       cta: site.cta,
+      showCoursesSection: true,
+      showWorkshopsSection: false,
     },
     update: {},
   });
@@ -233,6 +236,8 @@ async function main() {
   }
 
   for (const [index, workshop] of staticWorkshops.entries()) {
+    const scheduledAt = new Date(WORKSHOP_SCHEDULE_SEEDS[workshop.id] ?? Date.now() + index * 86_400_000);
+
     await prisma.workshop.upsert({
       where: { id: workshop.id },
       create: {
@@ -240,6 +245,7 @@ async function main() {
         title: workshop.title,
         description: workshop.description,
         dateLabel: workshop.date,
+        scheduledAt,
         duration: workshop.duration,
         badge: workshop.badge,
         priceCad: workshop.priceCad,
@@ -254,6 +260,7 @@ async function main() {
         title: workshop.title,
         description: workshop.description,
         dateLabel: workshop.date,
+        scheduledAt,
         duration: workshop.duration,
         badge: workshop.badge,
         priceCad: workshop.priceCad,

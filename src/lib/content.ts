@@ -33,6 +33,14 @@ export async function getDbSiteSettings() {
   );
 }
 
+export async function getStorefrontSectionVisibility() {
+  const row = await getDbSiteSettings();
+  return {
+    showCoursesSection: row?.showCoursesSection ?? true,
+    showWorkshopsSection: row?.showWorkshopsSection ?? false,
+  };
+}
+
 export async function getSiteSettingsFromDb() {
   const row = await getDbSiteSettings();
   if (!row) {
@@ -49,6 +57,8 @@ export async function getSiteSettingsFromDb() {
       whatsapp: site.contact.whatsapp,
       address: site.contact.location,
       cta: site.cta,
+      showCoursesSection: true,
+      showWorkshopsSection: false,
       nav: site.nav,
       fetchedAt: new Date().toISOString(),
     };
@@ -67,6 +77,8 @@ export async function getSiteSettingsFromDb() {
     whatsapp: row.whatsapp,
     address: row.address,
     cta: row.cta,
+    showCoursesSection: row.showCoursesSection ?? true,
+    showWorkshopsSection: row.showWorkshopsSection ?? false,
     nav: site.nav,
     fetchedAt: row.updatedAt.toISOString(),
   };
@@ -93,6 +105,8 @@ export async function getPublishedCourses() {
       priceCad: course.priceCad,
       image: course.image,
       imageAlt: course.imageAlt,
+      imageFocusX: 50,
+      imageFocusY: 50,
       level: course.level,
     }));
   }
@@ -107,6 +121,8 @@ export async function getPublishedCourses() {
     priceCad: course.priceCad,
     image: course.image,
     imageAlt: course.imageAlt,
+    imageFocusX: course.imageFocusX,
+    imageFocusY: course.imageFocusY,
     level: course.level,
   }));
 }
@@ -116,13 +132,17 @@ export async function getPublishedWorkshops() {
     () =>
       prisma.workshop.findMany({
         where: { published: true },
-        orderBy: { sortOrder: "asc" },
+        orderBy: { scheduledAt: "asc" },
       }),
     [],
   );
 
   if (rows.length === 0) {
-    return [...staticWorkshops];
+    return staticWorkshops.map((workshop) => ({
+      ...workshop,
+      imageFocusX: 50,
+      imageFocusY: 50,
+    }));
   }
 
   return rows.map((workshop) => ({
@@ -135,6 +155,8 @@ export async function getPublishedWorkshops() {
     priceCad: workshop.priceCad,
     image: workshop.image,
     imageAlt: workshop.imageAlt,
+    imageFocusX: workshop.imageFocusX,
+    imageFocusY: workshop.imageFocusY,
   }));
 }
 
@@ -307,6 +329,11 @@ export async function getAdminStats() {
     safeQuery(() => prisma.order.findMany(), []),
   ]);
 
+  const paidOrders = orderRows.filter(
+    (o) => o.status === OrderStatus.PAID || o.status === OrderStatus.COMPLETED,
+  ).length;
+  const pendingOrders = orderRows.filter((o) => o.status === OrderStatus.PENDING).length;
+
   const revenue = orderRows
     .filter((o) => o.status === OrderStatus.PAID || o.status === OrderStatus.COMPLETED)
     .reduce((sum, o) => sum + o.totalCad, 0);
@@ -317,6 +344,8 @@ export async function getAdminStats() {
     articles: articleCount.length,
     customers: customerRows.length,
     orders: orderRows.length,
+    paidOrders,
+    pendingOrders,
     revenue,
   };
 }

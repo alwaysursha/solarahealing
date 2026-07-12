@@ -17,6 +17,7 @@
     "db:generate": "prisma generate",
     "db:push": "prisma db push",
     "db:seed": "node --import tsx prisma/seed.ts",
+    "db:backfill-workshops": "node --import tsx scripts/backfill-workshop-schedules.ts",
     "db:setup": "prisma db push && pnpm db:seed"
   },
   "prisma": {

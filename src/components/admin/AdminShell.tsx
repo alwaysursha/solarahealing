@@ -1,4 +1,20 @@
+"use client";
+
+import { useEffect, useState } from "react";
 import { AdminSidebar } from "@/components/admin/AdminSidebar";
+import { AdminSubmit } from "@/components/admin/AdminSubmit";
+import { useAdminTheme } from "@/components/admin/AdminThemeProvider";
+import { AdminThemeToggle } from "@/components/admin/AdminThemeToggle";
+
+export { AdminSubmit };
+
+function MenuIcon() {
+  return (
+    <svg viewBox="0 0 20 20" fill="none" className="h-5 w-5" aria-hidden>
+      <path d="M3.5 5.5h13M3.5 10h13M3.5 14.5h13" stroke="currentColor" strokeWidth="1.6" strokeLinecap="round" />
+    </svg>
+  );
+}
 
 export function AdminShell({
   activePath,
@@ -11,15 +27,61 @@ export function AdminShell({
   description?: string;
   children: React.ReactNode;
 }) {
+  const { theme } = useAdminTheme();
+  const [mobileNavOpen, setMobileNavOpen] = useState(false);
+
+  useEffect(() => {
+    setMobileNavOpen(false);
+  }, [activePath]);
+
+  useEffect(() => {
+    const onKeyDown = (event: KeyboardEvent) => {
+      if (event.key === "Escape") setMobileNavOpen(false);
+    };
+    window.addEventListener("keydown", onKeyDown);
+    return () => window.removeEventListener("keydown", onKeyDown);
+  }, []);
+
   return (
-    <div className="admin-root flex min-h-screen bg-[#f6f1ea] text-purple-deep">
-      <AdminSidebar activePath={activePath} />
-      <div className="min-w-0 flex-1">
-        <header className="border-b border-purple-deep/10 bg-white/70 px-8 py-6 backdrop-blur">
-          <h2 className="font-serif text-3xl text-purple-deep">{title}</h2>
-          {description ? <p className="mt-2 max-w-3xl text-sm text-purple-deep/60">{description}</p> : null}
+    <div className="admin-root flex h-dvh min-h-0 overflow-hidden" data-admin-theme={theme}>
+      <AdminSidebar
+        activePath={activePath}
+        mobileOpen={mobileNavOpen}
+        onNavigate={() => setMobileNavOpen(false)}
+      />
+
+      <div className="admin-shell-content flex min-h-0 min-w-0 flex-1 flex-col overflow-hidden">
+        <header className="admin-shell-header shrink-0 backdrop-blur-xl">
+          <div className="admin-shell-header-inner flex items-start justify-between gap-3 sm:gap-4">
+            <div className="flex min-w-0 flex-1 items-start gap-3">
+              <button
+                type="button"
+                className="admin-mobile-menu-button mt-0.5 lg:hidden"
+                aria-label="Open navigation"
+                aria-expanded={mobileNavOpen}
+                onClick={() => setMobileNavOpen(true)}
+              >
+                <MenuIcon />
+              </button>
+              <div className="min-w-0">
+                <p className="admin-shell-eyebrow text-[0.62rem] font-semibold uppercase tracking-[0.28em]">
+                  Soulara Healing Admin
+                </p>
+                <h2 className="admin-shell-title mt-2 font-serif leading-tight tracking-[-0.02em]">{title}</h2>
+                {description ? (
+                  <p className="admin-shell-description mt-2 max-w-3xl text-sm leading-relaxed">{description}</p>
+                ) : null}
+              </div>
+            </div>
+            <div className="mt-0.5 flex shrink-0 items-center gap-2">
+              <AdminThemeToggle compact className="sm:hidden" />
+              <div className="hidden sm:block">
+                <AdminThemeToggle />
+              </div>
+            </div>
+          </div>
         </header>
-        <div className="px-8 py-8">{children}</div>
+        <main className="admin-shell-main min-h-0 flex-1 overflow-y-auto overscroll-y-contain">{children}</main>
       </div>
     </div>
   );
@@ -27,9 +89,9 @@ export function AdminShell({
 
 function StatCard({ label, value }: { label: string; value: string | number }) {
   return (
-    <div className="rounded-2xl border border-purple-deep/10 bg-white p-5 shadow-sm">
-      <p className="text-xs font-semibold uppercase tracking-[0.18em] text-purple-deep/45">{label}</p>
-      <p className="mt-3 font-serif text-3xl text-purple-deep">{value}</p>
+    <div className="admin-stat-card rounded-2xl p-5 shadow-sm">
+      <p className="admin-stat-label text-xs font-semibold uppercase tracking-[0.18em]">{label}</p>
+      <p className="admin-stat-value mt-3 font-serif text-3xl">{value}</p>
     </div>
   );
 }
@@ -46,8 +108,8 @@ export function AdminStatGrid({ stats }: { stats: Record<string, string | number
 
 export function AdminPanel({ title, children }: { title: string; children: React.ReactNode }) {
   return (
-    <section className="rounded-2xl border border-purple-deep/10 bg-white p-6 shadow-sm">
-      <h3 className="font-serif text-xl text-purple-deep">{title}</h3>
+    <section className="admin-panel rounded-2xl p-5 shadow-sm sm:p-6">
+      <h3 className="admin-panel-title font-serif text-xl">{title}</h3>
       <div className="mt-5">{children}</div>
     </section>
   );
@@ -66,28 +128,16 @@ export function AdminField({
   type?: string;
   rows?: number;
 }) {
-  const className =
-    "mt-1.5 w-full rounded-xl border border-purple-deep/10 bg-cream/30 px-3 py-2.5 text-sm text-purple-deep outline-none focus:border-gold/50";
+  const className = "admin-field-input mt-1.5 w-full rounded-xl px-3 py-2.5 text-sm outline-none";
 
   return (
-    <label className="block text-sm">
-      <span className="font-medium text-purple-deep/75">{label}</span>
+    <label className="admin-field block text-sm">
+      <span className="admin-field-label font-medium">{label}</span>
       {rows ? (
         <textarea name={name} defaultValue={defaultValue} rows={rows} className={className} />
       ) : (
         <input name={name} type={type} defaultValue={defaultValue} className={className} />
       )}
     </label>
-  );
-}
-
-export function AdminSubmit({ label = "Save changes" }: { label?: string }) {
-  return (
-    <button
-      type="submit"
-      className="rounded-full bg-purple-deep px-5 py-2.5 text-sm font-semibold text-cream transition hover:bg-purple-deep/90"
-    >
-      {label}
-    </button>
   );
 }

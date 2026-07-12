@@ -4,7 +4,7 @@ import Link from "next/link";
 import { useEffect, useId, useState } from "react";
 import { signIn } from "next-auth/react";
 import { GoogleSignInButton } from "@/components/auth/AuthForms";
-import { getAuthCallbackUrl } from "@/lib/auth-utils";
+import { getAuthCallbackUrl, getPostLoginRedirectUrl } from "@/lib/auth-utils";
 
 type HeaderLoginPanelProps = {
   onClose: () => void;
@@ -15,6 +15,7 @@ export function HeaderLoginPanel({ onClose }: HeaderLoginPanelProps) {
   const passwordId = useId();
   const [showPassword, setShowPassword] = useState(false);
   const [error, setError] = useState<string | null>(null);
+  const [submitting, setSubmitting] = useState(false);
   const [callbackUrl, setCallbackUrl] = useState("/");
 
   useEffect(() => {
@@ -32,21 +33,40 @@ export function HeaderLoginPanel({ onClose }: HeaderLoginPanelProps) {
             className="header-login-form flex flex-col gap-2.5"
             onSubmit={async (event) => {
               event.preventDefault();
-              setError(null);
-              const returnUrl = getAuthCallbackUrl("/");
-              const formData = new FormData(event.currentTarget);
-              const result = await signIn("credentials", {
-                email: formData.get("email")?.toString() ?? "",
-                password: formData.get("password")?.toString() ?? "",
-                redirect: false,
-                callbackUrl: returnUrl,
-              });
-              if (result?.error) {
-                setError("Invalid email or password.");
+              if (submitting) {
                 return;
               }
-              onClose();
-              window.location.href = returnUrl;
+
+              setSubmitting(true);
+              setError(null);
+
+              try {
+                const returnUrl = getAuthCallbackUrl("/");
+                const formData = new FormData(event.currentTarget);
+                const result = await signIn("credentials", {
+                  email: formData.get("email")?.toString() ?? "",
+                  password: formData.get("password")?.toString() ?? "",
+                  redirect: false,
+                  callbackUrl: returnUrl,
+                });
+
+                if (result?.error) {
+                  setError("Invalid email or password.");
+                  return;
+                }
+
+                if (!result?.ok) {
+                  setError("Could not sign in. Please try again.");
+                  return;
+                }
+
+                onClose();
+                window.location.assign(await getPostLoginRedirectUrl(returnUrl));
+              } catch {
+                setError("Something went wrong. Please try again.");
+              } finally {
+                setSubmitting(false);
+              }
             }}
           >
             <div className="header-login-form-layout">
@@ -71,6 +91,7 @@ export function HeaderLoginPanel({ onClose }: HeaderLoginPanelProps) {
                     autoComplete="email"
                     placeholder="you@email.com"
                     className="header-login-input header-login-input-compact mt-1.5"
+                    disabled={submitting}
                     required
                   />
                 </div>
@@ -84,6 +105,7 @@ export function HeaderLoginPanel({ onClose }: HeaderLoginPanelProps) {
                       type="button"
                       className="text-[0.58rem] font-medium uppercase tracking-[0.16em] text-cream/48 transition-colors hover:text-gold"
                       onClick={() => setShowPassword((value) => !value)}
+                      disabled={submitting}
                     >
                       {showPassword ? "Hide" : "Show"}
                     </button>
@@ -95,15 +117,20 @@ export function HeaderLoginPanel({ onClose }: HeaderLoginPanelProps) {
                     autoComplete="current-password"
                     placeholder="Password"
                     className="header-login-input header-login-input-compact mt-1.5"
+                    disabled={submitting}
                     required
                   />
                 </div>
               </div>
 
               <div className="header-login-actions">
-                <button type="submit" className="header-login-submit header-login-submit-compact">
+                <button
+                  type="submit"
+                  className="header-login-submit header-login-submit-compact disabled:cursor-not-allowed disabled:opacity-60"
+                  disabled={submitting}
+                >
                   <span className="header-login-submit-shine pointer-events-none absolute inset-0" />
-                  <span className="relative">Sign in</span>
+                  <span className="relative">{submitting ? "Signing in…" : "Sign in"}</span>
                 </button>
                 <div className="header-login-divider header-login-divider-mobile" aria-hidden>
                   or

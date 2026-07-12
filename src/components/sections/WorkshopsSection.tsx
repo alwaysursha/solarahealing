@@ -5,6 +5,7 @@ import Image from "next/image";
 import Link from "next/link";
 import { useRef } from "react";
 import { useAnimationsActive } from "@/hooks/useAnimationsActive";
+import { toImageObjectPosition } from "@/lib/image-focus";
 import { formatCad, workshops, workshopsIntro } from "@/lib/site";
 
 type WorkshopItem = {
@@ -17,7 +18,13 @@ type WorkshopItem = {
   priceCad: number;
   image: string;
   imageAlt: string;
+  imageFocusX?: number;
+  imageFocusY?: number;
 };
+
+function workshopImagePosition(workshop: WorkshopItem) {
+  return toImageObjectPosition(workshop.imageFocusX ?? 50, workshop.imageFocusY ?? 50);
+}
 
 const ease: [number, number, number, number] = [0.22, 1, 0.36, 1];
 const revealEase: [number, number, number, number] = [0.65, 0, 0.35, 1];
@@ -251,6 +258,7 @@ function FeaturedWorkshop({
               fill
               sizes="(max-width: 1024px) 100vw, 58vw"
               className="object-cover transition-transform duration-[1.2s] ease-out group-hover:scale-105"
+              style={{ objectPosition: workshopImagePosition(workshop) }}
               priority
             />
           </motion.div>
@@ -320,6 +328,7 @@ function FeaturedWorkshopStatic({ workshop }: { workshop: WorkshopItem }) {
             fill
             sizes="(max-width: 1024px) 100vw, 58vw"
             className="object-cover"
+            style={{ objectPosition: workshopImagePosition(workshop) }}
             priority
           />
           <div className="absolute inset-0 bg-gradient-to-r from-transparent via-purple-deep/15 to-purple-deep/55 lg:via-purple-deep/8" />
@@ -388,6 +397,7 @@ function UpcomingCard({
           fill
           sizes="(max-width: 768px) 100vw, 33vw"
           className="object-cover transition-transform duration-700 group-hover:scale-110"
+          style={{ objectPosition: workshopImagePosition(workshop) }}
         />
       </motion.div>
       <div className="absolute inset-0 bg-gradient-to-t from-[#352560]/75 via-[#483878]/40 to-[#584890]/10" />
@@ -422,6 +432,7 @@ function UpcomingCardContent({ workshop }: { workshop: WorkshopItem }) {
         fill
         sizes="(max-width: 768px) 100vw, 33vw"
         className="object-cover"
+        style={{ objectPosition: workshopImagePosition(workshop) }}
       />
       <div className="absolute inset-0 bg-gradient-to-t from-[#352560]/75 via-[#483878]/40 to-[#584890]/10" />
       <div className="absolute right-4 top-4 z-[3]">

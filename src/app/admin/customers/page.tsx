@@ -16,8 +16,8 @@ export default async function AdminCustomersPage() {
       description="View registered members, contact details, and account activity."
     >
       <AdminPanel title="Customer directory">
-        <div className="overflow-x-auto">
-          <table className="min-w-full text-left text-sm">
+        <div className="admin-table-scroll -mx-1 overflow-x-auto px-1">
+          <table className="min-w-[36rem] w-full text-left text-sm sm:min-w-full">
             <thead className="border-b border-purple-deep/10 text-xs uppercase tracking-[0.16em] text-purple-deep/45">
               <tr>
                 <th className="px-3 py-3">Name</th>

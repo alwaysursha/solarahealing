@@ -82,6 +82,22 @@ export const { handlers, auth, signIn, signOut } = NextAuth({
   providers,
   callbacks: {
     ...authConfig.callbacks,
+    async redirect({ url, baseUrl }) {
+      if (url.startsWith("/")) {
+        return `${baseUrl}${url}`;
+      }
+
+      try {
+        const parsed = new URL(url);
+        if (parsed.origin === new URL(baseUrl).origin) {
+          return url;
+        }
+      } catch {
+        return baseUrl;
+      }
+
+      return baseUrl;
+    },
     async session({ session, token }) {
       if (session.user) {
         session.user.id = token.sub as string;

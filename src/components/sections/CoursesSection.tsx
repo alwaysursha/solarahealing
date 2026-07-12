@@ -6,6 +6,7 @@ import Link from "next/link";
 import { useRef } from "react";
 import { CartIcon } from "@/components/ui/CartIcon";
 import { useAnimationsActive } from "@/hooks/useAnimationsActive";
+import { toImageObjectPosition } from "@/lib/image-focus";
 import { coursesIntro, formatCad, onlineCourses } from "@/lib/site";
 
 type CourseItem = {
@@ -18,8 +19,14 @@ type CourseItem = {
   priceCad: number;
   image: string;
   imageAlt: string;
+  imageFocusX?: number;
+  imageFocusY?: number;
   level?: string;
 };
+
+function courseImagePosition(course: CourseItem) {
+  return toImageObjectPosition(course.imageFocusX ?? 50, course.imageFocusY ?? 50);
+}
 
 const ease: [number, number, number, number] = [0.22, 1, 0.36, 1];
 const revealEase: [number, number, number, number] = [0.65, 0, 0.35, 1];
@@ -254,6 +261,7 @@ function FeaturedCourse({
               fill
               sizes="(max-width: 1024px) 100vw, 58vw"
               className="object-cover transition-transform duration-[1.2s] ease-out group-hover:scale-105"
+              style={{ objectPosition: courseImagePosition(course) }}
               priority
             />
           </motion.div>
@@ -321,6 +329,7 @@ function FeaturedCourseStatic({ course }: { course: CourseItem }) {
             fill
             sizes="(max-width: 1024px) 100vw, 58vw"
             className="object-cover"
+            style={{ objectPosition: courseImagePosition(course) }}
             priority
           />
           <div className="absolute inset-0 bg-gradient-to-r from-transparent via-purple-deep/15 to-purple-deep/55 lg:via-purple-deep/8" />
@@ -389,6 +398,7 @@ function UpcomingCourseCard({
           fill
           sizes="(max-width: 768px) 100vw, 33vw"
           className="object-cover transition-transform duration-700 group-hover:scale-110"
+          style={{ objectPosition: courseImagePosition(course) }}
         />
       </motion.div>
       <div className="absolute inset-0 bg-gradient-to-t from-[#352560]/75 via-[#483878]/40 to-[#584890]/10" />
@@ -423,6 +433,7 @@ function UpcomingCourseCardContent({ course }: { course: CourseItem }) {
         fill
         sizes="(max-width: 768px) 100vw, 33vw"
         className="object-cover"
+        style={{ objectPosition: courseImagePosition(course) }}
       />
       <div className="absolute inset-0 bg-gradient-to-t from-[#352560]/75 via-[#483878]/40 to-[#584890]/10" />
       <div className="absolute right-4 top-4 z-[3]">
