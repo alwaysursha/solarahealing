@@ -132,10 +132,14 @@ type PaymentSession = {
 
 export function CheckoutClient({
   initialWhatsApp,
+  customerName = "",
+  customerEmail = "",
   isAuthenticated,
   canceled = false,
 }: {
   initialWhatsApp: string;
+  customerName?: string;
+  customerEmail?: string;
   isAuthenticated: boolean;
   canceled?: boolean;
 }) {
@@ -303,13 +307,8 @@ export function CheckoutClient({
                 {workshops.length > 0 ? (
                   <section className="checkout-section checkout-section-workshops">
                     <div className="checkout-section-header">
-                      <div>
-                        <p className="checkout-section-eyebrow">Priority · Live seats</p>
-                        <h2 className="checkout-section-title">Workshops</h2>
-                      </div>
-                      <p className="checkout-section-copy">
-                        Limited spots for your upcoming live sessions — shown first at checkout.
-                      </p>
+                      <p className="checkout-section-eyebrow">Live seats</p>
+                      <h2 className="checkout-section-title">Workshops</h2>
                     </div>
                     <ul className="checkout-lines">
                       {workshops.map((item) => (
@@ -329,10 +328,8 @@ export function CheckoutClient({
                 {courses.length > 0 ? (
                   <section className="checkout-section">
                     <div className="checkout-section-header">
-                      <div>
-                        <p className="checkout-section-eyebrow">On demand</p>
-                        <h2 className="checkout-section-title">Courses</h2>
-                      </div>
+                      <p className="checkout-section-eyebrow">On demand</p>
+                      <h2 className="checkout-section-title">Courses</h2>
                     </div>
                     <ul className="checkout-lines">
                       {courses.map((item) => (
@@ -349,89 +346,112 @@ export function CheckoutClient({
                 ) : null}
               </div>
 
-              <aside className="checkout-summary">
+              <section
+                className={[
+                  "checkout-summary",
+                  paymentLocked ? "checkout-summary-paying" : "",
+                ]
+                  .filter(Boolean)
+                  .join(" ")}
+                aria-label={paymentLocked ? "Payment" : "Order summary"}
+              >
                 <div className="checkout-summary-glow" aria-hidden />
-                <p className="checkout-summary-eyebrow">Order summary</p>
-                <h2 className="checkout-summary-title">
-                  {paymentLocked ? "Complete payment" : "Ready when you are"}
-                </h2>
 
-                <dl className="checkout-summary-list">
-                  {workshops.length > 0 ? (
-                    <div className="checkout-summary-row">
-                      <dt>Workshops</dt>
-                      <dd>
-                        {formatCad(
-                          workshops.reduce((sum, item) => sum + item.priceCad * item.quantity, 0),
-                        )}
-                      </dd>
-                    </div>
-                  ) : null}
-                  {courses.length > 0 ? (
-                    <div className="checkout-summary-row">
-                      <dt>Courses</dt>
-                      <dd>
-                        {formatCad(
-                          courses.reduce((sum, item) => sum + item.priceCad * item.quantity, 0),
-                        )}
-                      </dd>
-                    </div>
-                  ) : null}
-                  <div className="checkout-summary-row checkout-summary-total">
-                    <dt>Total</dt>
-                    <dd>{formatCad(paymentSession?.totalCad ?? totalCad)}</dd>
+                <div className="checkout-summary-top">
+                  <div>
+                    <p className="checkout-summary-eyebrow">
+                      {paymentLocked ? "Secure payment" : "Order summary"}
+                    </p>
+                    <h2 className="checkout-summary-title">
+                      {paymentLocked ? "Complete your payment" : "Ready when you are"}
+                    </h2>
                   </div>
-                </dl>
 
-                {!paymentLocked ? (
-                  <>
-                    <CheckoutWhatsAppField
-                      initialWhatsApp={initialWhatsApp}
-                      isAuthenticated={isAuthenticated}
-                      onValidityChange={(valid) => {
-                        setWhatsappValid(valid);
-                        setPayMessage(null);
-                      }}
-                      onValueChange={setWhatsappValue}
-                    />
-
-                    <button
-                      type="button"
-                      className="checkout-pay-button"
-                      disabled={!isAuthenticated || !whatsappValid || savingPay}
-                      onClick={handleProceed}
-                    >
-                      <span className="checkout-pay-shine" aria-hidden />
-                      <span className="relative">
-                        {savingPay ? "Preparing payment…" : "Continue to payment"}
-                      </span>
-                    </button>
-
-                    {payMessage ? (
-                      <p className="checkout-summary-pay-message" role="status">
-                        {payMessage}
-                      </p>
+                  <dl className="checkout-summary-totals">
+                    {workshops.length > 0 ? (
+                      <div className="checkout-summary-row">
+                        <dt>Workshops</dt>
+                        <dd>
+                          {formatCad(
+                            workshops.reduce((sum, item) => sum + item.priceCad * item.quantity, 0),
+                          )}
+                        </dd>
+                      </div>
                     ) : null}
-                  </>
-                ) : paymentSession ? (
-                  <CheckoutPaymentForm
-                    clientSecret={paymentSession.clientSecret}
-                    publishableKey={paymentSession.publishableKey}
-                    totalCad={paymentSession.totalCad}
-                    onBack={handleBackFromPayment}
-                  />
-                ) : null}
+                    {courses.length > 0 ? (
+                      <div className="checkout-summary-row">
+                        <dt>Courses</dt>
+                        <dd>
+                          {formatCad(
+                            courses.reduce((sum, item) => sum + item.priceCad * item.quantity, 0),
+                          )}
+                        </dd>
+                      </div>
+                    ) : null}
+                    <div className="checkout-summary-row checkout-summary-total">
+                      <dt>Total</dt>
+                      <dd>{formatCad(paymentSession?.totalCad ?? totalCad)}</dd>
+                    </div>
+                  </dl>
+                </div>
 
-                <p className="checkout-summary-secure">
-                  <ShieldIcon />
-                  Secure payment powered by Stripe · You never leave this site
-                </p>
+                <div className="checkout-summary-body">
+                  {!paymentLocked ? (
+                    <div className="checkout-summary-prepare">
+                      <CheckoutWhatsAppField
+                        initialWhatsApp={initialWhatsApp}
+                        isAuthenticated={isAuthenticated}
+                        onValidityChange={(valid) => {
+                          setWhatsappValid(valid);
+                          setPayMessage(null);
+                        }}
+                        onValueChange={setWhatsappValue}
+                      />
 
-                <Link href="/" className="checkout-continue-browsing">
-                  Continue Browsing
-                  <span aria-hidden>→</span>
-                </Link>
-              </aside>
+                      <button
+                        type="button"
+                        className="checkout-pay-button"
+                        disabled={!isAuthenticated || !whatsappValid || savingPay}
+                        onClick={handleProceed}
+                      >
+                        <span className="checkout-pay-shine" aria-hidden />
+                        <span className="relative">
+                          {savingPay ? "Preparing payment…" : "Continue to payment"}
+                        </span>
+                      </button>
+
+                      {payMessage ? (
+                        <p className="checkout-summary-pay-message" role="status">
+                          {payMessage}
+                        </p>
+                      ) : null}
+                    </div>
+                  ) : paymentSession ? (
+                    <CheckoutPaymentForm
+                      clientSecret={paymentSession.clientSecret}
+                      publishableKey={paymentSession.publishableKey}
+                      totalCad={paymentSession.totalCad}
+                      customer={{
+                        name: customerName,
+                        email: customerEmail,
+                        whatsapp: whatsappValue,
+                      }}
+                      onBack={handleBackFromPayment}
+                    />
+                  ) : null}
+                </div>
+
+                <div className="checkout-summary-footer">
+                  <p className="checkout-summary-secure">
+                    <ShieldIcon />
+                    Secure payment powered by Stripe · You never leave this site
+                  </p>
+                  <Link href="/" className="checkout-continue-browsing">
+                    Continue Browsing
+                    <span aria-hidden>→</span>
+                  </Link>
+                </div>
+              </section>
             </motion.div>
           )}
         </AnimatePresence>

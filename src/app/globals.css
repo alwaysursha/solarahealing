@@ -4404,7 +4404,7 @@ body:has(.admin-root) {
   position: relative;
   z-index: 1;
   margin: 0 auto;
-  max-width: 68rem;
+  max-width: 52rem;
 }
 
 .checkout-hero {
@@ -4576,31 +4576,36 @@ body:has(.admin-root) {
 }
 
 .checkout-layout {
-  display: grid;
-  gap: 1.5rem;
+  display: flex;
+  flex-direction: column;
+  gap: 2rem;
 }
 
-@media (min-width: 980px) {
+@media (min-width: 900px) {
   .checkout-layout {
-    grid-template-columns: minmax(0, 1fr) 21rem;
-    align-items: start;
-    gap: 1.75rem;
+    gap: 2.5rem;
   }
 }
 
 .checkout-main {
   display: flex;
   flex-direction: column;
-  gap: 1.35rem;
+  gap: 1.5rem;
 }
 
 .checkout-section {
   border-radius: 1.6rem;
   border: 1px solid rgba(var(--purple-deep-rgb), 0.08);
   background: rgba(255, 255, 255, 0.52);
-  padding: 1.15rem 1.1rem 1.2rem;
+  padding: 1.35rem 1.25rem 1.4rem;
   backdrop-filter: blur(10px);
   box-shadow: 0 18px 48px -34px rgba(var(--purple-deep-rgb), 0.28);
+}
+
+@media (min-width: 700px) {
+  .checkout-section {
+    padding: 1.6rem 1.6rem 1.65rem;
+  }
 }
 
 .checkout-section-workshops {
@@ -4613,17 +4618,7 @@ body:has(.admin-root) {
 }
 
 .checkout-section-header {
-  display: grid;
-  gap: 0.55rem;
-  margin-bottom: 1rem;
-}
-
-@media (min-width: 700px) {
-  .checkout-section-header {
-    grid-template-columns: minmax(0, 1fr) minmax(12rem, 18rem);
-    align-items: end;
-    gap: 1rem;
-  }
+  margin-bottom: 1.15rem;
 }
 
 .checkout-section-eyebrow {
@@ -4635,7 +4630,7 @@ body:has(.admin-root) {
 }
 
 .checkout-section-title {
-  margin-top: 0.25rem;
+  margin-top: 0.3rem;
   font-family: var(--font-instrument-serif), Georgia, serif;
   font-size: clamp(1.55rem, 3vw, 1.95rem);
   font-weight: 400;
@@ -4835,20 +4830,19 @@ body:has(.admin-root) {
 
 .checkout-summary {
   position: relative;
-  overflow: visible;
+  overflow: hidden;
   border-radius: 1.7rem;
   border: 1px solid rgba(212, 173, 53, 0.28);
   background:
     linear-gradient(165deg, rgba(68, 34, 108, 0.96) 0%, rgba(44, 22, 74, 0.98) 55%, rgba(36, 16, 62, 1) 100%);
-  padding: 1.35rem 1.25rem 1.3rem;
+  padding: 1.5rem 1.35rem 1.4rem;
   color: var(--cream);
   box-shadow: 0 28px 60px -30px rgba(44, 22, 74, 0.65);
 }
 
-@media (min-width: 980px) {
+@media (min-width: 700px) {
   .checkout-summary {
-    position: sticky;
-    top: 6.5rem;
+    padding: 1.85rem 1.85rem 1.7rem;
   }
 }
 
@@ -4859,6 +4853,22 @@ body:has(.admin-root) {
   overflow: hidden;
   border-radius: inherit;
   background: radial-gradient(ellipse at 50% 0%, rgba(212, 173, 53, 0.28), transparent 68%);
+}
+
+.checkout-summary-top {
+  position: relative;
+  display: grid;
+  gap: 1.35rem;
+  padding-bottom: 1.35rem;
+  border-bottom: 1px solid rgba(250, 247, 242, 0.1);
+}
+
+@media (min-width: 760px) {
+  .checkout-summary-top {
+    grid-template-columns: minmax(0, 1fr) minmax(12rem, 16rem);
+    align-items: end;
+    gap: 2rem;
+  }
 }
 
 .checkout-summary-eyebrow {
@@ -4872,22 +4882,19 @@ body:has(.admin-root) {
 
 .checkout-summary-title {
   position: relative;
-  margin-top: 0.4rem;
+  margin-top: 0.45rem;
   font-family: var(--font-instrument-serif), Georgia, serif;
-  font-size: 1.55rem;
+  font-size: clamp(1.55rem, 3vw, 1.9rem);
   font-weight: 400;
   letter-spacing: -0.02em;
   color: #faf7f2;
 }
 
-.checkout-summary-list {
+.checkout-summary-totals {
   position: relative;
   display: flex;
   flex-direction: column;
-  gap: 0.65rem;
-  margin-top: 1.25rem;
-  padding-top: 1rem;
-  border-top: 1px solid rgba(250, 247, 242, 0.1);
+  gap: 0.55rem;
 }
 
 .checkout-summary-row {
@@ -4904,8 +4911,8 @@ body:has(.admin-root) {
 }
 
 .checkout-summary-total {
-  margin-top: 0.35rem;
-  padding-top: 0.75rem;
+  margin-top: 0.2rem;
+  padding-top: 0.65rem;
   border-top: 1px solid rgba(250, 247, 242, 0.1);
   font-family: var(--font-instrument-serif), Georgia, serif;
   font-size: 1.15rem;
@@ -4919,11 +4926,26 @@ body:has(.admin-root) {
   color: #eecf78;
 }
 
+.checkout-summary-body {
+  position: relative;
+  margin-top: 1.35rem;
+}
+
+.checkout-summary-prepare {
+  display: grid;
+  gap: 0.35rem;
+  max-width: 28rem;
+}
+
+.checkout-summary-paying .checkout-summary-body {
+  max-width: 36rem;
+}
+
 .checkout-whatsapp {
   position: relative;
-  margin-top: 1.15rem;
-  padding-top: 1rem;
-  border-top: 1px solid rgba(250, 247, 242, 0.1);
+  margin-top: 0;
+  padding-top: 0;
+  border-top: none;
 }
 
 .checkout-whatsapp-header {
@@ -5144,7 +5166,7 @@ body:has(.admin-root) {
 
 .checkout-pay-button {
   width: 100%;
-  margin-top: 1.25rem;
+  margin-top: 1rem;
   padding: 0.95rem 1.25rem;
 }
 
@@ -5187,42 +5209,28 @@ body:has(.admin-root) {
 
 .checkout-payment {
   position: relative;
-  margin-top: 1.15rem;
-  padding-top: 1rem;
-  border-top: 1px solid rgba(250, 247, 242, 0.1);
 }
 
-.checkout-payment-header {
-  display: flex;
-  align-items: flex-start;
-  justify-content: space-between;
-  gap: 0.75rem;
-  margin-bottom: 0.9rem;
+.checkout-payment-toolbar {
+  margin-bottom: 0.75rem;
 }
 
-.checkout-payment-eyebrow {
-  font-size: 0.6rem;
+.checkout-payment-account {
+  margin-bottom: 1rem;
+  font-size: 0.78rem;
+  line-height: 1.45;
+  color: rgba(250, 247, 242, 0.62);
+}
+
+.checkout-payment-account strong {
   font-weight: 600;
-  letter-spacing: 0.22em;
-  text-transform: uppercase;
-  color: rgba(238, 207, 120, 0.82);
-}
-
-.checkout-payment-title {
-  margin-top: 0.3rem;
-  font-family: var(--font-instrument-serif), Georgia, serif;
-  font-size: 1.2rem;
-  font-weight: 400;
-  letter-spacing: -0.02em;
-  color: #faf7f2;
+  color: rgba(247, 236, 208, 0.95);
 }
 
 .checkout-payment-back {
-  flex-shrink: 0;
-  margin-top: 0.15rem;
-  font-size: 0.62rem;
+  font-size: 0.68rem;
   font-weight: 600;
-  letter-spacing: 0.14em;
+  letter-spacing: 0.12em;
   text-transform: uppercase;
   color: rgba(238, 207, 120, 0.88);
   transition: color 0.2s ease;
@@ -5239,11 +5247,23 @@ body:has(.admin-root) {
 
 .checkout-payment-element {
   position: relative;
-  margin-bottom: 0.25rem;
 }
 
 .checkout-payment .checkout-pay-button {
-  margin-top: 1rem;
+  margin-top: 1.25rem;
+  max-width: 22rem;
+}
+
+.checkout-summary-footer {
+  position: relative;
+  display: flex;
+  flex-wrap: wrap;
+  align-items: center;
+  justify-content: space-between;
+  gap: 0.85rem 1.25rem;
+  margin-top: 1.4rem;
+  padding-top: 1.1rem;
+  border-top: 1px solid rgba(250, 247, 242, 0.1);
 }
 
 .checkout-summary-secure {
@@ -5251,7 +5271,8 @@ body:has(.admin-root) {
   display: flex;
   align-items: flex-start;
   gap: 0.45rem;
-  margin-top: 0.9rem;
+  margin: 0;
+  max-width: 22rem;
   font-size: 0.7rem;
   line-height: 1.45;
   color: rgba(250, 247, 242, 0.52);
@@ -5290,10 +5311,9 @@ body:has(.admin-root) {
   align-items: center;
   justify-content: center;
   gap: 0.45rem;
-  width: 100%;
-  margin-top: 1rem;
-  padding-top: 0.95rem;
-  border-top: 1px solid rgba(250, 247, 242, 0.1);
+  margin: 0;
+  padding: 0;
+  border: none;
   font-size: 0.72rem;
   font-weight: 600;
   letter-spacing: 0.14em;
