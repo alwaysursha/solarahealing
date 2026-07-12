@@ -24,7 +24,11 @@ export default async function AdminProfilePage() {
             <p className="text-sm text-purple-deep/60">
               Email: <span className="font-medium text-purple-deep">{user?.email}</span>
             </p>
-            <AdminField label="Phone" name="phone" defaultValue={user?.phone ?? ""} />
+            <AdminField
+              label="WhatsApp number"
+              name="whatsapp"
+              defaultValue={user?.whatsapp ? `+${user.whatsapp}` : ""}
+            />
             <AdminSubmit label="Save profile" />
           </form>
           <p className="mt-4 text-xs text-purple-deep/45">Email changes require a separate verification flow.</p>

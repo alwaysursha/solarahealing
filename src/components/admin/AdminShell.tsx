@@ -65,7 +65,7 @@ export function AdminShell({
               </button>
               <div className="min-w-0">
                 <p className="admin-shell-eyebrow text-[0.62rem] font-semibold uppercase tracking-[0.28em]">
-                  Soulara Healing Admin
+                  Soulara Healing Academy Admin
                 </p>
                 <h2 className="admin-shell-title mt-2 font-serif leading-tight tracking-[-0.02em]">{title}</h2>
                 {description ? (

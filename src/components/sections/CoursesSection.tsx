@@ -4,7 +4,7 @@ import { motion, useReducedMotion } from "framer-motion";
 import Image from "next/image";
 import Link from "next/link";
 import { useRef } from "react";
-import { useCart } from "@/components/cart/CartProvider";
+import { useEnrollmentGate } from "@/components/auth/EnrollmentGateProvider";
 import { useAnimationsActive } from "@/hooks/useAnimationsActive";
 import { toImageObjectPosition } from "@/lib/image-focus";
 import { coursesIntro, formatCad, onlineCourses } from "@/lib/site";
@@ -232,7 +232,7 @@ function EnrollButton({
   className?: string;
 }) {
   const reduceMotion = useReducedMotion();
-  const { beginAddFromElement } = useCart();
+  const { requestEnrollment } = useEnrollmentGate();
   const buttonRef = useRef<HTMLButtonElement>(null);
   const styles =
     variant === "gold"
@@ -247,7 +247,7 @@ function EnrollButton({
       whileHover={reduceMotion ? undefined : { scale: 1.04 }}
       whileTap={reduceMotion ? undefined : { scale: 0.97 }}
       onClick={() =>
-        beginAddFromElement(
+        requestEnrollment(
           {
             id: course.id,
             type: "course",
@@ -267,22 +267,12 @@ function EnrollButton({
   );
 }
 
-function CourseCardActions({
-  course,
-  variant = "gold",
-  className = "",
-}: {
-  course: CourseItem;
-  variant?: "gold" | "outline";
-  className?: string;
-}) {
+function ViewCourseDetailsLink({ courseId }: { courseId: string }) {
   return (
-    <div className="catalog-card-cta">
-      <EnrollButton course={course} variant={variant} className={className} />
-      <Link href={`/courses/${course.id}`} className="catalog-view-details">
-        View Details
-      </Link>
-    </div>
+    <Link href={`/courses/${courseId}`} className="catalog-view-details catalog-view-details-inline">
+      View Course Details
+      <span aria-hidden>→</span>
+    </Link>
   );
 }
 
@@ -350,6 +340,9 @@ function FeaturedCourse({
                 {course.title}
               </h3>
               <p className="mt-4 text-sm leading-relaxed text-white/60">{course.description}</p>
+              <div className="mt-3.5">
+                <ViewCourseDetailsLink courseId={course.id} />
+              </div>
               <p className="mt-3 text-[0.65rem] font-medium uppercase tracking-[0.2em] text-white/35">
                 {course.duration}
               </p>
@@ -363,7 +356,7 @@ function FeaturedCourse({
                 <p className="text-[0.6rem] uppercase tracking-[0.24em] text-white/40">Investment</p>
                 <PriceTag priceCad={course.priceCad} large />
               </div>
-              <CourseCardActions course={course} className="px-6 py-2.5 text-[0.68rem] md:text-xs" />
+              <EnrollButton course={course} className="px-6 py-2.5 text-[0.68rem] md:text-xs" />
             </motion.div>
           </motion.div>
         </motion.div>
@@ -399,6 +392,9 @@ function FeaturedCourseStatic({ course }: { course: CourseItem }) {
             <p className="text-[0.65rem] font-medium uppercase tracking-[0.24em] text-gold-light/80">{course.date}</p>
             <h3 className="font-serif mt-3 text-2xl font-normal leading-tight text-white md:text-3xl">{course.title}</h3>
             <p className="mt-4 text-sm leading-relaxed text-white/60">{course.description}</p>
+            <div className="mt-3.5">
+              <ViewCourseDetailsLink courseId={course.id} />
+            </div>
             <p className="mt-3 text-[0.65rem] font-medium uppercase tracking-[0.2em] text-white/35">{course.duration}</p>
           </div>
           <div className="mt-8 flex flex-wrap items-end justify-between gap-4 border-t border-white/10 pt-6">
@@ -406,7 +402,7 @@ function FeaturedCourseStatic({ course }: { course: CourseItem }) {
               <p className="text-[0.6rem] uppercase tracking-[0.24em] text-white/40">Investment</p>
               <PriceTag priceCad={course.priceCad} large />
             </div>
-            <CourseCardActions course={course} className="px-6 py-2.5 text-[0.68rem] md:text-xs" />
+            <EnrollButton course={course} className="px-6 py-2.5 text-[0.68rem] md:text-xs" />
           </div>
         </div>
       </div>
@@ -469,9 +465,12 @@ function UpcomingCourseCard({
         </p>
         <h3 className="font-serif mt-2 text-xl leading-tight text-white">{course.title}</h3>
         <p className="mt-2 line-clamp-2 text-sm leading-relaxed text-white/55">{course.description}</p>
+        <div className="mt-3">
+          <ViewCourseDetailsLink courseId={course.id} />
+        </div>
         <div className="mt-5 flex items-center justify-between gap-3">
           <span className="text-[0.62rem] uppercase tracking-[0.18em] text-white/35">{course.duration}</span>
-          <CourseCardActions course={course} variant="outline" />
+          <EnrollButton course={course} variant="outline" />
         </div>
       </motion.div>
     </motion.article>
@@ -498,9 +497,12 @@ function UpcomingCourseCardContent({ course }: { course: CourseItem }) {
         <p className="mt-3 text-[0.62rem] font-medium uppercase tracking-[0.22em] text-gold-light/75">{course.date}</p>
         <h3 className="font-serif mt-2 text-xl leading-tight text-white">{course.title}</h3>
         <p className="mt-2 line-clamp-2 text-sm leading-relaxed text-white/55">{course.description}</p>
+        <div className="mt-3">
+          <ViewCourseDetailsLink courseId={course.id} />
+        </div>
         <div className="mt-5 flex items-center justify-between gap-3">
           <span className="text-[0.62rem] uppercase tracking-[0.18em] text-white/35">{course.duration}</span>
-          <CourseCardActions course={course} variant="outline" />
+          <EnrollButton course={course} variant="outline" />
         </div>
       </div>
     </>

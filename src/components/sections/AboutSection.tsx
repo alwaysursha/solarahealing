@@ -367,7 +367,7 @@ export function AboutSection({ content = aboutContent }: { content?: typeof abou
           </p>
           <h2 className="font-serif mt-4 text-[2rem] font-normal leading-[1.08] tracking-[-0.02em] text-purple-deep md:text-4xl lg:text-[2.15rem] xl:text-4xl">
             At{" "}
-            <span className="italic text-purple-mid">Soulara Healing,</span>
+            <span className="italic text-purple-mid">Soulara Healing Academy,</span>
           </h2>
           <div className="mt-5 h-px w-16 bg-gradient-to-r from-gold/70 to-transparent" />
           <p className="mt-6 text-sm leading-[1.85] text-purple-deep/68 md:text-[0.98rem] lg:text-[1.02rem] lg:text-purple-deep/75">

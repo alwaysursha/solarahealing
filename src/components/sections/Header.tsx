@@ -20,7 +20,9 @@ import { HeaderLoginPanel } from "@/components/sections/HeaderLoginPanel";
 import { HeaderAccountPanel, HeaderUserGreeting } from "@/components/sections/HeaderAccountPanel";
 import { MobileNavMenu } from "@/components/sections/MobileNavMenu";
 import { DesktopNav } from "@/components/sections/nav/DesktopNav";
+import { useEnrollmentGate } from "@/components/auth/EnrollmentGateProvider";
 import { useCart } from "@/components/cart/CartProvider";
+import { HEADER_LOGIN_TARGET_ID } from "@/lib/auth-utils";
 
 const expandVariants = {
   closed: {
@@ -65,6 +67,7 @@ export function Header() {
   const router = useRouter();
   const { data: session, status } = useSession();
   const { totalQuantity, cartPulse } = useCart();
+  const { accountPulse } = useEnrollmentGate();
   const postLoginRedirectHandled = useRef(false);
   const firstName = session?.user?.name ? getFirstName(session.user.name) : null;
   const isLoggedIn = status === "authenticated" && Boolean(session?.user);
@@ -223,24 +226,34 @@ export function Header() {
         <div className="relative z-40 flex shrink-0 items-center gap-1.5 sm:gap-2">
           <div className="flex items-center gap-1 sm:gap-1.5">
             {isLoggedIn && firstName ? (
-              <button
+              <motion.button
                 type="button"
+                id={HEADER_LOGIN_TARGET_ID}
                 className={[
                   "header-user-greeting-trigger flex",
                   loginOpen ? "header-user-greeting-trigger-active" : "",
+                  accountPulse ? "header-account-pulse" : "",
                 ].join(" ")}
                 aria-expanded={loginOpen}
                 aria-label={loginOpen ? "Close account menu" : "Open account menu"}
                 onClick={toggleLogin}
+                animate={
+                  accountPulse && !reduceMotion
+                    ? { scale: [1, 1.08, 1] }
+                    : { scale: 1 }
+                }
+                transition={{ duration: 0.55, ease: [0.22, 1, 0.36, 1] }}
               >
                 <HeaderUserGreeting firstName={firstName} expanded={loginOpen} />
-              </button>
+              </motion.button>
             ) : (
               <HeaderIconButton
                 label={loginOpen ? "Close sign in" : "Open sign in"}
                 icon="login"
                 active={loginOpen}
                 onClick={toggleLogin}
+                pulse={accountPulse}
+                targetId={HEADER_LOGIN_TARGET_ID}
               />
             )}
             <HeaderIconButton

@@ -1,4 +1,4 @@
-export const SITE_NAME = "Soulara Healing";
+export const SITE_NAME = "Soulara Healing Academy";
 
 export const SITE_DESCRIPTION =
   "Experience transformative Reiki healing rooted in Indian spiritual wisdom. In-person and distance sessions available.";

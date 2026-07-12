@@ -1,5 +1,5 @@
 export const site = {
-  name: "Soulara Healing",
+  name: "Soulara Healing Academy",
   tagline: "Ancient healing energy for modern souls",
   sanskrit: "सर्वे भवन्तु सुखिनः",
   sanskritMeaning: "May all beings be happy",
@@ -21,12 +21,12 @@ export const site = {
 } as const;
 
 export const aboutContent = {
-  opener: "At Soulara Healing,",
+  opener: "At Soulara Healing Academy,",
   quote: "Healing begins from within.",
   paragraphs: [
     "we believe in the profound power of energy healing and the ability of Reiki to support balance, relaxation, and inner transformation. Our mission is to create a safe, nurturing, and welcoming space where individuals can reconnect with themselves, restore harmony, and embrace their natural healing journey.",
-    "Through authentic Reiki practices, compassionate guidance, and thoughtfully designed learning experiences, Soulara Healing is committed to making this ancient healing art accessible to everyone. Whether you are seeking personal growth, emotional balance, stress relief, or a deeper spiritual connection, our approach is centered around respect, mindfulness, and the belief that healing begins from within.",
-    "At Soulara Healing, we honor each person's unique path and strive to inspire a greater sense of peace, awareness, and wellbeing through the gentle and transformative practice of Reiki.",
+    "Through authentic Reiki practices, compassionate guidance, and thoughtfully designed learning experiences, Soulara Healing Academy is committed to making this ancient healing art accessible to everyone. Whether you are seeking personal growth, emotional balance, stress relief, or a deeper spiritual connection, our approach is centered around respect, mindfulness, and the belief that healing begins from within.",
+    "At Soulara Healing Academy, we honor each person's unique path and strive to inspire a greater sense of peace, awareness, and wellbeing through the gentle and transformative practice of Reiki.",
   ],
 } as const;
 
@@ -273,7 +273,7 @@ export const articlesList = [
 
 export const coursesIntro = {
   eyebrow: "Learn at your pace",
-  title: "Soulara Healing",
+  title: "Soulara Healing Academy",
   titleAccent: "Online Courses",
   description:
     "Seven immersive programs — from foundational Reiki to master-level attunement. Study on your schedule with lifetime access, guided modules, and practices you can return to again and again.",
@@ -413,14 +413,14 @@ export const testimonialsIntro = {
   title: "Voices of",
   titleAccent: "Transformation",
   description:
-    "Real experiences from souls who found balance, clarity, and renewal through Soulara Healing.",
+    "Real experiences from souls who found balance, clarity, and renewal through Soulara Healing Academy.",
 } as const;
 
 export const footerColumns = [
   {
     groups: [
       {
-        title: "About Soulara Healing",
+        title: "About Soulara Healing Academy",
         links: [
           { label: "Who We Are", href: "#about" },
           { label: "Our Achievements", href: "#about" },
@@ -507,7 +507,7 @@ export const footerColumns = [
       {
         title: "Contact Us",
         links: [
-          { label: "Soulara Healing", href: "#schedule" },
+          { label: "Soulara Healing Academy", href: "#schedule" },
           { label: "Reiki Healing Temple", href: "#schedule" },
           { label: "Mind Magic India", href: "#schedule" },
         ],
@@ -536,7 +536,7 @@ export const footerSocial = {
     { label: "Instagram", href: "https://instagram.com" },
     { label: "LinkedIn", href: "https://linkedin.com" },
   ],
-  communityTitle: "Join the Soulara Healing Family",
+  communityTitle: "Join the Soulara Healing Academy Family",
   communityDescription:
     "Join our WhatsApp Community with over 1 million members worldwide and receive daily wisdom.",
   communityCta: "Join Our WhatsApp Community",

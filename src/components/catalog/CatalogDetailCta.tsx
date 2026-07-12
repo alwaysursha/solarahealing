@@ -2,7 +2,7 @@
 
 import { motion, useReducedMotion } from "framer-motion";
 import { useRef } from "react";
-import { useCart } from "@/components/cart/CartProvider";
+import { useEnrollmentGate } from "@/components/auth/EnrollmentGateProvider";
 import type { CartItemType } from "@/lib/cart/types";
 
 type CatalogAddPayload = {
@@ -39,7 +39,7 @@ export function CatalogDetailCta({
   item: CatalogAddPayload;
 }) {
   const reduceMotion = useReducedMotion();
-  const { beginAddFromElement } = useCart();
+  const { requestEnrollment } = useEnrollmentGate();
   const buttonRef = useRef<HTMLButtonElement>(null);
   const label = type === "course" ? "Enroll Now" : "Register Now";
 
@@ -51,7 +51,7 @@ export function CatalogDetailCta({
       whileHover={reduceMotion ? undefined : { scale: 1.03 }}
       whileTap={reduceMotion ? undefined : { scale: 0.97 }}
       onClick={() =>
-        beginAddFromElement(
+        requestEnrollment(
           {
             id: item.id,
             type,

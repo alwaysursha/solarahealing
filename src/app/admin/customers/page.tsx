@@ -22,7 +22,7 @@ export default async function AdminCustomersPage() {
               <tr>
                 <th className="px-3 py-3">Name</th>
                 <th className="px-3 py-3">Email</th>
-                <th className="px-3 py-3">Phone</th>
+                <th className="px-3 py-3">WhatsApp</th>
                 <th className="px-3 py-3">Joined</th>
               </tr>
             </thead>
@@ -31,7 +31,9 @@ export default async function AdminCustomersPage() {
                 <tr key={customer.id} className="border-b border-purple-deep/5">
                   <td className="px-3 py-3 font-medium">{customer.name}</td>
                   <td className="px-3 py-3">{customer.email}</td>
-                  <td className="px-3 py-3">{customer.phone ?? "—"}</td>
+                  <td className="px-3 py-3">
+                    {customer.whatsapp ? `+${customer.whatsapp}` : "—"}
+                  </td>
                   <td className="px-3 py-3 text-purple-deep/55">
                     {new Date(customer.createdAt).toLocaleDateString()}
                   </td>

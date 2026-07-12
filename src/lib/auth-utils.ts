@@ -71,7 +71,10 @@ export function getFirstName(name: string | null | undefined): string {
   return name.trim().split(/\s+/)[0] ?? "Friend";
 }
 
-/** Session lifetime — rolling refresh keeps users signed in across visits. */
+/** Default session lifetime — rolling refresh keeps users signed in across visits. */
 export const SESSION_MAX_AGE_SECONDS = 60 * 60 * 24 * 365;
 /** How often an active visit extends the session cookie (sliding window). */
 export const SESSION_UPDATE_AGE_SECONDS = 60 * 60 * 24;
+
+export const HEADER_LOGIN_TARGET_ID = "header-login-target";
+export const PENDING_ENROLLMENT_STORAGE_KEY = "soulara-pending-enrollment";

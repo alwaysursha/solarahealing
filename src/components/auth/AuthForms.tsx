@@ -203,16 +203,19 @@ export function SignUpForm() {
 export function GoogleSignInButton({
   callbackUrl = "/account",
   compact = false,
+  onBeforeSignIn,
 }: {
   callbackUrl?: string;
   compact?: boolean;
+  onBeforeSignIn?: () => void;
 }) {
   return (
     <button
       type="button"
-      className={compact ? "header-login-google header-login-google-compact" : "flex w-full items-center justify-center gap-3 rounded-full border border-purple-deep/10 bg-white px-4 py-3 text-sm"}
+      className={compact ? "header-login-google header-login-google-compact" : "auth-gate-google flex w-full items-center justify-center gap-3 rounded-full border border-purple-deep/10 bg-white px-4 py-3 text-sm font-medium text-purple-deep transition hover:border-gold/40"}
       aria-label="Continue with Google"
       onClick={() => {
+        onBeforeSignIn?.();
         markPostLoginRedirectPending();
         signIn("google", { callbackUrl });
       }}

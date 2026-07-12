@@ -4,7 +4,7 @@ import { motion, useReducedMotion } from "framer-motion";
 import Image from "next/image";
 import Link from "next/link";
 import { useRef } from "react";
-import { useCart } from "@/components/cart/CartProvider";
+import { useEnrollmentGate } from "@/components/auth/EnrollmentGateProvider";
 import { useAnimationsActive } from "@/hooks/useAnimationsActive";
 import { toImageObjectPosition } from "@/lib/image-focus";
 import { formatCad, workshops, workshopsIntro } from "@/lib/site";
@@ -212,7 +212,7 @@ function RegisterButton({
   className?: string;
 }) {
   const reduceMotion = useReducedMotion();
-  const { beginAddFromElement } = useCart();
+  const { requestEnrollment } = useEnrollmentGate();
   const buttonRef = useRef<HTMLButtonElement>(null);
   const styles =
     variant === "gold"
@@ -227,7 +227,7 @@ function RegisterButton({
       whileHover={reduceMotion ? undefined : { scale: 1.04 }}
       whileTap={reduceMotion ? undefined : { scale: 0.97 }}
       onClick={() =>
-        beginAddFromElement(
+        requestEnrollment(
           {
             id: workshop.id,
             type: "workshop",

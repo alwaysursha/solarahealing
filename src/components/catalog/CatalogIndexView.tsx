@@ -63,7 +63,7 @@ function IndexCard({ type, item }: { type: CartItemType; item: CatalogDetailItem
               }}
             />
             <Link href={detailHref} className="catalog-index-card-details">
-              View Details
+              {type === "course" ? "View Course Details" : "View Workshop Details"}
             </Link>
           </div>
         </div>
