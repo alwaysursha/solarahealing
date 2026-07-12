@@ -1,26 +1,16 @@
 import { config } from "dotenv";
-import { Resend } from "resend";
+import { sendEmail } from "../src/lib/email";
 
 config({ path: ".env.local" });
 
 async function main() {
-  const apiKey = process.env.RESEND_API_KEY?.trim() ?? "";
-  const from = process.env.EMAIL_FROM?.trim() ?? "";
   const to =
     process.env.EMAIL_TEST_TO?.trim() ||
     process.env.ADMIN_EMAIL?.trim() ||
+    process.env.EMAIL_ADMIN_TO?.trim() ||
     "admin@soularahealing.com";
 
-  if (!apiKey) {
-    throw new Error("Missing RESEND_API_KEY in .env.local");
-  }
-  if (!from) {
-    throw new Error("Missing EMAIL_FROM in .env.local");
-  }
-
-  const resend = new Resend(apiKey);
-  const { data, error } = await resend.emails.send({
-    from,
+  const result = await sendEmail({
     to,
     subject: "Soulara Healing Academy · test email",
     text: "This is a test email from Soulara Healing Academy. Resend is working.",
@@ -37,14 +27,14 @@ async function main() {
     `,
   });
 
-  if (error) {
-    console.error("FAILED:", error.message);
+  if (!result.ok) {
+    console.error("FAILED:", result.error);
     process.exit(1);
   }
 
   console.log("OK — sent test email");
   console.log("to:", to);
-  console.log("id:", data?.id ?? "(none)");
+  console.log("id:", result.id);
 }
 
 main().catch((error) => {

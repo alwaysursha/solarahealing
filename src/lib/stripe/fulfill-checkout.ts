@@ -1,8 +1,8 @@
 import { OrderItemType, OrderStatus } from "@prisma/client";
-import type Stripe from "stripe";
-import { sendOrderConfirmationEmail } from "@/lib/email/order-confirmation";
 import { sendAdminNewOrderEmail } from "@/lib/email/admin-new-order";
+import { sendOrderConfirmationEmail } from "@/lib/email/order-confirmation";
 import { prisma } from "@/lib/prisma";
+import type { StripeCheckoutSession, StripePaymentIntent } from "@/lib/stripe";
 
 /**
  * Marks a pending order paid and books workshop seats.
@@ -56,7 +56,6 @@ export async function fulfillPaidOrder(params: {
     }
   });
 
-  // Fire-and-forget emails — never block or fail fulfillment on email errors.
   const paidOrder = { ...order, status: OrderStatus.PAID };
   void Promise.all([
     sendOrderConfirmationEmail(paidOrder),
@@ -68,7 +67,7 @@ export async function fulfillPaidOrder(params: {
   return { ok: true as const, alreadyFulfilled: false, orderId: order.id };
 }
 
-export async function fulfillPaidCheckoutSession(session: Stripe.Checkout.Session) {
+export async function fulfillPaidCheckoutSession(session: StripeCheckoutSession) {
   if (session.payment_status !== "paid" && session.status !== "complete") {
     return { ok: false as const, reason: "not_paid" as const };
   }
@@ -84,7 +83,7 @@ export async function fulfillPaidCheckoutSession(session: Stripe.Checkout.Sessio
   });
 }
 
-export async function fulfillPaidPaymentIntent(paymentIntent: Stripe.PaymentIntent) {
+export async function fulfillPaidPaymentIntent(paymentIntent: StripePaymentIntent) {
   if (paymentIntent.status !== "succeeded") {
     return { ok: false as const, reason: "not_paid" as const };
   }

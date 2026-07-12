@@ -1,11 +1,14 @@
-import { getStripe } from "@/lib/stripe";
+import {
+  constructStripeEvent,
+  type StripeCheckoutSession,
+  type StripePaymentIntent,
+} from "@/lib/stripe";
 import {
   fulfillPaidCheckoutSession,
   fulfillPaidPaymentIntent,
 } from "@/lib/stripe/fulfill-checkout";
 
 export const dynamic = "force-dynamic";
-export const runtime = "nodejs";
 
 export async function POST(request: Request) {
   const webhookSecret = process.env.STRIPE_WEBHOOK_SECRET?.trim() ?? "";
@@ -20,18 +23,10 @@ export async function POST(request: Request) {
   }
 
   const payload = await request.text();
-  let stripe;
-  try {
-    stripe = getStripe();
-  } catch (error) {
-    console.error("[stripe webhook] missing configuration", error);
-    return Response.json({ error: "Webhook not configured." }, { status: 500 });
-  }
 
   let event;
   try {
-    // Async + Web Crypto works on Cloudflare Workers (sync constructEvent may not).
-    event = await stripe.webhooks.constructEventAsync(payload, signature, webhookSecret);
+    event = await constructStripeEvent(payload, signature, webhookSecret);
   } catch (error) {
     console.error("[stripe webhook] Signature verification failed", error);
     return Response.json({ error: "Invalid signature." }, { status: 400 });
@@ -40,7 +35,7 @@ export async function POST(request: Request) {
   try {
     switch (event.type) {
       case "payment_intent.succeeded": {
-        const paymentIntent = event.data.object;
+        const paymentIntent = event.data.object as StripePaymentIntent;
         const result = await fulfillPaidPaymentIntent(paymentIntent);
         if (!result.ok && result.reason !== "not_paid") {
           console.error("[stripe webhook] PaymentIntent fulfillment issue", result);
@@ -48,7 +43,7 @@ export async function POST(request: Request) {
         break;
       }
       case "checkout.session.completed": {
-        const session = event.data.object;
+        const session = event.data.object as StripeCheckoutSession;
         const result = await fulfillPaidCheckoutSession(session);
         if (!result.ok && result.reason !== "not_paid") {
           console.error("[stripe webhook] Fulfillment issue", result);
@@ -56,7 +51,7 @@ export async function POST(request: Request) {
         break;
       }
       case "checkout.session.async_payment_succeeded": {
-        const session = event.data.object;
+        const session = event.data.object as StripeCheckoutSession;
         await fulfillPaidCheckoutSession(session);
         break;
       }

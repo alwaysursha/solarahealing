@@ -1,29 +1,4 @@
-import { Resend } from "resend";
-
-let resendClient: Resend | null = null;
-
-export function getResend(): Resend {
-  const apiKey = process.env.RESEND_API_KEY?.trim() ?? "";
-  if (!apiKey) {
-    throw new Error("Missing RESEND_API_KEY in environment.");
-  }
-
-  if (!resendClient) {
-    resendClient = new Resend(apiKey);
-  }
-
-  return resendClient;
-}
-
-export function getEmailFrom(): string {
-  const from = process.env.EMAIL_FROM?.trim() ?? "";
-  if (!from) {
-    throw new Error(
-      'Missing EMAIL_FROM in environment. Example: Soulara Healing Academy <hello@soularahealing.com>',
-    );
-  }
-  return from;
-}
+import { getEmailFrom } from "@/lib/email-config";
 
 export type SendEmailInput = {
   to: string | string[];
@@ -37,28 +12,54 @@ export type SendEmailResult =
   | { ok: true; id: string }
   | { ok: false; error: string };
 
-/** Send a transactional email via Resend. */
-export async function sendEmail(input: SendEmailInput): Promise<SendEmailResult> {
-  const resend = getResend();
-  const from = getEmailFrom();
+function getResendApiKey(): string {
+  const apiKey = process.env.RESEND_API_KEY?.trim() ?? "";
+  if (!apiKey) {
+    throw new Error("Missing RESEND_API_KEY in environment.");
+  }
+  return apiKey;
+}
 
-  const { data, error } = await resend.emails.send({
-    from,
-    to: input.to,
-    subject: input.subject,
-    html: input.html,
-    text: input.text,
-    replyTo: input.replyTo,
+/** Send a transactional email via Resend HTTP API (no heavy SDK). */
+export async function sendEmail(input: SendEmailInput): Promise<SendEmailResult> {
+  const apiKey = getResendApiKey();
+  const from = getEmailFrom();
+  const to = Array.isArray(input.to) ? input.to : [input.to];
+
+  const response = await fetch("https://api.resend.com/emails", {
+    method: "POST",
+    headers: {
+      Authorization: `Bearer ${apiKey}`,
+      "Content-Type": "application/json",
+    },
+    body: JSON.stringify({
+      from,
+      to,
+      subject: input.subject,
+      html: input.html,
+      text: input.text,
+      reply_to: input.replyTo,
+    }),
   });
 
-  if (error) {
+  const payload = (await response.json().catch(() => null)) as
+    | { id?: string; message?: string; name?: string }
+    | null;
+
+  if (!response.ok) {
+    const error =
+      payload?.message ||
+      payload?.name ||
+      `Resend request failed (${response.status})`;
     console.error("[email] send failed", error);
-    return { ok: false, error: error.message };
+    return { ok: false, error };
   }
 
-  if (!data?.id) {
+  if (!payload?.id) {
     return { ok: false, error: "Resend did not return a message id." };
   }
 
-  return { ok: true, id: data.id };
+  return { ok: true, id: payload.id };
 }
+
+export { getEmailFrom } from "@/lib/email-config";

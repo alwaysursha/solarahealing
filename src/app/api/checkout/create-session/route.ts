@@ -1,7 +1,7 @@
 import { OrderItemType, OrderStatus } from "@prisma/client";
 import { auth } from "@/auth";
 import { prisma } from "@/lib/prisma";
-import { cadToStripeAmount, getStripe, getStripePublishableKey } from "@/lib/stripe";
+import { cadToStripeAmount, createPaymentIntent, getStripePublishableKey } from "@/lib/stripe";
 import { isValidWhatsAppNumber, normalizeWhatsAppNumber } from "@/lib/whatsapp";
 
 export const dynamic = "force-dynamic";
@@ -92,6 +92,15 @@ async function resolveCatalogLines(
   return { ok: true, lines };
 }
 
+function assertStripeConfigured() {
+  if (!process.env.STRIPE_SECRET_KEY?.trim()) {
+    throw new Error("Missing STRIPE_SECRET_KEY in environment.");
+  }
+  if (!process.env.NEXT_PUBLIC_STRIPE_PUBLISHABLE_KEY?.trim()) {
+    throw new Error("Missing NEXT_PUBLIC_STRIPE_PUBLISHABLE_KEY in environment.");
+  }
+}
+
 export async function POST(request: Request) {
   const session = await auth();
   if (!session?.user?.id || !session.user.email) {
@@ -154,10 +163,9 @@ export async function POST(request: Request) {
     },
   });
 
-  let stripe: ReturnType<typeof getStripe>;
   let publishableKey: string;
   try {
-    stripe = getStripe();
+    assertStripeConfigured();
     publishableKey = getStripePublishableKey();
   } catch (error) {
     console.error("[stripe] missing configuration", error);
@@ -183,11 +191,10 @@ export async function POST(request: Request) {
       : `Soulara Healing Academy · ${resolved.lines.length} items`;
 
   try {
-    const paymentIntent = await stripe.paymentIntents.create({
+    const paymentIntent = await createPaymentIntent({
       amount: cadToStripeAmount(totalCad),
       currency: "cad",
-      automatic_payment_methods: { enabled: true },
-      receipt_email: session.user.email,
+      receiptEmail: session.user.email,
       description,
       metadata: {
         orderId: order.id,
