@@ -1,7 +1,7 @@
 @import "tailwindcss";
 
 :root {
-  /* Core brand — lifted ~12% for a lighter premium feel */
+  /* Core brand — original live homepage palette */
   --purple-deep: #5C1A94;
   --purple-mid: #9D4DAE;
   --purple-light: #C980D4;
@@ -27,6 +27,93 @@
   --panel-deep-rgb: 44, 22, 74;
   --panel-accent-rgb: 62, 34, 112;
   --overlay-rgb: 48, 28, 76;
+
+  /* Hero / header — original spiritual gradient stops */
+  --spirit-grad-1: #452078;
+  --spirit-grad-2: #553080;
+  --spirit-grad-3: #684090;
+  --spirit-grad-4: #5C1A94;
+  --spirit-grad-5: #583878;
+  --spirit-grad-mobile-1: #58388C;
+  --spirit-grad-mobile-2: #684898;
+  --spirit-grad-mobile-3: #7A58A8;
+  --spirit-grad-mobile-4: #7030A8;
+  --spirit-grad-mobile-5: #6C4890;
+}
+
+/* Preview-only palettes — applied on /preview/option-* pages */
+html[data-brand-theme="1"] {
+  --purple-deep: #6B21A8;
+  --purple-mid: #A855C8;
+  --purple-light: #D4A5E8;
+  --indigo-deep: #5A1F7A;
+  --violet-glow: #E4C4EA;
+  --gold: #D4AD35;
+  --gold-light: #E8CA62;
+  --saffron: #EDBC48;
+  --foreground: #3A2560;
+  --accent: #6B21A8;
+  --accent-light: #A855C8;
+  --accent-soft: #F7F4FC;
+  --hero-blush: #F6F0FA;
+  --hero-wash: #F0E6F7;
+  --purple-deep-rgb: 107, 33, 168;
+  --purple-mid-rgb: 168, 85, 200;
+  --panel-top-rgb: 78, 38, 122;
+  --panel-mid-rgb: 64, 30, 104;
+  --panel-deep-rgb: 50, 24, 86;
+  --panel-accent-rgb: 72, 38, 128;
+  --overlay-rgb: 54, 28, 88;
+  --spirit-grad-1: #4E1A7A;
+  --spirit-grad-2: #6B21A8;
+  --spirit-grad-3: #8B3BC0;
+  --spirit-grad-4: #A855C8;
+  --spirit-grad-5: #7A2EAE;
+  --spirit-grad-mobile-1: #4E1A7A;
+  --spirit-grad-mobile-2: #6B21A8;
+  --spirit-grad-mobile-3: #8B3BC0;
+  --spirit-grad-mobile-4: #A855C8;
+  --spirit-grad-mobile-5: #7A2EAE;
+}
+
+html[data-brand-theme="7"],
+html[data-brand-theme="8"] {
+  --purple-deep: #5C1470;
+  --purple-mid: #B84DC8;
+  --purple-light: #D9A8E4;
+  --indigo-deep: #3F0E52;
+  --violet-glow: #E8C8F0;
+  --gold: #D4A84A;
+  --gold-light: #E8C978;
+  --saffron: #E0B85C;
+  --foreground: #2F1A45;
+  --accent: #5C1470;
+  --accent-light: #B84DC8;
+  --accent-soft: #F7F0FA;
+  --hero-blush: #F4ECF7;
+  --hero-wash: #EDE2F2;
+  --purple-deep-rgb: 92, 20, 112;
+  --purple-mid-rgb: 184, 77, 200;
+  --panel-top-rgb: 64, 18, 82;
+  --panel-mid-rgb: 52, 14, 68;
+  --panel-deep-rgb: 40, 10, 54;
+  --panel-accent-rgb: 78, 24, 98;
+  --overlay-rgb: 46, 12, 62;
+  --spirit-grad-1: #2E0A3C;
+  --spirit-grad-2: #5C1470;
+  --spirit-grad-3: #7A2A8E;
+  --spirit-grad-4: #B84DC8;
+  --spirit-grad-5: #4A105C;
+  --spirit-grad-mobile-1: #2E0A3C;
+  --spirit-grad-mobile-2: #5C1470;
+  --spirit-grad-mobile-3: #7A2A8E;
+  --spirit-grad-mobile-4: #B84DC8;
+  --spirit-grad-mobile-5: #4A105C;
+}
+
+/* Option 8: same colors as 7, no background textures / chakras */
+html[data-brand-theme="8"] .spiritual-fx {
+  display: none !important;
 }
 
 @theme inline {
@@ -83,14 +170,13 @@ body:has(.admin-root) {
 }
 
 .bg-spiritual-gradient {
-  /* Static dark base — lifted for a lighter premium feel */
   background: linear-gradient(
     155deg,
-    #452078 0%,
-    #553080 28%,
-    #684090 52%,
-    #5C1A94 72%,
-    #583878 100%
+    var(--spirit-grad-1) 0%,
+    var(--spirit-grad-2) 28%,
+    var(--spirit-grad-3) 52%,
+    var(--spirit-grad-4) 72%,
+    var(--spirit-grad-5) 100%
   );
 }
 
@@ -114,16 +200,31 @@ body:has(.admin-root) {
   .bg-spiritual-gradient {
     background: linear-gradient(
       155deg,
-      #58388C 0%,
-      #684898 28%,
-      #7A58A8 52%,
-      #7030A8 72%,
-      #6C4890 100%
+      var(--spirit-grad-mobile-1) 0%,
+      var(--spirit-grad-mobile-2) 28%,
+      var(--spirit-grad-mobile-3) 52%,
+      var(--spirit-grad-mobile-4) 72%,
+      var(--spirit-grad-mobile-5) 100%
     );
   }
 
   .bg-spiritual-mesh {
     opacity: 0.44;
+  }
+
+  html[data-brand-theme="1"] {
+    --panel-top-rgb: 84, 38, 128;
+    --panel-mid-rgb: 70, 32, 112;
+    --panel-deep-rgb: 56, 26, 94;
+    --panel-accent-rgb: 78, 36, 122;
+  }
+
+  html[data-brand-theme="7"],
+  html[data-brand-theme="8"] {
+    --panel-top-rgb: 74, 22, 94;
+    --panel-mid-rgb: 60, 16, 78;
+    --panel-deep-rgb: 48, 12, 64;
+    --panel-accent-rgb: 88, 28, 110;
   }
 }
 
@@ -143,6 +244,22 @@ body:has(.admin-root) {
   );
   background-size: 220% 100%;
   animation: shimmer-sweep 9s ease-in-out infinite;
+}
+
+html[data-brand-theme="7"] .bg-spiritual-shimmer,
+html[data-brand-theme="8"] .bg-spiritual-shimmer {
+  opacity: 0.72;
+  background: linear-gradient(
+    105deg,
+    transparent 0%,
+    transparent 38%,
+    rgba(232, 201, 120, 0.2) 46%,
+    rgba(217, 168, 228, 0.22) 50%,
+    rgba(232, 201, 120, 0.16) 54%,
+    transparent 62%,
+    transparent 100%
+  );
+  animation-duration: 10s;
 }
 
 .bg-spiritual-shimmer-secondary {

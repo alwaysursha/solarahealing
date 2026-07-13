@@ -1,24 +1,34 @@
 "use client";
 
 import { useReducedMotion } from "framer-motion";
+import { FloatingChakras } from "@/components/shell/FloatingChakras";
+import { MandalaPattern } from "@/components/shell/MandalaPattern";
 import { usePageVisible } from "@/hooks/useAnimationsActive";
-import { MandalaPattern } from "./MandalaPattern";
-import { FloatingChakras } from "./FloatingChakras";
 
+/**
+ * Full-bleed spiritual atmosphere for the storefront shell.
+ * Textures/chakras hide automatically for Option 8 via [data-brand-theme="8"] CSS.
+ */
 export function SpiritualBackground() {
   const reduceMotion = useReducedMotion();
   const pageVisible = usePageVisible();
-  const animationsActive = pageVisible && !reduceMotion;
+  const animationsActive = Boolean(pageVisible && !reduceMotion);
 
   return (
     <div
-      className={`absolute inset-0 bg-spiritual-gradient${animationsActive ? "" : " animations-paused"}`}
+      className={`pointer-events-none fixed inset-0 -z-10 overflow-hidden${animationsActive ? "" : " animations-paused"}`}
+      aria-hidden
     >
-      <div className="pointer-events-none absolute inset-0 bg-spiritual-mesh" aria-hidden />
-      <div className="pointer-events-none absolute inset-0 bg-spiritual-shimmer" aria-hidden />
-      <div className="pointer-events-none absolute inset-0 bg-spiritual-shimmer-secondary" aria-hidden />
-      <MandalaPattern />
-      <FloatingChakras animationsActive={animationsActive} />
+      <div className="absolute inset-0 bg-spiritual-gradient" />
+      <div className="spiritual-fx absolute inset-0 bg-spiritual-mesh" />
+      <div className="spiritual-fx absolute inset-0 bg-spiritual-shimmer" />
+      <div className="spiritual-fx absolute inset-0 bg-spiritual-shimmer-secondary" />
+      <div className="spiritual-fx absolute inset-0">
+        <MandalaPattern />
+      </div>
+      <div className="spiritual-fx absolute inset-0">
+        <FloatingChakras animationsActive={animationsActive} />
+      </div>
     </div>
   );
 }
