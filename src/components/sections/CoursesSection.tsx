@@ -528,30 +528,17 @@ function CoursesUpcomingSlider({
   reduceMotion: boolean | null;
 }) {
   const perPage = useCoursesPerPage();
-  const pages = chunkCourses(courses, perPage);
-  const pageCount = pages.length;
+  const pages = chunkCourses(courses, Math.max(perPage, 1));
+  const pageCount = Math.max(pages.length, 1);
   const [page, setPage] = useState(0);
   const [paused, setPaused] = useState(false);
-  const [viewportWidth, setViewportWidth] = useState(0);
-  const viewportRef = useRef<HTMLDivElement>(null);
   const pageRef = useRef(page);
 
   pageRef.current = page;
 
   useEffect(() => {
-    const node = viewportRef.current;
-    if (!node) return;
-
-    const update = () => setViewportWidth(node.clientWidth);
-    update();
-    const observer = new ResizeObserver(update);
-    observer.observe(node);
-    return () => observer.disconnect();
-  }, []);
-
-  useEffect(() => {
     setPage((current) => Math.min(current, Math.max(pageCount - 1, 0)));
-  }, [pageCount]);
+  }, [pageCount, perPage]);
 
   const goTo = useCallback(
     (index: number) => {
@@ -580,7 +567,7 @@ function CoursesUpcomingSlider({
     return null;
   }
 
-  if (pageCount <= 1 || reduceMotion) {
+  if (pageCount <= 1) {
     return (
       <div className="grid gap-6 overflow-visible md:grid-cols-3">
         {courses.map((course, index) => (
@@ -604,22 +591,26 @@ function CoursesUpcomingSlider({
       onMouseLeave={() => setPaused(false)}
     >
       <div
-        ref={viewportRef}
-        className={`courses-upcoming-slider-viewport overflow-hidden ${swipe.className}`}
+        className={`courses-upcoming-slider-viewport ${swipe.className}`}
         onPointerDown={swipe.onPointerDown}
         onPointerUp={swipe.onPointerUp}
         onPointerCancel={swipe.onPointerCancel}
       >
         <motion.div
-          className="flex will-change-transform"
-          animate={{ x: viewportWidth ? -page * viewportWidth : 0 }}
-          transition={{ duration: 0.72, ease }}
+          className="courses-upcoming-slider-track"
+          style={{ width: `${pageCount * 100}%` }}
+          animate={{ x: `${((-100) / pageCount) * page}%` }}
+          transition={
+            reduceMotion
+              ? { duration: 0 }
+              : { duration: 0.72, ease }
+          }
         >
           {pages.map((pageCourses, pageIndex) => (
             <div
               key={`page-${pageIndex}`}
-              className="grid shrink-0 grid-cols-1 gap-6 md:grid-cols-3"
-              style={{ width: viewportWidth || "100%" }}
+              className="courses-upcoming-slider-page"
+              style={{ width: `${100 / pageCount}%` }}
               aria-hidden={pageIndex !== page}
               {...(pageIndex !== page ? { inert: true } : {})}
             >
@@ -628,7 +619,7 @@ function CoursesUpcomingSlider({
                   key={course.id}
                   course={course}
                   index={index}
-                  reduceMotion={false}
+                  reduceMotion={true}
                 />
               ))}
             </div>
@@ -636,20 +627,18 @@ function CoursesUpcomingSlider({
         </motion.div>
       </div>
 
-      {pageCount > 1 ? (
-        <div className="courses-upcoming-slider-dots mt-5 flex items-center justify-center gap-2">
-          {pages.map((_, index) => (
-            <button
-              key={`dot-${index}`}
-              type="button"
-              className={`courses-upcoming-slider-dot ${index === page ? "is-active" : ""}`}
-              aria-label={`Show courses page ${index + 1}`}
-              aria-current={index === page ? "true" : undefined}
-              onClick={() => goTo(index)}
-            />
-          ))}
-        </div>
-      ) : null}
+      <div className="courses-upcoming-slider-dots mt-5 flex items-center justify-center gap-2">
+        {pages.map((_, index) => (
+          <button
+            key={`dot-${index}`}
+            type="button"
+            className={`courses-upcoming-slider-dot ${index === page ? "is-active" : ""}`}
+            aria-label={`Show courses page ${index + 1}`}
+            aria-current={index === page ? "true" : undefined}
+            onClick={() => goTo(index)}
+          />
+        ))}
+      </div>
     </div>
   );
 }
@@ -737,20 +726,20 @@ export function CoursesSection({
           </motion.div>
 
           {reduceMotion ? (
-            <div className="space-y-6 lg:col-span-8">
+            <div className="min-w-0 space-y-6 lg:col-span-8">
               <FeaturedCourseStatic course={featured} />
               <CoursesUpcomingSlider courses={upcoming} reduceMotion={reduceMotion} />
             </div>
           ) : (
             <motion.div
-              className="space-y-6 lg:col-span-8"
+              className="min-w-0 space-y-6 lg:col-span-8"
               variants={catalogStagger}
               initial="hidden"
               whileInView="visible"
               viewport={{ once: true, amount: 0.12, margin: "-40px" }}
             >
               <FeaturedCourse reduceMotion={reduceMotion} course={featured} />
-              <motion.div variants={catalogStagger}>
+              <motion.div className="min-w-0" variants={catalogStagger}>
                 <CoursesUpcomingSlider courses={upcoming} reduceMotion={reduceMotion} />
               </motion.div>
             </motion.div>

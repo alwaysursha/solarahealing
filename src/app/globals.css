@@ -2708,6 +2708,35 @@ html[data-brand-theme="10"] section[aria-label="Hero highlights"] [role="tablist
 .courses-upcoming-slider-viewport {
   width: 100%;
   min-width: 0;
+  overflow: hidden;
+  touch-action: pan-y;
+}
+
+.courses-upcoming-slider-track {
+  display: flex;
+  align-items: stretch;
+  will-change: transform;
+}
+
+.courses-upcoming-slider-page {
+  box-sizing: border-box;
+  display: grid;
+  flex: 0 0 auto;
+  grid-template-columns: minmax(0, 1fr);
+  gap: 1.5rem;
+  min-width: 0;
+  padding-inline: 1px;
+}
+
+@media (min-width: 768px) {
+  .courses-upcoming-slider-page {
+    grid-template-columns: repeat(3, minmax(0, 1fr));
+  }
+}
+
+.courses-upcoming-slider-page .workshop-upcoming {
+  min-width: 0;
+  width: 100%;
 }
 
 .courses-upcoming-slider-dot {
