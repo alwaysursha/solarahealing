@@ -109,7 +109,7 @@ export function HeaderCartPanel({ onClose }: HeaderCartPanelProps) {
               <div className="header-cart-checkout-row">
                 <span />
                 <Link
-                  href="/#courses"
+                  href="/courses"
                   className="header-login-submit header-login-submit-compact header-cart-checkout-btn inline-flex items-center justify-center"
                   onClick={onClose}
                 >
