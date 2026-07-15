@@ -1,3 +1,11 @@
+import {
+  normalizeAboutContent,
+  normalizeHeroSlides,
+  parseNavJson,
+  type AboutContent,
+  type HeroSlide,
+  type SiteNavItem,
+} from "@/lib/frontpage-content";
 import { OrderStatus, Role } from "@prisma/client";
 import { prisma } from "@/lib/prisma";
 import {
@@ -24,6 +32,10 @@ async function safeQuery<T>(query: () => Promise<T>, fallback: T): Promise<T> {
   } catch {
     return fallback;
   }
+}
+
+function defaultNav(): SiteNavItem[] {
+  return parseNavJson(null);
 }
 
 export async function getDbSiteSettings() {
@@ -59,7 +71,7 @@ export async function getSiteSettingsFromDb() {
       cta: site.cta,
       showCoursesSection: true,
       showWorkshopsSection: false,
-      nav: site.nav,
+      nav: defaultNav(),
       fetchedAt: new Date().toISOString(),
     };
   }
@@ -79,7 +91,7 @@ export async function getSiteSettingsFromDb() {
     cta: row.cta,
     showCoursesSection: row.showCoursesSection ?? true,
     showWorkshopsSection: row.showWorkshopsSection ?? false,
-    nav: site.nav,
+    nav: parseNavJson(row.navJson),
     fetchedAt: row.updatedAt.toISOString(),
   };
 }
@@ -193,19 +205,22 @@ export async function getPageSection(pageKey: string, sectionKey: string) {
 }
 
 export async function getHomePageContent() {
-  const sections = await safeQuery(
-    () =>
-      prisma.pageSection.findMany({
-        where: { pageKey: "home" },
-      }),
-    [],
-  );
+  const [sections, settings] = await Promise.all([
+    safeQuery(
+      () =>
+        prisma.pageSection.findMany({
+          where: { pageKey: "home" },
+        }),
+      [],
+    ),
+    getSiteSettingsFromDb(),
+  ]);
 
   const map = new Map(sections.map((s) => [s.sectionKey, JSON.parse(s.content)]));
 
   return {
-    heroSlides: (map.get("hero") as typeof heroSlides | undefined) ?? heroSlides,
-    aboutContent: (map.get("about") as typeof aboutContent | undefined) ?? aboutContent,
+    heroSlides: normalizeHeroSlides(map.get("hero") ?? heroSlides, settings.cta) as HeroSlide[],
+    aboutContent: normalizeAboutContent(map.get("about") ?? aboutContent) as AboutContent,
     coursesIntro: (map.get("coursesIntro") as typeof coursesIntro | undefined) ?? coursesIntro,
     articlesIntro: (map.get("articlesIntro") as typeof articlesIntro | undefined) ?? articlesIntro,
     workshopsIntro: (map.get("workshopsIntro") as typeof workshopsIntro | undefined) ?? workshopsIntro,

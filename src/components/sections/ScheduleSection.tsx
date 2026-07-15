@@ -3,7 +3,7 @@
 import { motion, useReducedMotion } from "framer-motion";
 import Image from "next/image";
 import Link from "next/link";
-import { useRef } from "react";
+import { useEffect, useRef, useState } from "react";
 import { useAnimationsActive } from "@/hooks/useAnimationsActive";
 import { scheduleBooking } from "@/lib/site";
 
@@ -17,6 +17,13 @@ export function ScheduleSection({
   const reduceMotion = useReducedMotion();
   const sectionRef = useRef<HTMLElement>(null);
   const animationsActive = useAnimationsActive(sectionRef);
+  const [softMotion, setSoftMotion] = useState(false);
+
+  useEffect(() => {
+    setSoftMotion(document.documentElement.getAttribute("data-brand-theme") === "10");
+  }, []);
+
+  const motionOff = Boolean(reduceMotion);
 
   return (
     <section
@@ -29,11 +36,14 @@ export function ScheduleSection({
 
       <div className="relative z-[1] grid min-h-[28rem] lg:min-h-[32rem] lg:grid-cols-12 lg:items-center">
         <motion.div
-          className="schedule-content-panel group relative flex flex-col justify-center overflow-hidden px-5 py-16 sm:px-8 md:px-10 md:py-20 lg:col-span-5 lg:overflow-visible lg:px-12 xl:px-14 xl:py-24"
-          initial={reduceMotion ? false : { opacity: 0, x: -32 }}
-          whileInView={reduceMotion ? undefined : { opacity: 1, x: 0 }}
+          className={[
+            "schedule-content-panel group relative flex flex-col justify-center overflow-hidden px-5 py-16 sm:px-8 md:px-10 md:py-20 lg:col-span-5 lg:px-12 xl:px-14 xl:py-24",
+            softMotion ? "" : "lg:overflow-visible",
+          ].join(" ")}
+          initial={motionOff ? false : { opacity: 0, x: softMotion ? -16 : -32 }}
+          whileInView={motionOff ? undefined : { opacity: 1, x: 0 }}
           viewport={{ once: true, margin: "-60px" }}
-          transition={{ duration: 0.85, ease }}
+          transition={{ duration: softMotion ? 0.7 : 0.85, ease }}
         >
           <div className="schedule-content-bg pointer-events-none absolute inset-0 lg:hidden" aria-hidden>
             <Image
@@ -95,11 +105,11 @@ export function ScheduleSection({
         </motion.div>
 
         <motion.div
-          className="schedule-portrait-panel group relative hidden min-h-[32rem] lg:col-span-7 lg:block"
-          initial={reduceMotion ? false : { opacity: 0, scale: 1.04 }}
-          whileInView={reduceMotion ? undefined : { opacity: 1, scale: 1 }}
+          className="schedule-portrait-panel group relative hidden min-h-[32rem] overflow-hidden lg:col-span-7 lg:block"
+          initial={motionOff ? false : { opacity: 0, scale: softMotion ? 1 : 1.04 }}
+          whileInView={motionOff ? undefined : { opacity: 1, scale: 1 }}
           viewport={{ once: true, margin: "-40px" }}
-          transition={{ duration: 1, ease }}
+          transition={{ duration: softMotion ? 0.85 : 1, ease }}
         >
           <div className="schedule-aura pointer-events-none absolute inset-0 z-[1]" aria-hidden />
           <div className="schedule-aura-ring pointer-events-none absolute z-[2]" aria-hidden />

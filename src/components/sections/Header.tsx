@@ -4,7 +4,7 @@ import { AnimatePresence, motion, useReducedMotion } from "framer-motion";
 import { useSession } from "next-auth/react";
 import { useCallback, useEffect, useRef, useState } from "react";
 import { useRouter } from "next/navigation";
-import { site } from "@/lib/site";
+import { useSiteChrome } from "@/components/storefront/SiteChromeProvider";
 import { consumePostLoginRedirect, getFirstName } from "@/lib/auth-utils";
 import {
   HEADER_PANEL_EXIT_MS,
@@ -65,6 +65,7 @@ const expandVariants = {
 export function Header() {
   const reduceMotion = useReducedMotion();
   const router = useRouter();
+  const { nav } = useSiteChrome();
   const { data: session, status } = useSession();
   const { totalQuantity, cartPulse } = useCart();
   const { accountPulse } = useEnrollmentGate();
@@ -269,10 +270,10 @@ export function Header() {
           <motion.button
             type="button"
             className={[
-              "flex h-10 w-10 items-center justify-center rounded-full border transition-colors duration-300 lg:hidden",
+              "relative flex h-10 w-10 items-center justify-center overflow-visible rounded-full border transition-colors duration-300 lg:hidden",
               navOpen
-                ? "border-gold/50 bg-cream/10 text-gold"
-                : "border-transparent text-gold hover:border-gold/35 hover:text-gold-light",
+                ? "border-gold/55 bg-cream/10 text-gold"
+                : "border-cream/15 text-cream/90 hover:border-gold/45 hover:text-gold",
             ].join(" ")}
             aria-label={navOpen ? "Close menu" : "Open menu"}
             aria-expanded={navOpen}
@@ -367,7 +368,7 @@ export function Header() {
             exit={reduceMotion ? undefined : "exit"}
           >
             <MobileNavMenu
-              items={site.nav}
+              items={nav}
               onClose={closeNav}
               onLogin={() => setLoginOpen(true)}
             />

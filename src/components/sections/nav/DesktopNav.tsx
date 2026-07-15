@@ -1,18 +1,19 @@
 "use client";
 
 import { motion, useReducedMotion } from "framer-motion";
-import { site } from "@/lib/site";
+import { useSiteChrome } from "@/components/storefront/SiteChromeProvider";
 import { desktopNavStagger } from "@/lib/nav-motion";
 import { DesktopNavLink } from "@/components/sections/nav/NavLink";
 
 export function DesktopNav() {
   const reduceMotion = useReducedMotion();
+  const { nav } = useSiteChrome();
 
   if (reduceMotion) {
     return (
       <nav className="hidden flex-1 items-center justify-center gap-5 lg:flex xl:gap-7" aria-label="Main">
-        {site.nav.map((item) => (
-          <DesktopNavLink key={item.href} item={item} animated={false} />
+        {nav.map((item) => (
+          <DesktopNavLink key={item.id} item={item} animated={false} />
         ))}
       </nav>
     );
@@ -26,8 +27,8 @@ export function DesktopNav() {
       initial="hidden"
       animate="visible"
     >
-      {site.nav.map((item) => (
-        <DesktopNavLink key={item.href} item={item} />
+      {nav.map((item) => (
+        <DesktopNavLink key={item.id} item={item} />
       ))}
     </motion.nav>
   );

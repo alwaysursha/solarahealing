@@ -1,44 +1,53 @@
 @import "tailwindcss";
 
 :root {
-  /* Core brand — original live homepage palette */
-  --purple-deep: #5C1A94;
-  --purple-mid: #9D4DAE;
-  --purple-light: #C980D4;
-  --indigo-deep: #4A2068;
-  --violet-glow: #DEB0D8;
-  --gold: #D4AD35;
-  --gold-light: #E8CA62;
-  --saffron: #EDBC48;
+  /* Live brand — Option 8 midnight orchid (clean) */
+  --purple-deep: #5c1470;
+  --purple-mid: #b84dc8;
+  --purple-light: #d9a8e4;
+  --indigo-deep: #3f0e52;
+  --violet-glow: #e8c8f0;
+  --gold: #d916bf;
+  --gold-light: #f06bde;
+  --saffron: #e63acb;
   --cream: #faf7f2;
   --canvas: #fdfcfa;
-  --foreground: #3A2560;
-  --accent: #5B52D4;
-  --accent-light: #7470E8;
-  --accent-soft: #F7F4FC;
-  --hero-blush: #F4EEF8;
-  --hero-wash: #EDE4F5;
+  --foreground: #2f1a45;
+  --accent: #5c1470;
+  --accent-light: #b84dc8;
+  --accent-soft: #f7f0fa;
+  --hero-blush: #f4ecf7;
+  --hero-wash: #ede2f2;
 
   /* RGB tokens for overlays & panels */
-  --purple-deep-rgb: 92, 26, 148;
-  --purple-mid-rgb: 157, 77, 174;
-  --panel-top-rgb: 68, 34, 108;
-  --panel-mid-rgb: 56, 28, 92;
-  --panel-deep-rgb: 44, 22, 74;
-  --panel-accent-rgb: 62, 34, 112;
-  --overlay-rgb: 48, 28, 76;
+  --purple-deep-rgb: 92, 20, 112;
+  --purple-mid-rgb: 184, 77, 200;
+  --panel-top-rgb: 64, 18, 82;
+  --panel-mid-rgb: 52, 14, 68;
+  --panel-deep-rgb: 40, 10, 54;
+  --panel-accent-rgb: 78, 24, 98;
+  --overlay-rgb: 46, 12, 62;
 
-  /* Hero / header — original spiritual gradient stops */
-  --spirit-grad-1: #452078;
-  --spirit-grad-2: #553080;
-  --spirit-grad-3: #684090;
-  --spirit-grad-4: #5C1A94;
-  --spirit-grad-5: #583878;
-  --spirit-grad-mobile-1: #58388C;
-  --spirit-grad-mobile-2: #684898;
-  --spirit-grad-mobile-3: #7A58A8;
-  --spirit-grad-mobile-4: #7030A8;
-  --spirit-grad-mobile-5: #6C4890;
+  /* Header spiritual gradient */
+  --spirit-grad-1: #2e0a3c;
+  --spirit-grad-2: #5c1470;
+  --spirit-grad-3: #7a2a8e;
+  --spirit-grad-4: #b84dc8;
+  --spirit-grad-5: #4a105c;
+  --spirit-grad-mobile-1: #2e0a3c;
+  --spirit-grad-mobile-2: #5c1470;
+  --spirit-grad-mobile-3: #7a2a8e;
+  --spirit-grad-mobile-4: #b84dc8;
+  --spirit-grad-mobile-5: #4a105c;
+
+  /* Gap below measured header before the content panel seam */
+  --panel-header-gap: 8px;
+}
+
+@media (min-width: 768px) {
+  :root {
+    --panel-header-gap: 10px;
+  }
 }
 
 /* Preview-only palettes — applied on /preview/option-* pages */
@@ -111,9 +120,435 @@ html[data-brand-theme="8"] {
   --spirit-grad-mobile-5: #4A105C;
 }
 
-/* Option 8: same colors as 7, no background textures / chakras */
+/* Option 8: same orchid as 7, clean gradient, accent #d916bf */
+html[data-brand-theme="8"] {
+  --gold: #d916bf;
+  --gold-light: #F06BDE;
+  --saffron: #E63ACB;
+  --panel-header-gap: 8px;
+}
+
+@media (min-width: 768px) {
+  html[data-brand-theme="8"] {
+    --panel-header-gap: 10px;
+  }
+}
+
 html[data-brand-theme="8"] .spiritual-fx {
   display: none !important;
+}
+
+/* Vertically center logo / nav / account controls inside the purple band */
+html[data-brand-theme="8"] .site-header-layer {
+  display: flex;
+  align-items: center;
+  padding-top: 1.35rem;
+  padding-bottom: 1.35rem;
+}
+
+@media (min-width: 768px) {
+  html[data-brand-theme="8"] .site-header-layer {
+    padding-top: 1.55rem;
+    padding-bottom: 1.55rem;
+  }
+}
+
+html[data-brand-theme="8"] .site-header-layer > * {
+  flex: 1 1 auto;
+  width: 100%;
+  min-width: 0;
+}
+
+html[data-brand-theme="8"] .nav-link-desktop-label {
+  font-size: 0.92rem;
+  letter-spacing: 0.18em;
+}
+
+html[data-brand-theme="8"] .nav-link-desktop:hover .nav-link-desktop-label,
+html[data-brand-theme="8"] .nav-link-desktop:focus-visible .nav-link-desktop-label {
+  letter-spacing: 0.22em;
+}
+
+html[data-brand-theme="8"] .nav-link-icon {
+  width: 1.12rem;
+  height: 1.12rem;
+}
+
+/* Option 9 — Cobalt bloom: #051e82 (left) → #e158c2 (right) */
+html[data-brand-theme="9"] {
+  --purple-deep: #051e82;
+  --purple-mid: #e158c2;
+  --purple-light: #f0a8e4;
+  --indigo-deep: #03145c;
+  --violet-glow: #f5c4ec;
+  --gold: #e158c2;
+  --gold-light: #f08ad8;
+  --saffron: #e874cd;
+  --cream: #faf7fb;
+  --canvas: #fdfbfd;
+  --foreground: #0d1a4a;
+  --accent: #051e82;
+  --accent-light: #e158c2;
+  --accent-soft: #f7f0fa;
+  --hero-blush: #f5eef8;
+  --hero-wash: #ebe4f6;
+  --purple-deep-rgb: 5, 30, 130;
+  --purple-mid-rgb: 225, 88, 194;
+  --panel-top-rgb: 8, 36, 140;
+  --panel-mid-rgb: 6, 28, 118;
+  --panel-deep-rgb: 4, 20, 96;
+  --panel-accent-rgb: 180, 60, 170;
+  --overlay-rgb: 5, 22, 90;
+  --spirit-grad-1: #051e82;
+  --spirit-grad-2: #051e82;
+  --spirit-grad-3: #7a3db0;
+  --spirit-grad-4: #e158c2;
+  --spirit-grad-5: #e158c2;
+  --spirit-grad-mobile-1: #051e82;
+  --spirit-grad-mobile-2: #051e82;
+  --spirit-grad-mobile-3: #8a48b8;
+  --spirit-grad-mobile-4: #e158c2;
+  --spirit-grad-mobile-5: #e158c2;
+}
+
+/* Left → right header field (blue left, pink right) */
+html[data-brand-theme="9"] .bg-spiritual-gradient {
+  background: linear-gradient(
+    90deg,
+    #051e82 0%,
+    #051e82 18%,
+    #4a2e9a 48%,
+    #e158c2 82%,
+    #e158c2 100%
+  );
+}
+
+html[data-brand-theme="9"] .spiritual-fx {
+  display: none !important;
+}
+
+/* Option 10 — soft lilac wash header + classic gold accents (no hot pink fields) */
+html[data-brand-theme="10"] {
+  --purple-deep: #5c1470;
+  --purple-mid: #8a5aad;
+  --purple-light: #c9b0db;
+  --indigo-deep: #3f0e52;
+  --violet-glow: #e4d4f0;
+  --gold: #c9a227;
+  --gold-light: #dbb94a;
+  --saffron: #d4a84a;
+  --cream: #faf7f2;
+  --canvas: #fdfcfa;
+  --foreground: #2f1a45;
+  --accent: #5c1470;
+  --accent-light: #8a5aad;
+  --accent-soft: #f4eef8;
+  --hero-blush: #f0e8f6;
+  --hero-wash: #e8dff2;
+  --purple-deep-rgb: 92, 20, 112;
+  --purple-mid-rgb: 138, 90, 173;
+  --panel-top-rgb: 242, 236, 248;
+  --panel-mid-rgb: 236, 228, 245;
+  --panel-deep-rgb: 248, 244, 251;
+  --panel-accent-rgb: 198, 176, 220;
+  --overlay-rgb: 92, 20, 112;
+  --spirit-grad-1: #f7f3fa;
+  --spirit-grad-2: #efe8f6;
+  --spirit-grad-3: #e8dff2;
+  --spirit-grad-4: #f2ecf8;
+  --spirit-grad-5: #f7f3fa;
+  --spirit-grad-mobile-1: #f7f3fa;
+  --spirit-grad-mobile-2: #efe8f6;
+  --spirit-grad-mobile-3: #e8dff2;
+  --spirit-grad-mobile-4: #f2ecf8;
+  --spirit-grad-mobile-5: #f7f3fa;
+  /* Panel trim — dark purple + soft depth (no gold / no white chase) */
+  --panel-border-ridge-1: #7a3d96;
+  --panel-border-ridge-2: #5c1470;
+  --panel-border-ridge-3: #3f0e52;
+  --panel-border-shade-1: #4a1260;
+  --panel-border-shade-2: #3a0f4e;
+  --panel-border-shade-3: #2a0a3a;
+  --panel-border-edge: rgba(63, 14, 82, 0.55);
+  --panel-border-shadow-flood: #3f0e52;
+  --panel-border-highlight-flood: #8a5aad;
+  --panel-border-shimmer: transparent;
+}
+
+html[data-brand-theme="10"] .spiritual-fx {
+  display: none !important;
+}
+
+html[data-brand-theme="10"] .bg-spiritual-gradient {
+  background: linear-gradient(
+    155deg,
+    #f7f3fa 0%,
+    #efe8f6 32%,
+    #e8dff2 58%,
+    #f2ecf8 100%
+  );
+}
+
+html[data-brand-theme="10"] .panel-border-shimmer {
+  display: none !important;
+  animation: none !important;
+}
+
+html[data-brand-theme="10"] .site-panel-frame svg {
+  filter: drop-shadow(0 2px 6px rgba(63, 14, 82, 0.28))
+    drop-shadow(0 0 1px rgba(92, 20, 112, 0.35));
+}
+
+/* Light header shell — darken cream/gold-on-dark UI */
+html[data-brand-theme="10"] .site-header-layer,
+html[data-brand-theme="10"] .site-header-layer .text-cream,
+html[data-brand-theme="10"] .site-header-layer [class*="text-cream"] {
+  color: var(--purple-deep);
+}
+
+html[data-brand-theme="10"] .site-header-layer .text-gold,
+html[data-brand-theme="10"] .site-header-layer .text-gold-light,
+html[data-brand-theme="10"] .site-header-layer [class*="text-gold"] {
+  color: var(--purple-deep) !important;
+}
+
+html[data-brand-theme="10"] .nav-link-desktop-label,
+html[data-brand-theme="10"] .nav-link-icon {
+  color: var(--purple-deep) !important;
+}
+
+html[data-brand-theme="10"] .nav-link-desktop:hover .nav-link-desktop-label,
+html[data-brand-theme="10"] .nav-link-desktop:focus-visible .nav-link-desktop-label,
+html[data-brand-theme="10"] .nav-link-desktop-active .nav-link-desktop-label,
+html[data-brand-theme="10"] .nav-link-desktop:hover .nav-link-icon,
+html[data-brand-theme="10"] .nav-link-desktop:focus-visible .nav-link-icon,
+html[data-brand-theme="10"] .nav-link-desktop-active .nav-link-icon {
+  color: #7a3d96 !important;
+}
+
+html[data-brand-theme="10"] .site-header-layer button,
+html[data-brand-theme="10"] .site-header-layer a {
+  color: inherit;
+}
+
+/* Logged-in greeting — solid dark purple, readable on lilac header */
+html[data-brand-theme="10"] .header-user-greeting-hello {
+  color: color-mix(in srgb, var(--purple-deep) 62%, transparent);
+}
+
+html[data-brand-theme="10"] .header-user-greeting-name {
+  background: none;
+  -webkit-background-clip: unset;
+  background-clip: unset;
+  color: var(--purple-deep);
+  text-shadow: none;
+  font-weight: 500;
+}
+
+html[data-brand-theme="10"] .header-user-greeting-chevron,
+html[data-brand-theme="10"] .header-user-greeting-chevron-open,
+html[data-brand-theme="10"]
+  .header-user-greeting-trigger:hover
+  .header-user-greeting-chevron:not(.header-user-greeting-chevron-open) {
+  color: color-mix(in srgb, var(--purple-deep) 72%, transparent);
+}
+
+html[data-brand-theme="10"] .header-user-greeting-trigger-active {
+  background: color-mix(in srgb, var(--purple-deep) 6%, white);
+  box-shadow: inset 0 0 0 1px color-mix(in srgb, var(--purple-deep) 18%, transparent);
+}
+
+/* Expanded login / cart / account panels — soft lilac, dark copy */
+html[data-brand-theme="10"] .header-login-panel-inner,
+html[data-brand-theme="10"] .header-account-panel-inner {
+  background: linear-gradient(
+    155deg,
+    #f4eef8 0%,
+    #ebe3f4 48%,
+    #f7f3fa 100%
+  );
+  border-color: color-mix(in srgb, var(--purple-deep) 18%, transparent) !important;
+  box-shadow:
+    0 24px 60px -28px rgba(63, 14, 82, 0.28),
+    inset 0 1px 0 rgba(255, 255, 255, 0.65);
+}
+
+html[data-brand-theme="10"] .header-login-panel-glow,
+html[data-brand-theme="10"] .header-account-panel-glow {
+  background:
+    radial-gradient(circle at 12% 0%, rgba(138, 90, 173, 0.14), transparent 42%),
+    radial-gradient(circle at 88% 100%, rgba(92, 20, 112, 0.08), transparent 46%);
+}
+
+html[data-brand-theme="10"] .header-login-panel-shine,
+html[data-brand-theme="10"] .header-account-panel-shine {
+  background: linear-gradient(
+    118deg,
+    transparent 28%,
+    rgba(255, 255, 255, 0.35) 48%,
+    transparent 68%
+  );
+}
+
+html[data-brand-theme="10"] .header-login-label,
+html[data-brand-theme="10"] .header-account-eyebrow {
+  color: color-mix(in srgb, var(--purple-deep) 55%, transparent);
+}
+
+html[data-brand-theme="10"] .header-login-input {
+  border-color: color-mix(in srgb, var(--purple-deep) 14%, transparent);
+  background: rgba(255, 255, 255, 0.72);
+  color: var(--purple-deep);
+}
+
+html[data-brand-theme="10"] .header-login-input::placeholder {
+  color: color-mix(in srgb, var(--purple-deep) 38%, transparent);
+}
+
+html[data-brand-theme="10"] .header-login-input:focus {
+  border-color: color-mix(in srgb, var(--purple-deep) 36%, transparent);
+  background: rgba(255, 255, 255, 0.92);
+  box-shadow: 0 0 0 3px rgba(92, 20, 112, 0.1);
+}
+
+html[data-brand-theme="10"] .header-cart-empty {
+  border-color: color-mix(in srgb, var(--purple-deep) 12%, transparent);
+  background: color-mix(in srgb, var(--purple-deep) 4%, white);
+}
+
+html[data-brand-theme="10"] .header-account-welcome,
+html[data-brand-theme="10"] .header-cart-panel-header h2 {
+  color: var(--purple-deep) !important;
+}
+
+html[data-brand-theme="10"] .header-account-welcome span {
+  color: color-mix(in srgb, var(--purple-deep) 70%, transparent);
+}
+
+html[data-brand-theme="10"] .header-account-email,
+html[data-brand-theme="10"] .header-account-ghost,
+html[data-brand-theme="10"] .header-cart-panel-browse,
+html[data-brand-theme="10"] .header-account-cart-browse {
+  color: color-mix(in srgb, var(--purple-deep) 58%, transparent) !important;
+}
+
+html[data-brand-theme="10"] .header-account-nav-item,
+html[data-brand-theme="10"] .header-account-ghost {
+  border-color: color-mix(in srgb, var(--purple-deep) 14%, transparent);
+  background: rgba(255, 255, 255, 0.45);
+  color: var(--purple-deep);
+}
+
+html[data-brand-theme="10"] .header-account-nav-item:hover,
+html[data-brand-theme="10"] .header-account-ghost:hover {
+  border-color: color-mix(in srgb, var(--purple-deep) 28%, transparent);
+  background: rgba(255, 255, 255, 0.75);
+  color: var(--purple-deep);
+}
+
+html[data-brand-theme="10"] .header-account-avatar {
+  border-color: color-mix(in srgb, var(--purple-deep) 28%, transparent);
+  background: linear-gradient(145deg, #ebe3f4, #dccfea);
+  color: var(--purple-deep);
+  box-shadow: 0 10px 28px -16px rgba(63, 14, 82, 0.35);
+}
+
+html[data-brand-theme="10"] .header-login-google {
+  border-color: color-mix(in srgb, var(--purple-deep) 16%, transparent);
+  background: rgba(255, 255, 255, 0.65);
+  color: var(--purple-deep);
+}
+
+html[data-brand-theme="10"] .header-login-google:hover {
+  border-color: color-mix(in srgb, var(--purple-deep) 28%, transparent);
+  background: rgba(255, 255, 255, 0.88);
+}
+
+html[data-brand-theme="10"] .header-login-footer,
+html[data-brand-theme="10"] .header-login-footer a,
+html[data-brand-theme="10"] .header-cart-total-label,
+html[data-brand-theme="10"] .header-cart-line-meta,
+html[data-brand-theme="10"] .header-cart-line-remove {
+  color: color-mix(in srgb, var(--purple-deep) 55%, transparent) !important;
+}
+
+html[data-brand-theme="10"] .header-cart-line-title,
+html[data-brand-theme="10"] .header-cart-total-value {
+  color: var(--purple-deep) !important;
+}
+
+html[data-brand-theme="10"] .header-cart-line-type,
+html[data-brand-theme="10"] .header-cart-panel-header [class*="text-gold"] {
+  color: color-mix(in srgb, var(--purple-deep) 68%, transparent) !important;
+}
+
+html[data-brand-theme="10"] .header-cart-line {
+  border-color: color-mix(in srgb, var(--purple-deep) 10%, transparent);
+  background: rgba(255, 255, 255, 0.45);
+}
+
+html[data-brand-theme="10"] .footer-social-panel,
+html[data-brand-theme="10"] .footer-social-panel .text-white,
+html[data-brand-theme="10"] .footer-social-panel [class*="text-cream"],
+html[data-brand-theme="10"] .footer-panel-heading {
+  color: var(--purple-deep) !important;
+}
+
+/* Schedule — contain aura/transforms so nothing paints over the header */
+html[data-brand-theme="10"] .schedule-section {
+  isolation: isolate;
+  overflow: hidden;
+  contain: paint;
+}
+
+html[data-brand-theme="10"] .schedule-content-panel,
+html[data-brand-theme="10"] .schedule-portrait-panel {
+  overflow: hidden !important;
+  isolation: isolate;
+}
+
+html[data-brand-theme="10"] .schedule-aura {
+  opacity: 0.85;
+}
+
+html[data-brand-theme="10"] .schedule-aura-ring {
+  width: min(38vw, 20rem);
+  height: min(38vw, 20rem);
+  top: 22%;
+  left: 48%;
+  will-change: auto;
+  animation: schedule-aura-pulse-opt10 9s ease-in-out infinite;
+}
+
+html[data-brand-theme="10"] .schedule-content-bg-image,
+html[data-brand-theme="10"] .schedule-portrait-image {
+  will-change: auto;
+  transition:
+    transform 1.1s cubic-bezier(0.22, 1, 0.36, 1),
+    opacity 0.7s ease;
+}
+
+@media (hover: hover) {
+  html[data-brand-theme="10"] .schedule-content-panel:hover .schedule-content-bg-image {
+    opacity: 0.5;
+    transform: scale(1.03);
+  }
+
+  html[data-brand-theme="10"] .schedule-portrait-panel:hover .schedule-portrait-image {
+    transform: scale(1.03);
+  }
+}
+
+@keyframes schedule-aura-pulse-opt10 {
+  0%,
+  100% {
+    opacity: 0.55;
+    transform: translate(-50%, -50%) scale(1);
+  }
+  50% {
+    opacity: 0.85;
+    transform: translate(-50%, -50%) scale(1.03);
+  }
 }
 
 @theme inline {
@@ -191,10 +626,10 @@ body:has(.admin-root) {
 /* Mobile header theme — lift purple slightly for smaller, higher-contrast screens */
 @media (max-width: 1023px) {
   :root {
-    --panel-top-rgb: 80, 44, 124;
-    --panel-mid-rgb: 68, 38, 108;
-    --panel-deep-rgb: 56, 32, 92;
-    --panel-accent-rgb: 74, 46, 126;
+    --panel-top-rgb: 74, 22, 94;
+    --panel-mid-rgb: 60, 16, 78;
+    --panel-deep-rgb: 48, 12, 64;
+    --panel-accent-rgb: 88, 28, 110;
   }
 
   .bg-spiritual-gradient {
@@ -225,6 +660,20 @@ body:has(.admin-root) {
     --panel-mid-rgb: 60, 16, 78;
     --panel-deep-rgb: 48, 12, 64;
     --panel-accent-rgb: 88, 28, 110;
+  }
+
+  html[data-brand-theme="9"] {
+    --panel-top-rgb: 10, 40, 150;
+    --panel-mid-rgb: 8, 32, 128;
+    --panel-deep-rgb: 5, 24, 105;
+    --panel-accent-rgb: 200, 70, 180;
+  }
+
+  html[data-brand-theme="10"] {
+    --panel-top-rgb: 242, 236, 248;
+    --panel-mid-rgb: 236, 228, 245;
+    --panel-deep-rgb: 248, 244, 251;
+    --panel-accent-rgb: 198, 176, 220;
   }
 }
 
@@ -357,7 +806,7 @@ html[data-brand-theme="8"] .bg-spiritual-shimmer {
     0 1px 2px rgba(45, 27, 78, 0.04),
     0 3px 12px -2px rgba(var(--purple-deep-rgb), 0.07),
     0 8px 24px -6px rgba(var(--purple-deep-rgb), 0.08),
-    0 14px 36px -12px rgba(201, 162, 39, 0.1);
+    0 14px 36px -12px rgba(var(--purple-mid-rgb), 0.12);
 }
 
 @keyframes workshop-register-shimmer {
@@ -1285,7 +1734,7 @@ html[data-brand-theme="8"] .bg-spiritual-shimmer {
   align-items: center;
   justify-content: center;
   margin-top: 0.15rem;
-  color: rgba(219, 185, 74, 0.78);
+  color: rgba(201, 162, 39, 0.9);
   transition:
     transform 0.32s cubic-bezier(0.4, 0, 0.2, 1),
     color 0.25s ease;
@@ -1294,12 +1743,12 @@ html[data-brand-theme="8"] .bg-spiritual-shimmer {
 
 .header-user-greeting-chevron-open {
   transform: rotate(180deg);
-  color: rgba(240, 216, 144, 0.95);
+  color: #dbb94a;
   animation: none;
 }
 
 .header-user-greeting-trigger:hover .header-user-greeting-chevron:not(.header-user-greeting-chevron-open) {
-  color: rgba(240, 216, 144, 0.92);
+  color: #e8c76a;
 }
 
 @keyframes header-greeting-chevron-bob {
@@ -1317,24 +1766,25 @@ html[data-brand-theme="8"] .bg-spiritual-shimmer {
 }
 
 .header-user-greeting-hello {
-  font-size: 0.52rem;
-  font-weight: 600;
+  font-size: 0.55rem;
+  font-weight: 700;
   letter-spacing: 0.32em;
   text-transform: uppercase;
-  color: rgba(219, 185, 74, 0.72);
+  color: rgba(232, 199, 106, 0.92);
 }
 
 .header-user-greeting-name {
   margin-top: 0.12rem;
   font-family: var(--font-instrument-serif), serif;
-  font-size: clamp(1rem, 1.6vw, 1.18rem);
+  font-size: clamp(1.05rem, 1.7vw, 1.28rem);
   font-weight: 400;
   letter-spacing: 0.01em;
-  background: linear-gradient(118deg, #fff7e8 0%, #f0d890 38%, #dbb94a 72%, #c9a227 100%);
-  -webkit-background-clip: text;
-  background-clip: text;
-  color: transparent;
-  text-shadow: 0 0 24px rgba(219, 185, 74, 0.18);
+  background: none;
+  -webkit-background-clip: unset;
+  background-clip: unset;
+  color: #d4ad35;
+  text-shadow: none;
+  filter: none;
 }
 
 .header-account-panel-inner {
@@ -1796,6 +2246,312 @@ html[data-brand-theme="8"] .bg-spiritual-shimmer {
   background-image: url("data:image/svg+xml,%3Csvg viewBox='0 0 256 256' xmlns='http://www.w3.org/2000/svg'%3E%3Cfilter id='n'%3E%3CfeTurbulence type='fractalNoise' baseFrequency='0.85' numOctaves='4' stitchTiles='stitch'/%3E%3C/filter%3E%3Crect width='100%25' height='100%25' filter='url(%23n)'/%3E%3C/svg%3E");
 }
 
+/* Option 8 — lighter courses stage (orchid + magenta accent mix) */
+html[data-brand-theme="8"] .workshop-stage {
+  background: linear-gradient(
+    155deg,
+    #faf5fb 0%,
+    #f4e8f7 28%,
+    color-mix(in srgb, var(--gold) 10%, #efe0f4) 55%,
+    #f7eff9 100%
+  );
+}
+
+html[data-brand-theme="8"] .workshop-stage-mesh {
+  background:
+    radial-gradient(ellipse 42% 52% at 10% 16%, color-mix(in srgb, var(--gold) 14%, transparent) 0%, transparent 58%),
+    radial-gradient(ellipse 40% 44% at 90% 72%, rgba(var(--purple-mid-rgb), 0.12) 0%, transparent 52%),
+    radial-gradient(ellipse 58% 38% at 48% 100%, rgba(var(--purple-deep-rgb), 0.08) 0%, transparent 50%);
+}
+
+html[data-brand-theme="8"] .workshop-stage-shine {
+  background: linear-gradient(
+    118deg,
+    transparent 28%,
+    color-mix(in srgb, var(--gold) 6%, transparent) 42%,
+    color-mix(in srgb, var(--gold-light) 12%, transparent) 50%,
+    color-mix(in srgb, var(--gold) 5%, transparent) 58%,
+    transparent 72%
+  );
+}
+
+html[data-brand-theme="8"] .workshop-stage-gloss {
+  background: linear-gradient(
+    180deg,
+    rgba(255, 255, 255, 0.55) 0%,
+    rgba(255, 255, 255, 0.18) 18%,
+    transparent 42%
+  );
+}
+
+/* Option 10 — soft lilac courses stage (no pink wash) */
+html[data-brand-theme="10"] .workshop-stage {
+  background: linear-gradient(
+    155deg,
+    #f7f3fa 0%,
+    #efe8f6 32%,
+    #e8dff2 58%,
+    #f2ecf8 100%
+  );
+}
+
+html[data-brand-theme="10"] .workshop-stage-mesh {
+  background:
+    radial-gradient(ellipse 42% 52% at 12% 18%, rgba(138, 90, 173, 0.12) 0%, transparent 58%),
+    radial-gradient(ellipse 40% 44% at 90% 72%, rgba(92, 20, 112, 0.08) 0%, transparent 52%),
+    radial-gradient(ellipse 58% 38% at 48% 100%, rgba(92, 20, 112, 0.06) 0%, transparent 50%);
+}
+
+html[data-brand-theme="10"] .workshop-stage-shine {
+  background: linear-gradient(
+    118deg,
+    transparent 28%,
+    rgba(138, 90, 173, 0.06) 42%,
+    rgba(198, 176, 220, 0.14) 50%,
+    rgba(138, 90, 173, 0.05) 58%,
+    transparent 72%
+  );
+}
+
+html[data-brand-theme="10"] .workshop-stage-gloss {
+  background: linear-gradient(
+    180deg,
+    rgba(255, 255, 255, 0.55) 0%,
+    rgba(255, 255, 255, 0.18) 18%,
+    transparent 42%
+  );
+}
+
+/* Light stage: invert intro-column eyebrow only (not course-card badges) */
+html[data-brand-theme="8"] #courses .workshop-stage-content > *:first-child > .inline-flex:not(.workshop-view-all),
+html[data-brand-theme="10"] #courses .workshop-stage-content > *:first-child > .inline-flex:not(.workshop-view-all) {
+  border-color: color-mix(in srgb, var(--purple-deep) 18%, transparent) !important;
+  background: color-mix(in srgb, var(--purple-deep) 4%, white) !important;
+}
+
+html[data-brand-theme="8"] #courses .workshop-stage-content > *:first-child > .inline-flex:not(.workshop-view-all) span,
+html[data-brand-theme="10"] #courses .workshop-stage-content > *:first-child > .inline-flex:not(.workshop-view-all) span {
+  color: color-mix(in srgb, var(--purple-deep) 72%, transparent) !important;
+}
+
+/* Option 10 — keep On Demand / course badges readable on media */
+html[data-brand-theme="10"] #courses .workshop-featured .inline-flex[class*="bg-black"],
+html[data-brand-theme="10"] #courses .workshop-card .inline-flex[class*="bg-black"],
+html[data-brand-theme="10"] #courses .workshop-upcoming .inline-flex[class*="bg-black"] {
+  border-color: rgba(255, 250, 242, 0.35) !important;
+  background: rgba(20, 8, 40, 0.55) !important;
+  color: #fffaf2 !important;
+  backdrop-filter: blur(8px);
+}
+
+html[data-brand-theme="8"] #courses .workshop-stage-content h2,
+html[data-brand-theme="10"] #courses .workshop-stage-content h2 {
+  color: var(--purple-deep) !important;
+}
+
+html[data-brand-theme="8"] #courses .workshop-stage-content > div > div > p,
+html[data-brand-theme="8"] #courses .workshop-stage-content .max-w-md,
+html[data-brand-theme="10"] #courses .workshop-stage-content > div > div > p,
+html[data-brand-theme="10"] #courses .workshop-stage-content .max-w-md {
+  color: color-mix(in srgb, var(--purple-deep) 58%, transparent) !important;
+}
+
+html[data-brand-theme="8"] #courses .workshop-stage-content .text-6xl,
+html[data-brand-theme="10"] #courses .workshop-stage-content .text-6xl {
+  color: color-mix(in srgb, var(--purple-deep) 12%, transparent) !important;
+}
+
+html[data-brand-theme="8"] #courses .workshop-stage-content .uppercase.tracking-\[0\.28em\],
+html[data-brand-theme="10"] #courses .workshop-stage-content .uppercase.tracking-\[0\.28em\] {
+  color: color-mix(in srgb, var(--purple-deep) 38%, transparent) !important;
+}
+
+html[data-brand-theme="8"] #courses .workshop-view-all,
+html[data-brand-theme="10"] #courses .workshop-view-all {
+  border-color: color-mix(in srgb, var(--gold) 45%, transparent) !important;
+  background: color-mix(in srgb, var(--gold) 6%, white) !important;
+  color: var(--gold) !important;
+}
+
+html[data-brand-theme="8"] #courses .workshop-view-all:hover,
+html[data-brand-theme="10"] #courses .workshop-view-all:hover {
+  border-color: var(--gold) !important;
+  background: color-mix(in srgb, var(--gold) 12%, white) !important;
+}
+
+html[data-brand-theme="10"] #courses .workshop-view-all {
+  border-color: color-mix(in srgb, var(--purple-deep) 28%, transparent) !important;
+  background: color-mix(in srgb, var(--purple-deep) 5%, white) !important;
+  color: var(--purple-deep) !important;
+}
+
+html[data-brand-theme="10"] #courses .workshop-view-all:hover {
+  border-color: var(--purple-deep) !important;
+  background: color-mix(in srgb, var(--purple-deep) 10%, white) !important;
+}
+
+/* Softer price + enroll/register CTAs on catalog cards */
+#courses .workshop-price-tag .text-gold,
+#courses .workshop-price-large .text-gold,
+#workshops .workshop-price-tag .text-gold,
+#workshops .workshop-price-large .text-gold {
+  color: #dbc48a !important;
+}
+
+#courses .workshop-register-btn.bg-gold,
+#workshops .workshop-register-btn.bg-gold {
+  background: linear-gradient(
+    145deg,
+    #8f63b5 0%,
+    #734795 48%,
+    #5c1470 100%
+  ) !important;
+  color: #faf6fc !important;
+  box-shadow:
+    0 12px 28px -14px rgba(92, 20, 112, 0.42),
+    inset 0 1px 0 rgba(255, 255, 255, 0.14) !important;
+}
+
+#courses .workshop-register-btn.bg-gold:hover,
+#workshops .workshop-register-btn.bg-gold:hover {
+  background: linear-gradient(
+    145deg,
+    #a47bc6 0%,
+    #8556a8 55%,
+    #6b3d8a 100%
+  ) !important;
+  color: #ffffff !important;
+}
+
+#courses .workshop-register-btn[class*="border-gold"],
+#workshops .workshop-register-btn[class*="border-gold"] {
+  border-color: rgba(219, 196, 138, 0.5) !important;
+  color: #dbc48a !important;
+  background: rgba(255, 255, 255, 0.06) !important;
+}
+
+#courses .workshop-register-btn[class*="border-gold"]:hover,
+#workshops .workshop-register-btn[class*="border-gold"]:hover {
+  border-color: rgba(219, 196, 138, 0.72) !important;
+  background: rgba(219, 196, 138, 0.1) !important;
+}
+
+html[data-brand-theme="10"] #courses .workshop-title-line {
+  background: linear-gradient(
+    90deg,
+    var(--purple-deep) 0%,
+    color-mix(in srgb, var(--purple-mid) 55%, transparent) 55%,
+    transparent 100%
+  ) !important;
+}
+
+/* Option 10 — course card labels readable on dark overlays */
+html[data-brand-theme="10"] #courses .workshop-featured,
+html[data-brand-theme="10"] #courses .workshop-card,
+html[data-brand-theme="10"] #courses .workshop-upcoming {
+  --gold: #e8c76a;
+  --gold-light: #f0d890;
+}
+
+html[data-brand-theme="10"] #courses .workshop-featured .text-gold,
+html[data-brand-theme="10"] #courses .workshop-card .text-gold,
+html[data-brand-theme="10"] #courses .workshop-upcoming .text-gold,
+html[data-brand-theme="10"] #courses .workshop-price-tag .text-gold,
+html[data-brand-theme="10"] #courses .workshop-price-large .text-gold {
+  color: #e8c76a !important;
+}
+
+html[data-brand-theme="10"] #courses .workshop-featured h3,
+html[data-brand-theme="10"] #courses .workshop-card h3,
+html[data-brand-theme="10"] #courses .workshop-upcoming h3 {
+  color: #fffaf2 !important;
+  text-shadow: 0 1px 14px rgba(20, 8, 40, 0.35);
+}
+
+html[data-brand-theme="10"] #courses .workshop-featured [class*="text-gold-light"],
+html[data-brand-theme="10"] #courses .workshop-card [class*="text-gold-light"],
+html[data-brand-theme="10"] #courses .workshop-upcoming [class*="text-gold-light"] {
+  color: rgba(240, 216, 144, 0.92) !important;
+  letter-spacing: 0.2em;
+}
+
+html[data-brand-theme="10"] #courses .workshop-featured [class*="text-white/"],
+html[data-brand-theme="10"] #courses .workshop-card [class*="text-white/"],
+html[data-brand-theme="10"] #courses .workshop-upcoming [class*="text-white/"] {
+  color: rgba(255, 250, 242, 0.7) !important;
+}
+
+html[data-brand-theme="10"] #courses span[class*="bg-gold"] {
+  background: linear-gradient(135deg, #efe0a0, #d4b24a) !important;
+  color: #3f0e52 !important;
+}
+
+html[data-brand-theme="10"] #courses .workshop-register-btn.bg-gold {
+  background: linear-gradient(135deg, #efe0a0, #d4b24a) !important;
+  color: #3f0e52 !important;
+  box-shadow: 0 12px 28px -14px rgba(201, 162, 39, 0.55) !important;
+}
+
+html[data-brand-theme="10"] #courses .workshop-register-btn[class*="border-gold"] {
+  border-color: rgba(232, 199, 106, 0.55) !important;
+  color: #e8c76a !important;
+  background: rgba(255, 255, 255, 0.06) !important;
+}
+
+html[data-brand-theme="10"] #courses .catalog-view-details {
+  color: rgba(240, 216, 144, 0.92) !important;
+}
+
+html[data-brand-theme="10"] #courses .catalog-view-details:hover {
+  color: #fff3c4 !important;
+}
+
+/* Option 8 / 10 — hero primary CTA + dots in deep orchid */
+html[data-brand-theme="8"] section[aria-label="Hero highlights"] a.bg-gold,
+html[data-brand-theme="10"] section[aria-label="Hero highlights"] a.bg-gold {
+  background: linear-gradient(
+    155deg,
+    #5C1470 0%,
+    #7A2A8E 55%,
+    #5C1470 100%
+  ) !important;
+  color: #faf8fc !important;
+  box-shadow:
+    0 12px 28px -10px rgba(var(--purple-deep-rgb), 0.55),
+    0 0 0 1px color-mix(in srgb, white 14%, transparent) inset !important;
+}
+
+html[data-brand-theme="8"] section[aria-label="Hero highlights"] a.bg-gold:hover,
+html[data-brand-theme="10"] section[aria-label="Hero highlights"] a.bg-gold:hover {
+  background: linear-gradient(
+    155deg,
+    #7A2A8E 0%,
+    #B84DC8 100%
+  ) !important;
+  color: #ffffff !important;
+}
+
+html[data-brand-theme="8"] section[aria-label="Hero highlights"] a.bg-gold > span.absolute,
+html[data-brand-theme="10"] section[aria-label="Hero highlights"] a.bg-gold > span.absolute {
+  background: color-mix(in srgb, var(--purple-deep) 45%, transparent) !important;
+}
+
+html[data-brand-theme="8"] section[aria-label="Hero highlights"] [role="tablist"] button[aria-selected="true"],
+html[data-brand-theme="10"] section[aria-label="Hero highlights"] [role="tablist"] button[aria-selected="true"] {
+  background: var(--purple-deep) !important;
+  box-shadow: 0 0 12px color-mix(in srgb, var(--purple-deep) 45%, transparent);
+}
+
+html[data-brand-theme="8"] section[aria-label="Hero highlights"] [role="tablist"] button[aria-selected="false"],
+html[data-brand-theme="10"] section[aria-label="Hero highlights"] [role="tablist"] button[aria-selected="false"] {
+  background: color-mix(in srgb, var(--purple-deep) 30%, transparent) !important;
+}
+
+html[data-brand-theme="8"] section[aria-label="Hero highlights"] [role="tablist"] button[aria-selected="false"]:hover,
+html[data-brand-theme="10"] section[aria-label="Hero highlights"] [role="tablist"] button[aria-selected="false"]:hover {
+  background: color-mix(in srgb, var(--purple-deep) 50%, transparent) !important;
+}
+
 /* Site shell — fixed layer stack (scroll panel < border < header) */
 .site-shell {
   isolation: isolate;
@@ -1873,6 +2629,19 @@ html[data-brand-theme="8"] .bg-spiritual-shimmer {
     0 20px 60px -20px rgba(0, 0, 0, 0.45),
     inset 0 1px 0 rgba(255, 255, 255, 0.12);
   transition: box-shadow 0.5s ease;
+}
+
+/* Stacked mobile: square bottom corners against purple panel
+   Desktop side-by-side: square right edge against purple panel */
+.workshop-featured-media {
+  overflow: hidden;
+  border-radius: 1.75rem 1.75rem 0 0;
+}
+
+@media (min-width: 1024px) {
+  .workshop-featured-media {
+    border-radius: 1.75rem 0 0 1.75rem;
+  }
 }
 
 .workshop-featured:hover {
@@ -6393,8 +7162,8 @@ html[data-brand-theme="8"] .bg-spiritual-shimmer {
   display: inline-flex;
   align-items: center;
   gap: 0.35rem;
-  font-size: 0.58rem;
-  font-weight: 600;
+  font-size: 0.78rem;
+  font-weight: 700;
   letter-spacing: 0.16em;
   text-transform: uppercase;
   color: rgba(238, 207, 120, 0.78);

@@ -34,7 +34,11 @@ export function SiteShell({ children }: SiteShellProps) {
     const header = headerRef.current;
     if (!panel) return;
 
-    const lineY = (header?.offsetHeight ?? 68) + 6;
+    const gapRaw = getComputedStyle(document.documentElement)
+      .getPropertyValue("--panel-header-gap")
+      .trim();
+    const headerGap = Number.parseFloat(gapRaw) || 6;
+    const lineY = (header?.offsetHeight ?? 68) + headerGap;
     const { width, height } = panel.getBoundingClientRect();
     const outlinePath = buildPanelPath(width, height, lineY);
     const tracePath = buildBorderTracePath(width, height, lineY);

@@ -20,6 +20,11 @@ import {
   workshopsIntro,
 } from "../src/lib/site";
 import { WORKSHOP_SCHEDULE_SEEDS } from "../src/lib/admin/workshop-schedule";
+import {
+  normalizeAboutContent,
+  normalizeHeroSlides,
+  parseNavJson,
+} from "../src/lib/frontpage-content";
 import { SITE_DESCRIPTION, SITE_NAME } from "../src/lib/constants";
 
 config();
@@ -64,14 +69,14 @@ function sectionEntries() {
       pageKey: "home",
       sectionKey: "hero",
       label: "Hero carousel",
-      content: JSON.stringify(heroSlides),
+      content: JSON.stringify(normalizeHeroSlides(heroSlides, site.cta)),
     },
     {
       id: "home-about",
       pageKey: "home",
       sectionKey: "about",
       label: "About section",
-      content: JSON.stringify(aboutContent),
+      content: JSON.stringify(normalizeAboutContent(aboutContent)),
     },
     {
       id: "home-courses-intro",
@@ -196,10 +201,13 @@ async function main() {
       whatsapp: site.contact.whatsapp,
       address: site.contact.location,
       cta: site.cta,
+      navJson: JSON.stringify(parseNavJson(null)),
       showCoursesSection: true,
       showWorkshopsSection: false,
     },
-    update: {},
+    update: {
+      navJson: JSON.stringify(parseNavJson(null)),
+    },
   });
 
   for (const [index, course] of staticCourses.entries()) {

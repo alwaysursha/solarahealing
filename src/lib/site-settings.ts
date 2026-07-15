@@ -1,4 +1,5 @@
 import { getSiteSettingsFromDb } from "@/lib/content";
+import type { SiteNavItem } from "@/lib/frontpage-content";
 import { site } from "@/lib/site";
 
 export type SiteSettings = {
@@ -7,7 +8,7 @@ export type SiteSettings = {
   sanskrit: string;
   sanskritMeaning: string;
   description: string;
-  nav: typeof site.nav;
+  nav: SiteNavItem[];
   cta: string;
   contact: {
     email: string;
@@ -42,3 +43,5 @@ export async function getSiteSettings(): Promise<SiteSettings> {
     fetchedAt: settings.fetchedAt,
   };
 }
+
+export { site };

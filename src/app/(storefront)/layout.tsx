@@ -10,5 +10,15 @@ export default async function StorefrontLayout({
 }) {
   const settings = await getSiteSettings();
 
-  return <StorefrontShell whatsapp={settings.contact.whatsapp}>{children}</StorefrontShell>;
+  return (
+    <StorefrontShell
+      whatsapp={settings.contact.whatsapp}
+      name={settings.name}
+      nav={settings.nav}
+      cta={settings.cta}
+      sanskrit={settings.sanskrit}
+    >
+      {children}
+    </StorefrontShell>
+  );
 }

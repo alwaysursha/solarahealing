@@ -12,7 +12,7 @@ import {
   mobileNavPanelVariants,
 } from "@/lib/nav-motion";
 import { MOBILE_NAV_WIDTH_PERCENT } from "@/lib/panel-path";
-import { site } from "@/lib/site";
+import { useSiteChrome } from "@/components/storefront/SiteChromeProvider";
 
 type NavItem = {
   label: string;
@@ -31,11 +31,12 @@ function MobileNavShell({ children }: { children: ReactNode }) {
 }
 
 function MobileNavHeader() {
+  const { name, sanskrit } = useSiteChrome();
   return (
     <div className="mobile-nav-header px-5 pb-4 pt-5 sm:px-6">
       <p className="nav-link-desktop-label text-gold/78">Navigate</p>
-      <p className="nav-link-desktop-label mt-3">{site.name}</p>
-      <p className="mt-2 text-[0.62rem] font-semibold tracking-[0.18em] text-cream/38">{site.sanskrit}</p>
+      <p className="nav-link-desktop-label mt-3">{name}</p>
+      <p className="mt-2 text-[0.62rem] font-semibold tracking-[0.18em] text-cream/38">{sanskrit}</p>
     </div>
   );
 }
@@ -51,6 +52,7 @@ function MobileNavFooter({
 }) {
   const reduceMotion = useReducedMotion();
   const useMotion = animated && !reduceMotion;
+  const { cta } = useSiteChrome();
 
   const content = (
     <>
@@ -61,7 +63,7 @@ function MobileNavFooter({
         </button>
         <Link href="#sessions" className="mobile-nav-cta mobile-nav-cta-inline group flex-1" onClick={onClose}>
           <span className="mobile-nav-cta-shine pointer-events-none absolute inset-0" aria-hidden />
-          <span className="relative">{site.cta}</span>
+          <span className="relative">{cta}</span>
           <span className="relative transition-transform duration-300 group-hover:translate-x-0.5">→</span>
         </Link>
       </div>

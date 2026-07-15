@@ -36,6 +36,7 @@ export default function RootLayout({
   return (
     <html
       lang="en"
+      data-brand-theme="8"
       className={`${jakarta.variable} ${instrumentSerif.variable} h-full antialiased`}
       suppressHydrationWarning
     >
