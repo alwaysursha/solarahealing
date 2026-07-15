@@ -4,7 +4,8 @@ import { motion, useReducedMotion } from "framer-motion";
 import { useEffect, useRef, useState, type ReactNode } from "react";
 import { useAnimationsActive } from "@/hooks/useAnimationsActive";
 import { useHeroEntranceComplete } from "@/hooks/useHeroEntranceComplete";
-import { aboutContent } from "@/lib/site";
+import { aboutContent as staticAbout } from "@/lib/site";
+import { DEFAULT_QUOTE_LABEL, normalizeAboutContent, type AboutContent } from "@/lib/frontpage-content";
 
 const ease = [0.22, 1, 0.36, 1] as const;
 
@@ -176,7 +177,7 @@ function AboutEnergyVisual({ animationsActive }: { animationsActive: boolean }) 
         <p className="font-serif text-sm italic text-gold-light/90 md:text-base">
           Universal light, inner peace
         </p>
-        <p className="mt-1 text-[0.6rem] uppercase tracking-[0.28em] text-white/35">
+        <p className="mt-1 text-[0.6rem] uppercase tracking-[0.28em] text-white">
           Energy · Balance · Renewal
         </p>
       </div>
@@ -273,7 +274,7 @@ function TypewriterQuote({
       cancelled = true;
       clearTimers();
     };
-  }, [heroEntranceComplete, reduceMotion]);
+  }, [fullQuote, heroEntranceComplete, reduceMotion]);
 
   const visible = fullQuote.slice(0, charCount);
   const lead = visible.slice(0, Math.min(visible.length, QUOTE_LEAD.length));
@@ -290,13 +291,13 @@ function TypewriterQuote({
       <span aria-hidden="true">
         {lead}
         {accent ? (
-          <span className="about-quote-shimmer bg-gradient-to-r from-gold via-[#e8c96a] to-gold bg-clip-text not-italic text-transparent">
+          <span className="about-quote-shimmer bg-gradient-to-r from-purple-deep via-purple-mid to-purple-deep bg-clip-text not-italic text-transparent">
             {accent}
           </span>
         ) : null}
         {showCursor ? (
           <span
-            className={`about-quote-cursor ml-0.5 inline-block not-italic text-gold ${cursorBlink ? "about-quote-cursor-blink" : ""}`}
+            className={`about-quote-cursor ml-0.5 inline-block not-italic text-purple-mid ${cursorBlink ? "about-quote-cursor-blink" : ""}`}
             aria-hidden
           >
             |
@@ -307,33 +308,39 @@ function TypewriterQuote({
   );
 }
 
-function PracticeQuote({ quote }: { quote: string }) {
+function PracticeQuote({
+  quote,
+  label = DEFAULT_QUOTE_LABEL,
+}: {
+  quote: string;
+  label?: string;
+}) {
   const reduceMotion = useReducedMotion();
   const fullQuote = normalizeQuote(quote);
 
   return (
     <div className="about-quote-shadow relative z-0 mx-auto w-full max-w-[17.5rem] overflow-hidden rounded-lg bg-white/35 p-3 backdrop-blur-[2px] sm:max-w-sm lg:mx-0 lg:max-w-none">
       <div
-        className="about-quote-glow pointer-events-none absolute inset-0 rounded-xl bg-[radial-gradient(circle_at_50%_50%,rgba(201,162,39,0.12),transparent_72%)]"
+        className="about-quote-glow pointer-events-none absolute inset-0 rounded-xl bg-[radial-gradient(circle_at_50%_50%,rgba(var(--purple-mid-rgb),0.16),transparent_72%)]"
         aria-hidden
       />
       <div
-        className="pointer-events-none absolute inset-0 rounded-xl border border-gold/12"
+        className="pointer-events-none absolute inset-0 rounded-xl border border-purple-deep/12"
         aria-hidden
       />
 
-      <blockquote className="relative border-l-2 border-gold/50 pl-3.5">
+      <blockquote className="relative border-l-2 border-purple-mid/55 pl-3.5">
         <span
-          className="font-serif pointer-events-none absolute -top-1 left-2.5 text-3xl leading-none text-gold/20"
+          className="font-serif pointer-events-none absolute -top-1 left-2.5 text-3xl leading-none text-purple-mid/25"
           aria-hidden
         >
           &ldquo;
         </span>
         <TypewriterQuote reduceMotion={reduceMotion} fullQuote={fullQuote} />
         <div className="mt-2.5 space-y-1.5">
-          <div className="h-px w-full max-w-[7rem] bg-gradient-to-r from-gold/55 to-transparent" />
-          <p className="text-[0.6rem] font-semibold uppercase tracking-[0.22em] text-gold">
-            The heart of our practice
+          <div className="h-px w-full max-w-[7rem] bg-gradient-to-r from-purple-mid/60 to-transparent" />
+          <p className="text-[0.6rem] font-semibold uppercase tracking-[0.22em] text-purple-deep">
+            {label}
           </p>
         </div>
       </blockquote>
@@ -341,8 +348,16 @@ function PracticeQuote({ quote }: { quote: string }) {
   );
 }
 
-export function AboutSection({ content = aboutContent }: { content?: typeof aboutContent }) {
-  const [first, second, third] = content.paragraphs;
+export function AboutSection({
+  content,
+}: {
+  content?: AboutContent;
+}) {
+  const resolved = normalizeAboutContent(content ?? staticAbout);
+  const paragraphs = resolved.paragraphs?.length
+    ? resolved.paragraphs
+    : [...staticAbout.paragraphs];
+  const [first, second, third] = paragraphs;
   const sectionRef = useRef<HTMLElement>(null);
   const heroEntranceComplete = useHeroEntranceComplete();
   const scrollAnimationsActive = useAnimationsActive(sectionRef);
@@ -354,9 +369,12 @@ export function AboutSection({ content = aboutContent }: { content?: typeof abou
       ref={sectionRef}
       className={`bg-canvas px-6 pb-12 pt-6 md:px-10 md:pb-16 md:pt-10 lg:px-14 lg:pb-20 lg:pt-28${animationsActive ? "" : " animations-paused"}`}
     >
-      <div className="mx-auto grid max-w-7xl gap-6 md:gap-8 lg:grid-cols-12 lg:items-start lg:gap-6 xl:gap-10">
-        <Reveal delay={0.05} className="order-2 lg:order-none lg:col-span-3">
-          <div className="relative aspect-[16/10] lg:aspect-[4/5]">
+      <div className="mx-auto grid max-w-7xl gap-6 md:gap-8 lg:grid-cols-12 lg:items-stretch lg:gap-6 xl:gap-10">
+        <Reveal
+          delay={0.05}
+          className="order-2 lg:order-none lg:col-span-3 lg:flex lg:h-full lg:flex-col"
+        >
+          <div className="relative aspect-[16/10] lg:aspect-auto lg:min-h-[22rem] lg:flex-1">
             <AboutEnergyVisual animationsActive={animationsActive} />
           </div>
         </Reveal>
@@ -370,26 +388,26 @@ export function AboutSection({ content = aboutContent }: { content?: typeof abou
             <span className="italic text-purple-mid">Soulara Healing Academy,</span>
           </h2>
           <div className="mt-5 h-px w-16 bg-gradient-to-r from-gold/70 to-transparent" />
-          <p className="mt-6 text-sm leading-[1.85] text-purple-deep/68 md:text-[0.98rem] lg:text-[1.02rem] lg:text-purple-deep/75">
+          <p className="mt-6 text-[0.92rem] leading-[1.85] text-purple-deep/68 md:text-[1.05rem] lg:text-[1.08rem] lg:text-purple-deep/75">
             {first}
           </p>
         </Reveal>
 
         <Reveal delay={0.1} className="order-1 z-0 max-lg:mb-6 lg:order-none lg:col-span-3">
-          <PracticeQuote quote={content.quote} />
-          <p className="mt-6 hidden text-sm leading-[1.85] text-purple-deep/68 md:text-[0.98rem] lg:block">
+          <PracticeQuote quote={resolved.quote} label={resolved.quoteLabel} />
+          <p className="mt-6 hidden text-[0.92rem] leading-[1.85] text-purple-deep/68 md:text-[1.05rem] lg:block">
             {second}
           </p>
         </Reveal>
 
         <Reveal delay={0.1} className="order-4 lg:hidden">
-          <p className="text-sm leading-[1.85] text-purple-deep/68 md:text-[0.98rem]">
+          <p className="text-[0.92rem] leading-[1.85] text-purple-deep/68 md:text-[1.05rem]">
             {second}
           </p>
         </Reveal>
 
         <Reveal delay={0.15} className="order-5 lg:order-none lg:col-span-3">
-          <p className="text-sm leading-[1.85] text-purple-deep/68 md:text-[0.98rem]">
+          <p className="text-[0.92rem] leading-[1.85] text-purple-deep/68 md:text-[1.05rem]">
             {third}
           </p>
         </Reveal>

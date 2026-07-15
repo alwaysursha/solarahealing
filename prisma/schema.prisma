@@ -92,6 +92,7 @@ model SiteSettings {
   whatsapp        String
   address         String
   cta             String
+  navJson         String   @default("[]") @db.Text
   showCoursesSection   Boolean  @default(true)
   showWorkshopsSection Boolean  @default(false)
   updatedAt       DateTime @updatedAt

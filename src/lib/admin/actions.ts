@@ -51,6 +51,7 @@ export async function updateStorefrontSectionVisibilityAction(
       whatsapp: "",
       address: "",
       cta: "",
+      navJson: "[]",
       showCoursesSection: section === "courses" ? visible : true,
       showWorkshopsSection: section === "workshops" ? visible : false,
     },
@@ -81,6 +82,7 @@ export async function updateSiteSettingsAction(formData: FormData) {
       whatsapp: formData.get("whatsapp")?.toString() ?? "",
       address: formData.get("address")?.toString() ?? "",
       cta: formData.get("cta")?.toString() ?? "",
+      navJson: "[]",
     },
     update: {
       name: formData.get("name")?.toString() ?? "",

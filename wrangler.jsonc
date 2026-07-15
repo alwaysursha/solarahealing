@@ -22,5 +22,12 @@
   ],
   "images": {
     "binding": "IMAGES"
-  }
+  },
+  "r2_buckets": [
+    {
+      "binding": "MEDIA",
+      "bucket_name": "soulara-media",
+      "preview_bucket_name": "soulara-media"
+    }
+  ]
 }

@@ -167,12 +167,12 @@ export const workshopsIntro =
   "Join our live online Reiki workshops and experience guided, interactive training from the comfort of your home. Whether you're beginning your Reiki journey or advancing your practice, each workshop offers hands-on learning, personalized guidance, and a supportive community to help you build confidence, deepen your understanding, and awaken your natural healing abilities. Reserve your spot and take the next step on your path to healing and personal transformation.";
 
 export function formatCad(price: number) {
-  return new Intl.NumberFormat("en-CA", {
+  return `${new Intl.NumberFormat("en-CA", {
     style: "currency",
     currency: "CAD",
     minimumFractionDigits: 0,
     maximumFractionDigits: 0,
-  }).format(price);
+  }).format(price)}/-`;
 }
 
 export const articlesIntro = {
@@ -423,7 +423,6 @@ export const footerColumns = [
         title: "About Soulara Healing Academy",
         links: [
           { label: "Who We Are", href: "#about" },
-          { label: "Our Achievements", href: "#about" },
           { label: "Vision & Mission", href: "#about" },
           { label: "Leadership", href: "#about" },
           { label: "Our Services", href: "#schedule" },
@@ -437,12 +436,7 @@ export const footerColumns = [
           { label: "Reiki Level 2", href: "#courses" },
           { label: "Reiki Level 3", href: "#courses" },
           { label: "Reiki Mastership", href: "#courses" },
-          { label: "Reiki Grand Master", href: "#courses" },
         ],
-      },
-      {
-        title: "Live Online Reiki Workshops (Upcoming)",
-        links: [{ label: "View Workshops", href: "#workshops" }],
       },
     ],
   },
@@ -456,14 +450,7 @@ export const footerColumns = [
           { label: "Past Life Regression", href: "#courses" },
           { label: "Past-Life Master Course", href: "#courses" },
           { label: "Clinical Hypnotherapy", href: "#courses" },
-          { label: "Crystal Ball Gazing", href: "#courses" },
-          { label: "Science of Fingerprint", href: "#courses" },
-          { label: "Whole Brain Activation", href: "#courses" },
         ],
-      },
-      {
-        title: "Non-Reiki Live Online Workshops (Upcoming)",
-        links: [{ label: "View Workshops", href: "/workshops" }],
       },
     ],
   },
@@ -473,31 +460,7 @@ export const footerColumns = [
         title: "Healing",
         links: [
           { label: "About Healing at Soulara", href: "#about" },
-          { label: "What & How We Cure", href: "#about" },
           { label: "Book an Appointment", href: "#schedule" },
-          { label: "Treatment Packages", href: "#schedule" },
-          { label: "Testimonials", href: "#testimonials" },
-          { label: "FAQ's", href: "#about" },
-        ],
-      },
-      {
-        title: "Nutrition",
-        links: [
-          { label: "Healing with Nutrition", href: "#about" },
-          { label: "Plans & Programs", href: "#schedule" },
-          { label: "Consult a Nutritionist", href: "#schedule" },
-          { label: "Nutrition Videos", href: "/blog" },
-          { label: "Testimonials", href: "#testimonials" },
-          { label: "FAQ's", href: "#about" },
-        ],
-      },
-      {
-        title: "Transformation",
-        links: [
-          { label: "Life Coaching", href: "#schedule" },
-          { label: "Programs", href: "#courses" },
-          { label: "Consult a Life Coach", href: "#schedule" },
-          { label: "FAQ's", href: "#about" },
         ],
       },
     ],

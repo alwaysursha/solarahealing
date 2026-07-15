@@ -22,7 +22,8 @@ import {
   HERO_SLIDE_CHANGE_EASE,
   HERO_TEXT_DELAY_S,
 } from "@/lib/home-entrance";
-import { heroSlides, site } from "@/lib/site";
+import type { HeroSlide } from "@/lib/frontpage-content";
+import { useSiteChrome } from "@/components/storefront/SiteChromeProvider";
 
 const AUTO_PLAY_MS = 6500;
 
@@ -155,7 +156,8 @@ function PhotoSlideBackground({
   );
 }
 
-export function Hero({ slides = heroSlides }: { slides?: typeof heroSlides }) {
+export function Hero({ slides }: { slides: HeroSlide[] }) {
+  const { cta } = useSiteChrome();
   const reduceMotion = useReducedMotion();
   const [active, setActive] = useState(0);
   const [paused, setPaused] = useState(false);
@@ -330,14 +332,22 @@ export function Hero({ slides = heroSlides }: { slides?: typeof heroSlides }) {
                 </p>
 
                 <div className="mt-8 flex flex-wrap gap-3.5">
-                  <GlowButton href="#contact">{site.cta}</GlowButton>
-                  <GlowButton
-                    href="#sessions"
-                    variant="outline"
-                    className="border-purple-deep/25 text-purple-deep hover:border-gold hover:text-gold"
-                  >
-                    Explore Sessions
-                  </GlowButton>
+                  {slide.buttons.map((button) =>
+                    button.style === "primary" ? (
+                      <GlowButton key={button.id} href={button.href}>
+                        {button.label || cta}
+                      </GlowButton>
+                    ) : (
+                      <GlowButton
+                        key={button.id}
+                        href={button.href}
+                        variant="outline"
+                        className="border-purple-deep/25 text-purple-deep hover:border-gold hover:text-gold"
+                      >
+                        {button.label}
+                      </GlowButton>
+                    ),
+                  )}
                 </div>
               </motion.div>
             </AnimatePresence>

@@ -1,54 +1,49 @@
-import { AdminPanel, AdminShell, AdminSubmit } from "@/components/admin/AdminShell";
-import { updatePageSectionAction } from "@/lib/admin/actions";
-import { prisma } from "@/lib/prisma";
 import Link from "next/link";
+import { AdminShell } from "@/components/admin/AdminShell";
 
 export const dynamic = "force-dynamic";
 
-export default async function AdminWebPage() {
-  const sections = await prisma.pageSection.findMany({
-    where: { pageKey: "home" },
-    orderBy: { sectionKey: "asc" },
-  });
+const MAIN_LINKS = [
+  {
+    href: "/admin/web/frontpage",
+    title: "Frontpage",
+    description: "Site menu, hero slides, quote box, and About Us — with live preview and image uploads.",
+    ready: true,
+  },
+] as const;
 
+export default function AdminWebPage() {
   return (
     <AdminShell
       activePath="/admin/web"
       title="Web Development"
-      description="Edit homepage sections exactly where they appear on the live site. Changes publish immediately after saving."
+      description="Edit each public page from a dedicated workspace. More main links will appear here as you expand the site."
     >
-      <div className="mb-6 flex flex-wrap gap-3">
-        <Link href="/" target="_blank" className="rounded-full border border-purple-deep/15 px-4 py-2 text-sm text-purple-deep hover:border-gold/40">
-          Open live homepage
-        </Link>
-        <Link href="/workshops" target="_blank" className="rounded-full border border-purple-deep/15 px-4 py-2 text-sm text-purple-deep hover:border-gold/40">
-          Open workshops page
-        </Link>
-        <Link href="/blog" target="_blank" className="rounded-full border border-purple-deep/15 px-4 py-2 text-sm text-purple-deep hover:border-gold/40">
-          Open blog page
-        </Link>
-      </div>
-
-      <div className="space-y-6">
-        {sections.map((section) => (
-          <AdminPanel key={section.id} title={section.label}>
-            <p className="mb-3 text-xs uppercase tracking-[0.18em] text-purple-deep/45">
-              home / {section.sectionKey}
+      <div className="grid gap-4 md:grid-cols-2 xl:grid-cols-3">
+        {MAIN_LINKS.map((link) => (
+          <Link
+            key={link.href}
+            href={link.href}
+            className="admin-panel block rounded-2xl p-5 shadow-sm transition hover:-translate-y-0.5 hover:shadow-md"
+          >
+            <p className="text-[0.65rem] font-semibold uppercase tracking-[0.2em] text-[var(--admin-text-muted)]">
+              Main link
             </p>
-            <form action={updatePageSectionAction}>
-              <input type="hidden" name="id" value={section.id} />
-              <textarea
-                name="content"
-                defaultValue={section.content}
-                rows={12}
-                className="w-full rounded-xl border border-purple-deep/10 bg-cream/30 px-3 py-2.5 font-mono text-xs text-purple-deep outline-none focus:border-gold/50"
-              />
-              <div className="mt-4">
-                <AdminSubmit label={`Save ${section.label}`} />
-              </div>
-            </form>
-          </AdminPanel>
+            <h2 className="admin-panel-title mt-3 font-serif text-2xl">{link.title}</h2>
+            <p className="mt-3 text-sm leading-relaxed text-[var(--admin-text-muted)]">{link.description}</p>
+            <p className="mt-5 text-sm font-semibold text-purple-mid">Open editor →</p>
+          </Link>
         ))}
+
+        <div className="rounded-2xl border border-dashed border-[var(--admin-border)] p-5 opacity-70">
+          <p className="text-[0.65rem] font-semibold uppercase tracking-[0.2em] text-[var(--admin-text-muted)]">
+            Coming next
+          </p>
+          <h2 className="mt-3 font-serif text-2xl text-[var(--admin-text)]">More pages</h2>
+          <p className="mt-3 text-sm leading-relaxed text-[var(--admin-text-muted)]">
+            Courses, workshops, blog, and other main links can plug into this same hub later.
+          </p>
+        </div>
       </div>
     </AdminShell>
   );

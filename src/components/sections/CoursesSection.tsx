@@ -56,9 +56,9 @@ const featuredReveal = {
 };
 
 const featuredImageReveal = {
-  hidden: { clipPath: "inset(0 100% 0 0 round 1.75rem)" },
+  hidden: { clipPath: "inset(0 100% 0 0)" },
   visible: {
-    clipPath: "inset(0 0% 0 0 round 1.75rem)",
+    clipPath: "inset(0 0% 0 0)",
     transition: { duration: 1.1, ease: revealEase },
   },
 };
@@ -175,7 +175,7 @@ function CourseBadge({ label }: { label: string }) {
   const isOnDemand = label === "On Demand";
 
   return (
-    <span className="inline-flex items-center gap-1.5 rounded-full border border-white/20 bg-black/30 px-2.5 py-1 text-[0.58rem] font-semibold uppercase tracking-[0.14em] text-white backdrop-blur-md">
+    <span className="inline-flex items-center gap-1.5 rounded-full border border-white/20 bg-black/30 px-2.5 py-1 text-[0.65rem] font-semibold uppercase tracking-[0.14em] text-white backdrop-blur-md">
       {isOnDemand && <EnrollingDot className="h-1.5 w-1.5 shrink-0" />}
       {label}
     </span>
@@ -191,12 +191,12 @@ function PriceTag({
 }) {
   return (
     <div className={large ? "workshop-price-large" : "workshop-price-tag"}>
-      <span className={large ? "font-serif text-4xl text-gold md:text-5xl" : "font-serif text-2xl text-gold"}>
+      <span className={large ? "font-serif text-5xl text-gold md:text-6xl" : "font-serif text-3xl text-gold"}>
         {formatCad(priceCad)}
       </span>
       {!large && (
-        <span className="mt-0.5 block text-[0.55rem] uppercase tracking-[0.22em] text-white/45">
-          per course
+        <span className="mt-0.5 block text-[0.62rem] uppercase tracking-[0.22em] text-white/45">
+          Course Fee
         </span>
       )}
     </div>
@@ -243,7 +243,7 @@ function EnrollButton({
     <motion.button
       ref={buttonRef}
       type="button"
-      className={`workshop-register-btn relative inline-flex shrink-0 items-center justify-center gap-2 overflow-hidden whitespace-nowrap rounded-full px-4 py-2 text-[0.62rem] font-semibold uppercase tracking-[0.1em] transition-colors md:px-5 md:text-[0.65rem] ${styles} ${className}`}
+      className={`workshop-register-btn relative inline-flex shrink-0 items-center justify-center gap-2 overflow-hidden whitespace-nowrap rounded-full px-4 py-2 text-[0.7rem] font-semibold uppercase tracking-[0.1em] transition-colors md:px-5 md:text-[0.75rem] ${styles} ${className}`}
       whileHover={reduceMotion ? undefined : { scale: 1.04 }}
       whileTap={reduceMotion ? undefined : { scale: 0.97 }}
       onClick={() =>
@@ -295,7 +295,7 @@ function FeaturedCourse({
     >
       <div className="grid lg:grid-cols-12">
         <motion.div
-          className="relative min-h-[260px] lg:col-span-7 lg:min-h-[340px]"
+          className="workshop-featured-media relative min-h-[260px] lg:col-span-7 lg:min-h-[340px]"
           variants={featuredImageReveal}
         >
           <motion.div className="absolute inset-0" variants={featuredImageZoom}>
@@ -317,7 +317,7 @@ function FeaturedCourse({
             variants={featuredContentItem}
           >
             <CourseBadge label={course.badge} />
-            <span className="rounded-full bg-gold/90 px-2.5 py-1 text-[0.58rem] font-bold uppercase tracking-[0.18em] text-purple-deep">
+            <span className="rounded-full bg-gold/90 px-2.5 py-1 text-[0.65rem] font-bold uppercase tracking-[0.18em] text-[#c8ccd0]">
               Featured
             </span>
           </motion.div>
@@ -333,17 +333,17 @@ function FeaturedCourse({
           />
           <motion.div variants={featuredContentStagger}>
             <motion.div variants={featuredContentItem}>
-              <p className="text-[0.65rem] font-medium uppercase tracking-[0.24em] text-gold-light/80">
+              <p className="text-[0.72rem] font-medium uppercase tracking-[0.24em] text-gold-light/80">
                 {course.date}
               </p>
-              <h3 className="font-serif mt-3 text-2xl font-normal leading-tight text-white md:text-3xl">
+              <h3 className="font-serif mt-3 text-3xl font-normal leading-tight text-white md:text-4xl">
                 {course.title}
               </h3>
-              <p className="mt-4 text-sm leading-relaxed text-white/60">{course.description}</p>
+              <p className="mt-4 text-[0.98rem] leading-relaxed text-white/60">{course.description}</p>
               <div className="mt-3.5">
                 <ViewCourseDetailsLink courseId={course.id} />
               </div>
-              <p className="mt-3 text-[0.65rem] font-medium uppercase tracking-[0.2em] text-white/35">
+              <p className="mt-3 text-[0.72rem] font-medium uppercase tracking-[0.2em] text-white/35">
                 {course.duration}
               </p>
             </motion.div>
@@ -353,10 +353,10 @@ function FeaturedCourse({
               variants={featuredContentItem}
             >
               <div>
-                <p className="text-[0.6rem] uppercase tracking-[0.24em] text-white/40">Investment</p>
+                <p className="text-[0.68rem] uppercase tracking-[0.24em] text-white/40">Course Fee</p>
                 <PriceTag priceCad={course.priceCad} large />
               </div>
-              <EnrollButton course={course} className="px-6 py-2.5 text-[0.68rem] md:text-xs" />
+              <EnrollButton course={course} className="px-6 py-2.5 text-[0.75rem] md:text-[0.8rem]" />
             </motion.div>
           </motion.div>
         </motion.div>
@@ -369,7 +369,7 @@ function FeaturedCourseStatic({ course }: { course: CourseItem }) {
   return (
     <article className="workshop-featured group relative overflow-hidden rounded-[1.75rem] border border-white/15">
       <div className="grid lg:grid-cols-12">
-        <div className="relative min-h-[260px] lg:col-span-7 lg:min-h-[340px]">
+        <div className="workshop-featured-media relative min-h-[260px] lg:col-span-7 lg:min-h-[340px]">
           <Image
             src={course.image}
             alt={course.imageAlt}
@@ -382,27 +382,27 @@ function FeaturedCourseStatic({ course }: { course: CourseItem }) {
           <div className="absolute inset-0 bg-gradient-to-r from-transparent via-purple-deep/15 to-purple-deep/55 lg:via-purple-deep/8" />
           <div className="absolute left-5 top-5 flex items-center gap-3">
             <CourseBadge label={course.badge} />
-            <span className="rounded-full bg-gold/90 px-2.5 py-1 text-[0.58rem] font-bold uppercase tracking-[0.18em] text-purple-deep">
+            <span className="rounded-full bg-gold/90 px-2.5 py-1 text-[0.65rem] font-bold uppercase tracking-[0.18em] text-[#c8ccd0]">
               Featured
             </span>
           </div>
         </div>
         <div className="relative flex flex-col justify-between bg-[#2a1050]/82 p-6 backdrop-blur-xl md:p-8 lg:col-span-5">
           <div>
-            <p className="text-[0.65rem] font-medium uppercase tracking-[0.24em] text-gold-light/80">{course.date}</p>
-            <h3 className="font-serif mt-3 text-2xl font-normal leading-tight text-white md:text-3xl">{course.title}</h3>
-            <p className="mt-4 text-sm leading-relaxed text-white/60">{course.description}</p>
+            <p className="text-[0.72rem] font-medium uppercase tracking-[0.24em] text-gold-light/80">{course.date}</p>
+            <h3 className="font-serif mt-3 text-3xl font-normal leading-tight text-white md:text-4xl">{course.title}</h3>
+            <p className="mt-4 text-[0.98rem] leading-relaxed text-white/60">{course.description}</p>
             <div className="mt-3.5">
               <ViewCourseDetailsLink courseId={course.id} />
             </div>
-            <p className="mt-3 text-[0.65rem] font-medium uppercase tracking-[0.2em] text-white/35">{course.duration}</p>
+            <p className="mt-3 text-[0.72rem] font-medium uppercase tracking-[0.2em] text-white/35">{course.duration}</p>
           </div>
           <div className="mt-8 flex flex-wrap items-end justify-between gap-4 border-t border-white/10 pt-6">
             <div>
-              <p className="text-[0.6rem] uppercase tracking-[0.24em] text-white/40">Investment</p>
+              <p className="text-[0.68rem] uppercase tracking-[0.24em] text-white/40">Course Fee</p>
               <PriceTag priceCad={course.priceCad} large />
             </div>
-            <EnrollButton course={course} className="px-6 py-2.5 text-[0.68rem] md:text-xs" />
+            <EnrollButton course={course} className="px-6 py-2.5 text-[0.75rem] md:text-[0.8rem]" />
           </div>
         </div>
       </div>
@@ -460,16 +460,16 @@ function UpcomingCourseCard({
 
       <motion.div className="absolute inset-x-0 bottom-0 z-[3] p-5 md:p-6" variants={cardOverlayReveal}>
         <CourseBadge label={course.badge} />
-        <p className="mt-3 text-[0.62rem] font-medium uppercase tracking-[0.22em] text-gold-light/75">
+        <p className="mt-3 text-[0.7rem] font-medium uppercase tracking-[0.22em] text-gold-light/75">
           {course.date}
         </p>
-        <h3 className="font-serif mt-2 text-xl leading-tight text-white">{course.title}</h3>
-        <p className="mt-2 line-clamp-2 text-sm leading-relaxed text-white/55">{course.description}</p>
+        <h3 className="font-serif mt-2 text-2xl leading-tight text-white">{course.title}</h3>
+        <p className="mt-2 line-clamp-2 text-[0.95rem] leading-relaxed text-white/55">{course.description}</p>
         <div className="mt-3">
           <ViewCourseDetailsLink courseId={course.id} />
         </div>
         <div className="mt-5 flex items-center justify-between gap-3">
-          <span className="text-[0.62rem] uppercase tracking-[0.18em] text-white/35">{course.duration}</span>
+          <span className="text-[0.7rem] uppercase tracking-[0.18em] text-white/35">{course.duration}</span>
           <EnrollButton course={course} variant="outline" />
         </div>
       </motion.div>
@@ -494,14 +494,14 @@ function UpcomingCourseCardContent({ course }: { course: CourseItem }) {
       </div>
       <div className="absolute inset-x-0 bottom-0 z-[3] p-5 md:p-6">
         <CourseBadge label={course.badge} />
-        <p className="mt-3 text-[0.62rem] font-medium uppercase tracking-[0.22em] text-gold-light/75">{course.date}</p>
-        <h3 className="font-serif mt-2 text-xl leading-tight text-white">{course.title}</h3>
-        <p className="mt-2 line-clamp-2 text-sm leading-relaxed text-white/55">{course.description}</p>
+        <p className="mt-3 text-[0.7rem] font-medium uppercase tracking-[0.22em] text-gold-light/75">{course.date}</p>
+        <h3 className="font-serif mt-2 text-2xl leading-tight text-white">{course.title}</h3>
+        <p className="mt-2 line-clamp-2 text-[0.95rem] leading-relaxed text-white/55">{course.description}</p>
         <div className="mt-3">
           <ViewCourseDetailsLink courseId={course.id} />
         </div>
         <div className="mt-5 flex items-center justify-between gap-3">
-          <span className="text-[0.62rem] uppercase tracking-[0.18em] text-white/35">{course.duration}</span>
+          <span className="text-[0.7rem] uppercase tracking-[0.18em] text-white/35">{course.duration}</span>
           <EnrollButton course={course} variant="outline" />
         </div>
       </div>
@@ -563,7 +563,7 @@ export function CoursesSection({
 
             <div className="workshop-title-line mt-6 h-px w-20 origin-left bg-gradient-to-r from-gold to-transparent" />
 
-            <p className="mt-6 max-w-md text-sm leading-relaxed text-white/55 md:text-[0.95rem] md:leading-7">
+            <p className="mt-6 max-w-md text-[1.05rem] leading-relaxed text-white/55 md:text-[1.15rem] md:leading-7">
               {intro.description}
             </p>
 
