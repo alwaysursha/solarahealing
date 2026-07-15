@@ -113,7 +113,9 @@ export function CatalogDetailView({
 
             <div className="catalog-detail-invest">
               <div>
-                <p className="catalog-detail-meta-label">Investment</p>
+                <p className="catalog-detail-meta-label">
+                  {type === "course" ? "Course Fee" : "Workshop Fee"}
+                </p>
                 <p className="catalog-detail-price">{formatCad(item.priceCad)}</p>
               </div>
               <CatalogDetailCta
