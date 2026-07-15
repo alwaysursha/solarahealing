@@ -276,8 +276,48 @@ export const coursesIntro = {
   title: "Soulara Healing Academy",
   titleAccent: "Online Courses",
   description:
-    "Seven immersive programs — from foundational Reiki to master-level attunement. Study on your schedule with lifetime access, guided modules, and practices you can return to again and again.",
+    "{count} immersive programs — from foundational Reiki to master-level attunement. Study on your schedule with lifetime access, guided modules, and practices you can return to again and again.",
 } as const;
+
+/** Spell small counts for course intro copy; fall back to numerals. */
+export function formatCourseCountLabel(count: number): string {
+  const words = [
+    "Zero",
+    "One",
+    "Two",
+    "Three",
+    "Four",
+    "Five",
+    "Six",
+    "Seven",
+    "Eight",
+    "Nine",
+    "Ten",
+    "Eleven",
+    "Twelve",
+    "Thirteen",
+    "Fourteen",
+    "Fifteen",
+    "Sixteen",
+    "Seventeen",
+    "Eighteen",
+    "Nineteen",
+    "Twenty",
+  ] as const;
+
+  if (count >= 0 && count < words.length) {
+    return words[count];
+  }
+
+  return String(count);
+}
+
+export function resolveCoursesIntroDescription(template: string, count: number): string {
+  const label = formatCourseCountLabel(count);
+  return template
+    .replace(/\{count\}/gi, label)
+    .replace(/\bSeven\b/, label);
+}
 
 export const scheduleBooking = {
   eyebrow: "Online Bookings",

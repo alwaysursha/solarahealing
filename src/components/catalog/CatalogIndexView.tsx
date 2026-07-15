@@ -40,8 +40,12 @@ function IndexCard({ type, item }: { type: CartItemType; item: CatalogDetailItem
 
       <div className="catalog-index-card-body">
         <p className="catalog-index-card-meta">
-          {item.date}
-          <span aria-hidden>·</span>
+          {type === "workshop" ? (
+            <>
+              {item.date}
+              <span aria-hidden>·</span>
+            </>
+          ) : null}
           {item.duration}
         </p>
         <h2 className="catalog-index-card-title">

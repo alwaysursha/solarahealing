@@ -95,10 +95,12 @@ export function CatalogDetailView({
             <p className="catalog-detail-lead">{item.description}</p>
 
             <div className="catalog-detail-meta">
-              <div>
-                <p className="catalog-detail-meta-label">Schedule</p>
-                <p className="catalog-detail-meta-value">{item.date}</p>
-              </div>
+              {type === "workshop" ? (
+                <div>
+                  <p className="catalog-detail-meta-label">Schedule</p>
+                  <p className="catalog-detail-meta-value">{item.date}</p>
+                </div>
+              ) : null}
               <div>
                 <p className="catalog-detail-meta-label">Duration</p>
                 <p className="catalog-detail-meta-value">{item.duration}</p>
