@@ -1,4 +1,5 @@
 import { OrderItemType, OrderStatus } from "@prisma/client";
+import { orderItemTypeLabel as itemTypeLabel } from "@/lib/order-item-type";
 import { auth } from "@/auth";
 import {
   CheckoutSuccessActions,
@@ -34,19 +35,6 @@ function formatEnrollmentNames(titles: string[]): string {
   }
   const head = titles.slice(0, -1).join(", ");
   return `${head}, and ${titles[titles.length - 1]}`;
-}
-
-function itemTypeLabel(type: OrderItemType): string {
-  switch (type) {
-    case OrderItemType.COURSE:
-      return "Course";
-    case OrderItemType.WORKSHOP:
-      return "Workshop";
-    default: {
-      const _exhaustive: never = type;
-      return _exhaustive;
-    }
-  }
 }
 
 export default async function CheckoutSuccessPage({

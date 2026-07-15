@@ -41,7 +41,8 @@ export function CatalogDetailCta({
   const reduceMotion = useReducedMotion();
   const { requestEnrollment } = useEnrollmentGate();
   const buttonRef = useRef<HTMLButtonElement>(null);
-  const label = type === "course" ? "Enroll Now" : "Register Now";
+  const label =
+    type === "course" ? "Enroll Now" : type === "private_session" ? "Book a Session" : "Register Now";
 
   return (
     <motion.button
@@ -65,7 +66,7 @@ export function CatalogDetailCta({
       }
     >
       <span className="catalog-detail-cta-shine" aria-hidden />
-      {type === "course" ? <EnrolIcon className="relative h-4 w-4" /> : null}
+      {type === "course" || type === "private_session" ? <EnrolIcon className="relative h-4 w-4" /> : null}
       <span className="relative">{label}</span>
     </motion.button>
   );

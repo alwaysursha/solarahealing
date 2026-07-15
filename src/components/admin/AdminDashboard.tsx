@@ -1,5 +1,6 @@
 import Link from "next/link";
 import { OrderItemType } from "@prisma/client";
+import { orderItemTypeLabel } from "@/lib/order-item-type";
 
 type AdminDashboardStats = {
   courses: number;
@@ -136,7 +137,7 @@ function formatPurchasedItems(items: RecentOrderItem[]): string {
   }
   return items
     .map((item) => {
-      const kind = item.itemType === OrderItemType.WORKSHOP ? "Workshop" : "Course";
+      const kind = orderItemTypeLabel(item.itemType);
       const qty = item.quantity > 1 ? ` ×${item.quantity}` : "";
       return `${item.title}${qty} (${kind})`;
     })

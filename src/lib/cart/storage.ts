@@ -5,7 +5,7 @@ import {
 } from "@/lib/cart/types";
 
 function isCartItemType(value: unknown): value is CartItemType {
-  return value === "course" || value === "workshop";
+  return value === "course" || value === "workshop" || value === "private_session";
 }
 
 function normalizeItem(raw: unknown): CartItem | null {

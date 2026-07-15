@@ -141,3 +141,32 @@ export function AdminField({
     </label>
   );
 }
+
+export function AdminSelect({
+  label,
+  name,
+  defaultValue,
+  options,
+}: {
+  label: string;
+  name: string;
+  defaultValue?: string;
+  options: readonly { value: string; label: string }[];
+}) {
+  return (
+    <label className="admin-field block text-sm">
+      <span className="admin-field-label font-medium">{label}</span>
+      <select
+        name={name}
+        defaultValue={defaultValue}
+        className="admin-field-input mt-1.5 w-full rounded-xl px-3 py-2.5 text-sm outline-none"
+      >
+        {options.map((option) => (
+          <option key={option.value} value={option.value}>
+            {option.label}
+          </option>
+        ))}
+      </select>
+    </label>
+  );
+}

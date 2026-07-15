@@ -2,6 +2,7 @@ import { AboutSection } from "@/components/sections/AboutSection";
 import { ArticlesSection } from "@/components/sections/ArticlesSection";
 import { CoursesSection } from "@/components/sections/CoursesSection";
 import { Hero } from "@/components/sections/Hero";
+import { PrivateSessionsSection } from "@/components/sections/PrivateSessionsSection";
 import { ScheduleSection } from "@/components/sections/ScheduleSection";
 import { TestimonialsShowcaseSection } from "@/components/sections/TestimonialsShowcaseSection";
 import { WorkshopsSection } from "@/components/sections/WorkshopsSection";
@@ -9,6 +10,7 @@ import {
   getHomeArticlesDisplay,
   getHomePageContent,
   getPublishedCourses,
+  getPublishedPrivateSessions,
   getPublishedWorkshops,
   getStorefrontSectionVisibility,
 } from "@/lib/content";
@@ -21,9 +23,10 @@ export async function HomePageView() {
     getStorefrontSectionVisibility(),
   ]);
 
-  const [courses, workshops] = await Promise.all([
+  const [courses, workshops, sessions] = await Promise.all([
     visibility.showCoursesSection ? getPublishedCourses() : Promise.resolve([]),
     visibility.showWorkshopsSection ? getPublishedWorkshops() : Promise.resolve([]),
+    visibility.showPrivateSessionsSection ? getPublishedPrivateSessions() : Promise.resolve([]),
   ]);
 
   return (
@@ -32,6 +35,9 @@ export async function HomePageView() {
       <AboutSection content={home.aboutContent} />
       {visibility.showCoursesSection ? (
         <CoursesSection courses={courses} intro={home.coursesIntro} />
+      ) : null}
+      {visibility.showPrivateSessionsSection ? (
+        <PrivateSessionsSection sessions={sessions} />
       ) : null}
       <ArticlesSection
         intro={home.articlesIntro}

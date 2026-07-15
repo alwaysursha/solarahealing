@@ -1,4 +1,4 @@
-export type CartItemType = "course" | "workshop";
+export type CartItemType = "course" | "workshop" | "private_session";
 
 export type CartItem = {
   id: string;
@@ -25,10 +25,17 @@ export function cartLineKey(item: Pick<CartItem, "id" | "type">) {
   return `${item.type}:${item.id}`;
 }
 
+const cartTypeRank: Record<CartItemType, number> = {
+  workshop: 0,
+  private_session: 1,
+  course: 2,
+};
+
 export function sortCartItemsWorkshopsFirst(items: CartItem[]): CartItem[] {
   return [...items].sort((a, b) => {
-    if (a.type === b.type) return 0;
-    return a.type === "workshop" ? -1 : 1;
+    const rankDiff = cartTypeRank[a.type] - cartTypeRank[b.type];
+    if (rankDiff !== 0) return rankDiff;
+    return 0;
   });
 }
 
@@ -41,5 +48,16 @@ export function cartTotalCad(items: CartItem[]): number {
 }
 
 export function cartTypeLabel(type: CartItemType): string {
-  return type === "workshop" ? "Workshop" : "Course";
+  switch (type) {
+    case "workshop":
+      return "Workshop";
+    case "private_session":
+      return "Private session";
+    case "course":
+      return "Course";
+    default: {
+      const _exhaustive: never = type;
+      return _exhaustive;
+    }
+  }
 }

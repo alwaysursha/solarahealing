@@ -17,6 +17,7 @@ import {
   testimonials,
   testimonialsIntro,
   workshops as staticWorkshops,
+  privateSessions as staticPrivateSessions,
   workshopsIntro,
 } from "../src/lib/site";
 import { WORKSHOP_SCHEDULE_SEEDS } from "../src/lib/admin/workshop-schedule";
@@ -204,9 +205,11 @@ async function main() {
       navJson: JSON.stringify(parseNavJson(null)),
       showCoursesSection: true,
       showWorkshopsSection: false,
+      showPrivateSessionsSection: true,
     },
     update: {
       navJson: JSON.stringify(parseNavJson(null)),
+      showPrivateSessionsSection: true,
     },
   });
 
@@ -219,7 +222,8 @@ async function main() {
         description: course.description,
         dateLabel: course.date,
         duration: course.duration,
-        badge: course.badge,
+        badge: "",
+        category: course.category,
         priceCad: course.priceCad,
         image: course.image,
         imageAlt: course.imageAlt,
@@ -232,11 +236,39 @@ async function main() {
         description: course.description,
         dateLabel: course.date,
         duration: course.duration,
-        badge: course.badge,
+        badge: "",
+        category: course.category,
         priceCad: course.priceCad,
         image: course.image,
         imageAlt: course.imageAlt,
         level: course.level,
+        published: true,
+        sortOrder: index,
+      },
+    });
+  }
+
+  for (const [index, session] of staticPrivateSessions.entries()) {
+    await prisma.privateSession.upsert({
+      where: { id: session.id },
+      create: {
+        id: session.id,
+        title: session.title,
+        description: session.description,
+        duration: session.duration,
+        priceCad: session.priceCad,
+        image: session.image,
+        imageAlt: session.imageAlt,
+        published: true,
+        sortOrder: index,
+      },
+      update: {
+        title: session.title,
+        description: session.description,
+        duration: session.duration,
+        priceCad: session.priceCad,
+        image: session.image,
+        imageAlt: session.imageAlt,
         published: true,
         sortOrder: index,
       },

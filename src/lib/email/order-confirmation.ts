@@ -1,4 +1,3 @@
-import { OrderItemType } from "@prisma/client";
 import type { Order, OrderItem } from "@prisma/client";
 import { SITE_NAME } from "@/lib/constants";
 import { sendEmail } from "@/lib/email";
@@ -12,22 +11,10 @@ import {
   paragraph,
   renderEmailShell,
 } from "@/lib/email/layout";
+import { orderItemTypeLabel as itemTypeLabel } from "@/lib/order-item-type";
 import { formatCad } from "@/lib/site";
 
 type OrderWithItems = Order & { items: OrderItem[] };
-
-function itemTypeLabel(type: OrderItemType): string {
-  switch (type) {
-    case OrderItemType.COURSE:
-      return "Course";
-    case OrderItemType.WORKSHOP:
-      return "Workshop";
-    default: {
-      const _exhaustive: never = type;
-      return _exhaustive;
-    }
-  }
-}
 
 export function buildOrderConfirmationEmail(order: OrderWithItems) {
   const siteUrl = getEmailSiteUrl();

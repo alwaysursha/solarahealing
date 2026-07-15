@@ -58,7 +58,11 @@ export function HeaderCartPanel({ onClose }: HeaderCartPanelProps) {
                     key={`${item.type}-${item.id}`}
                     className={[
                       "header-cart-line",
-                      item.type === "workshop" ? "header-cart-line-workshop" : "",
+                      item.type === "workshop"
+                        ? "header-cart-line-workshop"
+                        : item.type === "private_session"
+                          ? "header-cart-line-session"
+                          : "",
                     ].join(" ")}
                   >
                     <div className="header-cart-line-thumb">

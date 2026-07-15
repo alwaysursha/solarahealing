@@ -3,10 +3,12 @@
 import { motion, useReducedMotion } from "framer-motion";
 import Image from "next/image";
 import Link from "next/link";
-import { useCallback, useEffect, useRef, useState } from "react";
+import { useCallback, useEffect, useMemo, useRef, useState } from "react";
 import { useEnrollmentGate } from "@/components/auth/EnrollmentGateProvider";
 import { useAnimationsActive } from "@/hooks/useAnimationsActive";
 import { useHorizontalSwipe } from "@/hooks/useHorizontalSwipe";
+import type { CourseCategory } from "@prisma/client";
+import { courseCategoryLabel, courseLevelLabel } from "@/lib/course-taxonomy";
 import { toImageObjectPosition } from "@/lib/image-focus";
 import { coursesIntro, formatCad, onlineCourses, resolveCoursesIntroDescription } from "@/lib/site";
 
@@ -17,12 +19,14 @@ type CourseItem = {
   date: string;
   duration: string;
   badge: string;
+  category?: CourseCategory;
   priceCad: number;
   image: string;
   imageAlt: string;
   imageFocusX?: number;
   imageFocusY?: number;
   level?: string;
+  levelKey?: string;
 };
 
 function courseImagePosition(course: CourseItem) {
@@ -173,11 +177,8 @@ function EnrollingDot({ className = "" }: { className?: string }) {
 }
 
 function CourseBadge({ label }: { label: string }) {
-  const isOnDemand = label === "On Demand";
-
   return (
     <span className="inline-flex items-center gap-1.5 rounded-full border border-white/20 bg-black/30 px-2.5 py-1 text-[0.65rem] font-semibold uppercase tracking-[0.14em] text-white backdrop-blur-md">
-      {isOnDemand && <EnrollingDot className="h-1.5 w-1.5 shrink-0" />}
       {label}
     </span>
   );
@@ -650,14 +651,39 @@ export function CoursesSection({
   courses?: CourseItem[];
   intro?: typeof coursesIntro;
 }) {
-  const catalog = courses && courses.length > 0 ? courses : [...onlineCourses];
-  const [featured, ...upcoming] = catalog;
+  const catalog =
+    courses && courses.length > 0
+      ? courses
+      : [...onlineCourses].map((course) => ({
+          id: course.id,
+          title: course.title,
+          description: course.description,
+          date: course.date,
+          duration: course.duration,
+          badge: courseCategoryLabel(course.category),
+          category: course.category,
+          priceCad: course.priceCad,
+          image: course.image,
+          imageAlt: course.imageAlt,
+          level: courseLevelLabel(course.level),
+          levelKey: course.level,
+        }));
+  const [category, setCategory] = useState<CourseCategory>("REIKI");
   const reduceMotion = useReducedMotion();
   const sectionRef = useRef<HTMLElement>(null);
   const animationsActive = useAnimationsActive(sectionRef);
+
+  const filtered = useMemo(() => {
+    return catalog.filter((course) => {
+      const key = course.category ?? (course.badge?.includes("Non-Reiki") ? "NON_REIKI" : "REIKI");
+      return key === category;
+    });
+  }, [catalog, category]);
+
+  const [featured, ...upcoming] = filtered;
   const description = resolveCoursesIntroDescription(intro.description, catalog.length);
 
-  if (!featured) {
+  if (catalog.length === 0) {
     return null;
   }
 
@@ -701,10 +727,37 @@ export function CoursesSection({
               {description}
             </p>
 
+            <div
+              className="courses-category-tabs mt-8 flex flex-wrap gap-2"
+              role="tablist"
+              aria-label="Course categories"
+            >
+              <button
+                type="button"
+                role="tab"
+                aria-selected={category === "REIKI"}
+                className={`courses-category-tab ${category === "REIKI" ? "is-active" : ""}`}
+                onClick={() => setCategory("REIKI")}
+              >
+                Reiki Courses
+              </button>
+              <button
+                type="button"
+                role="tab"
+                aria-selected={category === "NON_REIKI"}
+                className={`courses-category-tab ${category === "NON_REIKI" ? "is-active" : ""}`}
+                onClick={() => setCategory("NON_REIKI")}
+              >
+                Non-Reiki Courses
+              </button>
+            </div>
+
             <p className="mt-8 font-serif text-6xl font-normal text-white/8">
-              {String(catalog.length).padStart(2, "0")}
+              {String(filtered.length).padStart(2, "0")}
             </p>
-            <p className="text-[0.62rem] uppercase tracking-[0.28em] text-white/30">Online programs</p>
+            <p className="text-[0.62rem] uppercase tracking-[0.28em] text-white/30">
+              {category === "REIKI" ? "Reiki programs" : "Non-Reiki programs"}
+            </p>
 
             <Link
               href="/courses"
@@ -725,13 +778,18 @@ export function CoursesSection({
             </Link>
           </motion.div>
 
-          {reduceMotion ? (
+          {!featured ? (
+            <div className="flex min-h-[240px] items-center justify-center rounded-[1.5rem] border border-white/10 bg-white/5 px-6 py-10 lg:col-span-8">
+              <p className="text-center text-white/55">No courses in this category yet.</p>
+            </div>
+          ) : reduceMotion ? (
             <div className="min-w-0 space-y-6 lg:col-span-8">
               <FeaturedCourseStatic course={featured} />
               <CoursesUpcomingSlider courses={upcoming} reduceMotion={reduceMotion} />
             </div>
           ) : (
             <motion.div
+              key={category}
               className="min-w-0 space-y-6 lg:col-span-8"
               variants={catalogStagger}
               initial="hidden"

@@ -149,6 +149,7 @@ export function CheckoutClient({
   const reduceMotion = useReducedMotion();
   const { items, totalCad, totalQuantity, removeItem, updateQuantity } = useCart();
   const workshops = items.filter((item) => item.type === "workshop");
+  const privateSessions = items.filter((item) => item.type === "private_session");
   const courses = items.filter((item) => item.type === "course");
   const isEmpty = items.length === 0;
   const [whatsappValid, setWhatsappValid] = useState(isValidWhatsAppNumber(initialWhatsApp));
@@ -266,7 +267,7 @@ export function CheckoutClient({
           <p className="checkout-hero-copy">
             {paymentLocked
               ? "Enter your payment details below — you stay on Soulara the whole way."
-              : "Review your live workshops and on-demand courses, then pay securely on this page."}
+              : "Review your workshops, private sessions, and courses, then pay securely on this page."}
           </p>
           {!isEmpty ? (
             <div className="checkout-hero-meta">
@@ -293,11 +294,11 @@ export function CheckoutClient({
               <p className="checkout-empty-eyebrow">Your cart is quiet</p>
               <h2 className="checkout-empty-title">Nothing here yet</h2>
               <p className="checkout-empty-copy">
-                Reserve a live workshop seat or enroll in a self-paced course to begin checkout.
+                Reserve a workshop seat, book a private session, or enroll in a course to begin checkout.
               </p>
               <div className="checkout-empty-actions">
-                <Link href="/#workshops" className="checkout-cta-primary">
-                  Browse workshops
+                <Link href="/#sessions" className="checkout-cta-primary">
+                  Browse sessions
                 </Link>
                 <Link href="/#courses" className="checkout-cta-ghost">
                   Browse courses
@@ -334,10 +335,30 @@ export function CheckoutClient({
                   </section>
                 ) : null}
 
+                {privateSessions.length > 0 ? (
+                  <section className="checkout-section">
+                    <div className="checkout-section-header">
+                      <p className="checkout-section-eyebrow">One-to-one</p>
+                      <h2 className="checkout-section-title">Private sessions</h2>
+                    </div>
+                    <ul className="checkout-lines">
+                      {privateSessions.map((item) => (
+                        <CheckoutLine
+                          key={`private_session-${item.id}`}
+                          item={item}
+                          locked={paymentLocked}
+                          onRemove={() => removeItem(item.id, item.type)}
+                          onQty={(qty) => updateQuantity(item.id, item.type, qty)}
+                        />
+                      ))}
+                    </ul>
+                  </section>
+                ) : null}
+
                 {courses.length > 0 ? (
                   <section className="checkout-section">
                     <div className="checkout-section-header">
-                      <p className="checkout-section-eyebrow">On demand</p>
+                      <p className="checkout-section-eyebrow">Self-paced</p>
                       <h2 className="checkout-section-title">Courses</h2>
                     </div>
                     <ul className="checkout-lines">

@@ -24,6 +24,19 @@ enum OrderStatus {
 enum OrderItemType {
   COURSE
   WORKSHOP
+  PRIVATE_SESSION
+}
+
+enum CourseCategory {
+  REIKI
+  NON_REIKI
+}
+
+enum CourseLevel {
+  BEGINNER
+  INTERMEDIATE
+  ADVANCED
+  MASTER
 }
 
 model User {
@@ -93,27 +106,29 @@ model SiteSettings {
   address         String
   cta             String
   navJson         String   @default("[]") @db.Text
-  showCoursesSection   Boolean  @default(true)
-  showWorkshopsSection Boolean  @default(false)
+  showCoursesSection         Boolean  @default(true)
+  showWorkshopsSection       Boolean  @default(false)
+  showPrivateSessionsSection Boolean  @default(true)
   updatedAt       DateTime @updatedAt
 }
 
 model OnlineCourse {
-  id          String   @id
+  id          String         @id
   title       String
   description String
   dateLabel   String
   duration    String
-  badge       String
+  badge       String         @default("")
+  category    CourseCategory @default(REIKI)
   priceCad    Int
   image       String
   imageAlt    String
-  imageFocusX Int      @default(50)
-  imageFocusY Int      @default(50)
-  level       String
-  published   Boolean  @default(true)
-  sortOrder   Int      @default(0)
-  updatedAt   DateTime @updatedAt
+  imageFocusX Int            @default(50)
+  imageFocusY Int            @default(50)
+  level       CourseLevel    @default(BEGINNER)
+  published   Boolean        @default(true)
+  sortOrder   Int            @default(0)
+  updatedAt   DateTime       @updatedAt
 }
 
 model Workshop {
@@ -127,6 +142,21 @@ model Workshop {
   priceCad    Int
   seatsTotal  Int      @default(20)
   seatsBooked Int      @default(0)
+  image       String
+  imageAlt    String
+  imageFocusX Int      @default(50)
+  imageFocusY Int      @default(50)
+  published   Boolean  @default(true)
+  sortOrder   Int      @default(0)
+  updatedAt   DateTime @updatedAt
+}
+
+model PrivateSession {
+  id          String   @id
+  title       String
+  description String
+  duration    String
+  priceCad    Int
   image       String
   imageAlt    String
   imageFocusX Int      @default(50)

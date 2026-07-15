@@ -1,4 +1,4 @@
-import { OrderItemType, OrderStatus, type OnlineCourse, type Workshop } from "@prisma/client";
+import { OrderItemType, OrderStatus, type OnlineCourse, type PrivateSession, type Workshop } from "@prisma/client";
 import { prisma } from "@/lib/prisma";
 
 const PAID_STATUSES = new Set<OrderStatus>([OrderStatus.PAID, OrderStatus.COMPLETED]);
@@ -54,6 +54,11 @@ export type WorkshopWithSales = Workshop & {
   revenueCad: number;
   seatsRemaining: number;
   fillPercent: number;
+};
+
+export type PrivateSessionWithSales = PrivateSession & {
+  sold: number;
+  revenueCad: number;
 };
 
 export async function getCourseAdminOverview() {
@@ -129,6 +134,37 @@ export async function getWorkshopAdminOverview() {
       revenueCad: summary.revenueCad,
       spotsSold: summary.paidUnits,
       pendingSpots: summary.pendingUnits,
+    },
+  };
+}
+
+export async function getPrivateSessionAdminOverview() {
+  const [sessions, orderItems] = await Promise.all([
+    prisma.privateSession.findMany({ orderBy: [{ sortOrder: "asc" }, { title: "asc" }] }),
+    prisma.orderItem.findMany({
+      where: { itemType: OrderItemType.PRIVATE_SESSION },
+      include: { order: { select: { status: true } } },
+    }),
+  ]);
+
+  const summary = summarizeOrderItems(orderItems);
+  const salesBySession = countByItemId(orderItems);
+  const published = sessions.filter((session) => session.published).length;
+
+  const sessionsWithSales: PrivateSessionWithSales[] = sessions.map((session) => {
+    const sales = salesBySession.get(session.id) ?? { sold: 0, revenueCad: 0 };
+    return { ...session, sold: sales.sold, revenueCad: sales.revenueCad };
+  });
+
+  return {
+    sessions: sessionsWithSales,
+    stats: {
+      total: sessions.length,
+      published,
+      draft: sessions.length - published,
+      revenueCad: summary.revenueCad,
+      unitsSold: summary.paidUnits,
+      pendingUnits: summary.pendingUnits,
     },
   };
 }

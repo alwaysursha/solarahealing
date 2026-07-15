@@ -21,6 +21,7 @@ export type CatalogDetailItem = {
   imageFocusX?: number;
   imageFocusY?: number;
   level?: string;
+  category?: string;
 };
 
 const courseHighlights = [
@@ -37,6 +38,56 @@ const workshopHighlights = [
   "Clear next steps after your session",
 ];
 
+const privateSessionHighlights = [
+  "One-to-one attention tailored to your intention",
+  "Purchase a session credit through secure checkout",
+  "Scheduling arranged after purchase by WhatsApp or email",
+  "A calm, private space for deep guidance",
+];
+
+function catalogKindCopy(type: CartItemType) {
+  switch (type) {
+    case "course":
+      return {
+        highlights: courseHighlights,
+        backHref: "/#courses",
+        backLabel: "Back to courses",
+        kindLabel: "Online course",
+        feeLabel: "Course Fee",
+        sectionTitle: "Inside this course",
+        asideTitle: "Enroll and start whenever you are ready.",
+        asideCopy: "Add this course to your cart, then continue browsing or proceed to payment when you feel ready.",
+      };
+    case "workshop":
+      return {
+        highlights: workshopHighlights,
+        backHref: "/#workshops",
+        backLabel: "Back to workshops",
+        kindLabel: "Live workshop",
+        feeLabel: "Workshop Fee",
+        sectionTitle: "Inside this workshop",
+        asideTitle: "Reserve your seat while spots remain.",
+        asideCopy: "Add this workshop to your cart, then continue browsing or proceed to payment when you feel ready.",
+      };
+    case "private_session":
+      return {
+        highlights: privateSessionHighlights,
+        backHref: "/#sessions",
+        backLabel: "Back to private sessions",
+        kindLabel: "Private session",
+        feeLabel: "Session Fee",
+        sectionTitle: "Inside this session",
+        asideTitle: "Book your session credit today.",
+        asideCopy:
+          "Add this private session to your cart. After payment, we’ll help you schedule a time that works for you.",
+      };
+    default: {
+      const _exhaustive: never = type;
+      return _exhaustive;
+    }
+  }
+}
+
 export function CatalogDetailView({
   type,
   item,
@@ -45,10 +96,7 @@ export function CatalogDetailView({
   item: CatalogDetailItem;
 }) {
   const reduceMotion = useReducedMotion();
-  const highlights = type === "course" ? courseHighlights : workshopHighlights;
-  const backHref = type === "course" ? "/#courses" : "/#workshops";
-  const backLabel = type === "course" ? "Back to courses" : "Back to workshops";
-  const kindLabel = type === "course" ? "On-demand course" : "Live workshop";
+  const copy = catalogKindCopy(type);
   const objectPosition = toImageObjectPosition(item.imageFocusX ?? 50, item.imageFocusY ?? 50);
 
   return (
@@ -61,8 +109,8 @@ export function CatalogDetailView({
           animate={reduceMotion ? undefined : { opacity: 1, y: 0 }}
           transition={{ duration: 0.45 }}
         >
-          <Link href={backHref} className="catalog-detail-back">
-            ← {backLabel}
+          <Link href={copy.backHref} className="catalog-detail-back">
+            ← {copy.backLabel}
           </Link>
         </motion.div>
 
@@ -90,7 +138,7 @@ export function CatalogDetailView({
           </div>
 
           <div className="catalog-detail-hero-copy">
-            <p className="catalog-detail-eyebrow">{kindLabel}</p>
+            <p className="catalog-detail-eyebrow">{copy.kindLabel}</p>
             <h1 className="catalog-detail-title">{item.title}</h1>
             <p className="catalog-detail-lead">{item.description}</p>
 
@@ -107,7 +155,7 @@ export function CatalogDetailView({
               </div>
               {item.level ? (
                 <div>
-                  <p className="catalog-detail-meta-label">Level</p>
+                  <p className="catalog-detail-meta-label">Pathway</p>
                   <p className="catalog-detail-meta-value">{item.level}</p>
                 </div>
               ) : null}
@@ -115,9 +163,7 @@ export function CatalogDetailView({
 
             <div className="catalog-detail-invest">
               <div>
-                <p className="catalog-detail-meta-label">
-                  {type === "course" ? "Course Fee" : "Workshop Fee"}
-                </p>
+                <p className="catalog-detail-meta-label">{copy.feeLabel}</p>
                 <p className="catalog-detail-price">{formatCad(item.priceCad)}</p>
               </div>
               <CatalogDetailCta
@@ -141,11 +187,9 @@ export function CatalogDetailView({
         >
           <div>
             <p className="catalog-detail-eyebrow">What awaits you</p>
-            <h2 className="catalog-detail-section-title">
-              {type === "course" ? "Inside this course" : "Inside this workshop"}
-            </h2>
+            <h2 className="catalog-detail-section-title">{copy.sectionTitle}</h2>
             <ul className="catalog-detail-highlights">
-              {highlights.map((point) => (
+              {copy.highlights.map((point) => (
                 <li key={point}>{point}</li>
               ))}
             </ul>
@@ -153,15 +197,8 @@ export function CatalogDetailView({
 
           <aside className="catalog-detail-aside">
             <p className="catalog-detail-aside-eyebrow">Begin gently</p>
-            <p className="catalog-detail-aside-title">
-              {type === "course"
-                ? "Enroll and start whenever you are ready."
-                : "Reserve your seat while spots remain."}
-            </p>
-            <p className="catalog-detail-aside-copy">
-              Add this {type === "course" ? "course" : "workshop"} to your cart, then continue browsing or
-              proceed to payment when you feel ready.
-            </p>
+            <p className="catalog-detail-aside-title">{copy.asideTitle}</p>
+            <p className="catalog-detail-aside-copy">{copy.asideCopy}</p>
             <CatalogDetailCta
               type={type}
               item={{

@@ -19,11 +19,28 @@ type CatalogIndexViewProps = {
 };
 
 function IndexCard({ type, item }: { type: CartItemType; item: CatalogDetailItem }) {
-  const detailHref = type === "course" ? `/courses/${item.id}` : `/workshops/${item.id}`;
+  const detailHref =
+    type === "course"
+      ? `/courses/${item.id}`
+      : type === "workshop"
+        ? `/workshops/${item.id}`
+        : `/sessions/${item.id}`;
   const objectPosition = toImageObjectPosition(item.imageFocusX ?? 50, item.imageFocusY ?? 50);
+  const detailsLabel =
+    type === "course"
+      ? "View Course Details"
+      : type === "workshop"
+        ? "View Workshop Details"
+        : "View Session Details";
 
   return (
-    <article className={["catalog-index-card", type === "workshop" ? "catalog-index-card-workshop" : ""].join(" ")}>
+    <article
+      className={[
+        "catalog-index-card",
+        type === "workshop" ? "catalog-index-card-workshop" : "",
+        type === "private_session" ? "catalog-index-card-session" : "",
+      ].join(" ")}
+    >
       <Link href={detailHref} className="catalog-index-card-media">
         <Image
           src={item.image}
@@ -67,7 +84,7 @@ function IndexCard({ type, item }: { type: CartItemType; item: CatalogDetailItem
               }}
             />
             <Link href={detailHref} className="catalog-index-card-details">
-              {type === "course" ? "View Course Details" : "View Workshop Details"}
+              {detailsLabel}
             </Link>
           </div>
         </div>
@@ -85,7 +102,12 @@ export function CatalogIndexView({
   description,
 }: CatalogIndexViewProps) {
   const reduceMotion = useReducedMotion();
-  const countLabel = type === "course" ? "online programs" : "upcoming sessions";
+  const countLabel =
+    type === "course"
+      ? "online programs"
+      : type === "workshop"
+        ? "upcoming sessions"
+        : "private sessions";
 
   return (
     <div className="catalog-index">
@@ -113,7 +135,8 @@ export function CatalogIndexView({
           <div className="catalog-index-empty">
             <p className="catalog-index-empty-title">Nothing published yet</p>
             <p className="catalog-index-empty-copy">
-              Check back soon for new {type === "course" ? "courses" : "workshops"}.
+              Check back soon for new{" "}
+              {type === "course" ? "courses" : type === "workshop" ? "workshops" : "private sessions"}.
             </p>
             <Link href="/" className="catalog-index-empty-link">
               Back to home →

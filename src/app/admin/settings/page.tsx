@@ -28,6 +28,7 @@ export default async function AdminSettingsPage() {
         cta: site.cta,
         showCoursesSection: true,
         showWorkshopsSection: false,
+        showPrivateSessionsSection: true,
       },
       update: {},
     });

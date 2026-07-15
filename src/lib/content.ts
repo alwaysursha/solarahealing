@@ -7,6 +7,10 @@ import {
   type SiteNavItem,
 } from "@/lib/frontpage-content";
 import { OrderStatus, Role } from "@prisma/client";
+import {
+  courseCategoryLabel,
+  courseLevelLabel,
+} from "@/lib/course-taxonomy";
 import { prisma } from "@/lib/prisma";
 import {
   aboutContent,
@@ -17,6 +21,7 @@ import {
   coursesIntro,
   heroSlides,
   onlineCourses as staticCourses,
+  privateSessions as staticPrivateSessions,
   scheduleBooking,
   site,
   testimonials,
@@ -50,6 +55,7 @@ export async function getStorefrontSectionVisibility() {
   return {
     showCoursesSection: row?.showCoursesSection ?? true,
     showWorkshopsSection: row?.showWorkshopsSection ?? false,
+    showPrivateSessionsSection: row?.showPrivateSessionsSection ?? true,
   };
 }
 
@@ -71,6 +77,7 @@ export async function getSiteSettingsFromDb() {
       cta: site.cta,
       showCoursesSection: true,
       showWorkshopsSection: false,
+      showPrivateSessionsSection: true,
       nav: defaultNav(),
       fetchedAt: new Date().toISOString(),
     };
@@ -91,6 +98,7 @@ export async function getSiteSettingsFromDb() {
     cta: row.cta,
     showCoursesSection: row.showCoursesSection ?? true,
     showWorkshopsSection: row.showWorkshopsSection ?? false,
+    showPrivateSessionsSection: row.showPrivateSessionsSection ?? true,
     nav: parseNavJson(row.navJson),
     fetchedAt: row.updatedAt.toISOString(),
   };
@@ -113,13 +121,15 @@ export async function getPublishedCourses() {
       description: course.description,
       date: course.date,
       duration: course.duration,
-      badge: course.badge,
+      badge: courseCategoryLabel(course.category),
+      category: course.category,
       priceCad: course.priceCad,
       image: course.image,
       imageAlt: course.imageAlt,
       imageFocusX: 50,
       imageFocusY: 50,
-      level: course.level,
+      level: courseLevelLabel(course.level),
+      levelKey: course.level,
     }));
   }
 
@@ -129,13 +139,15 @@ export async function getPublishedCourses() {
     description: course.description,
     date: course.dateLabel,
     duration: course.duration,
-    badge: course.badge,
+    badge: courseCategoryLabel(course.category),
+    category: course.category,
     priceCad: course.priceCad,
     image: course.image,
     imageAlt: course.imageAlt,
     imageFocusX: course.imageFocusX,
     imageFocusY: course.imageFocusY,
-    level: course.level,
+    level: courseLevelLabel(course.level),
+    levelKey: course.level,
   }));
 }
 
@@ -172,6 +184,41 @@ export async function getPublishedWorkshops() {
   }));
 }
 
+export async function getPublishedPrivateSessions() {
+  const rows = await safeQuery(
+    () =>
+      prisma.privateSession.findMany({
+        where: { published: true },
+        orderBy: { sortOrder: "asc" },
+      }),
+    [],
+  );
+
+  if (rows.length === 0) {
+    return staticPrivateSessions.map((session) => ({
+      ...session,
+      date: "Schedule after booking",
+      badge: "Private session",
+      imageFocusX: 50,
+      imageFocusY: 50,
+    }));
+  }
+
+  return rows.map((session) => ({
+    id: session.id,
+    title: session.title,
+    description: session.description,
+    date: "Schedule after booking",
+    duration: session.duration,
+    badge: "Private session",
+    priceCad: session.priceCad,
+    image: session.image,
+    imageAlt: session.imageAlt,
+    imageFocusX: session.imageFocusX,
+    imageFocusY: session.imageFocusY,
+  }));
+}
+
 export async function getPublishedCourseById(id: string) {
   const courses = await getPublishedCourses();
   return courses.find((course) => course.id === id) ?? null;
@@ -180,6 +227,11 @@ export async function getPublishedCourseById(id: string) {
 export async function getPublishedWorkshopById(id: string) {
   const workshops = await getPublishedWorkshops();
   return workshops.find((workshop) => workshop.id === id) ?? null;
+}
+
+export async function getPublishedPrivateSessionById(id: string) {
+  const sessions = await getPublishedPrivateSessions();
+  return sessions.find((session) => session.id === id) ?? null;
 }
 
 export async function getWorkshopsIntro() {

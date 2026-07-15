@@ -5,7 +5,7 @@ import { useEffect, useState, useTransition } from "react";
 import { AdminConfirmDialog } from "@/components/admin/AdminConfirmDialog";
 import { updateStorefrontSectionVisibilityAction } from "@/lib/admin/actions";
 
-type StorefrontSection = "courses" | "workshops";
+type StorefrontSection = "courses" | "workshops" | "private_sessions";
 
 const sectionCopy: Record<
   StorefrontSection,
@@ -24,6 +24,13 @@ const sectionCopy: Record<
     hiddenHint: "The workshops section is hidden from the homepage.",
     showConfirm: "Show the workshops section on your homepage? Visitors will see your scheduled live sessions.",
     hideConfirm: "Hide the workshops section from your homepage? Your schedule stays in admin — only the public section is removed.",
+  },
+  private_sessions: {
+    title: "Private sessions section",
+    visibleHint: "The private sessions section is live on the homepage.",
+    hiddenHint: "The private sessions section is hidden from the homepage.",
+    showConfirm: "Show private sessions on your homepage? Visitors will see your one-to-one offerings.",
+    hideConfirm: "Hide private sessions from your homepage? Your catalog stays in admin — only the public section is removed.",
   },
 };
 
