@@ -406,6 +406,48 @@ export const onlineCourses = [
     imageAlt: "Sacred Reiki symbols and attunement course",
     level: "Advanced",
   },
+  {
+    id: "crystal-reiki",
+    title: "Crystal Reiki Integration",
+    description:
+      "Blend crystal allies with Reiki flows — placement maps, cleansing rituals, and session design for grounded, luminous results.",
+    date: "Lifetime access",
+    duration: "8 modules · self-paced",
+    badge: "On Demand",
+    priceCad: 269,
+    image:
+      "https://images.unsplash.com/photo-1518709268805-4e9042af9f23?auto=format&fit=crop&w=1200&q=90",
+    imageAlt: "Crystal Reiki integration online course",
+    level: "Energy work",
+  },
+  {
+    id: "intuitive-presence",
+    title: "Intuitive Presence Training",
+    description:
+      "Strengthen inner listening, ethical intuition, and client-ready presence so your healing sessions feel clear and trustworthy.",
+    date: "Lifetime access",
+    duration: "6 modules · self-paced",
+    badge: "On Demand",
+    priceCad: 219,
+    image:
+      "https://images.unsplash.com/photo-1506126613408-eca07ce68773?auto=format&fit=crop&w=1200&q=80",
+    imageAlt: "Intuitive presence training for healers",
+    level: "Foundations",
+  },
+  {
+    id: "sound-and-breath",
+    title: "Sound, Breath & Energy",
+    description:
+      "Pair breathwork and gentle sound with Reiki to deepen calm, release tension, and support lasting energetic balance.",
+    date: "Lifetime access",
+    duration: "9 modules · self-paced",
+    badge: "On Demand",
+    priceCad: 249,
+    image:
+      "https://images.unsplash.com/photo-1474418397713-7ede21d49118?auto=format&fit=crop&w=1200&q=90",
+    imageAlt: "Sound and breath energy healing course",
+    level: "Wellness",
+  },
 ] as const;
 
 export const testimonialsIntro = {

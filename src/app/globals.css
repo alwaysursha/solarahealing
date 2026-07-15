@@ -2700,6 +2700,59 @@ html[data-brand-theme="10"] section[aria-label="Hero highlights"] [role="tablist
     inset 0 1px 0 rgba(255, 255, 255, 0.18);
 }
 
+.courses-upcoming-slider {
+  width: 100%;
+  min-width: 0;
+}
+
+.courses-upcoming-slider-viewport {
+  container-type: inline-size;
+  width: 100%;
+  min-width: 0;
+  overflow: hidden;
+  touch-action: pan-y;
+}
+
+.courses-upcoming-slider-track {
+  display: flex;
+  width: max-content;
+  gap: 1.5rem;
+  will-change: transform;
+  animation-name: courses-upcoming-marquee;
+  animation-timing-function: linear;
+  animation-iteration-count: infinite;
+}
+
+.courses-upcoming-slider.is-paused .courses-upcoming-slider-track {
+  animation-play-state: paused;
+}
+
+.courses-upcoming-slider-card {
+  flex: 0 0 auto;
+  width: min(22rem, 88cqi);
+}
+
+@container (min-width: 48rem) {
+  .courses-upcoming-slider-card {
+    width: calc((100cqi - 3rem) / 3);
+  }
+}
+
+@keyframes courses-upcoming-marquee {
+  from {
+    transform: translate3d(0, 0, 0);
+  }
+  to {
+    transform: translate3d(calc(-50% - 0.75rem), 0, 0);
+  }
+}
+
+@media (prefers-reduced-motion: reduce) {
+  .courses-upcoming-slider-track {
+    animation: none;
+  }
+}
+
 .workshop-price-tag {
   border-radius: 0.75rem;
   border: 1px solid rgba(255, 255, 255, 0.12);
