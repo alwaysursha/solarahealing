@@ -18,8 +18,8 @@ function CartEmptyState() {
         <CartIcon className="h-4 w-4" />
       </span>
       <div className="min-w-0">
-        <p className="text-[0.72rem] font-medium text-cream/88">Your cart is empty</p>
-        <p className="mt-0.5 text-[0.66rem] text-cream/48">
+        <p className="text-[0.85rem] font-medium text-cream/88 sm:text-[0.9rem]">Your cart is empty</p>
+        <p className="mt-0.5 text-[0.78rem] text-cream/48 sm:text-[0.82rem]">
           Enroll in a course or register for a workshop to begin.
         </p>
       </div>
@@ -40,10 +40,10 @@ export function HeaderCartPanel({ onClose }: HeaderCartPanelProps) {
 
         <div className="header-cart-panel relative z-[1]">
           <header className="header-cart-panel-header">
-            <p className="text-[0.56rem] font-semibold uppercase tracking-[0.3em] text-gold/82">
+            <p className="text-[0.68rem] font-semibold uppercase tracking-[0.28em] text-gold/82 sm:text-[0.72rem]">
               Your selections
             </p>
-            <h2 className="mt-1 font-serif text-[1.15rem] font-normal leading-none tracking-[-0.02em] text-cream lg:text-[1.25rem]">
+            <h2 className="mt-1 font-serif text-[1.35rem] font-normal leading-none tracking-[-0.02em] text-cream sm:text-[1.5rem] lg:text-[1.65rem]">
               Items in your Cart
             </h2>
           </header>
@@ -123,20 +123,20 @@ export function HeaderCartPanel({ onClose }: HeaderCartPanelProps) {
               <div className="header-cart-panel-browse">
                 <Link
                   href="/#workshops"
-                  className="text-[0.68rem] font-medium text-gold/86 transition-colors hover:text-gold-light"
+                  className="text-[0.82rem] font-medium text-gold/86 transition-colors hover:text-gold-light sm:text-[0.88rem]"
                   onClick={onClose}
                 >
                   Browse workshops
                 </Link>
                 <Link
                   href="/#courses"
-                  className="text-[0.68rem] font-medium text-gold/86 transition-colors hover:text-gold-light"
+                  className="text-[0.82rem] font-medium text-gold/86 transition-colors hover:text-gold-light sm:text-[0.88rem]"
                   onClick={onClose}
                 >
                   Browse courses
                 </Link>
               </div>
-              <p className="text-[0.68rem] text-cream/52">Secure checkout with Stripe</p>
+              <p className="text-[0.78rem] text-cream/52 sm:text-[0.82rem]">Secure checkout with Stripe</p>
             </div>
           </div>
         </div>

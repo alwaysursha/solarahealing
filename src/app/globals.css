@@ -1355,9 +1355,9 @@ html[data-brand-theme="8"] .bg-spiritual-shimmer {
 
 .header-login-label {
   display: block;
-  font-size: 0.62rem;
+  font-size: 0.72rem;
   font-weight: 600;
-  letter-spacing: 0.28em;
+  letter-spacing: 0.22em;
   text-transform: uppercase;
   color: rgba(250, 247, 242, 0.58);
 }
@@ -1368,7 +1368,7 @@ html[data-brand-theme="8"] .bg-spiritual-shimmer {
   border: 1px solid rgba(250, 247, 242, 0.12);
   background: rgba(255, 255, 255, 0.04);
   padding: 0.9rem 1rem;
-  font-size: 0.92rem;
+  font-size: 0.98rem;
   color: var(--cream);
   outline: none;
   transition:
@@ -1388,15 +1388,15 @@ html[data-brand-theme="8"] .bg-spiritual-shimmer {
 }
 
 .header-login-input-compact {
-  padding: 0.62rem 0.8rem;
-  font-size: 0.84rem;
+  padding: 0.72rem 0.9rem;
+  font-size: 0.95rem;
   border-radius: 0.8rem;
 }
 
 .header-login-form-layout {
   display: flex;
   flex-wrap: wrap;
-  align-items: flex-end;
+  align-items: flex-start;
   gap: 0.75rem;
 }
 
@@ -1409,7 +1409,7 @@ html[data-brand-theme="8"] .bg-spiritual-shimmer {
 
 .header-login-intro {
   display: none;
-  width: 8.5rem;
+  width: 10.5rem;
   flex-shrink: 0;
 }
 
@@ -1432,6 +1432,14 @@ html[data-brand-theme="8"] .bg-spiritual-shimmer {
     flex: 1 1 auto;
     grid-template-columns: repeat(2, minmax(0, 1fr));
   }
+
+  .header-login-field-span {
+    grid-column: 1 / -1;
+  }
+
+  .header-login-fields-single {
+    grid-template-columns: minmax(0, 1fr);
+  }
 }
 
 @media (min-width: 1024px) {
@@ -1445,6 +1453,8 @@ html[data-brand-theme="8"] .bg-spiritual-shimmer {
   flex-shrink: 0;
   align-items: flex-end;
   gap: 0.5rem;
+  /* Sit beside the inputs, not the under-field hints */
+  margin-top: 1.55rem;
 }
 
 .header-cart-content {
@@ -1482,17 +1492,37 @@ html[data-brand-theme="8"] .bg-spiritual-shimmer {
 .header-login-submit-compact {
   flex-shrink: 0;
   min-width: 5.75rem;
-  padding: 0.62rem 1.15rem;
-  font-size: 0.64rem;
-  letter-spacing: 0.16em;
+  padding: 0.7rem 1.25rem;
+  font-size: 0.72rem;
+  letter-spacing: 0.14em;
   white-space: nowrap;
 }
 
 .header-login-google-compact {
   width: auto;
   min-width: 2.5rem;
-  padding: 0.62rem 0.75rem;
-  font-size: 0.64rem;
+  padding: 0.7rem 0.9rem;
+  font-size: 0.72rem;
+}
+
+@media (min-width: 640px) {
+  .header-login-label {
+    font-size: 0.76rem;
+  }
+
+  .header-login-input-compact {
+    font-size: 1rem;
+  }
+
+  .header-login-submit-compact {
+    padding: 0.75rem 1.3rem;
+    font-size: 0.78rem;
+  }
+
+  .header-login-google-compact {
+    padding: 0.75rem 1rem;
+    font-size: 0.78rem;
+  }
 }
 
 .header-login-footer {
@@ -1526,8 +1556,8 @@ html[data-brand-theme="8"] .bg-spiritual-shimmer {
   }
 
   .header-login-input-compact {
-    padding: 0.78rem 0.95rem;
-    font-size: 0.9rem;
+    padding: 0.85rem 1rem;
+    font-size: 1rem;
     border-radius: 0.85rem;
   }
 
@@ -1536,15 +1566,16 @@ html[data-brand-theme="8"] .bg-spiritual-shimmer {
     align-items: stretch;
     gap: 0.7rem;
     width: 100%;
+    margin-top: 0;
   }
 
   .header-login-submit-compact,
   .header-login-google-compact {
     width: 100%;
     min-width: 0;
-    padding: 0.8rem 1.25rem;
-    font-size: 0.68rem;
-    letter-spacing: 0.14em;
+    padding: 0.9rem 1.25rem;
+    font-size: 0.78rem;
+    letter-spacing: 0.12em;
   }
 
   .header-login-divider-mobile {
@@ -1586,9 +1617,9 @@ html[data-brand-theme="8"] .bg-spiritual-shimmer {
   .header-account-cart-embed-actions .header-login-submit-compact {
     width: 100%;
     min-width: 0;
-    padding: 0.8rem 1.25rem;
-    font-size: 0.68rem;
-    letter-spacing: 0.14em;
+    padding: 0.9rem 1.25rem;
+    font-size: 0.78rem;
+    letter-spacing: 0.12em;
   }
 }
 
@@ -1670,7 +1701,7 @@ html[data-brand-theme="8"] .bg-spiritual-shimmer {
   border: 1px solid rgba(250, 247, 242, 0.14);
   background: rgba(250, 247, 242, 0.06);
   padding: 0.875rem 1.25rem;
-  font-size: 0.72rem;
+  font-size: 0.78rem;
   font-weight: 600;
   letter-spacing: 0.12em;
   color: rgba(250, 247, 242, 0.92);
@@ -5127,7 +5158,7 @@ html[data-brand-theme="10"] section[aria-label="Hero highlights"] [role="tablist
 }
 
 .header-cart-total-label {
-  font-size: 0.58rem;
+  font-size: 0.72rem;
   font-weight: 600;
   letter-spacing: 0.16em;
   text-transform: uppercase;
@@ -5136,7 +5167,7 @@ html[data-brand-theme="10"] section[aria-label="Hero highlights"] [role="tablist
 
 .header-cart-total-value {
   font-family: var(--font-serif, Georgia, serif);
-  font-size: 1.05rem;
+  font-size: 1.25rem;
   font-weight: 400;
   letter-spacing: -0.02em;
   color: #eecf78;
@@ -5149,8 +5180,8 @@ html[data-brand-theme="10"] section[aria-label="Hero highlights"] [role="tablist
   flex-shrink: 0;
   margin-left: 0;
   justify-content: center;
-  padding: 0.48rem 0.95rem;
-  font-size: 0.58rem;
+  padding: 0.62rem 1.15rem;
+  font-size: 0.72rem;
   letter-spacing: 0.12em;
 }
 
@@ -5210,7 +5241,7 @@ html[data-brand-theme="10"] section[aria-label="Hero highlights"] [role="tablist
 }
 
 .header-cart-line-type {
-  font-size: 0.52rem;
+  font-size: 0.68rem;
   font-weight: 600;
   letter-spacing: 0.16em;
   text-transform: uppercase;
@@ -5219,7 +5250,7 @@ html[data-brand-theme="10"] section[aria-label="Hero highlights"] [role="tablist
 
 .header-cart-line-title {
   margin-top: 0.1rem;
-  font-size: 0.72rem;
+  font-size: 0.92rem;
   font-weight: 500;
   color: rgba(250, 247, 242, 0.92);
   white-space: nowrap;
@@ -5229,13 +5260,13 @@ html[data-brand-theme="10"] section[aria-label="Hero highlights"] [role="tablist
 
 .header-cart-line-meta {
   margin-top: 0.1rem;
-  font-size: 0.62rem;
+  font-size: 0.78rem;
   color: rgba(250, 247, 242, 0.5);
 }
 
 .header-cart-line-remove {
   flex-shrink: 0;
-  font-size: 0.58rem;
+  font-size: 0.72rem;
   font-weight: 600;
   letter-spacing: 0.08em;
   text-transform: uppercase;
@@ -5245,6 +5276,37 @@ html[data-brand-theme="10"] section[aria-label="Hero highlights"] [role="tablist
 
 .header-cart-line-remove:hover {
   color: #f7ecd0;
+}
+
+@media (min-width: 640px) {
+  .header-cart-total-label {
+    font-size: 0.76rem;
+  }
+
+  .header-cart-total-value {
+    font-size: 1.4rem;
+  }
+
+  .header-cart-checkout-btn {
+    padding: 0.7rem 1.3rem;
+    font-size: 0.78rem;
+  }
+
+  .header-cart-line-type {
+    font-size: 0.72rem;
+  }
+
+  .header-cart-line-title {
+    font-size: 1rem;
+  }
+
+  .header-cart-line-meta {
+    font-size: 0.85rem;
+  }
+
+  .header-cart-line-remove {
+    font-size: 0.78rem;
+  }
 }
 
 .checkout-page {
@@ -8051,15 +8113,36 @@ html[data-brand-theme="10"] section[aria-label="Hero highlights"] [role="tablist
   overflow: hidden;
   margin-top: 0.25rem;
   border-radius: 9999px;
-  border: 1px solid rgba(201, 162, 39, 0.4);
-  background: linear-gradient(135deg, #eecf78 0%, var(--gold) 48%, #b8922a 100%);
+  border: 1px solid rgba(143, 99, 181, 0.35);
+  background: linear-gradient(
+    145deg,
+    #8f63b5 0%,
+    #734795 48%,
+    #5c1470 100%
+  );
   padding: 0.85rem 1.2rem;
-  font-size: 0.68rem;
+  font-size: 0.82rem;
   font-weight: 700;
-  letter-spacing: 0.16em;
+  letter-spacing: 0.12em;
   text-transform: uppercase;
-  color: var(--purple-deep);
-  box-shadow: 0 14px 34px -18px rgba(201, 162, 39, 0.7);
+  color: #faf6fc;
+  box-shadow:
+    0 14px 30px -14px rgba(92, 20, 112, 0.45),
+    inset 0 1px 0 rgba(255, 255, 255, 0.14);
+  transition: background 0.22s ease, color 0.22s ease, box-shadow 0.22s ease;
+}
+
+.auth-gate-submit:hover:not(:disabled) {
+  background: linear-gradient(
+    145deg,
+    #a47bc6 0%,
+    #8556a8 55%,
+    #6b3d8a 100%
+  );
+  color: #ffffff;
+  box-shadow:
+    0 16px 34px -14px rgba(92, 20, 112, 0.5),
+    inset 0 1px 0 rgba(255, 255, 255, 0.18);
 }
 
 .auth-gate-submit:disabled {
@@ -8074,7 +8157,7 @@ html[data-brand-theme="10"] section[aria-label="Hero highlights"] [role="tablist
   background: linear-gradient(
     118deg,
     transparent 28%,
-    rgba(255, 255, 255, 0.28) 48%,
+    rgba(255, 255, 255, 0.18) 48%,
     transparent 68%
   );
   animation: checkout-pay-shine 4.5s ease-in-out infinite;

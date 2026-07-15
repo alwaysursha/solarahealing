@@ -1,26 +1,56 @@
 "use client";
 
-import Link from "next/link";
 import { useEffect, useId, useState } from "react";
 import { signIn } from "next-auth/react";
 import { GoogleSignInButton } from "@/components/auth/AuthForms";
+import { registerUserAction } from "@/lib/admin/actions";
+import { requestPasswordResetAction } from "@/lib/auth/password-reset";
 import { getAuthCallbackUrl, getPostLoginRedirectUrl } from "@/lib/auth-utils";
 
 type HeaderLoginPanelProps = {
   onClose: () => void;
 };
 
+type PanelMode = "signin" | "signup" | "forgot";
+
 export function HeaderLoginPanel({ onClose }: HeaderLoginPanelProps) {
+  const nameId = useId();
   const emailId = useId();
   const passwordId = useId();
+  const [mode, setMode] = useState<PanelMode>("signin");
   const [showPassword, setShowPassword] = useState(false);
   const [error, setError] = useState<string | null>(null);
+  const [success, setSuccess] = useState<string | null>(null);
   const [submitting, setSubmitting] = useState(false);
   const [callbackUrl, setCallbackUrl] = useState("/");
 
   useEffect(() => {
     setCallbackUrl(getAuthCallbackUrl("/"));
   }, []);
+
+  function switchMode(next: PanelMode) {
+    setMode(next);
+    setError(null);
+    setSuccess(null);
+    setShowPassword(false);
+  }
+
+  const eyebrow =
+    mode === "signup" ? "Join Soulara" : mode === "forgot" ? "Account help" : "Member access";
+  const title =
+    mode === "signup" ? "Create account" : mode === "forgot" ? "Reset password" : "Welcome back";
+  const submitLabel =
+    mode === "signup"
+      ? submitting
+        ? "Creating…"
+        : "Create account"
+      : mode === "forgot"
+        ? submitting
+          ? "Sending…"
+          : "Send reset link"
+        : submitting
+          ? "Signing in…"
+          : "Sign in";
 
   return (
     <div className="header-login-panel relative mt-2.5 w-full">
@@ -39,19 +69,45 @@ export function HeaderLoginPanel({ onClose }: HeaderLoginPanelProps) {
 
               setSubmitting(true);
               setError(null);
+              setSuccess(null);
 
               try {
                 const returnUrl = getAuthCallbackUrl("/");
                 const formData = new FormData(event.currentTarget);
+                const email = formData.get("email")?.toString() ?? "";
+                const password = formData.get("password")?.toString() ?? "";
+
+                if (mode === "forgot") {
+                  const result = await requestPasswordResetAction(email);
+                  if (!result.ok) {
+                    setError(result.error);
+                    return;
+                  }
+                  setSuccess(result.message);
+                  return;
+                }
+
+                if (mode === "signup") {
+                  const result = await registerUserAction(formData);
+                  if (!result.ok) {
+                    setError(result.error ?? "Could not create account.");
+                    return;
+                  }
+                }
+
                 const result = await signIn("credentials", {
-                  email: formData.get("email")?.toString() ?? "",
-                  password: formData.get("password")?.toString() ?? "",
+                  email,
+                  password,
                   redirect: false,
                   callbackUrl: returnUrl,
                 });
 
                 if (result?.error) {
-                  setError("Invalid email or password.");
+                  setError(
+                    mode === "signup"
+                      ? "Account created, but sign-in failed. Please try signing in."
+                      : "Invalid email or password.",
+                  );
                   return;
                 }
 
@@ -71,15 +127,39 @@ export function HeaderLoginPanel({ onClose }: HeaderLoginPanelProps) {
           >
             <div className="header-login-form-layout">
               <div className="header-login-intro">
-                <p className="text-[0.56rem] font-semibold uppercase tracking-[0.3em] text-gold/82">
-                  Member access
+                <p className="whitespace-nowrap text-[0.68rem] font-semibold uppercase tracking-[0.22em] text-gold/82 sm:text-[0.72rem]">
+                  {eyebrow}
                 </p>
-                <h2 className="mt-1 font-serif text-[1.15rem] font-normal leading-none tracking-[-0.02em] text-cream lg:text-[1.25rem]">
-                  Welcome back
+                <h2 className="mt-1 font-serif text-[1.35rem] font-normal leading-none tracking-[-0.02em] text-cream sm:text-[1.5rem] lg:text-[1.65rem]">
+                  {title}
                 </h2>
               </div>
 
-              <div className="header-login-fields">
+              <div
+                className={
+                  mode === "forgot"
+                    ? "header-login-fields header-login-fields-single"
+                    : "header-login-fields"
+                }
+              >
+                {mode === "signup" ? (
+                  <div className="header-login-field-span min-w-0">
+                    <label htmlFor={nameId} className="header-login-label">
+                      Full name
+                    </label>
+                    <input
+                      id={nameId}
+                      name="name"
+                      type="text"
+                      autoComplete="name"
+                      placeholder="Your name"
+                      className="header-login-input header-login-input-compact mt-1.5"
+                      disabled={submitting}
+                      required
+                    />
+                  </div>
+                ) : null}
+
                 <div className="min-w-0">
                   <label htmlFor={emailId} className="header-login-label">
                     Email ID
@@ -94,33 +174,88 @@ export function HeaderLoginPanel({ onClose }: HeaderLoginPanelProps) {
                     disabled={submitting}
                     required
                   />
+                  <p className="mt-2 text-[0.82rem] leading-snug text-cream/52 sm:text-[0.88rem]">
+                    {mode === "signin" ? (
+                      <>
+                        New here?{" "}
+                        <button
+                          type="button"
+                          className="font-medium text-gold/88 transition-colors hover:text-gold-light"
+                          onClick={() => switchMode("signup")}
+                        >
+                          Create account
+                        </button>
+                      </>
+                    ) : mode === "signup" ? (
+                      <>
+                        Already a member?{" "}
+                        <button
+                          type="button"
+                          className="font-medium text-gold/88 transition-colors hover:text-gold-light"
+                          onClick={() => switchMode("signin")}
+                        >
+                          Sign in
+                        </button>
+                      </>
+                    ) : (
+                      <button
+                        type="button"
+                        className="font-medium text-gold/88 transition-colors hover:text-gold-light"
+                        onClick={() => switchMode("signin")}
+                      >
+                        Back to sign in
+                      </button>
+                    )}
+                  </p>
                 </div>
 
-                <div className="min-w-0">
-                  <div className="flex items-center justify-between gap-2">
-                    <label htmlFor={passwordId} className="header-login-label">
-                      Password
-                    </label>
-                    <button
-                      type="button"
-                      className="text-[0.58rem] font-medium uppercase tracking-[0.16em] text-cream/48 transition-colors hover:text-gold"
-                      onClick={() => setShowPassword((value) => !value)}
+                {mode !== "forgot" ? (
+                  <div className="min-w-0">
+                    <div className="flex items-center justify-between gap-2">
+                      <label htmlFor={passwordId} className="header-login-label">
+                        Password
+                      </label>
+                      <button
+                        type="button"
+                        className="text-[0.72rem] font-medium uppercase tracking-[0.14em] text-cream/48 transition-colors hover:text-gold sm:text-[0.78rem]"
+                        onClick={() => setShowPassword((value) => !value)}
+                        disabled={submitting}
+                      >
+                        {showPassword ? "Hide" : "Show"}
+                      </button>
+                    </div>
+                    <input
+                      id={passwordId}
+                      name="password"
+                      type={showPassword ? "text" : "password"}
+                      autoComplete={mode === "signup" ? "new-password" : "current-password"}
+                      placeholder="Password"
+                      minLength={mode === "signup" ? 8 : undefined}
+                      className="header-login-input header-login-input-compact mt-1.5"
                       disabled={submitting}
-                    >
-                      {showPassword ? "Hide" : "Show"}
-                    </button>
+                      required
+                    />
+                    <p className="mt-2 text-right text-[0.82rem] leading-snug sm:text-[0.88rem]">
+                      {mode === "signin" ? (
+                        <button
+                          type="button"
+                          className="font-medium text-gold/86 transition-colors hover:text-gold-light"
+                          onClick={() => switchMode("forgot")}
+                        >
+                          Forgot your password?
+                        </button>
+                      ) : (
+                        <button
+                          type="button"
+                          className="font-medium text-gold/86 transition-colors hover:text-gold-light"
+                          onClick={() => switchMode("signin")}
+                        >
+                          Back to sign in
+                        </button>
+                      )}
+                    </p>
                   </div>
-                  <input
-                    id={passwordId}
-                    name="password"
-                    type={showPassword ? "text" : "password"}
-                    autoComplete="current-password"
-                    placeholder="Password"
-                    className="header-login-input header-login-input-compact mt-1.5"
-                    disabled={submitting}
-                    required
-                  />
-                </div>
+                ) : null}
               </div>
 
               <div className="header-login-actions">
@@ -130,36 +265,21 @@ export function HeaderLoginPanel({ onClose }: HeaderLoginPanelProps) {
                   disabled={submitting}
                 >
                   <span className="header-login-submit-shine pointer-events-none absolute inset-0" />
-                  <span className="relative">{submitting ? "Signing in…" : "Sign in"}</span>
+                  <span className="relative">{submitLabel}</span>
                 </button>
-                <div className="header-login-divider header-login-divider-mobile" aria-hidden>
-                  or
-                </div>
-                <GoogleSignInButton callbackUrl={callbackUrl} compact />
+                {mode !== "forgot" ? (
+                  <>
+                    <div className="header-login-divider header-login-divider-mobile" aria-hidden>
+                      or
+                    </div>
+                    <GoogleSignInButton callbackUrl={callbackUrl} compact />
+                  </>
+                ) : null}
               </div>
             </div>
 
-            {error ? <p className="text-xs text-red-300">{error}</p> : null}
-
-            <div className="header-login-footer flex flex-wrap items-center justify-between gap-x-4 gap-y-1 md:pl-[8.5rem]">
-              <Link
-                href={`/auth/sign-in?callbackUrl=${encodeURIComponent(callbackUrl)}`}
-                className="text-[0.68rem] font-medium text-gold/86 transition-colors hover:text-gold-light"
-                onClick={onClose}
-              >
-                Forgot your password?
-              </Link>
-              <p className="text-[0.68rem] text-cream/52">
-                New here?{" "}
-                <Link
-                  href={`/auth/sign-up?callbackUrl=${encodeURIComponent(callbackUrl)}`}
-                  className="font-medium text-gold/88 transition-colors hover:text-gold-light"
-                  onClick={onClose}
-                >
-                  Create account
-                </Link>
-              </p>
-            </div>
+            {error ? <p className="text-sm text-red-300">{error}</p> : null}
+            {success ? <p className="text-sm text-cream/80">{success}</p> : null}
           </form>
         </div>
       </div>
