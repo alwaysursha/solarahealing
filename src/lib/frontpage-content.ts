@@ -55,7 +55,7 @@ export const DEFAULT_QUOTE_LABEL = "The heart of our practice";
 
 export function defaultHeroButtons(ctaLabel: string = site.cta): HeroSlideButton[] {
   return [
-    { id: "primary", label: ctaLabel, href: "#contact", style: "primary" },
+    { id: "primary", label: ctaLabel, href: "#sessions", style: "primary" },
     { id: "secondary", label: "Explore Sessions", href: "#sessions", style: "secondary" },
   ];
 }
@@ -159,7 +159,11 @@ export function normalizeHeroSlides(raw: unknown, ctaLabel: string = site.cta): 
             const b = button as Record<string, unknown>;
             const style = b.style === "secondary" ? "secondary" : "primary";
             const label = typeof b.label === "string" ? b.label.trim() : "";
-            const href = typeof b.href === "string" ? b.href.trim() : "";
+            let href = typeof b.href === "string" ? b.href.trim() : "";
+            // Keep the primary "Book a Session" CTA pointed at private sessions.
+            if (style === "primary" && /session/i.test(label || ctaLabel)) {
+              href = "#sessions";
+            }
             if (!label || !href) return null;
             return {
               id: typeof b.id === "string" && b.id ? b.id : `btn-${buttonIndex + 1}`,
