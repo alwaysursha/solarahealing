@@ -21,8 +21,7 @@ export function GlowButton({
   const base =
     "relative inline-flex items-center justify-center rounded-full px-6 py-3 text-sm font-medium tracking-wide transition-colors md:px-8 md:py-3.5";
   const styles = {
-    primary:
-      "bg-gold text-purple-deep shadow-lg shadow-gold/30 hover:bg-gold-light",
+    primary: "glow-btn-primary",
     outline:
       "border border-purple-deep/20 text-purple-deep hover:border-gold hover:text-gold",
     light:
@@ -37,7 +36,7 @@ export function GlowButton({
       whileTap={reduceMotion ? undefined : { scale: 0.98 }}
     >
       {variant === "primary" && !reduceMotion && (
-        <span className="pointer-events-none absolute inset-0 rounded-full bg-gold/30 blur-xl" />
+        <span className="glow-btn-primary-glow pointer-events-none absolute inset-0 rounded-full blur-xl" />
       )}
       <span className="relative">{children}</span>
     </motion.a>

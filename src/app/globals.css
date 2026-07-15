@@ -1191,22 +1191,37 @@ html[data-brand-theme="8"] .bg-spiritual-shimmer {
   gap: 0.65rem;
   overflow: hidden;
   border-radius: 9999px;
-  background: linear-gradient(135deg, var(--gold) 0%, var(--gold-light) 100%);
+  background: linear-gradient(
+    145deg,
+    #8f63b5 0%,
+    #734795 48%,
+    #5c1470 100%
+  );
   padding: 0.9rem 1.25rem;
   font-family: var(--font-jakarta), system-ui, sans-serif;
   font-size: 0.72rem;
   font-weight: 600;
   letter-spacing: 0.24em;
   text-transform: uppercase;
-  color: var(--purple-deep);
-  box-shadow: 0 12px 32px -16px rgba(201, 162, 39, 0.65);
-  transition: transform 0.3s ease, box-shadow 0.3s ease;
+  color: #faf6fc;
+  box-shadow:
+    0 12px 28px -14px rgba(92, 20, 112, 0.45),
+    inset 0 1px 0 rgba(255, 255, 255, 0.14);
+  transition: transform 0.3s ease, box-shadow 0.3s ease, background 0.22s ease;
 }
 
 .mobile-nav-cta:hover,
 .mobile-nav-cta:focus-visible {
   transform: translateY(-1px);
-  box-shadow: 0 16px 36px -14px rgba(201, 162, 39, 0.75);
+  background: linear-gradient(
+    145deg,
+    #a47bc6 0%,
+    #8556a8 55%,
+    #6b3d8a 100%
+  );
+  box-shadow:
+    0 16px 34px -14px rgba(92, 20, 112, 0.5),
+    inset 0 1px 0 rgba(255, 255, 255, 0.18);
   outline: none;
 }
 
@@ -2537,34 +2552,71 @@ html[data-brand-theme="10"] #courses .catalog-view-details:hover {
   color: #fff3c4 !important;
 }
 
+/* Hero primary CTA — soft orchid purple (matches Enroll Now) */
+.glow-btn-primary {
+  border: 1px solid rgba(143, 99, 181, 0.35);
+  background: linear-gradient(
+    145deg,
+    #8f63b5 0%,
+    #734795 48%,
+    #5c1470 100%
+  );
+  color: #faf6fc;
+  box-shadow:
+    0 14px 30px -14px rgba(92, 20, 112, 0.45),
+    inset 0 1px 0 rgba(255, 255, 255, 0.14);
+  transition: background 0.22s ease, color 0.22s ease, box-shadow 0.22s ease;
+}
+
+.glow-btn-primary:hover {
+  background: linear-gradient(
+    145deg,
+    #a47bc6 0%,
+    #8556a8 55%,
+    #6b3d8a 100%
+  );
+  color: #ffffff;
+  box-shadow:
+    0 16px 34px -14px rgba(92, 20, 112, 0.5),
+    inset 0 1px 0 rgba(255, 255, 255, 0.18);
+}
+
+.glow-btn-primary-glow {
+  background: color-mix(in srgb, #734795 42%, transparent);
+}
+
 /* Option 8 / 10 — hero primary CTA + dots in deep orchid */
+section[aria-label="Hero highlights"] a.glow-btn-primary,
 html[data-brand-theme="8"] section[aria-label="Hero highlights"] a.bg-gold,
 html[data-brand-theme="10"] section[aria-label="Hero highlights"] a.bg-gold {
   background: linear-gradient(
-    155deg,
-    #5C1470 0%,
-    #7A2A8E 55%,
-    #5C1470 100%
+    145deg,
+    #8f63b5 0%,
+    #734795 48%,
+    #5c1470 100%
   ) !important;
-  color: #faf8fc !important;
+  color: #faf6fc !important;
   box-shadow:
-    0 12px 28px -10px rgba(var(--purple-deep-rgb), 0.55),
-    0 0 0 1px color-mix(in srgb, white 14%, transparent) inset !important;
+    0 14px 30px -14px rgba(92, 20, 112, 0.45),
+    inset 0 1px 0 rgba(255, 255, 255, 0.14) !important;
 }
 
+section[aria-label="Hero highlights"] a.glow-btn-primary:hover,
 html[data-brand-theme="8"] section[aria-label="Hero highlights"] a.bg-gold:hover,
 html[data-brand-theme="10"] section[aria-label="Hero highlights"] a.bg-gold:hover {
   background: linear-gradient(
-    155deg,
-    #7A2A8E 0%,
-    #B84DC8 100%
+    145deg,
+    #a47bc6 0%,
+    #8556a8 55%,
+    #6b3d8a 100%
   ) !important;
   color: #ffffff !important;
 }
 
+section[aria-label="Hero highlights"] a.glow-btn-primary > span.glow-btn-primary-glow,
 html[data-brand-theme="8"] section[aria-label="Hero highlights"] a.bg-gold > span.absolute,
 html[data-brand-theme="10"] section[aria-label="Hero highlights"] a.bg-gold > span.absolute {
-  background: color-mix(in srgb, var(--purple-deep) 45%, transparent) !important;
+  background: color-mix(in srgb, #734795 45%, transparent) !important;
 }
 
 html[data-brand-theme="8"] section[aria-label="Hero highlights"] [role="tablist"] button[aria-selected="true"],
@@ -5777,7 +5829,7 @@ html[data-brand-theme="10"] section[aria-label="Hero highlights"] [role="tablist
   height: 14rem;
   transform: translateX(-50%);
   border-radius: 9999px;
-  background: radial-gradient(circle, rgba(212, 173, 53, 0.28), transparent 68%);
+  background: radial-gradient(circle, rgba(143, 99, 181, 0.2), transparent 68%);
   filter: blur(4px);
 }
 
@@ -5787,7 +5839,7 @@ html[data-brand-theme="10"] section[aria-label="Hero highlights"] [role="tablist
   font-weight: 600;
   letter-spacing: 0.26em;
   text-transform: uppercase;
-  color: var(--gold);
+  color: color-mix(in srgb, var(--purple-deep) 72%, #8f63b5);
 }
 
 .checkout-empty-title {
@@ -5825,22 +5877,38 @@ html[data-brand-theme="10"] section[aria-label="Hero highlights"] [role="tablist
   justify-content: center;
   overflow: hidden;
   border-radius: 9999px;
-  border: 1px solid rgba(201, 162, 39, 0.4);
-  background: linear-gradient(135deg, #eecf78 0%, var(--gold) 48%, #b8922a 100%);
+  border: 1px solid rgba(143, 99, 181, 0.35);
+  background: linear-gradient(
+    145deg,
+    #8f63b5 0%,
+    #734795 48%,
+    #5c1470 100%
+  );
   padding: 0.85rem 1.45rem;
   font-size: 0.68rem;
   font-weight: 700;
   letter-spacing: 0.16em;
   text-transform: uppercase;
-  color: var(--purple-deep);
-  box-shadow: 0 16px 36px -18px rgba(201, 162, 39, 0.7);
-  transition: transform 0.2s ease, box-shadow 0.2s ease;
+  color: #faf6fc;
+  box-shadow:
+    0 14px 30px -14px rgba(92, 20, 112, 0.45),
+    inset 0 1px 0 rgba(255, 255, 255, 0.14);
+  transition: transform 0.2s ease, box-shadow 0.2s ease, background 0.22s ease;
 }
 
 .checkout-cta-primary:hover,
 .checkout-pay-button:hover:not(:disabled) {
   transform: translateY(-1px);
-  box-shadow: 0 18px 40px -16px rgba(201, 162, 39, 0.78);
+  background: linear-gradient(
+    145deg,
+    #a47bc6 0%,
+    #8556a8 55%,
+    #6b3d8a 100%
+  );
+  color: #ffffff;
+  box-shadow:
+    0 16px 34px -14px rgba(92, 20, 112, 0.5),
+    inset 0 1px 0 rgba(255, 255, 255, 0.18);
 }
 
 .checkout-cta-ghost {
