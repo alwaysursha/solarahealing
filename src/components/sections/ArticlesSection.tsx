@@ -79,7 +79,7 @@ function FeaturedArticleCard({ article }: { article: FeaturedArticle }) {
         <p className="mt-4 max-w-sm text-sm leading-relaxed text-white/72 md:text-[0.95rem]">
           {article.excerpt}
         </p>
-        <span className="article-featured-cta mt-7 inline-flex w-fit items-center rounded-full border border-white/25 bg-white/10 px-6 py-3 text-[0.65rem] font-semibold uppercase tracking-[0.24em] text-white backdrop-blur-md transition-all duration-300 group-hover:border-gold/50 group-hover:bg-gold/15 group-hover:text-gold-light">
+        <span className="article-featured-cta mt-7 inline-flex w-fit items-center rounded-full border border-white/30 bg-white/12 px-6 py-3 text-[0.65rem] font-semibold uppercase tracking-[0.24em] text-white backdrop-blur-md transition-all duration-300 group-hover:border-white group-hover:bg-white group-hover:text-purple-deep group-hover:shadow-[0_10px_28px_-14px_rgba(0,0,0,0.45)]">
           {article.cta}
         </span>
       </div>
