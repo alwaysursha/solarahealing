@@ -355,12 +355,13 @@ export const onlineCourses = [
       "Master sacred hand positions, energy sensing, and self-healing rituals through guided video modules you can revisit anytime.",
     date: "Start anytime",
     duration: "8 modules · self-paced",
-    badge: "On Demand",
+    badge: "",
     priceCad: 299,
     image:
       "https://images.unsplash.com/photo-1545389336-cf090694435e?auto=format&fit=crop&w=1200&q=90",
     imageAlt: "Reiki Level I online certification course",
-    level: "Foundations",
+    category: "REIKI" as const,
+    level: "BEGINNER" as const,
   },
   {
     id: "reiki-level-2",
@@ -369,12 +370,13 @@ export const onlineCourses = [
       "Expand your practice with distance healing symbols, emotional release techniques, and advanced energetic protocols.",
     date: "Lifetime access",
     duration: "10 modules · self-paced",
-    badge: "On Demand",
+    badge: "",
     priceCad: 449,
     image:
       "https://images.unsplash.com/photo-1599901860904-17e6d708b348?auto=format&fit=crop&w=1200&q=90",
     imageAlt: "Advanced Reiki Level II online training",
-    level: "Intermediate",
+    category: "REIKI" as const,
+    level: "INTERMEDIATE" as const,
   },
   {
     id: "chakra-mastery",
@@ -383,12 +385,13 @@ export const onlineCourses = [
       "Deep-dive into all seven chakras with guided scans, balancing practices, and integration exercises for daily life.",
     date: "Lifetime access",
     duration: "12 modules · self-paced",
-    badge: "On Demand",
+    badge: "",
     priceCad: 329,
     image:
       "https://images.unsplash.com/photo-1506126613408-eca07ce68773?auto=format&fit=crop&w=1200&q=90",
     imageAlt: "Chakra mastery online healing program",
-    level: "Energy work",
+    category: "NON_REIKI" as const,
+    level: "INTERMEDIATE" as const,
   },
   {
     id: "distance-practitioner",
@@ -397,12 +400,13 @@ export const onlineCourses = [
       "Learn to send healing across space with confidence — protocols, intention setting, and client-ready distance sessions.",
     date: "Lifetime access",
     duration: "9 modules · self-paced",
-    badge: "On Demand",
+    badge: "",
     priceCad: 279,
     image:
       "https://images.unsplash.com/photo-1573496359142-b8d87734a5a2?auto=format&fit=crop&w=1200&q=90",
     imageAlt: "Distance Reiki practitioner course online",
-    level: "Practitioner",
+    category: "REIKI" as const,
+    level: "INTERMEDIATE" as const,
   },
   {
     id: "master-teacher",
@@ -411,12 +415,13 @@ export const onlineCourses = [
       "The complete attunement and teaching pathway for those called to guide others — lineage, ethics, and mastery curriculum.",
     date: "Lifetime access",
     duration: "16 modules · certification",
-    badge: "Certified",
+    badge: "",
     priceCad: 899,
     image:
       "https://images.unsplash.com/photo-1544367567-0f2fcb009e0b?auto=format&fit=crop&w=1200&q=90",
     imageAlt: "Reiki master teacher certification path",
-    level: "Master",
+    category: "REIKI" as const,
+    level: "MASTER" as const,
   },
   {
     id: "energy-anatomy",
@@ -425,12 +430,13 @@ export const onlineCourses = [
       "Understand the subtle body, aura layers, and energetic anatomy — essential knowledge for any serious healing practice.",
     date: "Lifetime access",
     duration: "7 modules · self-paced",
-    badge: "On Demand",
+    badge: "",
     priceCad: 199,
     image:
       "https://images.unsplash.com/photo-1507003211169-0a1dd7228f2d?auto=format&fit=crop&w=1200&q=90",
     imageAlt: "Energy anatomy and aura reading course",
-    level: "Foundations",
+    category: "NON_REIKI" as const,
+    level: "BEGINNER" as const,
   },
   {
     id: "sacred-symbols",
@@ -439,12 +445,13 @@ export const onlineCourses = [
       "Study the sacred Reiki symbols with reverence — their meaning, application, and role in attunement and healing work.",
     date: "Lifetime access",
     duration: "11 modules · self-paced",
-    badge: "On Demand",
+    badge: "",
     priceCad: 379,
     image:
       "https://images.unsplash.com/photo-1499205798772-66a89db83f24?auto=format&fit=crop&w=1200&q=90",
     imageAlt: "Sacred Reiki symbols and attunement course",
-    level: "Advanced",
+    category: "REIKI" as const,
+    level: "ADVANCED" as const,
   },
   {
     id: "crystal-reiki",
@@ -453,12 +460,13 @@ export const onlineCourses = [
       "Blend crystal allies with Reiki flows — placement maps, cleansing rituals, and session design for grounded, luminous results.",
     date: "Lifetime access",
     duration: "8 modules · self-paced",
-    badge: "On Demand",
+    badge: "",
     priceCad: 269,
     image:
       "https://images.unsplash.com/photo-1518709268805-4e9042af9f23?auto=format&fit=crop&w=1200&q=90",
     imageAlt: "Crystal Reiki integration online course",
-    level: "Energy work",
+    category: "REIKI" as const,
+    level: "INTERMEDIATE" as const,
   },
   {
     id: "intuitive-presence",
@@ -467,12 +475,13 @@ export const onlineCourses = [
       "Strengthen inner listening, ethical intuition, and client-ready presence so your healing sessions feel clear and trustworthy.",
     date: "Lifetime access",
     duration: "6 modules · self-paced",
-    badge: "On Demand",
+    badge: "",
     priceCad: 219,
     image:
       "https://images.unsplash.com/photo-1506126613408-eca07ce68773?auto=format&fit=crop&w=1200&q=80",
     imageAlt: "Intuitive presence training for healers",
-    level: "Foundations",
+    category: "NON_REIKI" as const,
+    level: "BEGINNER" as const,
   },
   {
     id: "sound-and-breath",
@@ -481,12 +490,58 @@ export const onlineCourses = [
       "Pair breathwork and gentle sound with Reiki to deepen calm, release tension, and support lasting energetic balance.",
     date: "Lifetime access",
     duration: "9 modules · self-paced",
-    badge: "On Demand",
+    badge: "",
     priceCad: 249,
     image:
       "https://images.unsplash.com/photo-1474418397713-7ede21d49118?auto=format&fit=crop&w=1200&q=90",
     imageAlt: "Sound and breath energy healing course",
-    level: "Wellness",
+    category: "NON_REIKI" as const,
+    level: "BEGINNER" as const,
+  },
+] as const;
+
+
+export const privateSessionsIntro = {
+  eyebrow: "One-to-One",
+  title: "Book Private",
+  titleAccent: "Sessions",
+  description:
+    "Book a personal session for deep guidance — scheduling is arranged with you after checkout by WhatsApp or email.",
+} as const;
+
+export const privateSessions = [
+  {
+    id: "akashic-reading",
+    title: "Akashic Reading",
+    description:
+      "Receive a private Akashic Records reading to illuminate soul patterns, clarify purpose, and open next steps with grounded guidance.",
+    duration: "60 minutes · one-to-one",
+    priceCad: 180,
+    image:
+      "https://images.unsplash.com/photo-1506126613408-eca07ce68773?auto=format&fit=crop&w=1200&q=90",
+    imageAlt: "Quiet candlelit space prepared for an Akashic reading",
+  },
+  {
+    id: "past-life-regression",
+    title: "Past Life Regression",
+    description:
+      "A gentle guided regression to explore formative soul memories, release lingering imprints, and integrate insights into present healing.",
+    duration: "75 minutes · one-to-one",
+    priceCad: 220,
+    image:
+      "https://images.unsplash.com/photo-1474418397713-7ede21d49118?auto=format&fit=crop&w=1200&q=90",
+    imageAlt: "Soft contemplative light for past life regression",
+  },
+  {
+    id: "reiki-healing-session",
+    title: "Reiki Healing Session",
+    description:
+      "A private Reiki healing session focused on balance, calm, and energetic restoration — scheduled with you after purchase.",
+    duration: "60 minutes · one-to-one",
+    priceCad: 140,
+    image:
+      "https://images.unsplash.com/photo-1544367567-0f2fcb009e0b?auto=format&fit=crop&w=1200&q=90",
+    imageAlt: "Hands in a calm Reiki healing posture",
   },
 ] as const;
 

@@ -6,6 +6,12 @@ import Link from "next/link";
 import { useMemo, useState } from "react";
 import { CatalogDetailCta } from "@/components/catalog/CatalogDetailCta";
 import type { CatalogDetailItem } from "@/components/catalog/CatalogDetailView";
+import type { CourseCategory } from "@prisma/client";
+import {
+  COURSE_LEVELS,
+  courseCategoryLabel,
+  courseLevelLabel,
+} from "@/lib/course-taxonomy";
 import { toImageObjectPosition } from "@/lib/image-focus";
 import { formatCad } from "@/lib/site";
 
@@ -35,15 +41,18 @@ const rise = {
   },
 };
 
+const pathwayFilters = COURSE_LEVELS.map((level) => ({
+  value: level,
+  label: courseLevelLabel(level),
+}));
+
 function courseHref(id: string) {
   return `/courses/${id}`;
 }
 
-function uniqueLevels(items: CatalogDetailItem[]) {
-  const levels = items
-    .map((item) => item.level?.trim())
-    .filter((level): level is string => Boolean(level));
-  return Array.from(new Set(levels));
+function courseCategoryKey(item: CatalogDetailItem): CourseCategory {
+  if (item.category === "NON_REIKI" || item.category === "REIKI") return item.category;
+  return item.badge?.includes("Non-Reiki") ? "NON_REIKI" : "REIKI";
 }
 
 function SpotlightCourse({
@@ -189,13 +198,18 @@ export function CoursesCatalogView({
   description,
 }: CoursesCatalogViewProps) {
   const reduceMotion = useReducedMotion();
-  const levels = useMemo(() => uniqueLevels(items), [items]);
+  const [activeCategory, setActiveCategory] = useState<CourseCategory | "all">("all");
   const [activeLevel, setActiveLevel] = useState<string>("all");
 
   const filteredItems = useMemo(() => {
-    if (activeLevel === "all") return items;
-    return items.filter((item) => item.level === activeLevel);
-  }, [activeLevel, items]);
+    return items.filter((item) => {
+      if (activeCategory !== "all" && courseCategoryKey(item) !== activeCategory) {
+        return false;
+      }
+      if (activeLevel === "all") return true;
+      return item.level === courseLevelLabel(activeLevel as (typeof COURSE_LEVELS)[number]);
+    });
+  }, [activeCategory, activeLevel, items]);
 
   const spotlight = filteredItems[0];
   const gridItems = filteredItems.slice(1);
@@ -271,6 +285,36 @@ export function CoursesCatalogView({
           </div>
         ) : (
           <>
+            <div className="courses-catalog-category-tabs" role="tablist" aria-label="Course categories">
+              <button
+                type="button"
+                role="tab"
+                aria-selected={activeCategory === "all"}
+                className={`courses-catalog-filter${activeCategory === "all" ? " is-active" : ""}`}
+                onClick={() => setActiveCategory("all")}
+              >
+                All courses
+              </button>
+              <button
+                type="button"
+                role="tab"
+                aria-selected={activeCategory === "REIKI"}
+                className={`courses-catalog-filter${activeCategory === "REIKI" ? " is-active" : ""}`}
+                onClick={() => setActiveCategory("REIKI")}
+              >
+                {courseCategoryLabel("REIKI")}
+              </button>
+              <button
+                type="button"
+                role="tab"
+                aria-selected={activeCategory === "NON_REIKI"}
+                className={`courses-catalog-filter${activeCategory === "NON_REIKI" ? " is-active" : ""}`}
+                onClick={() => setActiveCategory("NON_REIKI")}
+              >
+                {courseCategoryLabel("NON_REIKI")}
+              </button>
+            </div>
+
             {spotlight ? <SpotlightCourse course={spotlight} reduceMotion={reduceMotion} /> : null}
 
             <section className="courses-catalog-browse" aria-label="Browse course catalogue">
@@ -280,47 +324,45 @@ export function CoursesCatalogView({
                   <h2 className="courses-catalog-browse-title">Find your pathway</h2>
                 </div>
 
-                {levels.length > 0 ? (
-                  <div className="courses-catalog-filters" role="tablist" aria-label="Filter by level">
+                <div className="courses-catalog-filters" role="tablist" aria-label="Filter by pathway level">
+                  <button
+                    type="button"
+                    role="tab"
+                    aria-selected={activeLevel === "all"}
+                    className={`courses-catalog-filter${activeLevel === "all" ? " is-active" : ""}`}
+                    onClick={() => setActiveLevel("all")}
+                  >
+                    All
+                  </button>
+                  {pathwayFilters.map((level) => (
                     <button
+                      key={level.value}
                       type="button"
                       role="tab"
-                      aria-selected={activeLevel === "all"}
-                      className={`courses-catalog-filter${activeLevel === "all" ? " is-active" : ""}`}
-                      onClick={() => setActiveLevel("all")}
+                      aria-selected={activeLevel === level.value}
+                      className={`courses-catalog-filter${activeLevel === level.value ? " is-active" : ""}`}
+                      onClick={() => setActiveLevel(level.value)}
                     >
-                      All
+                      {level.label}
                     </button>
-                    {levels.map((level) => (
-                      <button
-                        key={level}
-                        type="button"
-                        role="tab"
-                        aria-selected={activeLevel === level}
-                        className={`courses-catalog-filter${activeLevel === level ? " is-active" : ""}`}
-                        onClick={() => setActiveLevel(level)}
-                      >
-                        {level}
-                      </button>
-                    ))}
-                  </div>
-                ) : null}
+                  ))}
+                </div>
               </div>
 
               <AnimatePresence mode="popLayout">
                 <motion.div
-                  key={activeLevel}
+                  key={`${activeCategory}-${activeLevel}`}
                   className="courses-catalog-grid"
                   variants={stagger}
                   initial={reduceMotion ? false : "hidden"}
                   animate="visible"
                   exit={reduceMotion ? undefined : { opacity: 0, y: 12 }}
                 >
-                  {gridItems.length === 0 ? (
+                  {filteredItems.length === 0 ? (
+                    <p className="courses-catalog-empty-copy">No courses match these filters yet.</p>
+                  ) : gridItems.length === 0 ? (
                     <p className="courses-catalog-empty-copy">
-                      {filteredItems.length === 0
-                        ? "No courses in this level yet."
-                        : "This pathway is featured above — more programs coming soon."}
+                      This pathway is featured above — more programs coming soon.
                     </p>
                   ) : (
                     gridItems.map((course, index) => (

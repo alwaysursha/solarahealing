@@ -1,12 +1,28 @@
 import Link from "next/link";
 import { AdminCatalogCollapsiblePanel } from "@/components/admin/catalog/AdminCatalogCollapsiblePanel";
-import { AdminField, AdminSubmit } from "@/components/admin/AdminShell";
+import { AdminField, AdminSelect, AdminSubmit } from "@/components/admin/AdminShell";
 import { AdminCatalogHero } from "@/components/admin/catalog/AdminCatalogHero";
 import { AdminCourseDragList } from "@/components/admin/catalog/AdminCourseDragList";
 import { AdminStorefrontVisibilityToggle } from "@/components/admin/catalog/AdminStorefrontVisibilityToggle";
 import { upsertCourseAction } from "@/lib/admin/actions";
 import { getCourseAdminOverview } from "@/lib/admin/catalog-stats";
 import { getStorefrontSectionVisibility } from "@/lib/content";
+import {
+  COURSE_CATEGORIES,
+  COURSE_LEVELS,
+  courseCategoryLabel,
+  courseLevelLabel,
+} from "@/lib/course-taxonomy";
+
+const categoryOptions = COURSE_CATEGORIES.map((value) => ({
+  value,
+  label: courseCategoryLabel(value),
+}));
+
+const levelOptions = COURSE_LEVELS.map((value) => ({
+  value,
+  label: courseLevelLabel(value),
+}));
 
 function NewCoursePanel() {
   return (
@@ -28,9 +44,9 @@ function NewCoursePanel() {
         <form action={upsertCourseAction} className="admin-catalog-form rounded-[1rem] p-4">
           <div className="grid gap-3 lg:grid-cols-2">
             <AdminField label="Title" name="title" />
-            <AdminField label="Level" name="level" defaultValue="Foundations" />
+            <AdminSelect label="Category" name="category" defaultValue="REIKI" options={categoryOptions} />
+            <AdminSelect label="Pathway level" name="level" defaultValue="BEGINNER" options={levelOptions} />
             <AdminField label="Price (CAD)" name="priceCad" defaultValue={199} type="number" />
-            <AdminField label="Badge" name="badge" defaultValue="On Demand" />
             <AdminField label="Date label" name="dateLabel" defaultValue="Start anytime" />
             <AdminField label="Duration" name="duration" defaultValue="8 modules · self-paced" />
             <AdminField label="Image URL" name="image" />

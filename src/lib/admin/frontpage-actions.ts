@@ -44,6 +44,7 @@ async function ensureSiteSettingsRow() {
       navJson: JSON.stringify(normalizeNavItems(null)),
       showCoursesSection: true,
       showWorkshopsSection: false,
+      showPrivateSessionsSection: true,
     },
   });
 }

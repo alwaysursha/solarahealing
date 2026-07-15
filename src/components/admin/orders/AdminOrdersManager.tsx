@@ -1,4 +1,5 @@
 import { OrderItemType, OrderStatus } from "@prisma/client";
+import { orderItemTypeLabel as itemTypeLabel } from "@/lib/order-item-type";
 import Link from "next/link";
 import { AdminCatalogHero } from "@/components/admin/catalog/AdminCatalogHero";
 import { AdminSubmit } from "@/components/admin/AdminSubmit";
@@ -93,19 +94,6 @@ function statusTone(status: OrderStatus): string {
       return "refunded";
     default: {
       const _exhaustive: never = status;
-      return _exhaustive;
-    }
-  }
-}
-
-function itemTypeLabel(type: OrderItemType): string {
-  switch (type) {
-    case OrderItemType.COURSE:
-      return "Course";
-    case OrderItemType.WORKSHOP:
-      return "Workshop";
-    default: {
-      const _exhaustive: never = type;
       return _exhaustive;
     }
   }

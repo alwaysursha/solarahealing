@@ -9,6 +9,7 @@ const links = [
   { href: "/admin", label: "Dashboard" },
   { href: "/admin/settings", label: "Site Settings" },
   { href: "/admin/courses", label: "Courses" },
+  { href: "/admin/sessions", label: "Private Sessions" },
   { href: "/admin/workshops", label: "Workshops" },
   { href: "/admin/web", label: "Web Development" },
   { href: "/admin/blog", label: "Blog & Articles" },

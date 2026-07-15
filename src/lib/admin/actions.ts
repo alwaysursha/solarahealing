@@ -7,6 +7,7 @@ import { requireAdmin, requireUser } from "@/auth";
 import { prisma } from "@/lib/prisma";
 import { createId } from "@/lib/id";
 import { parseImageFocusValue } from "@/lib/image-focus";
+import { parseCourseCategory, parseCourseLevel } from "@/lib/course-taxonomy";
 import {
   formatWorkshopScheduleLabel,
   parseWorkshopScheduleInput,
@@ -20,12 +21,15 @@ function revalidateAll() {
   revalidatePath("/admin");
   revalidatePath("/admin/courses");
   revalidatePath("/admin/workshops");
+  revalidatePath("/admin/sessions");
+  revalidatePath("/courses");
   revalidatePath("/workshops");
+  revalidatePath("/sessions");
   revalidatePath("/blog");
 }
 
 export async function updateStorefrontSectionVisibilityAction(
-  section: "courses" | "workshops",
+  section: "courses" | "workshops" | "private_sessions",
   visible: boolean,
 ) {
   await requireAdmin();
@@ -33,7 +37,9 @@ export async function updateStorefrontSectionVisibilityAction(
   const data =
     section === "courses"
       ? { showCoursesSection: visible }
-      : { showWorkshopsSection: visible };
+      : section === "workshops"
+        ? { showWorkshopsSection: visible }
+        : { showPrivateSessionsSection: visible };
 
   await prisma.siteSettings.upsert({
     where: { id: 1 },
@@ -54,6 +60,7 @@ export async function updateStorefrontSectionVisibilityAction(
       navJson: "[]",
       showCoursesSection: section === "courses" ? visible : true,
       showWorkshopsSection: section === "workshops" ? visible : false,
+      showPrivateSessionsSection: section === "private_sessions" ? visible : true,
     },
     update: data,
   });
@@ -61,6 +68,7 @@ export async function updateStorefrontSectionVisibilityAction(
   revalidatePath("/", "layout");
   revalidatePath("/admin/courses");
   revalidatePath("/admin/workshops");
+  revalidatePath("/admin/sessions");
 }
 
 export async function updateSiteSettingsAction(formData: FormData) {
@@ -113,13 +121,14 @@ export async function upsertCourseAction(formData: FormData) {
     description: formData.get("description")?.toString() ?? "",
     dateLabel: formData.get("dateLabel")?.toString() ?? "Start anytime",
     duration: formData.get("duration")?.toString() ?? "",
-    badge: formData.get("badge")?.toString() ?? "On Demand",
+    badge: "",
+    category: parseCourseCategory(formData.get("category")),
     priceCad: Number(formData.get("priceCad") ?? 0),
     image: formData.get("image")?.toString() ?? "",
     imageAlt: formData.get("imageAlt")?.toString() ?? "",
     imageFocusX: parseImageFocusValue(formData.get("imageFocusX")),
     imageFocusY: parseImageFocusValue(formData.get("imageFocusY")),
-    level: formData.get("level")?.toString() ?? "Foundations",
+    level: parseCourseLevel(formData.get("level")),
     published: formData.get("published") === "on",
   };
 
@@ -216,6 +225,70 @@ export async function deleteWorkshopFormAction(formData: FormData) {
   const id = formData.get("id")?.toString();
   if (!id) return;
   await deleteWorkshopAction(id);
+}
+
+export async function upsertPrivateSessionAction(formData: FormData) {
+  await requireAdmin();
+  const existingId = formData.get("id")?.toString();
+  const id = existingId || createId();
+
+  const data = {
+    title: formData.get("title")?.toString() ?? "",
+    description: formData.get("description")?.toString() ?? "",
+    duration: formData.get("duration")?.toString() ?? "",
+    priceCad: Number(formData.get("priceCad") ?? 0),
+    image: formData.get("image")?.toString() ?? "",
+    imageAlt: formData.get("imageAlt")?.toString() ?? "",
+    imageFocusX: parseImageFocusValue(formData.get("imageFocusX")),
+    imageFocusY: parseImageFocusValue(formData.get("imageFocusY")),
+    published: formData.get("published") === "on",
+  };
+
+  if (existingId) {
+    await prisma.privateSession.update({
+      where: { id },
+      data,
+    });
+  } else {
+    const maxOrder = await prisma.privateSession.aggregate({ _max: { sortOrder: true } });
+    await prisma.privateSession.create({
+      data: {
+        id,
+        ...data,
+        sortOrder: (maxOrder._max.sortOrder ?? -1) + 1,
+      },
+    });
+  }
+
+  revalidateAll();
+}
+
+export async function reorderPrivateSessionsAction(sessionIds: string[]) {
+  await requireAdmin();
+  if (sessionIds.length === 0) return;
+
+  await prisma.$transaction(
+    sessionIds.map((id, index) =>
+      prisma.privateSession.update({
+        where: { id },
+        data: { sortOrder: index },
+      }),
+    ),
+  );
+
+  revalidateAll();
+}
+
+export async function deletePrivateSessionAction(id: string) {
+  await requireAdmin();
+  await prisma.privateSession.delete({ where: { id } });
+  revalidateAll();
+}
+
+export async function deletePrivateSessionFormAction(formData: FormData) {
+  const id = formData.get("id")?.toString();
+  if (!id) return;
+  await deletePrivateSessionAction(id);
 }
 
 export async function upsertArticleAction(formData: FormData) {

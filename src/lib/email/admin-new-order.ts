@@ -11,22 +11,10 @@ import {
   paragraph,
   renderEmailShell,
 } from "@/lib/email/layout";
+import { orderItemTypeLabel as itemTypeLabel } from "@/lib/order-item-type";
 import { formatCad } from "@/lib/site";
 
 type OrderWithItems = Order & { items: OrderItem[] };
-
-function itemTypeLabel(type: OrderItemType): string {
-  switch (type) {
-    case OrderItemType.COURSE:
-      return "Course";
-    case OrderItemType.WORKSHOP:
-      return "Workshop";
-    default: {
-      const _exhaustive: never = type;
-      return _exhaustive;
-    }
-  }
-}
 
 function resolveAdminInbox(): string | null {
   const explicit = process.env.EMAIL_ADMIN_TO?.trim();

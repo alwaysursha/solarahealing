@@ -20,16 +20,21 @@ type ResolvedLine = {
   unitPriceCad: number;
 };
 
-function parseItems(raw: unknown): { id: string; type: "course" | "workshop"; quantity: number }[] | null {
+type CheckoutCartType = "course" | "workshop" | "private_session";
+
+function parseItems(raw: unknown): { id: string; type: CheckoutCartType; quantity: number }[] | null {
   if (!Array.isArray(raw) || raw.length === 0) {
     return null;
   }
 
-  const items: { id: string; type: "course" | "workshop"; quantity: number }[] = [];
+  const items: { id: string; type: CheckoutCartType; quantity: number }[] = [];
 
   for (const entry of raw as CheckoutRequestItem[]) {
     const id = typeof entry.id === "string" ? entry.id.trim() : "";
-    const type = entry.type === "course" || entry.type === "workshop" ? entry.type : null;
+    const type =
+      entry.type === "course" || entry.type === "workshop" || entry.type === "private_session"
+        ? entry.type
+        : null;
     const quantity = Math.floor(Number(entry.quantity));
 
     if (!id || !type || !Number.isFinite(quantity) || quantity < 1 || quantity > 20) {
@@ -43,50 +48,74 @@ function parseItems(raw: unknown): { id: string; type: "course" | "workshop"; qu
 }
 
 async function resolveCatalogLines(
-  items: { id: string; type: "course" | "workshop"; quantity: number }[],
+  items: { id: string; type: CheckoutCartType; quantity: number }[],
 ): Promise<{ ok: true; lines: ResolvedLine[] } | { ok: false; error: string }> {
   const lines: ResolvedLine[] = [];
 
   for (const item of items) {
-    if (item.type === "course") {
-      const course = await prisma.onlineCourse.findFirst({
-        where: { id: item.id, published: true },
-      });
-      if (!course) {
-        return { ok: false, error: "One of the courses in your cart is no longer available." };
+    switch (item.type) {
+      case "course": {
+        const course = await prisma.onlineCourse.findFirst({
+          where: { id: item.id, published: true },
+        });
+        if (!course) {
+          return { ok: false, error: "One of the courses in your cart is no longer available." };
+        }
+        lines.push({
+          itemId: course.id,
+          itemType: OrderItemType.COURSE,
+          title: course.title,
+          quantity: item.quantity,
+          unitPriceCad: course.priceCad,
+        });
+        break;
       }
-      lines.push({
-        itemId: course.id,
-        itemType: OrderItemType.COURSE,
-        title: course.title,
-        quantity: item.quantity,
-        unitPriceCad: course.priceCad,
-      });
-      continue;
-    }
+      case "workshop": {
+        const workshop = await prisma.workshop.findFirst({
+          where: { id: item.id, published: true },
+        });
+        if (!workshop) {
+          return { ok: false, error: "One of the workshops in your cart is no longer available." };
+        }
 
-    const workshop = await prisma.workshop.findFirst({
-      where: { id: item.id, published: true },
-    });
-    if (!workshop) {
-      return { ok: false, error: "One of the workshops in your cart is no longer available." };
-    }
+        const seatsLeft = workshop.seatsTotal - workshop.seatsBooked;
+        if (item.quantity > seatsLeft) {
+          return {
+            ok: false,
+            error: `"${workshop.title}" only has ${Math.max(0, seatsLeft)} seat${seatsLeft === 1 ? "" : "s"} left.`,
+          };
+        }
 
-    const seatsLeft = workshop.seatsTotal - workshop.seatsBooked;
-    if (item.quantity > seatsLeft) {
-      return {
-        ok: false,
-        error: `"${workshop.title}" only has ${Math.max(0, seatsLeft)} seat${seatsLeft === 1 ? "" : "s"} left.`,
-      };
+        lines.push({
+          itemId: workshop.id,
+          itemType: OrderItemType.WORKSHOP,
+          title: workshop.title,
+          quantity: item.quantity,
+          unitPriceCad: workshop.priceCad,
+        });
+        break;
+      }
+      case "private_session": {
+        const session = await prisma.privateSession.findFirst({
+          where: { id: item.id, published: true },
+        });
+        if (!session) {
+          return { ok: false, error: "One of the private sessions in your cart is no longer available." };
+        }
+        lines.push({
+          itemId: session.id,
+          itemType: OrderItemType.PRIVATE_SESSION,
+          title: session.title,
+          quantity: item.quantity,
+          unitPriceCad: session.priceCad,
+        });
+        break;
+      }
+      default: {
+        const _exhaustive: never = item.type;
+        return { ok: false, error: `Unsupported cart item type: ${_exhaustive}` };
+      }
     }
-
-    lines.push({
-      itemId: workshop.id,
-      itemType: OrderItemType.WORKSHOP,
-      title: workshop.title,
-      quantity: item.quantity,
-      unitPriceCad: workshop.priceCad,
-    });
   }
 
   return { ok: true, lines };

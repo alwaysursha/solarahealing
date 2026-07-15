@@ -1,6 +1,7 @@
 import Image from "next/image";
 import { notFound, redirect } from "next/navigation";
 import { OrderItemType, OrderStatus, Role } from "@prisma/client";
+import { orderItemTypeLabel as itemTypeLabel } from "@/lib/order-item-type";
 import { auth } from "@/auth";
 import { InvoiceActions } from "@/components/admin/orders/InvoiceActions";
 import { LOGO_HEIGHT, LOGO_SRC, LOGO_WIDTH } from "@/components/ui/Logo";
@@ -24,19 +25,6 @@ function statusLabel(status: OrderStatus): string {
       return "Refunded";
     default: {
       const _exhaustive: never = status;
-      return _exhaustive;
-    }
-  }
-}
-
-function itemTypeLabel(type: OrderItemType): string {
-  switch (type) {
-    case OrderItemType.COURSE:
-      return "Course";
-    case OrderItemType.WORKSHOP:
-      return "Workshop";
-    default: {
-      const _exhaustive: never = type;
       return _exhaustive;
     }
   }

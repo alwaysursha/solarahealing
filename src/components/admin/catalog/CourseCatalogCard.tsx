@@ -2,10 +2,26 @@ import Image from "next/image";
 import { AdminCatalogCollapsiblePanel } from "@/components/admin/catalog/AdminCatalogCollapsiblePanel";
 import { AdminImageFocusField } from "@/components/admin/catalog/AdminImageFocusField";
 import { AdminDeleteButton } from "@/components/admin/AdminDeleteButton";
-import { AdminField, AdminSubmit } from "@/components/admin/AdminShell";
+import { AdminField, AdminSelect, AdminSubmit } from "@/components/admin/AdminShell";
 import { deleteCourseFormAction, upsertCourseAction } from "@/lib/admin/actions";
 import { formatCad, type CourseWithSales } from "@/lib/admin/catalog-stats";
+import {
+  COURSE_CATEGORIES,
+  COURSE_LEVELS,
+  courseCategoryLabel,
+  courseLevelLabel,
+} from "@/lib/course-taxonomy";
 import { toImageObjectPosition } from "@/lib/image-focus";
+
+const categoryOptions = COURSE_CATEGORIES.map((value) => ({
+  value,
+  label: courseCategoryLabel(value),
+}));
+
+const levelOptions = COURSE_LEVELS.map((value) => ({
+  value,
+  label: courseLevelLabel(value),
+}));
 
 function CourseStatusBadge({ published }: { published: boolean }) {
   return (
@@ -22,6 +38,8 @@ function CourseStatusBadge({ published }: { published: boolean }) {
 
 export function CourseCatalogCard({ course }: { course: CourseWithSales }) {
   const objectPosition = toImageObjectPosition(course.imageFocusX, course.imageFocusY);
+  const categoryLabel = courseCategoryLabel(course.category);
+  const levelLabel = courseLevelLabel(course.level);
 
   return (
     <article className="admin-catalog-card admin-catalog-card-course group relative min-w-0 flex-1 overflow-hidden rounded-[1.35rem]">
@@ -39,7 +57,7 @@ export function CourseCatalogCard({ course }: { course: CourseWithSales }) {
             />
           ) : (
             <div className="admin-catalog-media-fallback flex h-full items-end p-4">
-              <p className="font-serif text-lg">{course.level}</p>
+              <p className="font-serif text-lg">{levelLabel}</p>
             </div>
           )}
         </div>
@@ -48,7 +66,7 @@ export function CourseCatalogCard({ course }: { course: CourseWithSales }) {
           <div className="flex flex-wrap items-start justify-between gap-3">
             <div>
               <p className="admin-catalog-card-eyebrow text-[0.62rem] font-semibold uppercase tracking-[0.24em]">
-                {course.badge} · {course.level}
+                {categoryLabel} · {levelLabel}
               </p>
               <h4 className="admin-catalog-card-title mt-2 font-serif text-[1.45rem] leading-tight">{course.title}</h4>
             </div>
@@ -85,9 +103,19 @@ export function CourseCatalogCard({ course }: { course: CourseWithSales }) {
               <input type="hidden" name="id" value={course.id} />
               <div className="grid gap-3 lg:grid-cols-2">
                 <AdminField label="Title" name="title" defaultValue={course.title} />
-                <AdminField label="Level" name="level" defaultValue={course.level} />
+                <AdminSelect
+                  label="Category"
+                  name="category"
+                  defaultValue={course.category}
+                  options={categoryOptions}
+                />
+                <AdminSelect
+                  label="Pathway level"
+                  name="level"
+                  defaultValue={course.level}
+                  options={levelOptions}
+                />
                 <AdminField label="Price (CAD)" name="priceCad" defaultValue={course.priceCad} type="number" />
-                <AdminField label="Badge" name="badge" defaultValue={course.badge} />
                 <AdminField label="Date label" name="dateLabel" defaultValue={course.dateLabel} />
                 <AdminField label="Duration" name="duration" defaultValue={course.duration} />
                 <AdminField label="Image URL" name="image" defaultValue={course.image} />
