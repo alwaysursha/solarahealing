@@ -3,11 +3,12 @@
 import { motion, useReducedMotion } from "framer-motion";
 import Image from "next/image";
 import Link from "next/link";
-import { useEffect, useRef, useState } from "react";
+import { useCallback, useEffect, useRef, useState } from "react";
 import { useEnrollmentGate } from "@/components/auth/EnrollmentGateProvider";
 import { useAnimationsActive } from "@/hooks/useAnimationsActive";
+import { useHorizontalSwipe } from "@/hooks/useHorizontalSwipe";
 import { toImageObjectPosition } from "@/lib/image-focus";
-import { coursesIntro, formatCad, onlineCourses } from "@/lib/site";
+import { coursesIntro, formatCad, onlineCourses, resolveCoursesIntroDescription } from "@/lib/site";
 
 type CourseItem = {
   id: string;
@@ -317,9 +318,6 @@ function FeaturedCourse({
             variants={featuredContentItem}
           >
             <CourseBadge label={course.badge} />
-            <span className="rounded-full bg-gold/90 px-2.5 py-1 text-[0.65rem] font-bold uppercase tracking-[0.18em] text-[#c8ccd0]">
-              Featured
-            </span>
           </motion.div>
         </motion.div>
 
@@ -333,10 +331,7 @@ function FeaturedCourse({
           />
           <motion.div variants={featuredContentStagger}>
             <motion.div variants={featuredContentItem}>
-              <p className="text-[0.72rem] font-medium uppercase tracking-[0.24em] text-gold-light/80">
-                {course.date}
-              </p>
-              <h3 className="font-serif mt-3 text-3xl font-normal leading-tight text-white md:text-4xl">
+              <h3 className="font-serif text-3xl font-normal leading-tight text-white md:text-4xl">
                 {course.title}
               </h3>
               <p className="mt-4 text-[0.98rem] leading-relaxed text-white/60">{course.description}</p>
@@ -382,15 +377,11 @@ function FeaturedCourseStatic({ course }: { course: CourseItem }) {
           <div className="absolute inset-0 bg-gradient-to-r from-transparent via-purple-deep/15 to-purple-deep/55 lg:via-purple-deep/8" />
           <div className="absolute left-5 top-5 flex items-center gap-3">
             <CourseBadge label={course.badge} />
-            <span className="rounded-full bg-gold/90 px-2.5 py-1 text-[0.65rem] font-bold uppercase tracking-[0.18em] text-[#c8ccd0]">
-              Featured
-            </span>
           </div>
         </div>
         <div className="relative flex flex-col justify-between bg-[#2a1050]/82 p-6 backdrop-blur-xl md:p-8 lg:col-span-5">
           <div>
-            <p className="text-[0.72rem] font-medium uppercase tracking-[0.24em] text-gold-light/80">{course.date}</p>
-            <h3 className="font-serif mt-3 text-3xl font-normal leading-tight text-white md:text-4xl">{course.title}</h3>
+            <h3 className="font-serif text-3xl font-normal leading-tight text-white md:text-4xl">{course.title}</h3>
             <p className="mt-4 text-[0.98rem] leading-relaxed text-white/60">{course.description}</p>
             <div className="mt-3.5">
               <ViewCourseDetailsLink courseId={course.id} />
@@ -460,10 +451,7 @@ function UpcomingCourseCard({
 
       <motion.div className="absolute inset-x-0 bottom-0 z-[3] p-5 md:p-6" variants={cardOverlayReveal}>
         <CourseBadge label={course.badge} />
-        <p className="mt-3 text-[0.7rem] font-medium uppercase tracking-[0.22em] text-gold-light/75">
-          {course.date}
-        </p>
-        <h3 className="font-serif mt-2 text-2xl leading-tight text-white">{course.title}</h3>
+        <h3 className="font-serif mt-3 text-2xl leading-tight text-white">{course.title}</h3>
         <p className="mt-2 line-clamp-2 text-[0.95rem] leading-relaxed text-white/55">{course.description}</p>
         <div className="mt-3">
           <ViewCourseDetailsLink courseId={course.id} />
@@ -494,8 +482,7 @@ function UpcomingCourseCardContent({ course }: { course: CourseItem }) {
       </div>
       <div className="absolute inset-x-0 bottom-0 z-[3] p-5 md:p-6">
         <CourseBadge label={course.badge} />
-        <p className="mt-3 text-[0.7rem] font-medium uppercase tracking-[0.22em] text-gold-light/75">{course.date}</p>
-        <h3 className="font-serif mt-2 text-2xl leading-tight text-white">{course.title}</h3>
+        <h3 className="font-serif mt-3 text-2xl leading-tight text-white">{course.title}</h3>
         <p className="mt-2 line-clamp-2 text-[0.95rem] leading-relaxed text-white/55">{course.description}</p>
         <div className="mt-3">
           <ViewCourseDetailsLink courseId={course.id} />
@@ -509,7 +496,29 @@ function UpcomingCourseCardContent({ course }: { course: CourseItem }) {
   );
 }
 
-const COURSES_MARQUEE_SECONDS_PER_CARD = 9;
+const COURSES_SLIDER_AUTO_MS = 5200;
+
+function useCoursesPerPage() {
+  const [perPage, setPerPage] = useState(1);
+
+  useEffect(() => {
+    const media = window.matchMedia("(min-width: 768px)");
+    const sync = () => setPerPage(media.matches ? 3 : 1);
+    sync();
+    media.addEventListener("change", sync);
+    return () => media.removeEventListener("change", sync);
+  }, []);
+
+  return perPage;
+}
+
+function chunkCourses(courses: CourseItem[], size: number) {
+  const pages: CourseItem[][] = [];
+  for (let i = 0; i < courses.length; i += size) {
+    pages.push(courses.slice(i, i + size));
+  }
+  return pages;
+}
 
 function CoursesUpcomingSlider({
   courses,
@@ -518,31 +527,60 @@ function CoursesUpcomingSlider({
   courses: CourseItem[];
   reduceMotion: boolean | null;
 }) {
-  const [hovering, setHovering] = useState(false);
-  const [holding, setHolding] = useState(false);
-  const holdingRef = useRef(false);
-  const paused = Boolean(reduceMotion) || hovering || holding;
+  const perPage = useCoursesPerPage();
+  const pages = chunkCourses(courses, perPage);
+  const pageCount = pages.length;
+  const [page, setPage] = useState(0);
+  const [paused, setPaused] = useState(false);
+  const [viewportWidth, setViewportWidth] = useState(0);
+  const viewportRef = useRef<HTMLDivElement>(null);
+  const pageRef = useRef(page);
+
+  pageRef.current = page;
 
   useEffect(() => {
-    const endHold = () => {
-      if (!holdingRef.current) return;
-      holdingRef.current = false;
-      setHolding(false);
-    };
+    const node = viewportRef.current;
+    if (!node) return;
 
-    window.addEventListener("pointerup", endHold);
-    window.addEventListener("pointercancel", endHold);
-    return () => {
-      window.removeEventListener("pointerup", endHold);
-      window.removeEventListener("pointercancel", endHold);
-    };
+    const update = () => setViewportWidth(node.clientWidth);
+    update();
+    const observer = new ResizeObserver(update);
+    observer.observe(node);
+    return () => observer.disconnect();
   }, []);
+
+  useEffect(() => {
+    setPage((current) => Math.min(current, Math.max(pageCount - 1, 0)));
+  }, [pageCount]);
+
+  const goTo = useCallback(
+    (index: number) => {
+      if (pageCount <= 1) return;
+      setPage(((index % pageCount) + pageCount) % pageCount);
+    },
+    [pageCount],
+  );
+
+  const next = useCallback(() => goTo(pageRef.current + 1), [goTo]);
+  const prev = useCallback(() => goTo(pageRef.current - 1), [goTo]);
+
+  const swipe = useHorizontalSwipe({
+    enabled: pageCount > 1,
+    onSwipeLeft: next,
+    onSwipeRight: prev,
+  });
+
+  useEffect(() => {
+    if (reduceMotion || paused || pageCount <= 1) return;
+    const timer = window.setInterval(next, COURSES_SLIDER_AUTO_MS);
+    return () => window.clearInterval(timer);
+  }, [next, pageCount, paused, reduceMotion]);
 
   if (courses.length === 0) {
     return null;
   }
 
-  if (reduceMotion) {
+  if (pageCount <= 1 || reduceMotion) {
     return (
       <div className="grid gap-6 overflow-visible md:grid-cols-3">
         {courses.map((course, index) => (
@@ -557,53 +595,61 @@ function CoursesUpcomingSlider({
     );
   }
 
-  const loopCourses = [...courses, ...courses];
-  const durationSeconds = Math.max(courses.length * COURSES_MARQUEE_SECONDS_PER_CARD, 24);
-
   return (
     <div
-      className={`courses-upcoming-slider${paused ? " is-paused" : ""}`}
+      className="courses-upcoming-slider"
       aria-roledescription="carousel"
       aria-label="More online courses"
-      onMouseEnter={() => setHovering(true)}
-      onMouseLeave={() => setHovering(false)}
-      onFocusCapture={() => setHovering(true)}
-      onBlurCapture={(event) => {
-        if (!event.currentTarget.contains(event.relatedTarget as Node | null)) {
-          setHovering(false);
-        }
-      }}
+      onMouseEnter={() => setPaused(true)}
+      onMouseLeave={() => setPaused(false)}
     >
       <div
-        className="courses-upcoming-slider-viewport"
-        onPointerDown={(event) => {
-          if (event.pointerType === "mouse") return;
-          holdingRef.current = true;
-          setHolding(true);
-        }}
+        ref={viewportRef}
+        className={`courses-upcoming-slider-viewport overflow-hidden ${swipe.className}`}
+        onPointerDown={swipe.onPointerDown}
+        onPointerUp={swipe.onPointerUp}
+        onPointerCancel={swipe.onPointerCancel}
       >
-        <div
-          className="courses-upcoming-slider-track"
-          style={{ animationDuration: `${durationSeconds}s` }}
+        <motion.div
+          className="flex will-change-transform"
+          animate={{ x: viewportWidth ? -page * viewportWidth : 0 }}
+          transition={{ duration: 0.72, ease }}
         >
-          {loopCourses.map((course, index) => {
-            const isClone = index >= courses.length;
-            return (
-              <article
-                key={`${course.id}-${isClone ? "b" : "a"}`}
-                className="workshop-upcoming courses-upcoming-slider-card group relative min-h-[420px] overflow-hidden rounded-[1.5rem] border border-white/15"
-                aria-hidden={isClone}
-                {...(isClone ? { inert: true } : {})}
-              >
-                <UpcomingCourseCardContent course={course} />
-              </article>
-            );
-          })}
-        </div>
+          {pages.map((pageCourses, pageIndex) => (
+            <div
+              key={`page-${pageIndex}`}
+              className="grid shrink-0 grid-cols-1 gap-6 md:grid-cols-3"
+              style={{ width: viewportWidth || "100%" }}
+              aria-hidden={pageIndex !== page}
+              {...(pageIndex !== page ? { inert: true } : {})}
+            >
+              {pageCourses.map((course, index) => (
+                <UpcomingCourseCard
+                  key={course.id}
+                  course={course}
+                  index={index}
+                  reduceMotion={false}
+                />
+              ))}
+            </div>
+          ))}
+        </motion.div>
       </div>
-      <p className="sr-only">
-        Course cards move continuously. Hover on desktop or press and hold on mobile to pause.
-      </p>
+
+      {pageCount > 1 ? (
+        <div className="courses-upcoming-slider-dots mt-5 flex items-center justify-center gap-2">
+          {pages.map((_, index) => (
+            <button
+              key={`dot-${index}`}
+              type="button"
+              className={`courses-upcoming-slider-dot ${index === page ? "is-active" : ""}`}
+              aria-label={`Show courses page ${index + 1}`}
+              aria-current={index === page ? "true" : undefined}
+              onClick={() => goTo(index)}
+            />
+          ))}
+        </div>
+      ) : null}
     </div>
   );
 }
@@ -620,6 +666,7 @@ export function CoursesSection({
   const reduceMotion = useReducedMotion();
   const sectionRef = useRef<HTMLElement>(null);
   const animationsActive = useAnimationsActive(sectionRef);
+  const description = resolveCoursesIntroDescription(intro.description, catalog.length);
 
   if (!featured) {
     return null;
@@ -662,7 +709,7 @@ export function CoursesSection({
             <div className="workshop-title-line mt-6 h-px w-20 origin-left bg-gradient-to-r from-gold to-transparent" />
 
             <p className="mt-6 max-w-md text-[1.05rem] leading-relaxed text-white/55 md:text-[1.15rem] md:leading-7">
-              {intro.description}
+              {description}
             </p>
 
             <p className="mt-8 font-serif text-6xl font-normal text-white/8">
