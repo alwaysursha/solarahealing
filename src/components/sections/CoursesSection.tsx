@@ -3,7 +3,7 @@
 import { motion, useReducedMotion } from "framer-motion";
 import Image from "next/image";
 import Link from "next/link";
-import { useRef } from "react";
+import { useEffect, useRef, useState } from "react";
 import { useEnrollmentGate } from "@/components/auth/EnrollmentGateProvider";
 import { useAnimationsActive } from "@/hooks/useAnimationsActive";
 import { toImageObjectPosition } from "@/lib/image-focus";
@@ -509,6 +509,105 @@ function UpcomingCourseCardContent({ course }: { course: CourseItem }) {
   );
 }
 
+const COURSES_MARQUEE_SECONDS_PER_CARD = 9;
+
+function CoursesUpcomingSlider({
+  courses,
+  reduceMotion,
+}: {
+  courses: CourseItem[];
+  reduceMotion: boolean | null;
+}) {
+  const [hovering, setHovering] = useState(false);
+  const [holding, setHolding] = useState(false);
+  const holdingRef = useRef(false);
+  const paused = Boolean(reduceMotion) || hovering || holding;
+
+  useEffect(() => {
+    const endHold = () => {
+      if (!holdingRef.current) return;
+      holdingRef.current = false;
+      setHolding(false);
+    };
+
+    window.addEventListener("pointerup", endHold);
+    window.addEventListener("pointercancel", endHold);
+    return () => {
+      window.removeEventListener("pointerup", endHold);
+      window.removeEventListener("pointercancel", endHold);
+    };
+  }, []);
+
+  if (courses.length === 0) {
+    return null;
+  }
+
+  if (reduceMotion) {
+    return (
+      <div className="grid gap-6 overflow-visible md:grid-cols-3">
+        {courses.map((course, index) => (
+          <UpcomingCourseCard
+            key={course.id}
+            course={course}
+            index={index % 3}
+            reduceMotion={reduceMotion}
+          />
+        ))}
+      </div>
+    );
+  }
+
+  const loopCourses = [...courses, ...courses];
+  const durationSeconds = Math.max(courses.length * COURSES_MARQUEE_SECONDS_PER_CARD, 24);
+
+  return (
+    <div
+      className={`courses-upcoming-slider${paused ? " is-paused" : ""}`}
+      aria-roledescription="carousel"
+      aria-label="More online courses"
+      onMouseEnter={() => setHovering(true)}
+      onMouseLeave={() => setHovering(false)}
+      onFocusCapture={() => setHovering(true)}
+      onBlurCapture={(event) => {
+        if (!event.currentTarget.contains(event.relatedTarget as Node | null)) {
+          setHovering(false);
+        }
+      }}
+    >
+      <div
+        className="courses-upcoming-slider-viewport"
+        onPointerDown={(event) => {
+          if (event.pointerType === "mouse") return;
+          holdingRef.current = true;
+          setHolding(true);
+        }}
+      >
+        <div
+          className="courses-upcoming-slider-track"
+          style={{ animationDuration: `${durationSeconds}s` }}
+        >
+          {loopCourses.map((course, index) => {
+            const isClone = index >= courses.length;
+            return (
+              <article
+                key={`${course.id}-${isClone ? "b" : "a"}`}
+                className="workshop-upcoming courses-upcoming-slider-card group relative min-h-[420px] overflow-hidden rounded-[1.5rem] border border-white/15"
+                aria-hidden={isClone}
+                {...(isClone ? { inert: true } : {})}
+              >
+                <UpcomingCourseCardContent course={course} />
+              </article>
+            );
+          })}
+        </div>
+      </div>
+      <p className="sr-only">
+        Course cards move continuously. Hover on desktop or press and hold on mobile to pause.
+      </p>
+    </div>
+  );
+}
+
 export function CoursesSection({
   courses,
   intro = coursesIntro,
@@ -518,7 +617,6 @@ export function CoursesSection({
 }) {
   const catalog = courses && courses.length > 0 ? courses : [...onlineCourses];
   const [featured, ...upcoming] = catalog;
-  const gridCourses = upcoming.slice(0, 3);
   const reduceMotion = useReducedMotion();
   const sectionRef = useRef<HTMLElement>(null);
   const animationsActive = useAnimationsActive(sectionRef);
@@ -594,16 +692,7 @@ export function CoursesSection({
           {reduceMotion ? (
             <div className="space-y-6 lg:col-span-8">
               <FeaturedCourseStatic course={featured} />
-              <div className="grid gap-6 overflow-visible md:grid-cols-3">
-                {gridCourses.map((course, index) => (
-                  <UpcomingCourseCard
-                    key={course.id}
-                    course={course}
-                    index={index}
-                    reduceMotion={reduceMotion}
-                  />
-                ))}
-              </div>
+              <CoursesUpcomingSlider courses={upcoming} reduceMotion={reduceMotion} />
             </div>
           ) : (
             <motion.div
@@ -614,10 +703,8 @@ export function CoursesSection({
               viewport={{ once: true, amount: 0.12, margin: "-40px" }}
             >
               <FeaturedCourse reduceMotion={reduceMotion} course={featured} />
-              <motion.div className="grid gap-6 overflow-visible md:grid-cols-3" variants={catalogStagger}>
-                {gridCourses.map((course, index) => (
-                  <UpcomingCourseCard key={course.id} course={course} index={index} reduceMotion={reduceMotion} />
-                ))}
+              <motion.div variants={catalogStagger}>
+                <CoursesUpcomingSlider courses={upcoming} reduceMotion={reduceMotion} />
               </motion.div>
             </motion.div>
           )}
