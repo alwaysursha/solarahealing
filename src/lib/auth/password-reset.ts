@@ -58,13 +58,15 @@ export async function requestPasswordResetAction(emailInput: string) {
 
       const resetUrl = `${getEmailSiteUrl()}/auth/reset-password?token=${encodeURIComponent(rawToken)}`;
 
-      void sendPasswordResetEmail({
+      // Await so Cloudflare Workers do not cancel the fetch mid-flight.
+      const result = await sendPasswordResetEmail({
         name: user.name,
         email: user.email,
         resetUrl,
-      }).catch((error) => {
-        console.error("[email] password-reset unexpected error", error);
       });
+      if (!result.ok) {
+        console.error("[email] password-reset send failed", result.error);
+      }
     }
   } catch (error) {
     console.error("[auth] requestPasswordResetAction failed", error);
