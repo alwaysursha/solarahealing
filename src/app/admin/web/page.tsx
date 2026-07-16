@@ -13,7 +13,7 @@ const MAIN_LINKS = [
   {
     href: "/admin/web/reiki",
     title: "Reiki page",
-    description: "Hero, What is Reiki, benefits, chakras, pathways, and closing CTA for /reiki.",
+    description: "Hero, What is Reiki, benefits, FAQs, pathways, and closing CTA for /reiki.",
     ready: true,
   },
 ] as const;

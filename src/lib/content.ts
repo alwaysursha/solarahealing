@@ -319,6 +319,7 @@ export async function getReikiPageContent(): Promise<ReikiPageContent> {
     benefits: map.get("benefits") ?? reikiPageDefaults.benefits,
     chakras: map.get("chakras") ?? reikiPageDefaults.chakras,
     pathways: map.get("pathways") ?? reikiPageDefaults.pathways,
+    faq: map.get("faq") ?? reikiPageDefaults.faq,
     close: map.get("close") ?? reikiPageDefaults.close,
   });
 }

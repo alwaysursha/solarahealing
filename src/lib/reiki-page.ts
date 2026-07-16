@@ -68,12 +68,27 @@ export type ReikiClose = {
   cta: ReikiCta;
 };
 
+export type ReikiFaqItem = {
+  id: string;
+  question: string;
+  answer: string;
+};
+
+export type ReikiFaq = {
+  eyebrow: string;
+  title: string;
+  titleAccent: string;
+  description: string;
+  items: ReikiFaqItem[];
+};
+
 export type ReikiPageContent = {
   hero: ReikiHero;
   intro: ReikiIntro;
   benefits: ReikiBenefits;
   chakras: ReikiChakras;
   pathways: ReikiPathways;
+  faq: ReikiFaq;
   close: ReikiClose;
 };
 
@@ -177,6 +192,51 @@ export const reikiPageDefaults: ReikiPageContent = {
     description:
       "Whether you come to receive or to learn, Soulara Healing Academy offers a safe, nurturing space to reconnect with your natural energy.",
     cta: { label: "Book a Session", href: "/sessions" },
+  },
+  faq: {
+    eyebrow: "Common questions",
+    title: "Reiki",
+    titleAccent: "FAQs",
+    description:
+      "Straightforward answers to help you feel at ease before your first session or course.",
+    items: [
+      {
+        id: "faq-what-is-reiki",
+        question: "What is Reiki?",
+        answer:
+          "Reiki is a gentle Japanese energy healing practice that supports relaxation, balance, and the body’s natural ability to restore harmony. A practitioner channels universal life force energy with focused intention — without force, diagnosis, or invasive technique.",
+      },
+      {
+        id: "faq-distance",
+        question: "Does distance Reiki really work?",
+        answer:
+          "Yes. Because Reiki works with energy rather than physical touch alone, sessions can be offered at a distance. Many people experience the same calm, warmth, and emotional release from the comfort of their own space.",
+      },
+      {
+        id: "faq-feel",
+        question: "What might I feel during a session?",
+        answer:
+          "Experiences vary. Common sensations include warmth, tingling, deep calm, emotional release, mental quiet, or simply a restorative rest. Some notice shifts during the session; others notice them in the hours or days afterward.",
+      },
+      {
+        id: "faq-medical",
+        question: "Is Reiki a replacement for medical care?",
+        answer:
+          "No. Reiki is a complementary wellness practice. It can sit alongside conventional care, but it is not a substitute for diagnosis, medication, or treatment from a licensed healthcare professional.",
+      },
+      {
+        id: "faq-first-time",
+        question: "Do I need experience to begin?",
+        answer:
+          "Not at all. Reiki welcomes beginners. Whether you book a private session or start with an introductory course, you’ll be guided with clarity, care, and no pressure to “perform.”",
+      },
+      {
+        id: "faq-free-intro",
+        question: "What is Introduction to Reiki?",
+        answer:
+          "Introduction to Reiki is our free foundational course — a gentle starting point to understand Reiki principles, energy awareness, and how to begin your path with confidence.",
+      },
+    ],
   },
 };
 
@@ -331,12 +391,56 @@ export function normalizeReikiClose(value: unknown): ReikiClose {
   };
 }
 
+function createFaqId() {
+  if (typeof crypto !== "undefined" && "randomUUID" in crypto) {
+    return `faq-${crypto.randomUUID().slice(0, 8)}`;
+  }
+  return `faq-${Date.now()}-${Math.random().toString(16).slice(2, 8)}`;
+}
+
+export function normalizeReikiFaq(value: unknown): ReikiFaq {
+  const d = reikiPageDefaults.faq;
+  const row = asRecord(value);
+  if (!row) {
+    return {
+      ...d,
+      items: d.items.map((item) => ({ ...item })),
+    };
+  }
+
+  const itemsRaw = Array.isArray(row.items) ? row.items : [];
+  const items = itemsRaw
+    .map((item, index) => {
+      const itemRow = asRecord(item);
+      if (!itemRow) return null;
+      const question = str(itemRow.question, "");
+      const answer = str(itemRow.answer, "");
+      if (!question && !answer) return null;
+      const fallback = d.items[index] ?? d.items[0];
+      return {
+        id: str(itemRow.id, fallback?.id ?? createFaqId()),
+        question: question || fallback?.question || "Question",
+        answer: answer || fallback?.answer || "",
+      };
+    })
+    .filter((item): item is ReikiFaqItem => Boolean(item));
+
+  return {
+    eyebrow: str(row.eyebrow, d.eyebrow),
+    title: str(row.title, d.title),
+    titleAccent: str(row.titleAccent, d.titleAccent),
+    description: str(row.description, d.description),
+    items: items.length > 0 ? items : d.items.map((item) => ({ ...item })),
+  };
+}
+
 export function normalizeReikiPageContent(input: {
   hero?: unknown;
   intro?: unknown;
   benefits?: unknown;
   chakras?: unknown;
   pathways?: unknown;
+  faq?: unknown;
   close?: unknown;
 }): ReikiPageContent {
   return {
@@ -345,6 +449,7 @@ export function normalizeReikiPageContent(input: {
     benefits: normalizeReikiBenefits(input.benefits),
     chakras: normalizeReikiChakras(input.chakras),
     pathways: normalizeReikiPathways(input.pathways),
+    faq: normalizeReikiFaq(input.faq),
     close: normalizeReikiClose(input.close),
   };
 }
@@ -355,6 +460,7 @@ export const REIKI_SECTION_META = [
   { sectionKey: "benefits", label: "Benefits of Reiki" },
   { sectionKey: "chakras", label: "Chakras" },
   { sectionKey: "pathways", label: "Pathways" },
+  { sectionKey: "faq", label: "FAQs" },
   { sectionKey: "close", label: "Closing CTA" },
 ] as const;
 

@@ -7,12 +7,14 @@ import {
   normalizeReikiBenefits,
   normalizeReikiChakras,
   normalizeReikiClose,
+  normalizeReikiFaq,
   normalizeReikiHero,
   normalizeReikiIntro,
   normalizeReikiPathways,
   type ReikiBenefits,
   type ReikiChakras,
   type ReikiClose,
+  type ReikiFaq,
   type ReikiHero,
   type ReikiIntro,
   type ReikiPathways,
@@ -89,6 +91,14 @@ export async function saveReikiCloseAction(input: ReikiClose) {
   await requireAdmin();
   const normalized = normalizeReikiClose(input);
   await upsertReikiSection("close", "Closing CTA", normalized);
+  revalidateReiki();
+  return { ok: true as const };
+}
+
+export async function saveReikiFaqAction(input: ReikiFaq) {
+  await requireAdmin();
+  const normalized = normalizeReikiFaq(input);
+  await upsertReikiSection("faq", "FAQs", normalized);
   revalidateReiki();
   return { ok: true as const };
 }

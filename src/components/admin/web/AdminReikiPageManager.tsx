@@ -7,6 +7,7 @@ import {
   saveReikiBenefitsAction,
   saveReikiChakrasAction,
   saveReikiCloseAction,
+  saveReikiFaqAction,
   saveReikiHeroAction,
   saveReikiIntroAction,
   saveReikiPathwaysAction,
@@ -15,10 +16,11 @@ import {
   REIKI_BENEFIT_TAB_IDS,
   type ReikiBenefitTab,
   type ReikiBenefitTabId,
+  type ReikiFaqItem,
   type ReikiPageContent,
 } from "@/lib/reiki-page";
 
-type Pane = "hero" | "intro" | "benefits" | "chakras" | "pathways" | "close";
+type Pane = "hero" | "intro" | "benefits" | "chakras" | "pathways" | "faq" | "close";
 
 const PANES: { id: Pane; label: string; blurb: string }[] = [
   { id: "hero", label: "Hero", blurb: "Brand line, headline, CTAs, and image." },
@@ -26,8 +28,16 @@ const PANES: { id: Pane; label: string; blurb: string }[] = [
   { id: "benefits", label: "Benefits", blurb: "Mind, Body, and Soul bullet lists." },
   { id: "chakras", label: "Chakras", blurb: "Energy centers section copy." },
   { id: "pathways", label: "Pathways", blurb: "Session and courses cards." },
+  { id: "faq", label: "FAQs", blurb: "Questions and answers accordion." },
   { id: "close", label: "Closing CTA", blurb: "Final headline and button." },
 ];
+
+function createFaqId() {
+  if (typeof crypto !== "undefined" && "randomUUID" in crypto) {
+    return `faq-${crypto.randomUUID().slice(0, 8)}`;
+  }
+  return `faq-${Date.now()}`;
+}
 
 function fieldClass() {
   return "admin-field-input mt-1.5 w-full rounded-xl px-3 py-2.5 text-sm outline-none";
@@ -106,6 +116,7 @@ export function AdminReikiPageManager({ initialContent }: AdminReikiPageManagerP
   const [benefits, setBenefits] = useState(initialContent.benefits);
   const [chakras, setChakras] = useState(initialContent.chakras);
   const [pathways, setPathways] = useState(initialContent.pathways);
+  const [faq, setFaq] = useState(initialContent.faq);
   const [close, setClose] = useState(initialContent.close);
   const [activeTabId, setActiveTabId] = useState<ReikiBenefitTabId>("mind");
   const [savedPane, setSavedPane] = useState<Pane | null>(null);
@@ -653,6 +664,119 @@ export function AdminReikiPageManager({ initialContent }: AdminReikiPageManagerP
                   startTransition(async () => {
                     await saveReikiPathwaysAction(pathways);
                     markSaved("pathways");
+                  })
+                }
+              />
+            </div>
+          </AdminPanel>
+        ) : null}
+
+        {pane === "faq" ? (
+          <AdminPanel title="FAQs">
+            <div className="grid gap-4 md:grid-cols-2">
+              <TextField
+                label="Eyebrow"
+                value={faq.eyebrow}
+                onChange={(value) => setFaq((current) => ({ ...current, eyebrow: value }))}
+              />
+              <TextField
+                label="Title"
+                value={faq.title}
+                onChange={(value) => setFaq((current) => ({ ...current, title: value }))}
+              />
+              <TextField
+                label="Title accent"
+                value={faq.titleAccent}
+                onChange={(value) => setFaq((current) => ({ ...current, titleAccent: value }))}
+              />
+            </div>
+            <div className="mt-4">
+              <TextField
+                label="Description"
+                value={faq.description}
+                onChange={(value) => setFaq((current) => ({ ...current, description: value }))}
+                multiline
+                rows={2}
+              />
+            </div>
+            <div className="mt-5 space-y-3">
+              <div className="flex items-center justify-between gap-3">
+                <p className={labelClass()}>Questions</p>
+                <button
+                  type="button"
+                  className="rounded-full border border-[var(--admin-border)] px-3 py-1.5 text-xs font-semibold"
+                  onClick={() =>
+                    setFaq((current) => ({
+                      ...current,
+                      items: [
+                        ...current.items,
+                        { id: createFaqId(), question: "", answer: "" } satisfies ReikiFaqItem,
+                      ],
+                    }))
+                  }
+                >
+                  Add question
+                </button>
+              </div>
+              {faq.items.map((item, index) => (
+                <div key={item.id} className="space-y-3 rounded-2xl border border-[var(--admin-border)] p-4">
+                  <div className="flex items-center justify-between gap-2">
+                    <p className="text-xs font-semibold uppercase tracking-[0.14em] text-[var(--admin-text-muted)]">
+                      FAQ {index + 1}
+                    </p>
+                    <button
+                      type="button"
+                      className="text-xs font-semibold text-red-600"
+                      onClick={() =>
+                        setFaq((current) => ({
+                          ...current,
+                          items:
+                            current.items.length > 1
+                              ? current.items.filter((entry) => entry.id !== item.id)
+                              : [{ id: createFaqId(), question: "", answer: "" }],
+                        }))
+                      }
+                    >
+                      Remove
+                    </button>
+                  </div>
+                  <TextField
+                    label="Question"
+                    value={item.question}
+                    onChange={(value) =>
+                      setFaq((current) => ({
+                        ...current,
+                        items: current.items.map((entry) =>
+                          entry.id === item.id ? { ...entry, question: value } : entry,
+                        ),
+                      }))
+                    }
+                  />
+                  <TextField
+                    label="Answer"
+                    value={item.answer}
+                    onChange={(value) =>
+                      setFaq((current) => ({
+                        ...current,
+                        items: current.items.map((entry) =>
+                          entry.id === item.id ? { ...entry, answer: value } : entry,
+                        ),
+                      }))
+                    }
+                    multiline
+                    rows={3}
+                  />
+                </div>
+              ))}
+            </div>
+            <div className="mt-6">
+              <SaveBar
+                pending={pending}
+                saved={savedPane === "faq"}
+                onSave={() =>
+                  startTransition(async () => {
+                    await saveReikiFaqAction(faq);
+                    markSaved("faq");
                   })
                 }
               />

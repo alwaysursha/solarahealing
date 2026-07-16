@@ -122,6 +122,7 @@ function SectionHead({
 export function ReikiPageView({ content }: { content: ReikiPageContent }) {
   const reduceMotion = useReducedMotion();
   const [benefitTab, setBenefitTab] = useState<ReikiBenefitTabId>("mind");
+  const [openFaqId, setOpenFaqId] = useState<string | null>(content.faq.items[0]?.id ?? null);
   const activeBenefits =
     content.benefits.tabs.find((tab) => tab.id === benefitTab) ?? content.benefits.tabs[0];
 
@@ -200,7 +201,7 @@ export function ReikiPageView({ content }: { content: ReikiPageContent }) {
       </section>
 
       {/* What is Reiki */}
-      <section className="reiki-intro">
+      <section id="reiki-what" className="reiki-intro">
         <div className="reiki-intro-aura" aria-hidden />
         <div className="reiki-intro-inner">
           <div className="reiki-intro-grid">
@@ -246,7 +247,7 @@ export function ReikiPageView({ content }: { content: ReikiPageContent }) {
       </section>
 
       {/* Benefits tabs */}
-      <section className="reiki-benefits">
+      <section id="reiki-benefits" className="reiki-benefits">
         <div className="reiki-benefits-aura" aria-hidden />
         <div className="reiki-benefits-inner">
           <SectionHead
@@ -369,6 +370,52 @@ export function ReikiPageView({ content }: { content: ReikiPageContent }) {
               </Link>
             </motion.article>
           </motion.div>
+        </div>
+      </section>
+
+      {/* FAQs */}
+      <section id="reiki-faq" className="reiki-faq">
+        <div className="reiki-faq-inner">
+          <SectionHead
+            eyebrow={content.faq.eyebrow}
+            title={content.faq.title}
+            titleAccent={content.faq.titleAccent}
+            description={content.faq.description}
+          />
+          <div className="reiki-faq-list">
+            {content.faq.items.map((item) => {
+              const open = openFaqId === item.id;
+              return (
+                <div key={item.id} className={["reiki-faq-item", open ? "reiki-faq-item-open" : ""].join(" ")}>
+                  <button
+                    type="button"
+                    className="reiki-faq-trigger"
+                    aria-expanded={open}
+                    onClick={() => setOpenFaqId(open ? null : item.id)}
+                  >
+                    <span>{item.question}</span>
+                    <span className="reiki-faq-icon" aria-hidden>
+                      {open ? "−" : "+"}
+                    </span>
+                  </button>
+                  <AnimatePresence initial={false}>
+                    {open ? (
+                      <motion.div
+                        key={`${item.id}-answer`}
+                        className="reiki-faq-answer"
+                        initial={reduceMotion ? false : { height: 0, opacity: 0 }}
+                        animate={{ height: "auto", opacity: 1 }}
+                        exit={reduceMotion ? undefined : { height: 0, opacity: 0 }}
+                        transition={{ duration: 0.32, ease }}
+                      >
+                        <p>{item.answer}</p>
+                      </motion.div>
+                    ) : null}
+                  </AnimatePresence>
+                </div>
+              );
+            })}
+          </div>
         </div>
       </section>
 
