@@ -1,4 +1,5 @@
 import { getEmailFrom } from "@/lib/email-config";
+import { getRuntimeEnv } from "@/lib/runtime-env";
 
 export type SendEmailInput = {
   to: string | string[];
@@ -13,7 +14,7 @@ export type SendEmailResult =
   | { ok: false; error: string };
 
 function getResendApiKey(): string {
-  const apiKey = process.env.RESEND_API_KEY?.trim() ?? "";
+  const apiKey = getRuntimeEnv("RESEND_API_KEY") ?? "";
   if (!apiKey) {
     throw new Error("Missing RESEND_API_KEY in environment.");
   }

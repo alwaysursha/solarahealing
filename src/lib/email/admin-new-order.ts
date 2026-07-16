@@ -2,7 +2,7 @@ import { OrderItemType } from "@prisma/client";
 import type { Order, OrderItem } from "@prisma/client";
 import { SITE_NAME } from "@/lib/constants";
 import { sendEmail } from "@/lib/email";
-import { getEmailFrom } from "@/lib/email-config";
+import { getEmailAdminTo, getEmailFrom } from "@/lib/email-config";
 import {
   EMAIL_BRAND,
   emailCtaButton,
@@ -17,7 +17,7 @@ import { formatCad } from "@/lib/site";
 type OrderWithItems = Order & { items: OrderItem[] };
 
 function resolveAdminInbox(): string | null {
-  const explicit = process.env.EMAIL_ADMIN_TO?.trim();
+  const explicit = getEmailAdminTo();
   if (explicit?.includes("@")) {
     return explicit;
   }

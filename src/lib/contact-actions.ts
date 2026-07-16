@@ -1,6 +1,7 @@
 "use server";
 
 import { sendEmail } from "@/lib/email";
+import { getEmailAdminTo } from "@/lib/email-config";
 import { escapeHtml, paragraph, renderEmailShell } from "@/lib/email/layout";
 import { getSiteSettings } from "@/lib/site-settings";
 
@@ -26,8 +27,12 @@ export async function submitContactFormAction(
   }
 
   const settings = await getSiteSettings();
-  const to = settings.contact.email.trim();
-  if (!to) {
+  const contactTo = settings.contact.email.trim();
+  const adminTo = getEmailAdminTo();
+  const recipients = Array.from(
+    new Set([contactTo, adminTo].filter((value): value is string => Boolean(value?.includes("@")))),
+  );
+  if (recipients.length === 0) {
     return { ok: false, error: "Contact email is not configured yet." };
   }
 
@@ -43,7 +48,7 @@ export async function submitContactFormAction(
     title: "New contact message",
     eyebrow: "Website contact",
     bodyHtml,
-    footerNote: `Sent to ${to} from the Contact Us form.`,
+    footerNote: `Sent to ${recipients.join(", ")} from the Contact Us form.`,
   });
 
   const text = [
@@ -55,7 +60,7 @@ export async function submitContactFormAction(
 
   try {
     const result = await sendEmail({
-      to,
+      to: recipients,
       subject,
       html,
       text,
