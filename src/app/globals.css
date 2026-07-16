@@ -839,6 +839,637 @@ html[data-brand-theme="8"] .bg-spiritual-shimmer {
   background: var(--canvas);
 }
 
+/* —— Reiki marketing page —— */
+.reiki-page {
+  position: relative;
+  isolation: isolate;
+  background: var(--canvas);
+  color: var(--foreground);
+  scroll-margin-top: 5.5rem;
+}
+
+.reiki-hero {
+  position: relative;
+  min-height: min(100dvh, 56rem);
+  display: flex;
+  align-items: flex-end;
+  overflow: hidden;
+  padding: 8.5rem 1.35rem 4.5rem;
+}
+
+@media (min-width: 768px) {
+  .reiki-hero {
+    padding: 9.5rem 2.75rem 5.5rem;
+  }
+}
+
+.reiki-hero-media {
+  position: absolute;
+  inset: 0;
+  z-index: 0;
+}
+
+.reiki-hero-veil {
+  position: absolute;
+  inset: 0;
+  background:
+    linear-gradient(
+      115deg,
+      rgba(46, 10, 60, 0.82) 0%,
+      rgba(92, 20, 112, 0.55) 42%,
+      rgba(46, 10, 60, 0.35) 100%
+    ),
+    linear-gradient(to top, rgba(30, 6, 42, 0.75) 0%, transparent 48%);
+}
+
+.reiki-hero-grain {
+  position: absolute;
+  inset: 0;
+  opacity: 0.18;
+  background-image: url("data:image/svg+xml,%3Csvg viewBox='0 0 200 200' xmlns='http://www.w3.org/2000/svg'%3E%3Cfilter id='n'%3E%3CfeTurbulence type='fractalNoise' baseFrequency='0.85' numOctaves='4' stitchTiles='stitch'/%3E%3C/filter%3E%3Crect width='100%25' height='100%25' filter='url(%23n)'/%3E%3C/svg%3E");
+  mix-blend-mode: soft-light;
+}
+
+.reiki-hero-float {
+  position: absolute;
+  border-radius: 9999px;
+  filter: blur(2px);
+  pointer-events: none;
+}
+
+.reiki-hero-float-a {
+  width: 18rem;
+  height: 18rem;
+  left: 8%;
+  top: 18%;
+  background: radial-gradient(circle, rgba(201, 128, 212, 0.45), transparent 68%);
+}
+
+.reiki-hero-float-b {
+  width: 14rem;
+  height: 14rem;
+  right: 12%;
+  bottom: 22%;
+  background: radial-gradient(circle, rgba(217, 22, 191, 0.28), transparent 70%);
+}
+
+.reiki-hero-inner {
+  position: relative;
+  z-index: 1;
+  width: min(100%, 42rem);
+}
+
+.reiki-hero-brand {
+  margin: 0;
+  font-family: var(--font-instrument-serif), Georgia, serif;
+  font-size: clamp(2.2rem, 5.2vw, 3.25rem);
+  font-weight: 400;
+  letter-spacing: -0.02em;
+  line-height: 1.1;
+  color: #faf6fc;
+  text-shadow: 0 10px 40px rgba(0, 0, 0, 0.35);
+}
+
+.reiki-hero-title {
+  margin: 0.85rem 0 0;
+  font-family: var(--font-instrument-serif), Georgia, serif;
+  font-size: clamp(3.15rem, 8.7vw, 5.25rem);
+  font-weight: 400;
+  line-height: 1.02;
+  letter-spacing: -0.03em;
+  color: #fff;
+}
+
+.reiki-hero-title span {
+  font-style: italic;
+  color: color-mix(in srgb, #f06bde 70%, #fff);
+}
+
+.reiki-hero-copy {
+  margin: 1.1rem 0 0;
+  max-width: 30rem;
+  font-size: 1.2rem;
+  line-height: 1.65;
+  color: rgba(255, 255, 255, 0.78);
+}
+
+.reiki-hero-actions {
+  display: flex;
+  flex-wrap: wrap;
+  align-items: center;
+  gap: 0.85rem;
+  margin-top: 1.85rem;
+}
+
+.reiki-hero-ghost {
+  display: inline-flex;
+  align-items: center;
+  justify-content: center;
+  border-radius: 9999px;
+  border: 1px solid rgba(255, 255, 255, 0.32);
+  background: rgba(255, 255, 255, 0.08);
+  padding: 0.95rem 1.45rem;
+  font-size: 0.82rem;
+  font-weight: 700;
+  letter-spacing: 0.14em;
+  text-transform: uppercase;
+  text-decoration: none;
+  color: #faf6fc;
+  backdrop-filter: blur(8px);
+  transition:
+    background 0.2s ease,
+    border-color 0.2s ease;
+}
+
+.reiki-hero-ghost:hover {
+  background: rgba(255, 255, 255, 0.16);
+  border-color: rgba(255, 255, 255, 0.5);
+}
+
+.reiki-eyebrow {
+  margin: 0;
+  font-size: 0.78rem;
+  font-weight: 650;
+  letter-spacing: 0.28em;
+  text-transform: uppercase;
+  color: color-mix(in srgb, var(--purple-deep) 70%, #8f63b5);
+}
+
+.reiki-section-title {
+  margin: 0.55rem 0 0;
+  font-family: var(--font-instrument-serif), Georgia, serif;
+  font-size: clamp(2.45rem, 5.2vw, 3.55rem);
+  font-weight: 400;
+  line-height: 1.12;
+  letter-spacing: -0.02em;
+  color: var(--purple-deep);
+}
+
+.reiki-section-title span {
+  font-style: italic;
+  color: color-mix(in srgb, var(--gold) 55%, var(--purple-deep));
+}
+
+.reiki-section-copy {
+  margin: 0.9rem 0 0;
+  max-width: 38rem;
+  font-size: 1.15rem;
+  line-height: 1.65;
+  color: rgba(58, 37, 96, 0.62);
+}
+
+.reiki-section-head {
+  margin-bottom: 2.25rem;
+}
+
+.reiki-intro,
+.reiki-benefits,
+.reiki-chakras,
+.reiki-pathways {
+  position: relative;
+  padding: 4.5rem 1.35rem;
+}
+
+@media (min-width: 768px) {
+  .reiki-intro,
+  .reiki-benefits,
+  .reiki-chakras,
+  .reiki-pathways {
+    padding: 5.5rem 2.75rem;
+  }
+}
+
+.reiki-intro-aura,
+.reiki-benefits-aura {
+  pointer-events: none;
+  position: absolute;
+  inset: 0;
+  background:
+    radial-gradient(ellipse 60% 50% at 8% 20%, rgba(201, 128, 212, 0.16), transparent 55%),
+    radial-gradient(ellipse 50% 40% at 92% 70%, rgba(143, 99, 181, 0.12), transparent 52%);
+}
+
+.reiki-intro-inner,
+.reiki-benefits-inner,
+.reiki-chakras-inner,
+.reiki-pathways-inner {
+  position: relative;
+  z-index: 1;
+  margin: 0 auto;
+  max-width: 70rem;
+}
+
+.reiki-intro-grid {
+  display: grid;
+  gap: 2rem;
+  align-items: start;
+  grid-template-areas:
+    "head"
+    "visual"
+    "copy";
+}
+
+.reiki-intro-head {
+  grid-area: head;
+  min-width: 0;
+}
+
+.reiki-intro-head .reiki-section-head {
+  margin-bottom: 0;
+}
+
+.reiki-intro-copy {
+  grid-area: copy;
+  display: flex;
+  flex-direction: column;
+  gap: 1.15rem;
+}
+
+.reiki-intro-copy p {
+  margin: 0;
+  font-size: 1.18rem;
+  line-height: 1.75;
+  color: rgba(58, 37, 96, 0.72);
+}
+
+.reiki-intro-visual {
+  grid-area: visual;
+  position: relative;
+  display: grid;
+  place-items: center;
+  min-height: 18rem;
+  aspect-ratio: 4 / 5;
+  border-radius: 1.75rem;
+  background: #2a1848;
+  overflow: hidden;
+}
+
+.reiki-intro-visual-image {
+  z-index: 0;
+}
+
+.reiki-intro-visual-veil {
+  position: absolute;
+  inset: 0;
+  z-index: 1;
+  background:
+    linear-gradient(
+      to top,
+      rgba(30, 6, 42, 0.72) 0%,
+      rgba(30, 6, 42, 0.2) 42%,
+      transparent 68%
+    );
+  pointer-events: none;
+}
+
+@media (min-width: 960px) {
+  .reiki-intro-grid {
+    grid-template-columns: minmax(0, 1.15fr) minmax(0, 0.85fr);
+    grid-template-areas:
+      "head visual"
+      "copy visual";
+    gap: 0 3.5rem;
+  }
+
+  .reiki-intro-head .reiki-section-head {
+    margin-bottom: 1.75rem;
+  }
+
+  .reiki-intro-visual {
+    min-height: 22rem;
+    position: sticky;
+    top: 7.25rem;
+    align-self: start;
+    z-index: 1;
+  }
+}
+
+@media (min-width: 1280px) {
+  .reiki-intro-visual {
+    top: 7.75rem;
+  }
+}
+
+.reiki-orb {
+  position: relative;
+  width: min(72%, 16rem);
+  aspect-ratio: 1;
+}
+
+.reiki-orb-core {
+  position: absolute;
+  inset: 22%;
+  border-radius: 9999px;
+  background: radial-gradient(circle, rgba(240, 107, 222, 0.85), rgba(143, 99, 181, 0.2) 55%, transparent 72%);
+  filter: blur(1px);
+}
+
+.reiki-orb-ring {
+  position: absolute;
+  inset: 8%;
+  border-radius: 9999px;
+  border: 1px solid rgba(255, 255, 255, 0.18);
+}
+
+.reiki-orb-ring-b {
+  inset: 0;
+  border-color: rgba(240, 107, 222, 0.28);
+}
+
+.reiki-orb-chakra {
+  --angle: calc(var(--i) * 51.4deg);
+  position: absolute;
+  left: 50%;
+  top: 50%;
+  width: 0.55rem;
+  height: 0.55rem;
+  border-radius: 9999px;
+  background: color-mix(in srgb, #faf6fc 70%, #f06bde);
+  box-shadow: 0 0 12px rgba(240, 107, 222, 0.55);
+  transform:
+    translate(-50%, -50%)
+    rotate(var(--angle))
+    translateY(-6.4rem);
+}
+
+.reiki-intro-visual-caption {
+  position: absolute;
+  bottom: 1.25rem;
+  z-index: 2;
+  margin: 0;
+  font-size: 0.78rem;
+  font-weight: 650;
+  letter-spacing: 0.22em;
+  text-transform: uppercase;
+  color: rgba(255, 255, 255, 0.62);
+}
+
+.reiki-benefits {
+  background:
+    linear-gradient(
+      180deg,
+      #f7f1fb 0%,
+      #faf7f2 55%,
+      #f5eef9 100%
+    );
+}
+
+.reiki-benefits-panel {
+  border-radius: 1.5rem;
+  border: 1px solid rgba(92, 20, 112, 0.1);
+  background: rgba(255, 255, 255, 0.55);
+  padding: 1.25rem 1.25rem 1.5rem;
+  box-shadow: 0 24px 50px -36px rgba(92, 20, 112, 0.35);
+}
+
+@media (min-width: 768px) {
+  .reiki-benefits-panel {
+    padding: 1.5rem 1.75rem 1.75rem;
+  }
+}
+
+.reiki-benefits-tabs {
+  display: flex;
+  flex-wrap: wrap;
+  gap: 0.4rem;
+  margin-bottom: 1.25rem;
+}
+
+.reiki-benefits-tab {
+  display: inline-flex;
+  align-items: center;
+  gap: 0.55rem;
+  border: 1px solid transparent;
+  border-radius: 9999px;
+  background: transparent;
+  padding: 0.7rem 1.2rem;
+  font-size: 0.82rem;
+  font-weight: 700;
+  letter-spacing: 0.14em;
+  text-transform: uppercase;
+  color: rgba(58, 37, 96, 0.55);
+  cursor: pointer;
+  transition:
+    background 0.18s ease,
+    color 0.18s ease,
+    border-color 0.18s ease;
+}
+
+.reiki-benefits-tab-icon {
+  width: 1.15rem;
+  height: 1.15rem;
+  flex-shrink: 0;
+}
+
+.reiki-benefits-tab-active {
+  border-color: rgba(143, 99, 181, 0.35);
+  background: linear-gradient(145deg, #8f63b5 0%, #734795 48%, #5c1470 100%);
+  color: #faf6fc;
+}
+
+.reiki-benefits-list {
+  margin: 0;
+  padding: 0.15rem 0 0 0.15rem;
+  display: grid;
+  gap: 0.85rem;
+  list-style: none;
+}
+
+.reiki-benefits-list li {
+  position: relative;
+  padding-left: 1.35rem;
+  font-size: 1.12rem;
+  line-height: 1.65;
+  color: rgba(58, 37, 96, 0.72);
+}
+
+.reiki-benefits-list li::before {
+  content: "";
+  position: absolute;
+  left: 0;
+  top: 0.68em;
+  width: 0.42rem;
+  height: 0.42rem;
+  border-radius: 9999px;
+  background: linear-gradient(145deg, #8f63b5 0%, #5c1470 100%);
+  box-shadow: 0 0 0 3px rgba(143, 99, 181, 0.14);
+  transform: translateY(-50%);
+}
+
+.reiki-chakras {
+  text-align: center;
+}
+
+.reiki-chakras .reiki-section-head {
+  margin-left: auto;
+  margin-right: auto;
+}
+
+.reiki-chakras .reiki-section-copy {
+  margin-left: auto;
+  margin-right: auto;
+}
+
+.reiki-chakra-row {
+  display: flex;
+  flex-wrap: wrap;
+  justify-content: center;
+  gap: 1.15rem 1.5rem;
+  margin-top: 0.5rem;
+}
+
+.reiki-chakra-dot {
+  --hue: calc(280 + var(--i) * 12);
+  display: grid;
+  place-items: center;
+  width: 4.5rem;
+  height: 4.5rem;
+  border-radius: 9999px;
+  background: radial-gradient(
+    circle,
+    hsla(var(--hue), 70%, 68%, 0.55),
+    hsla(var(--hue), 55%, 42%, 0.12) 62%,
+    transparent 72%
+  );
+  border: 1px solid rgba(92, 20, 112, 0.1);
+}
+
+.reiki-chakra-dot em {
+  font-style: normal;
+  font-size: 0.68rem;
+  font-weight: 700;
+  letter-spacing: 0.12em;
+  text-transform: uppercase;
+  color: var(--purple-deep);
+}
+
+.reiki-pathways-grid {
+  display: grid;
+  gap: 1.5rem;
+}
+
+@media (min-width: 860px) {
+  .reiki-pathways-grid {
+    grid-template-columns: 1fr 1fr;
+    gap: 2rem;
+  }
+}
+
+.reiki-pathway {
+  padding: 1.75rem 0 0;
+  border-top: 1px solid rgba(92, 20, 112, 0.14);
+}
+
+.reiki-pathway-eyebrow {
+  margin: 0;
+  font-size: 0.72rem;
+  font-weight: 700;
+  letter-spacing: 0.24em;
+  text-transform: uppercase;
+  color: color-mix(in srgb, var(--purple-deep) 65%, #8f63b5);
+}
+
+.reiki-pathway-title {
+  margin: 0.55rem 0 0;
+  font-family: var(--font-instrument-serif), Georgia, serif;
+  font-size: 2.2rem;
+  font-weight: 400;
+  color: var(--purple-deep);
+}
+
+.reiki-pathway-copy {
+  margin: 0.7rem 0 1.35rem;
+  max-width: 30rem;
+  font-size: 1.12rem;
+  line-height: 1.65;
+  color: rgba(58, 37, 96, 0.62);
+}
+
+.reiki-pathway-ghost {
+  display: inline-flex;
+  align-items: center;
+  justify-content: center;
+  border-radius: 9999px;
+  border: 1px solid rgba(92, 20, 112, 0.18);
+  background: rgba(255, 255, 255, 0.5);
+  padding: 0.95rem 1.45rem;
+  font-size: 0.82rem;
+  font-weight: 700;
+  letter-spacing: 0.14em;
+  text-transform: uppercase;
+  text-decoration: none;
+  color: color-mix(in srgb, var(--purple-deep) 88%, #8f63b5);
+  transition:
+    border-color 0.2s ease,
+    background 0.2s ease;
+}
+
+.reiki-pathway-ghost:hover {
+  border-color: rgba(143, 99, 181, 0.4);
+  background: #fff;
+}
+
+.reiki-close {
+  position: relative;
+  overflow: hidden;
+  padding: 5.5rem 1.35rem;
+  background:
+    linear-gradient(
+      145deg,
+      #2e0a3c 0%,
+      #5c1470 42%,
+      #3f0e52 100%
+    );
+  text-align: center;
+}
+
+@media (min-width: 768px) {
+  .reiki-close {
+    padding: 6.5rem 2.75rem;
+  }
+}
+
+.reiki-close-veil {
+  pointer-events: none;
+  position: absolute;
+  inset: 0;
+  background:
+    radial-gradient(ellipse 50% 60% at 50% 0%, rgba(201, 128, 212, 0.28), transparent 58%),
+    radial-gradient(ellipse 40% 40% at 80% 80%, rgba(217, 22, 191, 0.18), transparent 55%);
+}
+
+.reiki-close-inner {
+  position: relative;
+  z-index: 1;
+  margin: 0 auto;
+  max-width: 36rem;
+}
+
+.reiki-close-title {
+  margin: 0;
+  font-family: var(--font-instrument-serif), Georgia, serif;
+  font-size: clamp(2.6rem, 5.7vw, 3.85rem);
+  font-weight: 400;
+  line-height: 1.1;
+  color: #faf6fc;
+}
+
+.reiki-close-title span {
+  font-style: italic;
+  color: color-mix(in srgb, #f06bde 65%, #fff);
+}
+
+.reiki-close-copy {
+  margin: 1rem auto 1.75rem;
+  font-size: 1.18rem;
+  line-height: 1.65;
+  color: rgba(255, 255, 255, 0.72);
+}
+
+#reiki {
+  scroll-margin-top: 5.5rem;
+}
+
 /* Blog index + article detail */
 .article-index,
 .article-page {
@@ -2957,6 +3588,10 @@ html[data-brand-theme="10"] section[aria-label="Hero highlights"] [role="tablist
 }
 
 .site-scroll-panel .article-spotlight-sticky {
+  z-index: 1;
+}
+
+.site-scroll-panel .reiki-intro-visual {
   z-index: 1;
 }
 

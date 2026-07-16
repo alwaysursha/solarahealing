@@ -126,10 +126,14 @@ export function normalizeNavItems(raw: unknown): SiteNavItem[] {
       const label = typeof row.label === "string" ? row.label.trim() : "";
       const href = typeof row.href === "string" ? row.href.trim() : "";
       if (!label || !href) return null;
+      const resolvedHref =
+        label.toUpperCase() === "REIKI" && (href === "#courses" || href === "/#courses")
+          ? "/reiki"
+          : href;
       return {
         id: typeof row.id === "string" && row.id ? row.id : `nav-${index + 1}`,
         label,
-        href,
+        href: resolvedHref,
         icon: validIcon,
       } satisfies SiteNavItem;
     })

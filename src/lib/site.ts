@@ -6,7 +6,7 @@ export const site = {
   description:
     "Experience the transformative power of Reiki — a sacred Japanese-Indian healing practice that channels universal life energy to restore balance, peace, and vitality.",
   nav: [
-    { label: "REIKI", href: "#courses", icon: "reiki" },
+    { label: "REIKI", href: "/reiki", icon: "reiki" },
     { label: "HEALING", href: "#schedule", icon: "healing" },
     { label: "NUTRITION", href: "#insights", icon: "nutrition" },
     { label: "TRANSFORMATION", href: "#testimonials", icon: "transformation" },
@@ -569,10 +569,10 @@ export const footerColumns = [
       {
         title: "Reiki Courses",
         links: [
-          { label: "Reiki Level 1 (Free)", href: "#courses" },
-          { label: "Reiki Level 2", href: "#courses" },
-          { label: "Reiki Level 3", href: "#courses" },
-          { label: "Reiki Mastership", href: "#courses" },
+          { label: "Reiki Level 1 (Free)", href: "/reiki" },
+          { label: "Reiki Level 2", href: "/courses" },
+          { label: "Reiki Level 3", href: "/courses" },
+          { label: "Reiki Mastership", href: "/courses" },
         ],
       },
     ],

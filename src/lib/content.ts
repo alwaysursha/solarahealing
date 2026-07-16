@@ -6,6 +6,11 @@ import {
   type HeroSlide,
   type SiteNavItem,
 } from "@/lib/frontpage-content";
+import {
+  normalizeReikiPageContent,
+  reikiPageDefaults,
+  type ReikiPageContent,
+} from "@/lib/reiki-page";
 import { OrderStatus, Role } from "@prisma/client";
 import {
   courseCategoryLabel,
@@ -287,6 +292,35 @@ export async function getHomePageContent() {
       (map.get("testimonialsIntro") as typeof testimonialsIntro | undefined) ?? testimonialsIntro,
     testimonials: (map.get("testimonials") as typeof testimonials | undefined) ?? testimonials,
   };
+}
+
+export async function getReikiPageContent(): Promise<ReikiPageContent> {
+  const sections = await safeQuery(
+    () =>
+      prisma.pageSection.findMany({
+        where: { pageKey: "reiki" },
+      }),
+    [],
+  );
+
+  const map = new Map(
+    sections.map((section) => {
+      try {
+        return [section.sectionKey, JSON.parse(section.content)] as const;
+      } catch {
+        return [section.sectionKey, null] as const;
+      }
+    }),
+  );
+
+  return normalizeReikiPageContent({
+    hero: map.get("hero") ?? reikiPageDefaults.hero,
+    intro: map.get("intro") ?? reikiPageDefaults.intro,
+    benefits: map.get("benefits") ?? reikiPageDefaults.benefits,
+    chakras: map.get("chakras") ?? reikiPageDefaults.chakras,
+    pathways: map.get("pathways") ?? reikiPageDefaults.pathways,
+    close: map.get("close") ?? reikiPageDefaults.close,
+  });
 }
 
 export async function getPublishedArticles() {
