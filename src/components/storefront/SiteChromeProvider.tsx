@@ -2,6 +2,7 @@
 
 import { createContext, useContext, type ReactNode } from "react";
 import type { SiteNavItem } from "@/lib/frontpage-content";
+import type { ReikiMenuCourse } from "@/lib/reiki-nav";
 import { site } from "@/lib/site";
 
 type SiteChromeValue = {
@@ -9,6 +10,7 @@ type SiteChromeValue = {
   nav: SiteNavItem[];
   cta: string;
   sanskrit: string;
+  reikiMenuCourse: ReikiMenuCourse | null;
 };
 
 const SiteChromeContext = createContext<SiteChromeValue>({
@@ -21,6 +23,7 @@ const SiteChromeContext = createContext<SiteChromeValue>({
   })),
   cta: site.cta,
   sanskrit: site.sanskrit,
+  reikiMenuCourse: null,
 });
 
 export function SiteChromeProvider({

@@ -4,7 +4,7 @@ import { motion, useReducedMotion } from "framer-motion";
 import Link from "next/link";
 import { useRef, type ReactNode } from "react";
 import { MobileNavLink } from "@/components/sections/nav/NavLink";
-import type { NavIconId } from "@/components/sections/nav/NavIcon";
+import { ReikiMobileNavMenu } from "@/components/sections/nav/ReikiNavMenu";
 import {
   mobileNavFooterVariants,
   mobileNavItemVariants,
@@ -13,15 +13,11 @@ import {
 } from "@/lib/nav-motion";
 import { MOBILE_NAV_WIDTH_PERCENT } from "@/lib/panel-path";
 import { useSiteChrome } from "@/components/storefront/SiteChromeProvider";
-
-type NavItem = {
-  label: string;
-  href: string;
-  icon: NavIconId;
-};
+import { isReikiNavItem } from "@/lib/reiki-nav";
+import type { SiteNavItem } from "@/lib/frontpage-content";
 
 type MobileNavMenuProps = {
-  items: readonly NavItem[];
+  items: readonly SiteNavItem[];
   onClose: () => void;
   onLogin: () => void;
 };
@@ -97,15 +93,19 @@ export function MobileNavMenu({ items, onClose, onLogin }: MobileNavMenuProps) {
     style: { width: `${MOBILE_NAV_WIDTH_PERCENT}%` },
   };
 
-  const linkList = items.map((item, index) => (
-    <MobileNavLink
-      key={item.href}
-      item={item}
-      index={index}
-      onNavigate={onClose}
-      animated={!staticMotion}
-    />
-  ));
+  const linkList = items.map((item, index) =>
+    isReikiNavItem(item) ? (
+      <ReikiMobileNavMenu key={item.href} item={item} onNavigate={onClose} />
+    ) : (
+      <MobileNavLink
+        key={item.href}
+        item={item}
+        index={index}
+        onNavigate={onClose}
+        animated={!staticMotion}
+      />
+    ),
+  );
 
   if (staticMotion) {
     return (
@@ -139,7 +139,11 @@ export function MobileNavMenu({ items, onClose, onLogin }: MobileNavMenuProps) {
         >
           {items.map((item, index) => (
             <motion.div key={item.href} variants={mobileNavItemVariants}>
-              <MobileNavLink item={item} index={index} onNavigate={onClose} />
+              {isReikiNavItem(item) ? (
+                <ReikiMobileNavMenu item={item} onNavigate={onClose} />
+              ) : (
+                <MobileNavLink item={item} index={index} onNavigate={onClose} />
+              )}
             </motion.div>
           ))}
         </motion.nav>

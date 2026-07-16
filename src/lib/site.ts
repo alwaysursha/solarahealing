@@ -349,6 +349,21 @@ export const scheduleBooking = {
 
 export const onlineCourses = [
   {
+    id: "introduction-to-reiki",
+    title: "Introduction to Reiki",
+    description:
+      "Begin your Reiki path with a free, gentle foundation — core principles, energy awareness, and practices you can return to anytime.",
+    date: "Start anytime",
+    duration: "4 modules · self-paced",
+    badge: "Free",
+    priceCad: 0,
+    image:
+      "https://images.unsplash.com/photo-1544367567-0f2fcb009e0b?auto=format&fit=crop&w=1200&q=90",
+    imageAlt: "Introduction to Reiki free online course",
+    category: "REIKI" as const,
+    level: "BEGINNER" as const,
+  },
+  {
     id: "reiki-level-1",
     title: "Reiki Level I Certification",
     description:

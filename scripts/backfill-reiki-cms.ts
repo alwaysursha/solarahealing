@@ -7,12 +7,16 @@ import {
   normalizeReikiBenefits,
   normalizeReikiChakras,
   normalizeReikiClose,
+  normalizeReikiFaq,
   normalizeReikiHero,
   normalizeReikiIntro,
   normalizeReikiPathways,
   reikiPageDefaults,
   type ReikiSectionKey,
 } from "../src/lib/reiki-page";
+
+import { onlineCourses } from "../src/lib/site";
+import { REIKI_INTRO_COURSE_ID } from "../src/lib/reiki-nav";
 
 config({ path: ".env.local", override: true });
 
@@ -30,8 +34,52 @@ const normalizers: Record<ReikiSectionKey, (value: unknown) => unknown> = {
   benefits: normalizeReikiBenefits,
   chakras: normalizeReikiChakras,
   pathways: normalizeReikiPathways,
+  faq: normalizeReikiFaq,
   close: normalizeReikiClose,
 };
+
+async function upsertIntroCourse() {
+  const course = onlineCourses.find((item) => item.id === REIKI_INTRO_COURSE_ID);
+  if (!course) {
+    console.log("introduction-to-reiki: missing from static courses");
+    return;
+  }
+
+  await prisma.onlineCourse.upsert({
+    where: { id: course.id },
+    create: {
+      id: course.id,
+      slug: course.id,
+      title: course.title,
+      description: course.description,
+      dateLabel: course.date,
+      duration: course.duration,
+      badge: course.badge || "Free",
+      category: course.category,
+      priceCad: course.priceCad,
+      image: course.image,
+      imageAlt: course.imageAlt,
+      level: course.level,
+      published: true,
+      sortOrder: 0,
+    },
+    update: {
+      slug: course.id,
+      title: course.title,
+      description: course.description,
+      dateLabel: course.date,
+      duration: course.duration,
+      badge: course.badge || "Free",
+      category: course.category,
+      priceCad: course.priceCad,
+      image: course.image,
+      imageAlt: course.imageAlt,
+      level: course.level,
+      published: true,
+    },
+  });
+  console.log("introduction-to-reiki: upserted ($0)");
+}
 
 async function main() {
   for (const section of REIKI_SECTION_META) {
@@ -72,6 +120,8 @@ async function main() {
 
     console.log(`${section.sectionKey}: ${existing ? "updated" : "created"}`);
   }
+
+  await upsertIntroCourse();
 }
 
 main()
