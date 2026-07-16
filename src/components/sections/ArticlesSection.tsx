@@ -206,9 +206,9 @@ export function ArticlesSection({
           </p>
         </motion.div>
 
-        <div className="grid gap-10 lg:grid-cols-12 lg:gap-12 xl:gap-14">
+        <div className="article-spotlight-grid grid gap-10 lg:grid-cols-12 lg:gap-12 xl:gap-14">
           <motion.div
-            className="space-y-5 lg:col-span-5"
+            className="article-spotlight-sticky space-y-5 lg:col-span-5"
             initial={reduceMotion ? false : { opacity: 0, y: 28 }}
             whileInView={reduceMotion ? undefined : { opacity: 1, y: 0 }}
             viewport={{ once: true, margin: "-40px" }}
@@ -222,7 +222,7 @@ export function ArticlesSection({
             </div>
           </motion.div>
 
-          <div className="lg:col-span-7">
+          <div className="article-spotlight-list lg:col-span-7">
             {reduceMotion ? (
               <ul className="article-list divide-y divide-purple-deep/8">
                 {list.map((article, index) => (

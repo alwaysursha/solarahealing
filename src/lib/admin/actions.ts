@@ -333,38 +333,42 @@ export async function deletePrivateSessionFormAction(formData: FormData) {
 
 export async function upsertArticleAction(formData: FormData) {
   await requireAdmin();
-  const id = formData.get("id")?.toString() || createId();
+  const existingId = formData.get("id")?.toString();
+  const id = existingId || createId();
+  const title = formData.get("title")?.toString() ?? "";
+  const slug = await ensureUniqueSlug(
+    resolveSlugInput({
+      slug: formData.get("slug")?.toString(),
+      title,
+      fallback: id,
+    }),
+    async (candidate) => {
+      const existing = await prisma.article.findUnique({ where: { slug: candidate } });
+      return Boolean(existing && existing.id !== id);
+    },
+  );
+
+  const data = {
+    slug,
+    title,
+    excerpt: formData.get("excerpt")?.toString() ?? "",
+    body: formData.get("body")?.toString() ?? "",
+    category: formData.get("category")?.toString()?.trim() || "Insights",
+    image: formData.get("image")?.toString() ?? "",
+    imageAlt: formData.get("imageAlt")?.toString() ?? "",
+    featured: formData.get("featured") === "on",
+    published: formData.get("published") === "on",
+    sortOrder: Number(formData.get("sortOrder") ?? 0),
+  };
 
   await prisma.article.upsert({
     where: { id },
-    create: {
-      id,
-      slug: formData.get("slug")?.toString() ?? createId(),
-      title: formData.get("title")?.toString() ?? "",
-      excerpt: formData.get("excerpt")?.toString() ?? "",
-      body: formData.get("body")?.toString() ?? "",
-      category: formData.get("category")?.toString() ?? "Insights",
-      image: formData.get("image")?.toString() ?? "",
-      imageAlt: formData.get("imageAlt")?.toString() ?? "",
-      featured: formData.get("featured") === "on",
-      published: formData.get("published") === "on",
-      sortOrder: Number(formData.get("sortOrder") ?? 0),
-    },
-    update: {
-      slug: formData.get("slug")?.toString() ?? createId(),
-      title: formData.get("title")?.toString() ?? "",
-      excerpt: formData.get("excerpt")?.toString() ?? "",
-      body: formData.get("body")?.toString() ?? "",
-      category: formData.get("category")?.toString() ?? "Insights",
-      image: formData.get("image")?.toString() ?? "",
-      imageAlt: formData.get("imageAlt")?.toString() ?? "",
-      featured: formData.get("featured") === "on",
-      published: formData.get("published") === "on",
-      sortOrder: Number(formData.get("sortOrder") ?? 0),
-    },
+    create: { id, ...data },
+    update: data,
   });
 
   revalidateAll();
+  return { id, slug };
 }
 
 export async function deleteArticleAction(id: string) {

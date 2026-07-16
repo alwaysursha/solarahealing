@@ -44,6 +44,9 @@ importers:
       '@tiptap/starter-kit':
         specifier: ^3.27.4
         version: 3.27.4
+      aws4fetch:
+        specifier: ^1.0.20
+        version: 1.0.20
       bcryptjs:
         specifier: ^3.0.3
         version: 3.0.3

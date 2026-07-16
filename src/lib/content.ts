@@ -318,44 +318,41 @@ export async function getHomeArticlesDisplay() {
   }
 
   const featured = rows.find((a) => a.featured) ?? rows[0];
-  const secondary = rows.filter((a) => a.featured && a.id !== featured?.id).slice(0, 2);
-  const list = rows.filter((a) => !a.featured);
+  const rest = rows.filter((a) => a.id !== featured.id);
+  const secondary = [
+    ...rest.filter((a) => a.featured),
+    ...rest.filter((a) => !a.featured),
+  ].slice(0, 2);
+  const secondaryIds = new Set(secondary.map((a) => a.id));
+  const list = rest.filter((a) => !secondaryIds.has(a.id));
 
   return {
-    featured: featured
-      ? {
-          slug: featured.slug,
-          category: featured.category,
-          title: featured.title,
-          excerpt: featured.excerpt,
-          image: featured.image,
-          imageAlt: featured.imageAlt,
-          cta: "Read the guide",
-        }
-      : articlesFeatured,
-    secondary:
-      secondary.length > 0
-        ? secondary.map((a) => ({
-            slug: a.slug,
-            category: a.category,
-            title: a.title,
-            excerpt: a.excerpt,
-            image: a.image,
-            imageAlt: a.imageAlt,
-            cta: "Explore",
-          }))
-        : [...articlesSecondary],
-    list:
-      list.length > 0
-        ? list.map((a) => ({
-            slug: a.slug,
-            title: a.title,
-            description: a.excerpt,
-            linkLabel: "Learn more",
-            image: a.image,
-            imageAlt: a.imageAlt,
-          }))
-        : [...articlesList],
+    featured: {
+      slug: featured.slug,
+      category: featured.category,
+      title: featured.title,
+      excerpt: featured.excerpt,
+      image: featured.image,
+      imageAlt: featured.imageAlt,
+      cta: "Read the guide",
+    },
+    secondary: secondary.map((a) => ({
+      slug: a.slug,
+      category: a.category,
+      title: a.title,
+      excerpt: a.excerpt,
+      image: a.image,
+      imageAlt: a.imageAlt,
+      cta: "Explore",
+    })),
+    list: list.map((a) => ({
+      slug: a.slug,
+      title: a.title,
+      description: a.excerpt,
+      linkLabel: "Learn more",
+      image: a.image,
+      imageAlt: a.imageAlt,
+    })),
   };
 }
 
