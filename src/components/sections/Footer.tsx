@@ -7,7 +7,17 @@ import { Logo } from "@/components/ui/Logo";
 import { useAnimationsActive } from "@/hooks/useAnimationsActive";
 import { footerColumns, footerSocial, site } from "@/lib/site";
 
-const linkGroups = footerColumns.flatMap((column) => column.groups);
+type FooterNavGroup = {
+  title: string;
+  links: readonly { label: string; href: string }[];
+};
+
+const linkGroups: FooterNavGroup[] = footerColumns.flatMap((column) =>
+  column.groups.map((group) => ({
+    title: group.title,
+    links: group.links,
+  })),
+);
 
 function SocialIcon({ network }: { network: string }) {
   const className = "footer-social-svg";
