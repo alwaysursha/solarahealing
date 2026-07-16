@@ -29,6 +29,7 @@ function NewSessionPanel() {
         <form action={upsertPrivateSessionAction} className="admin-catalog-form rounded-[1rem] p-4">
           <div className="grid gap-3 lg:grid-cols-2">
             <AdminField label="Title" name="title" />
+            <AdminField label="Slug" name="slug" />
             <AdminField label="Price (CAD)" name="priceCad" defaultValue={180} type="number" />
             <AdminField label="Duration" name="duration" defaultValue="60 minutes · one-to-one" />
             <AdminField label="Image URL" name="image" />

@@ -3,7 +3,7 @@
 import { motion, useReducedMotion } from "framer-motion";
 import Image from "next/image";
 import Link from "next/link";
-import { useCallback, useEffect, useMemo, useRef, useState } from "react";
+import { useCallback, useEffect, useRef, useState } from "react";
 import { useEnrollmentGate } from "@/components/auth/EnrollmentGateProvider";
 import { useAnimationsActive } from "@/hooks/useAnimationsActive";
 import { useHorizontalSwipe } from "@/hooks/useHorizontalSwipe";
@@ -14,6 +14,7 @@ import { coursesIntro, formatCad, onlineCourses, resolveCoursesIntroDescription 
 
 type CourseItem = {
   id: string;
+  slug?: string;
   title: string;
   description: string;
   date: string;
@@ -28,6 +29,12 @@ type CourseItem = {
   level?: string;
   levelKey?: string;
 };
+
+function courseTagLabel(course: Pick<CourseItem, "badge" | "category">) {
+  if (course.category) return courseCategoryLabel(course.category);
+  if (course.badge?.trim()) return course.badge;
+  return courseCategoryLabel("REIKI");
+}
 
 function courseImagePosition(course: CourseItem) {
   return toImageObjectPosition(course.imageFocusX ?? 50, course.imageFocusY ?? 50);
@@ -269,9 +276,12 @@ function EnrollButton({
   );
 }
 
-function ViewCourseDetailsLink({ courseId }: { courseId: string }) {
+function ViewCourseDetailsLink({ courseSlug }: { courseSlug: string }) {
   return (
-    <Link href={`/courses/${courseId}`} className="catalog-view-details catalog-view-details-inline">
+    <Link
+      href={`/courses/${courseSlug}`}
+      className="catalog-view-details catalog-view-details-inline"
+    >
       View Course Details
       <span aria-hidden>→</span>
     </Link>
@@ -318,7 +328,7 @@ function FeaturedCourse({
             className="absolute left-5 top-5 z-[3] flex items-center gap-3"
             variants={featuredContentItem}
           >
-            <CourseBadge label={course.badge} />
+            <CourseBadge label={courseTagLabel(course)} />
           </motion.div>
         </motion.div>
 
@@ -337,7 +347,7 @@ function FeaturedCourse({
               </h3>
               <p className="mt-4 text-[0.98rem] leading-relaxed text-white/60">{course.description}</p>
               <div className="mt-3.5">
-                <ViewCourseDetailsLink courseId={course.id} />
+                <ViewCourseDetailsLink courseSlug={course.slug ?? course.id} />
               </div>
               <p className="mt-3 text-[0.72rem] font-medium uppercase tracking-[0.2em] text-white/35">
                 {course.duration}
@@ -377,7 +387,7 @@ function FeaturedCourseStatic({ course }: { course: CourseItem }) {
           />
           <div className="absolute inset-0 bg-gradient-to-r from-transparent via-purple-deep/15 to-purple-deep/55 lg:via-purple-deep/8" />
           <div className="absolute left-5 top-5 flex items-center gap-3">
-            <CourseBadge label={course.badge} />
+            <CourseBadge label={courseTagLabel(course)} />
           </div>
         </div>
         <div className="relative flex flex-col justify-between bg-[#2a1050]/82 p-6 backdrop-blur-xl md:p-8 lg:col-span-5">
@@ -385,7 +395,7 @@ function FeaturedCourseStatic({ course }: { course: CourseItem }) {
             <h3 className="font-serif text-3xl font-normal leading-tight text-white md:text-4xl">{course.title}</h3>
             <p className="mt-4 text-[0.98rem] leading-relaxed text-white/60">{course.description}</p>
             <div className="mt-3.5">
-              <ViewCourseDetailsLink courseId={course.id} />
+              <ViewCourseDetailsLink courseSlug={course.slug ?? course.id} />
             </div>
             <p className="mt-3 text-[0.72rem] font-medium uppercase tracking-[0.2em] text-white/35">{course.duration}</p>
           </div>
@@ -451,11 +461,11 @@ function UpcomingCourseCard({
       </motion.div>
 
       <motion.div className="absolute inset-x-0 bottom-0 z-[3] p-5 md:p-6" variants={cardOverlayReveal}>
-        <CourseBadge label={course.badge} />
+        <CourseBadge label={courseTagLabel(course)} />
         <h3 className="font-serif mt-3 text-2xl leading-tight text-white">{course.title}</h3>
         <p className="mt-2 line-clamp-2 text-[0.95rem] leading-relaxed text-white/55">{course.description}</p>
         <div className="mt-3">
-          <ViewCourseDetailsLink courseId={course.id} />
+          <ViewCourseDetailsLink courseSlug={course.slug ?? course.id} />
         </div>
         <div className="mt-5 flex items-center justify-between gap-3">
           <span className="text-[0.7rem] uppercase tracking-[0.18em] text-white/35">{course.duration}</span>
@@ -482,11 +492,11 @@ function UpcomingCourseCardContent({ course }: { course: CourseItem }) {
         <PriceTag priceCad={course.priceCad} />
       </div>
       <div className="absolute inset-x-0 bottom-0 z-[3] p-5 md:p-6">
-        <CourseBadge label={course.badge} />
+        <CourseBadge label={courseTagLabel(course)} />
         <h3 className="font-serif mt-3 text-2xl leading-tight text-white">{course.title}</h3>
         <p className="mt-2 line-clamp-2 text-[0.95rem] leading-relaxed text-white/55">{course.description}</p>
         <div className="mt-3">
-          <ViewCourseDetailsLink courseId={course.id} />
+          <ViewCourseDetailsLink courseSlug={course.slug ?? course.id} />
         </div>
         <div className="mt-5 flex items-center justify-between gap-3">
           <span className="text-[0.7rem] uppercase tracking-[0.18em] text-white/35">{course.duration}</span>
@@ -668,22 +678,14 @@ export function CoursesSection({
           level: courseLevelLabel(course.level),
           levelKey: course.level,
         }));
-  const [category, setCategory] = useState<CourseCategory>("REIKI");
   const reduceMotion = useReducedMotion();
   const sectionRef = useRef<HTMLElement>(null);
   const animationsActive = useAnimationsActive(sectionRef);
 
-  const filtered = useMemo(() => {
-    return catalog.filter((course) => {
-      const key = course.category ?? (course.badge?.includes("Non-Reiki") ? "NON_REIKI" : "REIKI");
-      return key === category;
-    });
-  }, [catalog, category]);
-
-  const [featured, ...upcoming] = filtered;
+  const [featured, ...upcoming] = catalog;
   const description = resolveCoursesIntroDescription(intro.description, catalog.length);
 
-  if (catalog.length === 0) {
+  if (!featured) {
     return null;
   }
 
@@ -727,37 +729,10 @@ export function CoursesSection({
               {description}
             </p>
 
-            <div
-              className="courses-category-tabs mt-8 flex flex-wrap gap-2"
-              role="tablist"
-              aria-label="Course categories"
-            >
-              <button
-                type="button"
-                role="tab"
-                aria-selected={category === "REIKI"}
-                className={`courses-category-tab ${category === "REIKI" ? "is-active" : ""}`}
-                onClick={() => setCategory("REIKI")}
-              >
-                Reiki Courses
-              </button>
-              <button
-                type="button"
-                role="tab"
-                aria-selected={category === "NON_REIKI"}
-                className={`courses-category-tab ${category === "NON_REIKI" ? "is-active" : ""}`}
-                onClick={() => setCategory("NON_REIKI")}
-              >
-                Non-Reiki Courses
-              </button>
-            </div>
-
             <p className="mt-8 font-serif text-6xl font-normal text-white/8">
-              {String(filtered.length).padStart(2, "0")}
+              {String(catalog.length).padStart(2, "0")}
             </p>
-            <p className="text-[0.62rem] uppercase tracking-[0.28em] text-white/30">
-              {category === "REIKI" ? "Reiki programs" : "Non-Reiki programs"}
-            </p>
+            <p className="text-[0.62rem] uppercase tracking-[0.28em] text-white/30">Online programs</p>
 
             <Link
               href="/courses"
@@ -778,18 +753,13 @@ export function CoursesSection({
             </Link>
           </motion.div>
 
-          {!featured ? (
-            <div className="flex min-h-[240px] items-center justify-center rounded-[1.5rem] border border-white/10 bg-white/5 px-6 py-10 lg:col-span-8">
-              <p className="text-center text-white/55">No courses in this category yet.</p>
-            </div>
-          ) : reduceMotion ? (
+          {reduceMotion ? (
             <div className="min-w-0 space-y-6 lg:col-span-8">
               <FeaturedCourseStatic course={featured} />
               <CoursesUpcomingSlider courses={upcoming} reduceMotion={reduceMotion} />
             </div>
           ) : (
             <motion.div
-              key={category}
               className="min-w-0 space-y-6 lg:col-span-8"
               variants={catalogStagger}
               initial="hidden"

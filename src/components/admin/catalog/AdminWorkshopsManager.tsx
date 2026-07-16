@@ -116,10 +116,15 @@ function WorkshopCard({ workshop }: { workshop: WorkshopWithSales }) {
           </div>
 
           <AdminCatalogCollapsiblePanel label="Edit workshop session">
-            <form action={upsertWorkshopAction} className="admin-catalog-form mt-4 rounded-[1rem] p-4">
+            <form
+              key={`${workshop.id}-${workshop.slug}`}
+              action={upsertWorkshopAction}
+              className="admin-catalog-form mt-4 rounded-[1rem] p-4"
+            >
               <input type="hidden" name="id" value={workshop.id} />
               <div className="grid gap-3 lg:grid-cols-2">
                 <AdminField label="Title" name="title" defaultValue={workshop.title} />
+                <AdminField label="Slug" name="slug" defaultValue={workshop.slug || workshop.id} />
                 <AdminField label="Price per spot (CAD)" name="priceCad" defaultValue={workshop.priceCad} type="number" />
                 <AdminField label="Total seats" name="seatsTotal" defaultValue={workshop.seatsTotal} type="number" />
                 <AdminField
@@ -207,6 +212,7 @@ function NewWorkshopPanel() {
         <form action={upsertWorkshopAction} className="admin-catalog-form rounded-[1rem] p-4">
           <div className="grid gap-3 lg:grid-cols-2">
             <AdminField label="Title" name="title" />
+            <AdminField label="Slug" name="slug" />
             <AdminField label="Price per spot (CAD)" name="priceCad" defaultValue={149} type="number" />
             <AdminField label="Total seats" name="seatsTotal" defaultValue={24} type="number" />
             <AdminField

@@ -11,6 +11,7 @@ import { formatCad, workshops, workshopsIntro } from "@/lib/site";
 
 type WorkshopItem = {
   id: string;
+  slug?: string;
   title: string;
   description: string;
   date: string;
@@ -258,7 +259,7 @@ function WorkshopCardActions({
   return (
     <div className="catalog-card-cta">
       <RegisterButton workshop={workshop} variant={variant} className={className} />
-      <Link href={`/workshops/${workshop.id}`} className="catalog-view-details">
+      <Link href={`/workshops/${workshop.slug ?? workshop.id}`} className="catalog-view-details">
         View Details
       </Link>
     </div>

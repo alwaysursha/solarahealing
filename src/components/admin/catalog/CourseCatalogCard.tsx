@@ -99,10 +99,15 @@ export function CourseCatalogCard({ course }: { course: CourseWithSales }) {
           </div>
 
           <AdminCatalogCollapsiblePanel label="Edit course">
-            <form action={upsertCourseAction} className="admin-catalog-form mt-4 rounded-[1rem] p-4">
+            <form
+              key={`${course.id}-${course.slug}`}
+              action={upsertCourseAction}
+              className="admin-catalog-form mt-4 rounded-[1rem] p-4"
+            >
               <input type="hidden" name="id" value={course.id} />
               <div className="grid gap-3 lg:grid-cols-2">
                 <AdminField label="Title" name="title" defaultValue={course.title} />
+                <AdminField label="Slug" name="slug" defaultValue={course.slug || course.id} />
                 <AdminSelect
                   label="Category"
                   name="category"

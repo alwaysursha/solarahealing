@@ -15,6 +15,7 @@ import {
 import { sendPasswordChangedEmail } from "@/lib/email/password-changed";
 import { sendWelcomeEmail } from "@/lib/email/welcome";
 import { isValidWhatsAppNumber, normalizeWhatsAppNumber } from "@/lib/whatsapp";
+import { ensureUniqueSlug, resolveSlugInput } from "@/lib/slug";
 
 function revalidateAll() {
   revalidatePath("/", "layout");
@@ -115,9 +116,22 @@ export async function upsertCourseAction(formData: FormData) {
   await requireAdmin();
   const existingId = formData.get("id")?.toString();
   const id = existingId || createId();
+  const title = formData.get("title")?.toString() ?? "";
+  const slug = await ensureUniqueSlug(
+    resolveSlugInput({
+      slug: formData.get("slug")?.toString(),
+      title,
+      fallback: id,
+    }),
+    async (candidate) => {
+      const existing = await prisma.onlineCourse.findUnique({ where: { slug: candidate } });
+      return Boolean(existing && existing.id !== id);
+    },
+  );
 
   const data = {
-    title: formData.get("title")?.toString() ?? "",
+    slug,
+    title,
     description: formData.get("description")?.toString() ?? "",
     dateLabel: formData.get("dateLabel")?.toString() ?? "Start anytime",
     duration: formData.get("duration")?.toString() ?? "",
@@ -184,9 +198,22 @@ export async function upsertWorkshopAction(formData: FormData) {
   const existingId = formData.get("id")?.toString();
   const id = existingId || createId();
   const scheduledAt = parseWorkshopScheduleInput(formData.get("scheduledAt")?.toString() ?? "");
+  const title = formData.get("title")?.toString() ?? "";
+  const slug = await ensureUniqueSlug(
+    resolveSlugInput({
+      slug: formData.get("slug")?.toString(),
+      title,
+      fallback: id,
+    }),
+    async (candidate) => {
+      const existing = await prisma.workshop.findUnique({ where: { slug: candidate } });
+      return Boolean(existing && existing.id !== id);
+    },
+  );
 
   const data = {
-    title: formData.get("title")?.toString() ?? "",
+    slug,
+    title,
     description: formData.get("description")?.toString() ?? "",
     scheduledAt,
     dateLabel: formatWorkshopScheduleLabel(scheduledAt),
@@ -231,9 +258,22 @@ export async function upsertPrivateSessionAction(formData: FormData) {
   await requireAdmin();
   const existingId = formData.get("id")?.toString();
   const id = existingId || createId();
+  const title = formData.get("title")?.toString() ?? "";
+  const slug = await ensureUniqueSlug(
+    resolveSlugInput({
+      slug: formData.get("slug")?.toString(),
+      title,
+      fallback: id,
+    }),
+    async (candidate) => {
+      const existing = await prisma.privateSession.findUnique({ where: { slug: candidate } });
+      return Boolean(existing && existing.id !== id);
+    },
+  );
 
   const data = {
-    title: formData.get("title")?.toString() ?? "",
+    slug,
+    title,
     description: formData.get("description")?.toString() ?? "",
     duration: formData.get("duration")?.toString() ?? "",
     priceCad: Number(formData.get("priceCad") ?? 0),

@@ -1,15 +1,20 @@
-import { InnerPage } from "@/components/storefront/InnerPage";
-import { SignUpForm } from "@/components/auth/AuthForms";
 import { Suspense } from "react";
+import { AuthPageShell } from "@/components/auth/AuthPageShell";
+import { SignUpForm } from "@/components/auth/AuthForms";
 
 export const dynamic = "force-dynamic";
 
 export default function SignUpPage() {
   return (
-    <InnerPage title="Create your account" description="Join Soulara Healing Academy to book sessions and track your journey.">
-      <Suspense fallback={<p className="text-sm text-purple-deep/60">Loading…</p>}>
+    <AuthPageShell
+      eyebrow="Join Soulara Healing Academy"
+      title="Create your"
+      titleAccent="account"
+      description="Book private sessions, enroll in courses, and keep your healing path in one place."
+    >
+      <Suspense fallback={<p className="auth-page-loading">Loading…</p>}>
         <SignUpForm />
       </Suspense>
-    </InnerPage>
+    </AuthPageShell>
   );
 }

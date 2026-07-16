@@ -10,6 +10,7 @@ import type { CartItemType } from "@/lib/cart/types";
 
 export type CatalogDetailItem = {
   id: string;
+  slug?: string;
   title: string;
   description: string;
   date: string;

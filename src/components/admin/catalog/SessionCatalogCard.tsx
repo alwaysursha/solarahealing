@@ -80,10 +80,15 @@ export function SessionCatalogCard({ session }: { session: PrivateSessionWithSal
           </div>
 
           <AdminCatalogCollapsiblePanel label="Edit session">
-            <form action={upsertPrivateSessionAction} className="admin-catalog-form mt-4 rounded-[1rem] p-4">
+            <form
+              key={`${session.id}-${session.slug}`}
+              action={upsertPrivateSessionAction}
+              className="admin-catalog-form mt-4 rounded-[1rem] p-4"
+            >
               <input type="hidden" name="id" value={session.id} />
               <div className="grid gap-3 lg:grid-cols-2">
                 <AdminField label="Title" name="title" defaultValue={session.title} />
+                <AdminField label="Slug" name="slug" defaultValue={session.slug || session.id} />
                 <AdminField label="Price (CAD)" name="priceCad" defaultValue={session.priceCad} type="number" />
                 <AdminField label="Duration" name="duration" defaultValue={session.duration} />
                 <AdminField label="Image URL" name="image" defaultValue={session.image} />
@@ -108,7 +113,7 @@ export function SessionCatalogCard({ session }: { session: PrivateSessionWithSal
             </form>
             <div className="mt-3 flex flex-wrap items-center gap-3">
               <a
-                href={`/sessions/${session.id}`}
+                href={`/sessions/${session.slug}`}
                 target="_blank"
                 rel="noreferrer"
                 className="admin-catalog-inline-link inline-flex items-center gap-2 text-[0.68rem] font-semibold uppercase tracking-[0.16em]"

@@ -1,5 +1,5 @@
 import { Suspense } from "react";
-import { InnerPage } from "@/components/storefront/InnerPage";
+import { AuthPageShell } from "@/components/auth/AuthPageShell";
 import { ResetPasswordForm } from "@/components/auth/ResetPasswordForm";
 
 export const dynamic = "force-dynamic";
@@ -13,13 +13,15 @@ export default async function ResetPasswordPage({ searchParams }: PageProps) {
   const token = params.token?.trim() ?? "";
 
   return (
-    <InnerPage
-      title="Choose a new password"
+    <AuthPageShell
+      eyebrow="Account recovery"
+      title="Choose a"
+      titleAccent="new password"
       description="Enter a new password for your Soulara Healing Academy account."
     >
-      <Suspense fallback={<p className="text-sm text-purple-deep/60">Loading…</p>}>
+      <Suspense fallback={<p className="auth-page-loading">Loading…</p>}>
         <ResetPasswordForm token={token} />
       </Suspense>
-    </InnerPage>
+    </AuthPageShell>
   );
 }

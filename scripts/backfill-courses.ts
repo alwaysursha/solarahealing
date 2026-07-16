@@ -32,6 +32,7 @@ async function backfillCourses() {
       where: { id: course.id },
       create: {
         id: course.id,
+        slug: course.id,
         title: course.title,
         description: course.description,
         dateLabel: course.date,
@@ -96,6 +97,7 @@ async function backfillPrivateSessions() {
       where: { id: session.id },
       create: {
         id: session.id,
+        slug: session.id,
         title: session.title,
         description: session.description,
         duration: session.duration,

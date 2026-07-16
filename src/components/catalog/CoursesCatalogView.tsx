@@ -21,6 +21,7 @@ type CoursesCatalogViewProps = {
   title: string;
   titleAccent: string;
   description: string;
+  showWorkshopsCta?: boolean;
 };
 
 const ease: [number, number, number, number] = [0.22, 1, 0.36, 1];
@@ -46,8 +47,8 @@ const pathwayFilters = COURSE_LEVELS.map((level) => ({
   label: courseLevelLabel(level),
 }));
 
-function courseHref(id: string) {
-  return `/courses/${id}`;
+function courseHref(slug: string) {
+  return `/courses/${slug}`;
 }
 
 function courseCategoryKey(item: CatalogDetailItem): CourseCategory {
@@ -63,7 +64,7 @@ function SpotlightCourse({
   reduceMotion: boolean | null;
 }) {
   const objectPosition = toImageObjectPosition(course.imageFocusX ?? 50, course.imageFocusY ?? 50);
-  const href = courseHref(course.id);
+  const href = courseHref(course.slug ?? course.id);
 
   return (
     <motion.article
@@ -132,7 +133,7 @@ function CatalogCard({
   reduceMotion: boolean | null;
 }) {
   const objectPosition = toImageObjectPosition(course.imageFocusX ?? 50, course.imageFocusY ?? 50);
-  const href = courseHref(course.id);
+  const href = courseHref(course.slug ?? course.id);
   const featuredLayout = index % 5 === 0;
 
   return (
@@ -196,6 +197,7 @@ export function CoursesCatalogView({
   title,
   titleAccent,
   description,
+  showWorkshopsCta = false,
 }: CoursesCatalogViewProps) {
   const reduceMotion = useReducedMotion();
   const [activeCategory, setActiveCategory] = useState<CourseCategory | "all">("all");
@@ -211,8 +213,8 @@ export function CoursesCatalogView({
     });
   }, [activeCategory, activeLevel, items]);
 
-  const spotlight = filteredItems[0];
-  const gridItems = filteredItems.slice(1);
+  const spotlight = items[0];
+  const gridItems = filteredItems.filter((item) => item.id !== spotlight?.id);
 
   const heroImage = items[0]?.image;
   const heroPosition = toImageObjectPosition(
@@ -285,36 +287,6 @@ export function CoursesCatalogView({
           </div>
         ) : (
           <>
-            <div className="courses-catalog-category-tabs" role="tablist" aria-label="Course categories">
-              <button
-                type="button"
-                role="tab"
-                aria-selected={activeCategory === "all"}
-                className={`courses-catalog-filter${activeCategory === "all" ? " is-active" : ""}`}
-                onClick={() => setActiveCategory("all")}
-              >
-                All courses
-              </button>
-              <button
-                type="button"
-                role="tab"
-                aria-selected={activeCategory === "REIKI"}
-                className={`courses-catalog-filter${activeCategory === "REIKI" ? " is-active" : ""}`}
-                onClick={() => setActiveCategory("REIKI")}
-              >
-                {courseCategoryLabel("REIKI")}
-              </button>
-              <button
-                type="button"
-                role="tab"
-                aria-selected={activeCategory === "NON_REIKI"}
-                className={`courses-catalog-filter${activeCategory === "NON_REIKI" ? " is-active" : ""}`}
-                onClick={() => setActiveCategory("NON_REIKI")}
-              >
-                {courseCategoryLabel("NON_REIKI")}
-              </button>
-            </div>
-
             {spotlight ? <SpotlightCourse course={spotlight} reduceMotion={reduceMotion} /> : null}
 
             <section className="courses-catalog-browse" aria-label="Browse course catalogue">
@@ -322,30 +294,82 @@ export function CoursesCatalogView({
                 <div>
                   <p className="courses-catalog-kicker">Browse the shelves</p>
                   <h2 className="courses-catalog-browse-title">Find your pathway</h2>
+                  <p className="courses-catalog-browse-copy">
+                    Choose a course type, then refine by pathway level.
+                  </p>
                 </div>
+                <p className="courses-catalog-browse-count">
+                  {String(filteredItems.length).padStart(2, "0")} matching
+                </p>
+              </div>
 
-                <div className="courses-catalog-filters" role="tablist" aria-label="Filter by pathway level">
-                  <button
-                    type="button"
-                    role="tab"
-                    aria-selected={activeLevel === "all"}
-                    className={`courses-catalog-filter${activeLevel === "all" ? " is-active" : ""}`}
-                    onClick={() => setActiveLevel("all")}
+              <div className="courses-catalog-pathway">
+                <div className="courses-catalog-pathway-group">
+                  <p className="courses-catalog-pathway-label">Course type</p>
+                  <div
+                    className="courses-catalog-segment"
+                    role="tablist"
+                    aria-label="Filter by course type"
                   >
-                    All
-                  </button>
-                  {pathwayFilters.map((level) => (
                     <button
-                      key={level.value}
                       type="button"
                       role="tab"
-                      aria-selected={activeLevel === level.value}
-                      className={`courses-catalog-filter${activeLevel === level.value ? " is-active" : ""}`}
-                      onClick={() => setActiveLevel(level.value)}
+                      aria-selected={activeCategory === "all"}
+                      className={`courses-catalog-segment-btn${activeCategory === "all" ? " is-active" : ""}`}
+                      onClick={() => setActiveCategory("all")}
                     >
-                      {level.label}
+                      All
                     </button>
-                  ))}
+                    <button
+                      type="button"
+                      role="tab"
+                      aria-selected={activeCategory === "REIKI"}
+                      className={`courses-catalog-segment-btn${activeCategory === "REIKI" ? " is-active" : ""}`}
+                      onClick={() => setActiveCategory("REIKI")}
+                    >
+                      Reiki
+                    </button>
+                    <button
+                      type="button"
+                      role="tab"
+                      aria-selected={activeCategory === "NON_REIKI"}
+                      className={`courses-catalog-segment-btn${activeCategory === "NON_REIKI" ? " is-active" : ""}`}
+                      onClick={() => setActiveCategory("NON_REIKI")}
+                    >
+                      Non-Reiki
+                    </button>
+                  </div>
+                </div>
+
+                <div className="courses-catalog-pathway-group">
+                  <p className="courses-catalog-pathway-label">Pathway level</p>
+                  <div
+                    className="courses-catalog-filters"
+                    role="tablist"
+                    aria-label="Filter by pathway level"
+                  >
+                    <button
+                      type="button"
+                      role="tab"
+                      aria-selected={activeLevel === "all"}
+                      className={`courses-catalog-filter${activeLevel === "all" ? " is-active" : ""}`}
+                      onClick={() => setActiveLevel("all")}
+                    >
+                      All levels
+                    </button>
+                    {pathwayFilters.map((level) => (
+                      <button
+                        key={level.value}
+                        type="button"
+                        role="tab"
+                        aria-selected={activeLevel === level.value}
+                        className={`courses-catalog-filter${activeLevel === level.value ? " is-active" : ""}`}
+                        onClick={() => setActiveLevel(level.value)}
+                      >
+                        {level.label}
+                      </button>
+                    ))}
+                  </div>
                 </div>
               </div>
 
@@ -378,16 +402,18 @@ export function CoursesCatalogView({
               </AnimatePresence>
             </section>
 
-            <section className="courses-catalog-footer-band">
-              <div>
-                <p className="courses-catalog-kicker">Prefer live energy</p>
-                <h2 className="courses-catalog-footer-title">Explore upcoming workshops</h2>
-              </div>
-              <Link href="/workshops" className="courses-catalog-footer-cta">
-                View workshops
-                <span aria-hidden>→</span>
-              </Link>
-            </section>
+            {showWorkshopsCta ? (
+              <section className="courses-catalog-footer-band">
+                <div>
+                  <p className="courses-catalog-kicker">Prefer live energy</p>
+                  <h2 className="courses-catalog-footer-title">Explore upcoming workshops</h2>
+                </div>
+                <Link href="/workshops" className="courses-catalog-footer-cta">
+                  View workshops
+                  <span aria-hidden>→</span>
+                </Link>
+              </section>
+            ) : null}
           </>
         )}
       </div>

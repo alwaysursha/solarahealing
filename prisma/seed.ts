@@ -218,6 +218,7 @@ async function main() {
       where: { id: course.id },
       create: {
         id: course.id,
+        slug: course.id,
         title: course.title,
         description: course.description,
         dateLabel: course.date,
@@ -253,6 +254,7 @@ async function main() {
       where: { id: session.id },
       create: {
         id: session.id,
+        slug: session.id,
         title: session.title,
         description: session.description,
         duration: session.duration,
@@ -282,6 +284,7 @@ async function main() {
       where: { id: workshop.id },
       create: {
         id: workshop.id,
+        slug: workshop.id,
         title: workshop.title,
         description: workshop.description,
         dateLabel: workshop.date,

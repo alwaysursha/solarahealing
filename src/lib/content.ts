@@ -117,6 +117,7 @@ export async function getPublishedCourses() {
   if (rows.length === 0) {
     return staticCourses.map((course) => ({
       id: course.id,
+      slug: course.id,
       title: course.title,
       description: course.description,
       date: course.date,
@@ -135,6 +136,7 @@ export async function getPublishedCourses() {
 
   return rows.map((course) => ({
     id: course.id,
+    slug: course.slug,
     title: course.title,
     description: course.description,
     date: course.dateLabel,
@@ -164,6 +166,7 @@ export async function getPublishedWorkshops() {
   if (rows.length === 0) {
     return staticWorkshops.map((workshop) => ({
       ...workshop,
+      slug: workshop.id,
       imageFocusX: 50,
       imageFocusY: 50,
     }));
@@ -171,6 +174,7 @@ export async function getPublishedWorkshops() {
 
   return rows.map((workshop) => ({
     id: workshop.id,
+    slug: workshop.slug,
     title: workshop.title,
     description: workshop.description,
     date: workshop.dateLabel,
@@ -197,6 +201,7 @@ export async function getPublishedPrivateSessions() {
   if (rows.length === 0) {
     return staticPrivateSessions.map((session) => ({
       ...session,
+      slug: session.id,
       date: "Schedule after booking",
       badge: "Private session",
       imageFocusX: 50,
@@ -206,6 +211,7 @@ export async function getPublishedPrivateSessions() {
 
   return rows.map((session) => ({
     id: session.id,
+    slug: session.slug,
     title: session.title,
     description: session.description,
     date: "Schedule after booking",
@@ -219,19 +225,19 @@ export async function getPublishedPrivateSessions() {
   }));
 }
 
-export async function getPublishedCourseById(id: string) {
+export async function getPublishedCourseById(idOrSlug: string) {
   const courses = await getPublishedCourses();
-  return courses.find((course) => course.id === id) ?? null;
+  return courses.find((course) => course.id === idOrSlug || course.slug === idOrSlug) ?? null;
 }
 
-export async function getPublishedWorkshopById(id: string) {
+export async function getPublishedWorkshopById(idOrSlug: string) {
   const workshops = await getPublishedWorkshops();
-  return workshops.find((workshop) => workshop.id === id) ?? null;
+  return workshops.find((workshop) => workshop.id === idOrSlug || workshop.slug === idOrSlug) ?? null;
 }
 
-export async function getPublishedPrivateSessionById(id: string) {
+export async function getPublishedPrivateSessionById(idOrSlug: string) {
   const sessions = await getPublishedPrivateSessions();
-  return sessions.find((session) => session.id === id) ?? null;
+  return sessions.find((session) => session.id === idOrSlug || session.slug === idOrSlug) ?? null;
 }
 
 export async function getWorkshopsIntro() {

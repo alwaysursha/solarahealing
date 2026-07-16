@@ -44,6 +44,7 @@ function NewCoursePanel() {
         <form action={upsertCourseAction} className="admin-catalog-form rounded-[1rem] p-4">
           <div className="grid gap-3 lg:grid-cols-2">
             <AdminField label="Title" name="title" />
+            <AdminField label="Slug" name="slug" />
             <AdminSelect label="Category" name="category" defaultValue="REIKI" options={categoryOptions} />
             <AdminSelect label="Pathway level" name="level" defaultValue="BEGINNER" options={levelOptions} />
             <AdminField label="Price (CAD)" name="priceCad" defaultValue={199} type="number" />

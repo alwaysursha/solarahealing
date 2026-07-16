@@ -19,6 +19,7 @@
     "db:seed": "node --import tsx prisma/seed.ts",
     "db:backfill-workshops": "node --import tsx scripts/backfill-workshop-schedules.ts",
     "db:backfill-courses": "node --import tsx scripts/backfill-courses.ts",
+    "db:backfill-slugs": "node --import tsx scripts/backfill-catalog-slugs.ts",
     "db:setup": "prisma db push && pnpm db:seed"
   },
   "prisma": {
