@@ -7,11 +7,16 @@ import { useEffect, useId, useRef, useState } from "react";
 import { usePathname } from "next/navigation";
 import { NavIcon } from "@/components/sections/nav/NavIcon";
 import { useSiteChrome } from "@/components/storefront/SiteChromeProvider";
-import { desktopNavItem } from "@/lib/nav-motion";
-import { isReikiNavItem, reikiNavLinks, type ReikiMenuCourse } from "@/lib/reiki-nav";
 import type { SiteNavItem } from "@/lib/frontpage-content";
+import { desktopNavItem } from "@/lib/nav-motion";
+import {
+  isSessionsNavItem,
+  pickSessionsForNav,
+  type SessionsMenuItem,
+} from "@/lib/sessions-nav";
+import { formatCad } from "@/lib/site";
 
-type ReikiNavMenuProps = {
+type SessionsNavMenuProps = {
   item: SiteNavItem;
   animated?: boolean;
 };
@@ -22,47 +27,65 @@ function isActivePath(pathname: string, href: string) {
   return pathname === path || pathname.startsWith(`${path}/`);
 }
 
-function CoursePromoCard({
-  course,
+function SessionRow({
+  session,
   onNavigate,
 }: {
-  course: ReikiMenuCourse;
+  session: SessionsMenuItem;
   onNavigate?: () => void;
 }) {
   return (
-    <Link href={course.href} className="reiki-mega-course" onClick={onNavigate}>
-      <span className="reiki-mega-course-media">
+    <Link href={session.href} className="courses-mega-item" onClick={onNavigate} role="menuitem">
+      <span className="courses-mega-item-media">
         <Image
-          src={course.image}
-          alt={course.imageAlt}
+          src={session.image}
+          alt={session.imageAlt}
           fill
-          sizes="280px"
+          sizes="56px"
           className="object-cover"
         />
-        <span className="reiki-mega-course-badge">Free</span>
       </span>
-      <span className="reiki-mega-course-body">
-        <span className="reiki-mega-course-kicker">Join for free</span>
-        <span className="reiki-mega-course-title">{course.title}</span>
-        <span className="reiki-mega-course-copy">{course.description}</span>
-        <span className="reiki-mega-course-cta">
-          Start Introduction to Reiki
-          <span aria-hidden>→</span>
-        </span>
+      <span className="courses-mega-item-copy">
+        <span className="courses-mega-item-title">{session.title}</span>
+        {session.duration ? (
+          <span className="courses-mega-item-meta">{session.duration}</span>
+        ) : null}
       </span>
+      <span className="courses-mega-item-price">{formatCad(session.priceCad)}</span>
     </Link>
   );
 }
 
-export function ReikiDesktopNavMenu({ item, animated = true }: ReikiNavMenuProps) {
+function SessionsList({
+  sessions,
+  onNavigate,
+}: {
+  sessions: SessionsMenuItem[];
+  onNavigate?: () => void;
+}) {
+  if (sessions.length === 0) {
+    return <p className="courses-mega-empty">Private sessions coming soon</p>;
+  }
+
+  return (
+    <>
+      {sessions.map((session) => (
+        <SessionRow key={session.id} session={session} onNavigate={onNavigate} />
+      ))}
+    </>
+  );
+}
+
+export function SessionsDesktopNavMenu({ item, animated = true }: SessionsNavMenuProps) {
   const reduceMotion = useReducedMotion();
   const pathname = usePathname();
-  const { reikiMenuCourse } = useSiteChrome();
+  const { sessionsMenu } = useSiteChrome();
   const [open, setOpen] = useState(false);
   const closeTimer = useRef<number | null>(null);
   const menuId = useId();
   const active = isActivePath(pathname, item.href);
   const useMotion = animated && !reduceMotion;
+  const sessions = pickSessionsForNav(sessionsMenu);
 
   const clearCloseTimer = () => {
     if (closeTimer.current) {
@@ -141,45 +164,26 @@ export function ReikiDesktopNavMenu({ item, animated = true }: ReikiNavMenuProps
 
       <AnimatePresence>
         {open ? (
-          <div className="reiki-mega-panel-anchor">
+          <div className="sessions-mega-panel-anchor">
             <motion.div
               id={menuId}
-              className="reiki-mega-panel"
+              className="reiki-mega-panel courses-mega-panel"
               role="menu"
-              aria-label="Reiki menu"
+              aria-label="Book a session menu"
               initial={reduceMotion ? false : { opacity: 0, y: 10, scale: 0.98 }}
               animate={{ opacity: 1, y: 0, scale: 1 }}
               exit={reduceMotion ? undefined : { opacity: 0, y: 8, scale: 0.98 }}
               transition={{ duration: 0.28, ease: [0.22, 1, 0.36, 1] }}
             >
               <div className="reiki-mega-panel-glow" aria-hidden />
-              <div className="reiki-mega-grid">
-                <div className="reiki-mega-links">
-                  <p className="reiki-mega-eyebrow">Explore Reiki</p>
-                  {reikiNavLinks.map((link) => (
-                    <a key={link.id} href={link.href} className="reiki-mega-link" role="menuitem">
-                      <span className="reiki-mega-link-label">{link.label}</span>
-                      <span className="reiki-mega-link-blurb">{link.blurb}</span>
-                    </a>
-                  ))}
-                  <a href={item.href} className="reiki-mega-overview" role="menuitem">
-                    View full Reiki page →
-                  </a>
-                </div>
-                {reikiMenuCourse ? (
-                  <CoursePromoCard course={reikiMenuCourse} />
-                ) : (
-                  <a href="/courses" className="reiki-mega-course reiki-mega-course-fallback" role="menuitem">
-                    <span className="reiki-mega-course-body">
-                      <span className="reiki-mega-course-kicker">Catalog</span>
-                      <span className="reiki-mega-course-title">Browse Reiki courses</span>
-                      <span className="reiki-mega-course-cta">
-                        Open courses
-                        <span aria-hidden>→</span>
-                      </span>
-                    </span>
-                  </a>
-                )}
+              <div className="sessions-mega-list">
+                <p className="reiki-mega-eyebrow">Private sessions</p>
+                <SessionsList sessions={sessions} />
+              </div>
+              <div className="courses-mega-footer">
+                <a href={item.href} className="reiki-mega-overview" role="menuitem">
+                  View all sessions →
+                </a>
               </div>
             </motion.div>
           </div>
@@ -189,7 +193,7 @@ export function ReikiDesktopNavMenu({ item, animated = true }: ReikiNavMenuProps
   );
 }
 
-export function ReikiMobileNavMenu({
+export function SessionsMobileNavMenu({
   item,
   onNavigate,
   open,
@@ -201,10 +205,11 @@ export function ReikiMobileNavMenu({
   onToggle: () => void;
 }) {
   const pathname = usePathname();
-  const { reikiMenuCourse } = useSiteChrome();
+  const { sessionsMenu } = useSiteChrome();
   const active = isActivePath(pathname, item.href);
+  const sessions = pickSessionsForNav(sessionsMenu);
 
-  if (!isReikiNavItem(item)) return null;
+  if (!isSessionsNavItem(item)) return null;
 
   return (
     <div className={["reiki-mobile-menu", open ? "reiki-mobile-menu-open" : ""].join(" ")}>
@@ -237,21 +242,14 @@ export function ReikiMobileNavMenu({
             exit={{ height: 0, opacity: 0 }}
             transition={{ duration: 0.3, ease: [0.22, 1, 0.36, 1] }}
           >
-            <div className="reiki-mobile-panel-inner">
-              {reikiNavLinks.map((link) => (
-                <a
-                  key={link.id}
-                  href={link.href}
-                  className="reiki-mobile-link"
-                  onClick={onNavigate}
-                >
-                  <span className="reiki-mobile-link-label">{link.label}</span>
-                  <span className="reiki-mobile-link-blurb">{link.blurb}</span>
-                </a>
-              ))}
-              {reikiMenuCourse ? (
-                <CoursePromoCard course={reikiMenuCourse} onNavigate={onNavigate} />
-              ) : null}
+            <div className="reiki-mobile-panel-inner courses-mobile-panel-inner">
+              <div className="sessions-mega-list sessions-mega-list-mobile">
+                <p className="reiki-mega-eyebrow">Private sessions</p>
+                <SessionsList sessions={sessions} onNavigate={onNavigate} />
+              </div>
+              <a href={item.href} className="courses-mobile-all" onClick={onNavigate}>
+                View all sessions →
+              </a>
             </div>
           </motion.div>
         ) : null}

@@ -1,8 +1,11 @@
 "use client";
 
 import { createContext, useContext, type ReactNode } from "react";
+import type { BlogMenuPost } from "@/lib/blog-nav";
+import type { CoursesMenuCourse } from "@/lib/courses-nav";
 import type { SiteNavItem } from "@/lib/frontpage-content";
 import type { ReikiMenuCourse } from "@/lib/reiki-nav";
+import type { SessionsMenuItem } from "@/lib/sessions-nav";
 import { site } from "@/lib/site";
 
 type SiteChromeValue = {
@@ -11,6 +14,9 @@ type SiteChromeValue = {
   cta: string;
   sanskrit: string;
   reikiMenuCourse: ReikiMenuCourse | null;
+  coursesMenu: CoursesMenuCourse[];
+  sessionsMenu: SessionsMenuItem[];
+  blogMenu: BlogMenuPost[];
 };
 
 const SiteChromeContext = createContext<SiteChromeValue>({
@@ -24,6 +30,9 @@ const SiteChromeContext = createContext<SiteChromeValue>({
   cta: site.cta,
   sanskrit: site.sanskrit,
   reikiMenuCourse: null,
+  coursesMenu: [],
+  sessionsMenu: [],
+  blogMenu: [],
 });
 
 export function SiteChromeProvider({

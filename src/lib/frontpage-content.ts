@@ -1,6 +1,7 @@
 import { aboutContent, heroSlides, site } from "@/lib/site";
+import type { NavIconId } from "@/components/sections/nav/NavIcon";
 
-export type NavIconId = "reiki" | "healing" | "nutrition" | "transformation";
+export type { NavIconId };
 
 export type SiteNavItem = {
   id: string;
@@ -46,10 +47,60 @@ export type AboutContent = {
 
 export const NAV_ICON_OPTIONS: { value: NavIconId; label: string }[] = [
   { value: "reiki", label: "Reiki" },
-  { value: "healing", label: "Healing" },
-  { value: "nutrition", label: "Nutrition" },
-  { value: "transformation", label: "Transformation" },
+  { value: "courses", label: "Courses" },
+  { value: "sessions", label: "Book a Session" },
+  { value: "blog", label: "Articles" },
+  { value: "contact", label: "Contact Us" },
 ];
+
+const NAV_ICON_IDS: NavIconId[] = ["reiki", "courses", "sessions", "blog", "contact"];
+
+const LEGACY_NAV_BY_LABEL: Record<
+  string,
+  { label: string; href: string; icon: NavIconId }
+> = {
+  HEALING: { label: "COURSES", href: "/courses", icon: "courses" },
+  NUTRITION: { label: "BOOK A SESSION", href: "/sessions", icon: "sessions" },
+  TRANSFORM: { label: "ARTICLES", href: "/articles", icon: "blog" },
+  TRANSFORMATIONATION: { label: "ARTICLES", href: "/articles", icon: "blog" },
+  BLOG: { label: "ARTICLES", href: "/articles", icon: "blog" },
+};
+
+const LEGACY_ICON_MAP: Record<string, NavIconId> = {
+  healing: "courses",
+  nutrition: "sessions",
+  transformation: "blog",
+};
+
+function isNavIconId(value: unknown): value is NavIconId {
+  return typeof value === "string" && NAV_ICON_IDS.includes(value as NavIconId);
+}
+
+function resolveNavIcon(value: unknown): NavIconId {
+  if (isNavIconId(value)) return value;
+  if (typeof value === "string" && value in LEGACY_ICON_MAP) {
+    return LEGACY_ICON_MAP[value];
+  }
+  return "reiki";
+}
+
+function resolveLegacyNav(labelRaw: string, hrefRaw: string, iconRaw: unknown) {
+  const byLabel = LEGACY_NAV_BY_LABEL[labelRaw.toUpperCase()];
+  if (byLabel) return byLabel;
+
+  // Catch leftover admin edits that changed casing/wording but kept old destinations.
+  if (hrefRaw === "#testimonials" || hrefRaw === "/#testimonials" || iconRaw === "transformation") {
+    return LEGACY_NAV_BY_LABEL.TRANSFORM;
+  }
+  if (hrefRaw === "#insights" || hrefRaw === "/#insights" || iconRaw === "nutrition") {
+    return LEGACY_NAV_BY_LABEL.NUTRITION;
+  }
+  if (hrefRaw === "#schedule" || hrefRaw === "/#schedule" || iconRaw === "healing") {
+    return LEGACY_NAV_BY_LABEL.HEALING;
+  }
+
+  return null;
+}
 
 export const DEFAULT_QUOTE_LABEL = "The heart of our practice";
 
@@ -114,30 +165,58 @@ export function normalizeNavItems(raw: unknown): SiteNavItem[] {
     }));
   }
 
-  return raw
+  const items = raw
     .map((item, index) => {
       if (!item || typeof item !== "object") return null;
       const row = item as Record<string, unknown>;
-      const icon = row.icon;
-      const validIcon =
-        icon === "reiki" || icon === "healing" || icon === "nutrition" || icon === "transformation"
-          ? icon
-          : "reiki";
-      const label = typeof row.label === "string" ? row.label.trim() : "";
-      const href = typeof row.href === "string" ? row.href.trim() : "";
-      if (!label || !href) return null;
-      const resolvedHref =
-        label.toUpperCase() === "REIKI" && (href === "#courses" || href === "/#courses")
-          ? "/reiki"
-          : href;
+      const labelRaw = typeof row.label === "string" ? row.label.trim() : "";
+      const hrefRaw = typeof row.href === "string" ? row.href.trim() : "";
+      if (!labelRaw || !hrefRaw) return null;
+
+      const legacy = resolveLegacyNav(labelRaw, hrefRaw, row.icon);
+      const label = legacy?.label ?? labelRaw;
+      let href = legacy?.href ?? hrefRaw;
+      const icon = legacy?.icon ?? resolveNavIcon(row.icon);
+
+      if (label.toUpperCase() === "REIKI" && (href === "#courses" || href === "/#courses")) {
+        href = "/reiki";
+      }
+
+      if (href === "/blog" || href.startsWith("/blog/") || href.startsWith("/blog#")) {
+        href = href.replace(/^\/blog/, "/articles");
+      }
+
       return {
         id: typeof row.id === "string" && row.id ? row.id : `nav-${index + 1}`,
         label,
-        href: resolvedHref,
-        icon: validIcon,
+        href,
+        icon,
       } satisfies SiteNavItem;
     })
     .filter((item): item is SiteNavItem => Boolean(item));
+
+  const hasContact = items.some((item) => {
+    const label = item.label.toUpperCase();
+    return label.includes("CONTACT") || item.href.includes("contact");
+  });
+
+  if (!hasContact) {
+    items.push({
+      id: `nav-${items.length + 1}`,
+      label: "CONTACT US",
+      href: "/#contact",
+      icon: "contact",
+    });
+  }
+
+  return items.length > 0
+    ? items
+    : site.nav.map((item, index) => ({
+        id: `nav-${index + 1}`,
+        label: item.label,
+        href: item.href,
+        icon: item.icon,
+      }));
 }
 
 export function parseNavJson(navJson: string | null | undefined): SiteNavItem[] {

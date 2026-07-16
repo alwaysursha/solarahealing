@@ -3,21 +3,40 @@
 import { motion, useReducedMotion } from "framer-motion";
 import { useSiteChrome } from "@/components/storefront/SiteChromeProvider";
 import { desktopNavStagger } from "@/lib/nav-motion";
+import { BlogDesktopNavMenu } from "@/components/sections/nav/BlogNavMenu";
+import { CoursesDesktopNavMenu } from "@/components/sections/nav/CoursesNavMenu";
 import { DesktopNavLink } from "@/components/sections/nav/NavLink";
 import { ReikiDesktopNavMenu } from "@/components/sections/nav/ReikiNavMenu";
+import { SessionsDesktopNavMenu } from "@/components/sections/nav/SessionsNavMenu";
+import { isBlogNavItem } from "@/lib/blog-nav";
+import { isCoursesNavItem } from "@/lib/courses-nav";
+import type { SiteNavItem } from "@/lib/frontpage-content";
 import { isReikiNavItem } from "@/lib/reiki-nav";
+import { isSessionsNavItem } from "@/lib/sessions-nav";
+
+function DesktopNavItem({ item, animated }: { item: SiteNavItem; animated: boolean }) {
+  if (isReikiNavItem(item)) {
+    return <ReikiDesktopNavMenu item={item} animated={animated} />;
+  }
+  if (isCoursesNavItem(item)) {
+    return <CoursesDesktopNavMenu item={item} animated={animated} />;
+  }
+  if (isSessionsNavItem(item)) {
+    return <SessionsDesktopNavMenu item={item} animated={animated} />;
+  }
+  if (isBlogNavItem(item)) {
+    return <BlogDesktopNavMenu item={item} animated={animated} />;
+  }
+  return <DesktopNavLink item={item} animated={animated} />;
+}
 
 export function DesktopNav() {
   const reduceMotion = useReducedMotion();
   const { nav } = useSiteChrome();
 
-  const items = nav.map((item) =>
-    isReikiNavItem(item) ? (
-      <ReikiDesktopNavMenu key={item.id} item={item} animated={!reduceMotion} />
-    ) : (
-      <DesktopNavLink key={item.id} item={item} animated={!reduceMotion} />
-    ),
-  );
+  const items = nav.map((item) => (
+    <DesktopNavItem key={item.id} item={item} animated={!reduceMotion} />
+  ));
 
   if (reduceMotion) {
     return (

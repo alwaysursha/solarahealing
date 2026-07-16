@@ -293,8 +293,8 @@ export function AdminDashboard({
             eyebrow="Publishing"
             title="Total Articles"
             value={stats.articles}
-            detail="Blog posts and editorial content on the site."
-            href="/admin/blog"
+            detail="Articles and editorial content on the site."
+            href="/admin/articles"
             linkLabel="View articles"
             tone="violet"
             icon={<ArticlesIcon />}

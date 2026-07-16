@@ -12,7 +12,7 @@ const links = [
   { href: "/admin/sessions", label: "Private Sessions" },
   { href: "/admin/workshops", label: "Workshops" },
   { href: "/admin/web", label: "Web Development" },
-  { href: "/admin/blog", label: "Blog & Articles" },
+  { href: "/admin/articles", label: "Articles" },
   { href: "/admin/customers", label: "Customers" },
   { href: "/admin/orders", label: "Orders" },
   { href: "/admin/profile", label: "Profile" },

@@ -2,9 +2,12 @@
 
 import { motion, useReducedMotion } from "framer-motion";
 import Link from "next/link";
-import { useRef, type ReactNode } from "react";
+import { useRef, useState, type ReactNode } from "react";
 import { MobileNavLink } from "@/components/sections/nav/NavLink";
+import { BlogMobileNavMenu } from "@/components/sections/nav/BlogNavMenu";
+import { CoursesMobileNavMenu } from "@/components/sections/nav/CoursesNavMenu";
 import { ReikiMobileNavMenu } from "@/components/sections/nav/ReikiNavMenu";
+import { SessionsMobileNavMenu } from "@/components/sections/nav/SessionsNavMenu";
 import {
   mobileNavFooterVariants,
   mobileNavItemVariants,
@@ -13,7 +16,10 @@ import {
 } from "@/lib/nav-motion";
 import { MOBILE_NAV_WIDTH_PERCENT } from "@/lib/panel-path";
 import { useSiteChrome } from "@/components/storefront/SiteChromeProvider";
+import { isBlogNavItem } from "@/lib/blog-nav";
+import { isCoursesNavItem } from "@/lib/courses-nav";
 import { isReikiNavItem } from "@/lib/reiki-nav";
+import { isSessionsNavItem } from "@/lib/sessions-nav";
 import type { SiteNavItem } from "@/lib/frontpage-content";
 
 type MobileNavMenuProps = {
@@ -77,14 +83,54 @@ function MobileNavFooter({
   );
 }
 
+function MobileNavItem({
+  item,
+  index,
+  animated,
+  onClose,
+  openSubmenuId,
+  onToggleSubmenu,
+}: {
+  item: SiteNavItem;
+  index: number;
+  animated: boolean;
+  onClose: () => void;
+  openSubmenuId: string | null;
+  onToggleSubmenu: (id: string) => void;
+}) {
+  const open = openSubmenuId === item.id;
+  const onToggle = () => onToggleSubmenu(item.id);
+
+  if (isReikiNavItem(item)) {
+    return <ReikiMobileNavMenu item={item} onNavigate={onClose} open={open} onToggle={onToggle} />;
+  }
+  if (isCoursesNavItem(item)) {
+    return <CoursesMobileNavMenu item={item} onNavigate={onClose} open={open} onToggle={onToggle} />;
+  }
+  if (isSessionsNavItem(item)) {
+    return <SessionsMobileNavMenu item={item} onNavigate={onClose} open={open} onToggle={onToggle} />;
+  }
+  if (isBlogNavItem(item)) {
+    return <BlogMobileNavMenu item={item} onNavigate={onClose} open={open} onToggle={onToggle} />;
+  }
+  return (
+    <MobileNavLink item={item} index={index} onNavigate={onClose} animated={animated} />
+  );
+}
+
 export function MobileNavMenu({ items, onClose, onLogin }: MobileNavMenuProps) {
   const reduceMotion = useReducedMotion();
   const staticMotion = reduceMotion;
   const shellRef = useRef<HTMLDivElement>(null);
+  const [openSubmenuId, setOpenSubmenuId] = useState<string | null>(null);
 
   const handleLogin = () => {
     onClose();
     onLogin();
+  };
+
+  const toggleSubmenu = (id: string) => {
+    setOpenSubmenuId((current) => (current === id ? null : id));
   };
 
   const shellProps = {
@@ -93,19 +139,17 @@ export function MobileNavMenu({ items, onClose, onLogin }: MobileNavMenuProps) {
     style: { width: `${MOBILE_NAV_WIDTH_PERCENT}%` },
   };
 
-  const linkList = items.map((item, index) =>
-    isReikiNavItem(item) ? (
-      <ReikiMobileNavMenu key={item.href} item={item} onNavigate={onClose} />
-    ) : (
-      <MobileNavLink
-        key={item.href}
-        item={item}
-        index={index}
-        onNavigate={onClose}
-        animated={!staticMotion}
-      />
-    ),
-  );
+  const linkList = items.map((item, index) => (
+    <MobileNavItem
+      key={item.id}
+      item={item}
+      index={index}
+      animated={!staticMotion}
+      onClose={onClose}
+      openSubmenuId={openSubmenuId}
+      onToggleSubmenu={toggleSubmenu}
+    />
+  ));
 
   if (staticMotion) {
     return (
@@ -138,12 +182,15 @@ export function MobileNavMenu({ items, onClose, onLogin }: MobileNavMenuProps) {
           animate="open"
         >
           {items.map((item, index) => (
-            <motion.div key={item.href} variants={mobileNavItemVariants}>
-              {isReikiNavItem(item) ? (
-                <ReikiMobileNavMenu item={item} onNavigate={onClose} />
-              ) : (
-                <MobileNavLink item={item} index={index} onNavigate={onClose} />
-              )}
+            <motion.div key={item.id} variants={mobileNavItemVariants}>
+              <MobileNavItem
+                item={item}
+                index={index}
+                animated
+                onClose={onClose}
+                openSubmenuId={openSubmenuId}
+                onToggleSubmenu={toggleSubmenu}
+              />
             </motion.div>
           ))}
         </motion.nav>

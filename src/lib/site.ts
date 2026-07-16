@@ -7,9 +7,10 @@ export const site = {
     "Experience the transformative power of Reiki — a sacred Japanese-Indian healing practice that channels universal life energy to restore balance, peace, and vitality.",
   nav: [
     { label: "REIKI", href: "/reiki", icon: "reiki" },
-    { label: "HEALING", href: "#schedule", icon: "healing" },
-    { label: "NUTRITION", href: "#insights", icon: "nutrition" },
-    { label: "TRANSFORMATION", href: "#testimonials", icon: "transformation" },
+    { label: "COURSES", href: "/courses", icon: "courses" },
+    { label: "BOOK A SESSION", href: "/sessions", icon: "sessions" },
+    { label: "ARTICLES", href: "/articles", icon: "blog" },
+    { label: "CONTACT US", href: "/#contact", icon: "contact" },
   ],
   cta: "Book a Session",
   contact: {
@@ -167,6 +168,10 @@ export const workshopsIntro =
   "Join our live online Reiki workshops and experience guided, interactive training from the comfort of your home. Whether you're beginning your Reiki journey or advancing your practice, each workshop offers hands-on learning, personalized guidance, and a supportive community to help you build confidence, deepen your understanding, and awaken your natural healing abilities. Reserve your spot and take the next step on your path to healing and personal transformation.";
 
 export function formatCad(price: number) {
+  if (!Number.isFinite(price) || price <= 0) {
+    return "FREE";
+  }
+
   return `${new Intl.NumberFormat("en-CA", {
     style: "currency",
     currency: "CAD",
@@ -578,7 +583,7 @@ export const footerColumns = [
           { label: "Vision & Mission", href: "#about" },
           { label: "Leadership", href: "#about" },
           { label: "Our Services", href: "#schedule" },
-          { label: "Knowledge Cove", href: "/blog" },
+          { label: "Knowledge Cove", href: "/articles" },
         ],
       },
       {

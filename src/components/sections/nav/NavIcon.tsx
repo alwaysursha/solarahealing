@@ -1,4 +1,4 @@
-export type NavIconId = "reiki" | "healing" | "nutrition" | "transformation";
+export type NavIconId = "reiki" | "courses" | "sessions" | "blog" | "contact";
 
 type NavIconProps = {
   id: NavIconId;
@@ -19,38 +19,59 @@ export function NavIcon({ id, className = "h-4 w-4" }: NavIconProps) {
           <path strokeLinecap="round" strokeLinejoin="round" d="M12 8.75v6.5M8.75 12h6.5" />
         </svg>
       );
-    case "healing":
+    case "courses":
       return (
         <svg className={className} fill="none" viewBox="0 0 24 24" stroke="currentColor" strokeWidth={1.75} aria-hidden>
           <path
             strokeLinecap="round"
             strokeLinejoin="round"
-            d="M12 20.25c3.5-3.25 5.75-6.35 5.75-9.35a5.75 5.75 0 10-11.5 0c0 3 2.25 6.1 5.75 9.35z"
+            d="M4.5 5.25c1.8-.9 3.9-.9 5.7 0v13.5c-1.8-.9-3.9-.9-5.7 0V5.25Z"
           />
-          <path strokeLinecap="round" strokeLinejoin="round" d="M12 12.5v4.25" />
+          <path
+            strokeLinecap="round"
+            strokeLinejoin="round"
+            d="M13.8 5.25c1.8-.9 3.9-.9 5.7 0v13.5c-1.8-.9-3.9-.9-5.7 0V5.25Z"
+          />
+          <path strokeLinecap="round" strokeLinejoin="round" d="M12 5.25v13.5" />
         </svg>
       );
-    case "nutrition":
+    case "sessions":
       return (
         <svg className={className} fill="none" viewBox="0 0 24 24" stroke="currentColor" strokeWidth={1.75} aria-hidden>
+          <circle cx="9" cy="8.25" r="2.5" strokeLinecap="round" strokeLinejoin="round" />
+          <circle cx="16.25" cy="9" r="2" strokeLinecap="round" strokeLinejoin="round" />
           <path
             strokeLinecap="round"
             strokeLinejoin="round"
-            d="M12 21s6-4.5 6-10a4.5 4.5 0 00-9-2.25A4.5 4.5 0 006 11c0 5.5 6 10 6 10z"
+            d="M3.75 18.75c.6-2.7 2.7-4.2 5.25-4.2s4.65 1.5 5.25 4.2"
           />
-          <path strokeLinecap="round" strokeLinejoin="round" d="M12 11v10" />
+          <path
+            strokeLinecap="round"
+            strokeLinejoin="round"
+            d="M14.1 14.7c1.65-.35 3.3.35 4.15 1.95"
+          />
         </svg>
       );
-    case "transformation":
+    case "blog":
       return (
         <svg className={className} fill="none" viewBox="0 0 24 24" stroke="currentColor" strokeWidth={1.75} aria-hidden>
           <path
             strokeLinecap="round"
             strokeLinejoin="round"
-            d="M12 4.5c-2.2 2.6-3.25 4.65-3.25 6.75a3.25 3.25 0 106.5 0c0-2.1-1.05-4.15-3.25-6.75z"
+            d="M5.25 4.5h13.5A.75.75 0 0 1 19.5 5.25v13.5a.75.75 0 0 1-.75.75H5.25a.75.75 0 0 1-.75-.75V5.25a.75.75 0 0 1 .75-.75Z"
           />
-          <path strokeLinecap="round" strokeLinejoin="round" d="M7.5 17.25c1.2 1.35 2.85 2.25 4.5 2.25s3.3-.9 4.5-2.25" />
-          <path strokeLinecap="round" strokeLinejoin="round" d="M9 20.25h6" />
+          <path strokeLinecap="round" strokeLinejoin="round" d="M8.25 8.25h7.5M8.25 12h7.5M8.25 15.75h4.5" />
+        </svg>
+      );
+    case "contact":
+      return (
+        <svg className={className} fill="none" viewBox="0 0 24 24" stroke="currentColor" strokeWidth={1.75} aria-hidden>
+          <path
+            strokeLinecap="round"
+            strokeLinejoin="round"
+            d="M3.75 6.75A2.25 2.25 0 0 1 6 4.5h12a2.25 2.25 0 0 1 2.25 2.25v10.5A2.25 2.25 0 0 1 18 19.5H6a2.25 2.25 0 0 1-2.25-2.25V6.75Z"
+          />
+          <path strokeLinecap="round" strokeLinejoin="round" d="m4.5 7.5 7.5 5.25L19.5 7.5" />
         </svg>
       );
     default: {
