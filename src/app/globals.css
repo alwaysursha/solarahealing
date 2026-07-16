@@ -2641,10 +2641,9 @@ html[data-brand-theme="8"] .bg-spiritual-shimmer {
   position: relative;
   isolation: isolate;
   overflow: hidden;
-  /* Closer to the header on #contact; leave room above the panel bottom edge */
-  scroll-margin-top: 1.25rem;
-  scroll-margin-bottom: 7rem;
-  padding: 5.5rem 1.35rem 10rem;
+  scroll-margin-top: 7.25rem;
+  /* Extra room below so #contact can scroll up under the header */
+  padding: 5.5rem 1.35rem max(7rem, 50vh);
   background:
     linear-gradient(
       165deg,
@@ -2657,9 +2656,8 @@ html[data-brand-theme="8"] .bg-spiritual-shimmer {
 
 @media (min-width: 768px) {
   .contact-section {
-    scroll-margin-top: 1.5rem;
-    scroll-margin-bottom: 7.5rem;
-    padding: 6.5rem 2.5rem 11rem;
+    scroll-margin-top: 8rem;
+    padding: 6.5rem 2.5rem max(8rem, 52vh);
   }
 }
 
@@ -5209,8 +5207,15 @@ html[data-brand-theme="10"] section[aria-label="Hero highlights"] [role="tablist
   isolation: isolate;
   z-index: 10;
   -webkit-overflow-scrolling: touch;
-  /* Keep in-view content clear of the panel’s bottom curve / purple edge */
+  /* Keep hash targets clear of the fixed header and bottom panel edge */
+  scroll-padding-top: 7.5rem;
   scroll-padding-bottom: 4.5rem;
+}
+
+@media (min-width: 768px) {
+  .site-scroll-panel {
+    scroll-padding-top: 8rem;
+  }
 }
 
 .site-scroll-main {

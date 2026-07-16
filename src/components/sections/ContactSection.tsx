@@ -74,7 +74,6 @@ export function ContactSection({ contact }: { contact: ContactSectionInfo }) {
   const [clientError, setClientError] = useState<string | null>(null);
   const [whatsappOpened, setWhatsappOpened] = useState(false);
   const formRef = useRef<HTMLFormElement>(null);
-  const submitRowRef = useRef<HTMLDivElement>(null);
   const whatsappDigits = normalizeWhatsAppNumber(contact.whatsapp);
   const phoneHref = contact.phone.replace(/[^\d+]/g, "");
   const showSuccess = state.ok || whatsappOpened;
@@ -82,39 +81,6 @@ export function ContactSection({ contact }: { contact: ContactSectionInfo }) {
   useEffect(() => {
     if (state.ok) formRef.current?.reset();
   }, [state.ok]);
-
-  // Hash jumps can leave the submit row under the panel’s bottom edge — nudge up.
-  useEffect(() => {
-    if (typeof window === "undefined") return;
-
-    let frame = 0;
-    const clearBottomEdge = () => {
-      if (window.location.hash !== "#contact") return;
-      const panel = document.querySelector(".site-scroll-panel");
-      const submitRow = submitRowRef.current;
-      if (!(panel instanceof HTMLElement) || !submitRow) return;
-
-      frame = window.requestAnimationFrame(() => {
-        const panelRect = panel.getBoundingClientRect();
-        const rowRect = submitRow.getBoundingClientRect();
-        const clearance = 240;
-        const overflow = rowRect.bottom - (panelRect.bottom - clearance);
-        if (overflow > 0) {
-          panel.scrollBy({
-            top: overflow,
-            behavior: reduceMotion ? "auto" : "smooth",
-          });
-        }
-      });
-    };
-
-    clearBottomEdge();
-    window.addEventListener("hashchange", clearBottomEdge);
-    return () => {
-      window.cancelAnimationFrame(frame);
-      window.removeEventListener("hashchange", clearBottomEdge);
-    };
-  }, [reduceMotion]);
 
   const sendViaWhatsApp = () => {
     setClientError(null);
@@ -248,7 +214,7 @@ export function ContactSection({ contact }: { contact: ContactSectionInfo }) {
 
                   <p className="contact-send-hint">Choose how you’d like to send this message</p>
 
-                  <div ref={submitRowRef} className="contact-submit-row">
+                  <div className="contact-submit-row">
                     <motion.button
                       type="submit"
                       className="contact-submit glow-btn-primary"

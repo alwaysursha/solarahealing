@@ -1,5 +1,6 @@
 "use client";
 
+import { usePathname } from "next/navigation";
 import { useCallback, useEffect, useRef, useState, type ReactNode } from "react";
 import { buildPanelPath, buildBorderTracePath } from "@/lib/panel-path";
 import { Header } from "@/components/sections/Header";
@@ -24,7 +25,10 @@ const PANEL_POSITION = [
   "lg:bottom-2.5 lg:left-2",
 ].join(" ");
 
+const HASH_SCROLL_GAP_PX = 14;
+
 export function SiteShell({ children }: SiteShellProps) {
+  const pathname = usePathname();
   const panelRef = useRef<HTMLDivElement>(null);
   const headerRef = useRef<HTMLDivElement>(null);
   const [geometry, setGeometry] = useState<PanelGeometry>();
@@ -54,6 +58,33 @@ export function SiteShell({ children }: SiteShellProps) {
     }
   }, []);
 
+  const scrollToHashTarget = useCallback(() => {
+    const hash = window.location.hash;
+    if (!hash || hash.length < 2) return;
+
+    const panel = panelRef.current;
+    const header = headerRef.current;
+    if (!panel) return;
+
+    let id = hash.slice(1);
+    try {
+      id = decodeURIComponent(id);
+    } catch {
+      // keep raw id
+    }
+
+    const target = document.getElementById(id);
+    if (!target || !panel.contains(target)) return;
+
+    const panelRect = panel.getBoundingClientRect();
+    const headerBottom = header?.getBoundingClientRect().bottom ?? panelRect.top + 88;
+    const offset = Math.max(0, headerBottom - panelRect.top) + HASH_SCROLL_GAP_PX;
+    const delta = target.getBoundingClientRect().top - panelRect.top - offset;
+    if (Math.abs(delta) < 2) return;
+
+    panel.scrollBy({ top: delta, behavior: "smooth" });
+  }, []);
+
   useEffect(() => {
     updateClip();
 
@@ -77,6 +108,23 @@ export function SiteShell({ children }: SiteShellProps) {
       window.removeEventListener("resize", scheduleUpdate);
     };
   }, [updateClip]);
+
+  // Native hash scrolling fights our fixed header + custom scroll panel — align manually.
+  useEffect(() => {
+    if (!window.location.hash) return;
+
+    const timers = [
+      window.setTimeout(scrollToHashTarget, 0),
+      window.setTimeout(scrollToHashTarget, 120),
+      window.setTimeout(scrollToHashTarget, 320),
+    ];
+
+    window.addEventListener("hashchange", scrollToHashTarget);
+    return () => {
+      timers.forEach((timer) => window.clearTimeout(timer));
+      window.removeEventListener("hashchange", scrollToHashTarget);
+    };
+  }, [pathname, scrollToHashTarget]);
 
   return (
     <div className="site-shell fixed inset-0 overflow-hidden">
