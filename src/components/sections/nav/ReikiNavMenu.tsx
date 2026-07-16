@@ -249,6 +249,9 @@ export function ReikiMobileNavMenu({
                   <span className="reiki-mobile-link-blurb">{link.blurb}</span>
                 </a>
               ))}
+              <a href={item.href} className="courses-mobile-all" onClick={onNavigate}>
+                View full Reiki page →
+              </a>
               {reikiMenuCourse ? (
                 <CoursePromoCard course={reikiMenuCourse} onNavigate={onNavigate} />
               ) : null}

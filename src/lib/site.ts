@@ -583,7 +583,7 @@ export const footerColumns = [
           { label: "Vision & Mission", href: "#about" },
           { label: "Leadership", href: "#about" },
           { label: "Our Services", href: "#schedule" },
-          { label: "Knowledge Cove", href: "/articles" },
+          { label: "Articles", href: "/articles" },
         ],
       },
       {
@@ -614,22 +614,9 @@ export const footerColumns = [
   {
     groups: [
       {
-        title: "Healing",
-        links: [
-          { label: "About Healing at Soulara", href: "#about" },
-          { label: "Book an Appointment", href: "#schedule" },
-        ],
-      },
-    ],
-  },
-  {
-    groups: [
-      {
         title: "Contact Us",
         links: [
           { label: "Soulara Healing Academy", href: "#schedule" },
-          { label: "Reiki Healing Temple", href: "#schedule" },
-          { label: "Mind Magic India", href: "#schedule" },
         ],
       },
       {
