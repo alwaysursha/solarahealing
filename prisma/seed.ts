@@ -26,6 +26,10 @@ import {
   normalizeHeroSlides,
   parseNavJson,
 } from "../src/lib/frontpage-content";
+import {
+  REIKI_SECTION_META,
+  reikiPageDefaults,
+} from "../src/lib/reiki-page";
 import { SITE_DESCRIPTION, SITE_NAME } from "../src/lib/constants";
 
 config();
@@ -121,6 +125,13 @@ function sectionEntries() {
       label: "Testimonials",
       content: JSON.stringify(testimonials),
     },
+    ...REIKI_SECTION_META.map((section) => ({
+      id: `reiki-${section.sectionKey}`,
+      pageKey: "reiki" as const,
+      sectionKey: section.sectionKey,
+      label: section.label,
+      content: JSON.stringify(reikiPageDefaults[section.sectionKey]),
+    })),
   ];
 }
 

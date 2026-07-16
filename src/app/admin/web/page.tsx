@@ -10,6 +10,12 @@ const MAIN_LINKS = [
     description: "Site menu, hero slides, quote box, and About Us — with live preview and image uploads.",
     ready: true,
   },
+  {
+    href: "/admin/web/reiki",
+    title: "Reiki page",
+    description: "Hero, What is Reiki, benefits, chakras, pathways, and closing CTA for /reiki.",
+    ready: true,
+  },
 ] as const;
 
 export default function AdminWebPage() {
