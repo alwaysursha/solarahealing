@@ -27,6 +27,11 @@ const nextConfig: NextConfig = {
       },
       {
         protocol: "https",
+        hostname: "media.soularahealing.com",
+        pathname: "/**",
+      },
+      {
+        protocol: "https",
         hostname: "soularahealing.com",
         pathname: "/media/**",
       },

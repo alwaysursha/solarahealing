@@ -38,6 +38,7 @@
     "@tiptap/pm": "^3.27.4",
     "@tiptap/react": "^3.27.4",
     "@tiptap/starter-kit": "^3.27.4",
+    "aws4fetch": "^1.0.20",
     "bcryptjs": "^3.0.3",
     "framer-motion": "^12.42.2",
     "html2canvas": "^1.4.1",

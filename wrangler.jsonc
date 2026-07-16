@@ -29,5 +29,10 @@
       "bucket_name": "soulara-media",
       "preview_bucket_name": "soulara-media"
     }
-  ]
+  ],
+  // Set in Cloudflare dashboard / `wrangler secret` for production deploys:
+  // R2_PUBLIC_BASE_URL=https://pub-xxxx.r2.dev
+  "vars": {
+    "R2_BUCKET_NAME": "soulara-media"
+  }
 }
