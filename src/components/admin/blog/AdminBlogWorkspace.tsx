@@ -14,12 +14,12 @@ import {
 } from "@/lib/admin/actions";
 import { normalizeSlug } from "@/lib/slug";
 
-const AdminRichTextEditor = dynamic(
+const ArticleBodyEditor = dynamic(
   () =>
-    import("@/components/admin/AdminRichTextEditor").then((mod) => mod.AdminRichTextEditor),
+    import("@/components/admin/blog/ArticleBodyEditor").then((mod) => mod.ArticleBodyEditor),
   {
     ssr: false,
-    loading: () => <div className="admin-blog-editor-loading" aria-hidden />,
+    loading: () => <div className="article-body-editor-loading" aria-hidden />,
   },
 );
 
@@ -192,7 +192,7 @@ export function AdminBlogWorkspace({ articles }: { articles: AdminBlogArticle[] 
     });
   };
 
-  const previewHref = editor.slug ? `/blog/${editor.slug}` : "/blog";
+  const previewHref = editor.slug ? `/articles/${editor.slug}` : "/articles";
   const isNew = selectedId === "new" || !editor.id;
 
   return (
@@ -355,10 +355,10 @@ export function AdminBlogWorkspace({ articles }: { articles: AdminBlogArticle[] 
 
               <div className="admin-blog-field">
                 <span>Article body</span>
-                <AdminRichTextEditor
+                <ArticleBodyEditor
                   value={editor.body}
                   onChange={(html) => patch("body", html)}
-                  placeholder="Write the full article here. Use headings, lists, and links to keep it easy to read…"
+                  placeholder="Write the full article here. Use headings, lists, quotes, links, and images — styled exactly like the live article page…"
                 />
               </div>
             </div>
@@ -389,7 +389,7 @@ export function AdminBlogWorkspace({ articles }: { articles: AdminBlogArticle[] 
                     onChange={(event) => patch("slug", normalizeSlug(event.target.value))}
                     placeholder="auto-from-title"
                   />
-                  <em className="admin-blog-field-hint">/blog/{editor.slug || "your-slug"}</em>
+                  <em className="admin-blog-field-hint">/articles/{editor.slug || "your-slug"}</em>
                 </label>
 
                 <label className="admin-blog-field">
@@ -425,7 +425,7 @@ export function AdminBlogWorkspace({ articles }: { articles: AdminBlogArticle[] 
                   />
                   <span>
                     <strong>Published</strong>
-                    <em>Visible on /blog and eligible for the homepage.</em>
+                    <em>Visible on /articles and eligible for the homepage.</em>
                   </span>
                 </label>
 

@@ -3,12 +3,12 @@ import { AdminBlogManager } from "@/components/admin/blog/AdminBlogManager";
 
 export const dynamic = "force-dynamic";
 
-export default function AdminBlogPage() {
+export default function AdminArticlesPage() {
   return (
     <AdminShell
-      activePath="/admin/blog"
-      title="Blog & Articles"
-      description="Create and publish healing insights for the homepage and blog."
+      activePath="/admin/articles"
+      title="Articles"
+      description="Create and publish healing insights for the homepage and articles library."
     >
       <AdminBlogManager />
     </AdminShell>

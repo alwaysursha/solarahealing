@@ -70,6 +70,7 @@ export function Header() {
   const { totalQuantity, cartPulse } = useCart();
   const { accountPulse } = useEnrollmentGate();
   const postLoginRedirectHandled = useRef(false);
+  const headerRootRef = useRef<HTMLDivElement>(null);
   const firstName = session?.user?.name ? getFirstName(session.user.name) : null;
   const isLoggedIn = status === "authenticated" && Boolean(session?.user);
   const [navOpen, setNavOpen] = useState(false);
@@ -213,8 +214,39 @@ export function Header() {
     return () => window.removeEventListener("keydown", onKeyDown);
   }, [beginCloseCart, beginCloseLogin, cartOpen, loginOpen, navOpen]);
 
+  useEffect(() => {
+    if (!navOpen) return;
+
+    const closeFromPageInteraction = () => setNavOpen(false);
+
+    const onPointerDown = (event: PointerEvent) => {
+      const target = event.target;
+      if (!(target instanceof Node)) return;
+      if (headerRootRef.current?.contains(target)) return;
+      closeFromPageInteraction();
+    };
+
+    const onScroll = (event: Event) => {
+      const target = event.target;
+      if (target instanceof Node && headerRootRef.current?.contains(target)) {
+        return;
+      }
+      closeFromPageInteraction();
+    };
+
+    // Capture scroll from the page (and nested scrollers) while the menu is open.
+    window.addEventListener("scroll", onScroll, { capture: true, passive: true });
+    document.addEventListener("pointerdown", onPointerDown);
+
+    return () => {
+      window.removeEventListener("scroll", onScroll, true);
+      document.removeEventListener("pointerdown", onPointerDown);
+    };
+  }, [navOpen]);
+
   return (
     <motion.div
+      ref={headerRootRef}
       initial={reduceMotion ? undefined : { opacity: 0, y: -10 }}
       animate={reduceMotion ? undefined : { opacity: 1, y: 0 }}
       transition={{ duration: 0.5, delay: 0.1 }}

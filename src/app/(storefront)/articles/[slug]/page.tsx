@@ -21,7 +21,7 @@ export default async function BlogPostPage({ params }: PageProps) {
     <div className="article-page">
       <div className="article-page-aura" aria-hidden />
       <article className="article-page-inner">
-        <Link href="/blog" className="article-page-back">
+        <Link href="/articles" className="article-page-back">
           ← All articles
         </Link>
 

@@ -28,7 +28,7 @@ export default async function BlogIndexPage() {
           <ul className="article-index-grid">
             {posts.map((post) => (
               <li key={post.id}>
-                <Link href={`/blog/${post.slug}`} className="article-index-card">
+                <Link href={`/articles/${post.slug}`} className="article-index-card">
                   <div className="article-index-media">
                     {post.image ? (
                       <Image

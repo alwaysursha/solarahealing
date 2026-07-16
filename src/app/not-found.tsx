@@ -8,7 +8,7 @@ const pathways = [
   { label: "Courses", href: "/courses" },
   { label: "Private sessions", href: "/sessions" },
   { label: "Workshops", href: "/workshops" },
-  { label: "Articles", href: "/blog" },
+  { label: "Articles", href: "/articles" },
 ] as const;
 
 export default async function NotFound() {

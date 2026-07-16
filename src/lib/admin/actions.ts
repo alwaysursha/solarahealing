@@ -26,7 +26,7 @@ function revalidateAll() {
   revalidatePath("/courses");
   revalidatePath("/workshops");
   revalidatePath("/sessions");
-  revalidatePath("/blog");
+  revalidatePath("/articles");
 }
 
 export async function updateStorefrontSectionVisibilityAction(

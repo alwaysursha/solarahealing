@@ -13,6 +13,13 @@ const nextConfig: NextConfig = {
   experimental: {
     optimizePackageImports: ["framer-motion"],
   },
+  async redirects() {
+    return [
+      { source: "/blog", destination: "/articles", permanent: true },
+      { source: "/blog/:slug", destination: "/articles/:slug", permanent: true },
+      { source: "/admin/blog", destination: "/admin/articles", permanent: true },
+    ];
+  },
   images: {
     remotePatterns: [
       {

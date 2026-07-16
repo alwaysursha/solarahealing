@@ -52,27 +52,6 @@ function getSlideDirection(from: number, to: number, count: number) {
   return forward <= backward ? 1 : -1;
 }
 
-function LotusVisual({ className }: { className?: string }) {
-  return (
-    <svg viewBox="0 0 200 200" className={className} aria-hidden>
-      {[0, 45, 90, 135, 180, 225, 270, 315].map((angle, i) => (
-        <ellipse
-          key={angle}
-          cx="100"
-          cy="100"
-          rx="30"
-          ry="70"
-          fill="currentColor"
-          opacity={0.2 + (i % 3) * 0.06}
-          transform={`rotate(${angle} 100 100)`}
-        />
-      ))}
-      <circle cx="100" cy="100" r="20" fill="currentColor" opacity="0.35" />
-      <circle cx="100" cy="100" r="8" fill="currentColor" className="text-gold" opacity="0.85" />
-    </svg>
-  );
-}
-
 function HeroPhotoOverlays() {
   return (
     <>
@@ -119,12 +98,6 @@ function IllustratedSlideBackground({
         aria-hidden
       />
       <div className="pointer-events-none absolute inset-x-0 top-0 z-[1] h-px bg-gradient-to-r from-transparent via-purple-mid/20 to-transparent" />
-      <div className="pointer-events-none absolute -right-[8%] top-[8%] z-[2] hidden text-purple-mid/25 md:block lg:-right-[4%]">
-        <LotusVisual className="h-[min(52vw,420px)] w-[min(52vw,420px)]" />
-      </div>
-      <div className="pointer-events-none absolute right-[5%] top-[16%] z-[2] text-purple-mid/20 md:hidden">
-        <LotusVisual className="h-44 w-44" />
-      </div>
     </>
   );
 }

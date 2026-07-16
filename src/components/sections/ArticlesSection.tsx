@@ -55,7 +55,7 @@ function ReadLink({ label }: { label: string }) {
 function FeaturedArticleCard({ article }: { article: FeaturedArticle }) {
   return (
     <Link
-      href={`/blog/${article.slug}`}
+      href={`/articles/${article.slug}`}
       className="article-featured group relative z-0 block min-h-[26rem] overflow-hidden rounded-[1.75rem] md:min-h-[30rem]"
     >
       <Image
@@ -94,7 +94,7 @@ function SecondaryArticleCard({
 }) {
   return (
     <Link
-      href={`/blog/${article.slug}`}
+      href={`/articles/${article.slug}`}
       className="article-secondary group block overflow-hidden rounded-[1.35rem] border border-purple-deep/6 bg-white shadow-[0_8px_40px_-20px_rgba(45,27,78,0.12)] transition-all duration-500 hover:-translate-y-1 hover:border-gold/25 hover:shadow-[0_20px_50px_-20px_rgba(75,0,130,0.18)]"
     >
       <div className="relative aspect-[4/3] overflow-hidden">
@@ -135,7 +135,7 @@ function ArticleListItem({
   return (
     <motion.li variants={listItemReveal}>
       <Link
-        href={`/blog/${article.slug}`}
+        href={`/articles/${article.slug}`}
         className="article-list-item group grid grid-cols-[1fr_auto] items-center gap-5 py-8 md:grid-cols-[1fr_9.5rem] md:gap-8 md:py-9"
       >
         <div className="min-w-0">
@@ -228,7 +228,7 @@ export function ArticlesSection({
                 {list.map((article, index) => (
                   <li key={article.slug}>
                     <Link
-                      href={`/blog/${article.slug}`}
+                      href={`/articles/${article.slug}`}
                       className="article-list-item group grid grid-cols-[1fr_auto] items-center gap-5 py-8 md:grid-cols-[1fr_9.5rem] md:gap-8 md:py-9"
                     >
                       <div className="min-w-0">
@@ -280,7 +280,7 @@ export function ArticlesSection({
               transition={{ duration: 0.7, delay: 0.3, ease }}
             >
               <Link
-                href="/blog"
+                href="/articles"
                 className="group inline-flex items-center gap-3 text-[0.68rem] font-semibold uppercase tracking-[0.24em] text-purple-mid transition-colors hover:text-gold"
               >
                 View all articles

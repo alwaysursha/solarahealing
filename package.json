@@ -21,6 +21,7 @@
     "db:backfill-courses": "node --import tsx scripts/backfill-courses.ts",
     "db:backfill-slugs": "node --import tsx scripts/backfill-catalog-slugs.ts",
     "db:backfill-reiki": "node --import tsx scripts/backfill-reiki-cms.ts",
+    "db:backfill-nav": "node --import tsx scripts/backfill-nav-menu.ts",
     "db:setup": "prisma db push && pnpm db:seed"
   },
   "prisma": {
@@ -32,9 +33,13 @@
     "@prisma/client": "^7.8.0",
     "@stripe/react-stripe-js": "^6.7.0",
     "@stripe/stripe-js": "^9.9.0",
+    "@tiptap/extension-color": "3.27.4",
+    "@tiptap/extension-highlight": "^3.27.4",
+    "@tiptap/extension-image": "^3.27.4",
     "@tiptap/extension-link": "^3.27.4",
     "@tiptap/extension-placeholder": "^3.27.4",
     "@tiptap/extension-text-align": "^3.27.4",
+    "@tiptap/extension-text-style": "3.27.4",
     "@tiptap/extension-underline": "^3.27.4",
     "@tiptap/pm": "^3.27.4",
     "@tiptap/react": "^3.27.4",

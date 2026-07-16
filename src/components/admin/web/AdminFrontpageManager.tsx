@@ -312,7 +312,7 @@ export function AdminFrontpageManager({
                       id: createClientId(),
                       label: "NEW LINK",
                       href: "#",
-                      icon: "reiki",
+                      icon: "courses" as SiteNavItem["icon"],
                     },
                   ])
                 }

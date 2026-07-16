@@ -7,11 +7,11 @@ import { useEffect, useId, useRef, useState } from "react";
 import { usePathname } from "next/navigation";
 import { NavIcon } from "@/components/sections/nav/NavIcon";
 import { useSiteChrome } from "@/components/storefront/SiteChromeProvider";
-import { desktopNavItem } from "@/lib/nav-motion";
-import { isReikiNavItem, reikiNavLinks, type ReikiMenuCourse } from "@/lib/reiki-nav";
+import { isBlogNavItem, pickPostsForNav, type BlogMenuPost } from "@/lib/blog-nav";
 import type { SiteNavItem } from "@/lib/frontpage-content";
+import { desktopNavItem } from "@/lib/nav-motion";
 
-type ReikiNavMenuProps = {
+type BlogNavMenuProps = {
   item: SiteNavItem;
   animated?: boolean;
 };
@@ -22,31 +22,28 @@ function isActivePath(pathname: string, href: string) {
   return pathname === path || pathname.startsWith(`${path}/`);
 }
 
-function CoursePromoCard({
-  course,
-  onNavigate,
-}: {
-  course: ReikiMenuCourse;
-  onNavigate?: () => void;
-}) {
+function FeaturedPreview({ post }: { post: BlogMenuPost }) {
   return (
-    <Link href={course.href} className="reiki-mega-course" onClick={onNavigate}>
-      <span className="reiki-mega-course-media">
+    <Link href={post.href} className="blog-mega-featured" role="menuitem">
+      <span className="blog-mega-featured-media">
         <Image
-          src={course.image}
-          alt={course.imageAlt}
+          src={post.image}
+          alt={post.imageAlt}
           fill
-          sizes="280px"
+          sizes="320px"
           className="object-cover"
+          priority={false}
         />
-        <span className="reiki-mega-course-badge">Free</span>
+        <span className="blog-mega-featured-shade" aria-hidden />
       </span>
-      <span className="reiki-mega-course-body">
-        <span className="reiki-mega-course-kicker">Join for free</span>
-        <span className="reiki-mega-course-title">{course.title}</span>
-        <span className="reiki-mega-course-copy">{course.description}</span>
-        <span className="reiki-mega-course-cta">
-          Start Introduction to Reiki
+      <span className="blog-mega-featured-body">
+        <span className="blog-mega-featured-kicker">{post.category || "Journal"}</span>
+        <span className="blog-mega-featured-title">{post.title}</span>
+        {post.excerpt ? (
+          <span className="blog-mega-featured-excerpt">{post.excerpt}</span>
+        ) : null}
+        <span className="blog-mega-featured-cta">
+          Read article
           <span aria-hidden>→</span>
         </span>
       </span>
@@ -54,15 +51,49 @@ function CoursePromoCard({
   );
 }
 
-export function ReikiDesktopNavMenu({ item, animated = true }: ReikiNavMenuProps) {
+function PostRow({
+  post,
+  active,
+  onNavigate,
+  onHighlight,
+}: {
+  post: BlogMenuPost;
+  active?: boolean;
+  onNavigate?: () => void;
+  onHighlight?: () => void;
+}) {
+  return (
+    <Link
+      href={post.href}
+      className={["courses-mega-item blog-mega-item", active ? "is-active" : ""].join(" ")}
+      onClick={onNavigate}
+      onMouseEnter={onHighlight}
+      onFocus={onHighlight}
+      role="menuitem"
+    >
+      <span className="courses-mega-item-media">
+        <Image src={post.image} alt={post.imageAlt} fill sizes="56px" className="object-cover" />
+      </span>
+      <span className="courses-mega-item-copy">
+        <span className="courses-mega-item-title">{post.title}</span>
+        <span className="courses-mega-item-meta">{post.category || "Journal"}</span>
+      </span>
+    </Link>
+  );
+}
+
+export function BlogDesktopNavMenu({ item, animated = true }: BlogNavMenuProps) {
   const reduceMotion = useReducedMotion();
   const pathname = usePathname();
-  const { reikiMenuCourse } = useSiteChrome();
+  const { blogMenu } = useSiteChrome();
   const [open, setOpen] = useState(false);
   const closeTimer = useRef<number | null>(null);
   const menuId = useId();
   const active = isActivePath(pathname, item.href);
   const useMotion = animated && !reduceMotion;
+  const posts = pickPostsForNav(blogMenu);
+  const [previewId, setPreviewId] = useState(posts[0]?.id ?? "");
+  const preview = posts.find((post) => post.id === previewId) ?? posts[0] ?? null;
 
   const clearCloseTimer = () => {
     if (closeTimer.current) {
@@ -141,45 +172,54 @@ export function ReikiDesktopNavMenu({ item, animated = true }: ReikiNavMenuProps
 
       <AnimatePresence>
         {open ? (
-          <div className="reiki-mega-panel-anchor">
+          <div className="blog-mega-panel-anchor">
             <motion.div
               id={menuId}
-              className="reiki-mega-panel"
+              className="reiki-mega-panel courses-mega-panel"
               role="menu"
-              aria-label="Reiki menu"
+              aria-label="Articles menu"
               initial={reduceMotion ? false : { opacity: 0, y: 10, scale: 0.98 }}
               animate={{ opacity: 1, y: 0, scale: 1 }}
               exit={reduceMotion ? undefined : { opacity: 0, y: 8, scale: 0.98 }}
               transition={{ duration: 0.28, ease: [0.22, 1, 0.36, 1] }}
             >
               <div className="reiki-mega-panel-glow" aria-hidden />
-              <div className="reiki-mega-grid">
-                <div className="reiki-mega-links">
-                  <p className="reiki-mega-eyebrow">Explore Reiki</p>
-                  {reikiNavLinks.map((link) => (
-                    <a key={link.id} href={link.href} className="reiki-mega-link" role="menuitem">
-                      <span className="reiki-mega-link-label">{link.label}</span>
-                      <span className="reiki-mega-link-blurb">{link.blurb}</span>
-                    </a>
-                  ))}
+              <div className="blog-mega-grid">
+                <div className="blog-mega-preview">
+                  <AnimatePresence mode="wait" initial={false}>
+                    {preview ? (
+                      <motion.div
+                        key={preview.id}
+                        initial={reduceMotion ? false : { opacity: 0, y: 6 }}
+                        animate={{ opacity: 1, y: 0 }}
+                        exit={reduceMotion ? undefined : { opacity: 0, y: -4 }}
+                        transition={{ duration: 0.22, ease: [0.22, 1, 0.36, 1] }}
+                      >
+                        <FeaturedPreview post={preview} />
+                      </motion.div>
+                    ) : (
+                      <p className="courses-mega-empty">Articles coming soon</p>
+                    )}
+                  </AnimatePresence>
+                </div>
+                <div className="blog-mega-list">
+                  <p className="reiki-mega-eyebrow">Latest posts</p>
+                  {posts.length > 0 ? (
+                    posts.map((post) => (
+                      <PostRow
+                        key={post.id}
+                        post={post}
+                        active={post.id === preview?.id}
+                        onHighlight={() => setPreviewId(post.id)}
+                      />
+                    ))
+                  ) : (
+                    <p className="courses-mega-empty">No posts yet</p>
+                  )}
                   <a href={item.href} className="reiki-mega-overview" role="menuitem">
-                    View full Reiki page →
+                    View all articles →
                   </a>
                 </div>
-                {reikiMenuCourse ? (
-                  <CoursePromoCard course={reikiMenuCourse} />
-                ) : (
-                  <a href="/courses" className="reiki-mega-course reiki-mega-course-fallback" role="menuitem">
-                    <span className="reiki-mega-course-body">
-                      <span className="reiki-mega-course-kicker">Catalog</span>
-                      <span className="reiki-mega-course-title">Browse Reiki courses</span>
-                      <span className="reiki-mega-course-cta">
-                        Open courses
-                        <span aria-hidden>→</span>
-                      </span>
-                    </span>
-                  </a>
-                )}
               </div>
             </motion.div>
           </div>
@@ -189,7 +229,7 @@ export function ReikiDesktopNavMenu({ item, animated = true }: ReikiNavMenuProps
   );
 }
 
-export function ReikiMobileNavMenu({
+export function BlogMobileNavMenu({
   item,
   onNavigate,
   open,
@@ -201,10 +241,11 @@ export function ReikiMobileNavMenu({
   onToggle: () => void;
 }) {
   const pathname = usePathname();
-  const { reikiMenuCourse } = useSiteChrome();
+  const { blogMenu } = useSiteChrome();
   const active = isActivePath(pathname, item.href);
+  const posts = pickPostsForNav(blogMenu);
 
-  if (!isReikiNavItem(item)) return null;
+  if (!isBlogNavItem(item)) return null;
 
   return (
     <div className={["reiki-mobile-menu", open ? "reiki-mobile-menu-open" : ""].join(" ")}>
@@ -237,21 +278,14 @@ export function ReikiMobileNavMenu({
             exit={{ height: 0, opacity: 0 }}
             transition={{ duration: 0.3, ease: [0.22, 1, 0.36, 1] }}
           >
-            <div className="reiki-mobile-panel-inner">
-              {reikiNavLinks.map((link) => (
-                <a
-                  key={link.id}
-                  href={link.href}
-                  className="reiki-mobile-link"
-                  onClick={onNavigate}
-                >
-                  <span className="reiki-mobile-link-label">{link.label}</span>
-                  <span className="reiki-mobile-link-blurb">{link.blurb}</span>
-                </a>
+            <div className="reiki-mobile-panel-inner courses-mobile-panel-inner">
+              <p className="reiki-mega-eyebrow blog-mobile-eyebrow">Latest posts</p>
+              {posts.map((post) => (
+                <PostRow key={post.id} post={post} onNavigate={onNavigate} />
               ))}
-              {reikiMenuCourse ? (
-                <CoursePromoCard course={reikiMenuCourse} onNavigate={onNavigate} />
-              ) : null}
+              <a href={item.href} className="courses-mobile-all" onClick={onNavigate}>
+                View all articles →
+              </a>
             </div>
           </motion.div>
         ) : null}

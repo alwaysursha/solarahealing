@@ -1,5 +1,6 @@
 import { AboutSection } from "@/components/sections/AboutSection";
 import { ArticlesSection } from "@/components/sections/ArticlesSection";
+import { ContactSection } from "@/components/sections/ContactSection";
 import { CoursesSection } from "@/components/sections/CoursesSection";
 import { Hero } from "@/components/sections/Hero";
 import { PrivateSessionsSection } from "@/components/sections/PrivateSessionsSection";
@@ -14,13 +15,15 @@ import {
   getPublishedWorkshops,
   getStorefrontSectionVisibility,
 } from "@/lib/content";
+import { getSiteSettings } from "@/lib/site-settings";
 
 /** Shared homepage body used by `/` and brand theme preview routes. */
 export async function HomePageView() {
-  const [home, articlesDisplay, visibility] = await Promise.all([
+  const [home, articlesDisplay, visibility, settings] = await Promise.all([
     getHomePageContent(),
     getHomeArticlesDisplay(),
     getStorefrontSectionVisibility(),
+    getSiteSettings(),
   ]);
 
   const [courses, workshops, sessions] = await Promise.all([
@@ -53,6 +56,7 @@ export async function HomePageView() {
         intro={home.testimonialsIntro}
         items={home.testimonials}
       />
+      <ContactSection contact={settings.contact} />
     </main>
   );
 }
