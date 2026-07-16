@@ -3,11 +3,14 @@
 import Image from "next/image";
 import { useRef } from "react";
 import { SpiritualSurface } from "@/components/shell/SpiritualSurface";
+import { Logo } from "@/components/ui/Logo";
 import { useAnimationsActive } from "@/hooks/useAnimationsActive";
 import { footerColumns, footerSocial, site } from "@/lib/site";
 
+const linkGroups = footerColumns.flatMap((column) => column.groups);
+
 function SocialIcon({ network }: { network: string }) {
-  const className = "h-5 w-5";
+  const className = "footer-social-svg";
 
   switch (network) {
     case "YouTube":
@@ -42,23 +45,32 @@ function SocialIcon({ network }: { network: string }) {
 function FooterLinkGroup({
   title,
   links,
+  index,
 }: {
   title: string;
   links: readonly { label: string; href: string }[];
+  index: number;
 }) {
+  const ordinal = String(index + 1).padStart(2, "0");
+
   return (
-    <div className="footer-link-group">
-      <h3 className="footer-link-group-title">{title}</h3>
-      <ul className="mt-3 space-y-2">
+    <nav className="footer-link-group" aria-label={title}>
+      <div className="footer-link-group-head">
+        <span className="footer-link-group-index" aria-hidden>
+          {ordinal}
+        </span>
+        <h3 className="footer-link-group-title">{title}</h3>
+      </div>
+      <ul className="footer-link-list">
         {links.map((link) => (
           <li key={link.label}>
             <a href={link.href} className="footer-link">
-              {link.label}
+              <span>{link.label}</span>
             </a>
           </li>
         ))}
       </ul>
-    </div>
+    </nav>
   );
 }
 
@@ -67,82 +79,102 @@ export function Footer() {
   const animationsActive = useAnimationsActive(footerRef);
 
   return (
-    <footer ref={footerRef} className="footer-shell w-full">
-      <div className="grid lg:grid-cols-[5fr_3fr] xl:grid-cols-[7fr_4fr]">
-        <div className="footer-links-panel px-5 py-12 sm:px-8 md:px-10 lg:px-12 lg:py-14 xl:px-14">
-          <div className="grid gap-10 sm:grid-cols-2 xl:grid-cols-4">
-            {footerColumns.map((column) => (
-              <div key={column.groups[0]?.title} className="space-y-8">
-                {column.groups.map((group) => (
-                  <FooterLinkGroup key={group.title} title={group.title} links={group.links} />
+    <footer ref={footerRef} className="footer-shell">
+      <div className="footer-main">
+        <div className="footer-main-aura" aria-hidden />
+
+        <div className="footer-inner">
+          <div className="footer-brand">
+            <div className="footer-brand-copy">
+              <Logo variant="dark" className="footer-brand-logo" />
+              <p className="footer-brand-sanskrit" lang="sa">
+                {site.sanskrit}
+              </p>
+              <p className="footer-brand-meaning">{site.sanskritMeaning}</p>
+            </div>
+
+            <div className="footer-social-block">
+              <p className="footer-social-label">{footerSocial.title}</p>
+              <ul className="footer-social-list">
+                {footerSocial.links.map((link) => (
+                  <li key={link.label}>
+                    <a
+                      href={link.href}
+                      target="_blank"
+                      rel="noopener noreferrer"
+                      aria-label={link.label}
+                      className="footer-social-icon"
+                    >
+                      <SocialIcon network={link.label} />
+                      <span className="footer-social-name">{link.label}</span>
+                    </a>
+                  </li>
                 ))}
-              </div>
+              </ul>
+            </div>
+          </div>
+
+          <div className="footer-divider" aria-hidden>
+            <span className="footer-divider-line" />
+            <span className="footer-divider-gem" />
+            <span className="footer-divider-line" />
+          </div>
+
+          <div className="footer-links-grid">
+            {linkGroups.map((group, index) => (
+              <FooterLinkGroup
+                key={group.title}
+                title={group.title}
+                links={group.links}
+                index={index}
+              />
             ))}
           </div>
-
-          <p className="footer-copyright mt-12 text-sm text-purple-deep/45">
-            &copy; {new Date().getFullYear()} {site.name}. All rights reserved.
-          </p>
         </div>
+      </div>
 
-        <SpiritualSurface
-          className="footer-social-panel px-6 py-12 sm:px-8 lg:px-8 lg:py-14"
-          animationsPaused={!animationsActive}
-        >
-          <div className="space-y-10">
-            <div>
-              <h3 className="footer-panel-heading">{footerSocial.title}</h3>
-              <div className="mt-5 flex items-center gap-4">
-                {footerSocial.links.map((link) => (
-                  <a
-                    key={link.label}
-                    href={link.href}
-                    target="_blank"
-                    rel="noopener noreferrer"
-                    aria-label={link.label}
-                    className="footer-social-icon flex h-10 w-10 items-center justify-center rounded-full border border-cream/15 text-cream transition-colors hover:border-gold/45 hover:text-gold"
+      <SpiritualSurface
+        className="footer-community footer-social-panel"
+        animationsPaused={!animationsActive}
+      >
+        <div className="footer-community-inner">
+          <div className="footer-community-copy">
+            <p className="footer-panel-heading">{footerSocial.communityTitle}</p>
+            <p className="footer-community-text">{footerSocial.communityDescription}</p>
+            <div className="footer-community-proof">
+              <div className="footer-community-avatars">
+                {footerSocial.communityAvatars.map((avatar, index) => (
+                  <div
+                    key={avatar.src}
+                    className="footer-community-avatar"
+                    style={{ zIndex: 10 - index }}
                   >
-                    <SocialIcon network={link.label} />
-                  </a>
+                    <Image src={avatar.src} alt={avatar.alt} fill sizes="40px" className="object-cover" />
+                  </div>
                 ))}
               </div>
-            </div>
-
-            <div>
-              <h3 className="footer-panel-heading">{footerSocial.communityTitle}</h3>
-              <p className="mt-4 text-sm leading-relaxed text-cream/78">
-                {footerSocial.communityDescription}
-              </p>
-
-              <a
-                href={`https://wa.me/${site.contact.whatsapp}`}
-                target="_blank"
-                rel="noopener noreferrer"
-                className="footer-whatsapp-btn mt-6 inline-flex w-full items-center justify-center gap-2 rounded-full bg-[#25D366] px-5 py-3.5 text-[0.72rem] font-semibold uppercase tracking-[0.14em] text-white shadow-lg shadow-[#25D366]/25 transition-colors hover:bg-[#20bd5a]"
-              >
-                {footerSocial.communityCta}
-                <svg className="h-4 w-4" viewBox="0 0 24 24" fill="currentColor" aria-hidden>
-                  <path d="M17.472 14.382c-.297-.149-1.758-.867-2.03-.967-.273-.099-.471-.148-.67.15-.197.297-.767.966-.94 1.164-.173.199-.347.223-.644.075-.297-.15-1.255-.463-2.39-1.475-.883-.788-1.48-1.761-1.653-2.059-.173-.297-.018-.458.13-.606.134-.133.298-.347.446-.52.149-.174.198-.298.298-.497.099-.198.05-.371-.025-.52-.075-.149-.669-1.612-.916-2.207-.242-.579-.487-.5-.669-.51-.173-.008-.371-.01-.57-.01-.198 0-.52.074-.792.372-.272.297-1.04 1.016-1.04 2.479 0 1.462 1.065 2.875 1.213 3.074.149.198 2.096 3.2 5.077 4.487.709.306 1.262.489 1.694.625.712.227 1.36.195 1.871.118.571-.085 1.758-.719 2.006-1.413.248-.694.248-1.289.173-1.413-.074-.124-.272-.198-.57-.347m-5.421 7.403h-.004a9.87 9.87 0 01-5.031-1.378l-.361-.214-3.741.982.998-3.648-.235-.374a9.86 9.86 0 01-1.51-5.26c.001-5.45 4.436-9.884 9.888-9.884 2.64 0 5.122 1.03 6.988 2.898a9.825 9.825 0 012.893 6.994c-.003 5.45-4.435 9.884-9.881 9.884m8.413-18.297A11.815 11.815 0 0012.05 0C5.495 0 .16 5.335.157 11.892c0 2.096.547 4.142 1.588 5.945L.057 24l6.305-1.654a11.882 11.882 0 005.683 1.448h.005c6.554 0 11.89-5.335 11.893-11.893a11.821 11.821 0 00-3.48-8.413z" />
-                </svg>
-              </a>
-
-              <div className="mt-6 flex items-center gap-3">
-                <div className="flex items-center">
-                  {footerSocial.communityAvatars.map((avatar, index) => (
-                    <div
-                      key={avatar.src}
-                      className="relative h-9 w-9 overflow-hidden rounded-full border-2 border-purple-deep/80"
-                      style={{ zIndex: 10 - index, marginLeft: index === 0 ? 0 : -10 }}
-                    >
-                      <Image src={avatar.src} alt={avatar.alt} fill sizes="36px" className="object-cover" />
-                    </div>
-                  ))}
-                </div>
-                <p className="text-sm text-cream/80">{footerSocial.communityProof}</p>
-              </div>
+              <p className="footer-community-proof-text">{footerSocial.communityProof}</p>
             </div>
           </div>
-        </SpiritualSurface>
+
+          <a
+            href={`https://wa.me/${site.contact.whatsapp}`}
+            target="_blank"
+            rel="noopener noreferrer"
+            className="footer-whatsapp-btn"
+          >
+            <span>{footerSocial.communityCta}</span>
+            <svg className="footer-whatsapp-icon" viewBox="0 0 24 24" fill="currentColor" aria-hidden>
+              <path d="M17.472 14.382c-.297-.149-1.758-.867-2.03-.967-.273-.099-.471-.148-.67.15-.197.297-.767.966-.94 1.164-.173.199-.347.223-.644.075-.297-.15-1.255-.463-2.39-1.475-.883-.788-1.48-1.761-1.653-2.059-.173-.297-.018-.458.13-.606.134-.133.298-.347.446-.52.149-.174.198-.298.298-.497.099-.198.05-.371-.025-.52-.075-.149-.669-1.612-.916-2.207-.242-.579-.487-.5-.669-.51-.173-.008-.371-.01-.57-.01-.198 0-.52.074-.792.372-.272.297-1.04 1.016-1.04 2.479 0 1.462 1.065 2.875 1.213 3.074.149.198 2.096 3.2 5.077 4.487.709.306 1.262.489 1.694.625.712.227 1.36.195 1.871.118.571-.085 1.758-.719 2.006-1.413.248-.694.248-1.289.173-1.413-.074-.124-.272-.198-.57-.347m-5.421 7.403h-.004a9.87 9.87 0 01-5.031-1.378l-.361-.214-3.741.982.998-3.648-.235-.374a9.86 9.86 0 01-1.51-5.26c.001-5.45 4.436-9.884 9.888-9.884 2.64 0 5.122 1.03 6.988 2.898a9.825 9.825 0 012.893 6.994c-.003 5.45-4.435 9.884-9.881 9.884m8.413-18.297A11.815 11.815 0 0012.05 0C5.495 0 .16 5.335.157 11.892c0 2.096.547 4.142 1.588 5.945L.057 24l6.305-1.654a11.882 11.882 0 005.683 1.448h.005c6.554 0 11.89-5.335 11.893-11.893a11.821 11.821 0 00-3.48-8.413z" />
+            </svg>
+          </a>
+        </div>
+      </SpiritualSurface>
+
+      <div className="footer-bar">
+        <p className="footer-copyright">
+          &copy; {new Date().getFullYear()} {site.name}. All rights reserved.
+        </p>
       </div>
     </footer>
   );

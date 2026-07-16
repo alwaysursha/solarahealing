@@ -123,7 +123,7 @@ export default async function AccountPage() {
           <div className="account-main">
             <AccountProfileForm name={name} email={email} whatsapp={whatsapp} />
 
-            <section id="orders" className="account-orders scroll-mt-28">
+            <section id="orders" className="account-orders">
               <div className="account-orders-header">
                 <div>
                   <p className="account-section-eyebrow">History</p>

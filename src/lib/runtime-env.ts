@@ -9,7 +9,7 @@ export function getRuntimeEnv(name: string): string | undefined {
 
   try {
     const { env } = getCloudflareContext();
-    const value = (env as Record<string, unknown>)[name];
+    const value = (env as unknown as Record<string, unknown>)[name];
     if (typeof value === "string" && value.trim()) {
       return value.trim();
     }
