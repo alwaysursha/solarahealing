@@ -11,29 +11,27 @@ export function ResetPasswordForm({ token }: { token: string }) {
 
   if (!token) {
     return (
-      <div className="space-y-4">
-        <p className="text-sm text-red-700">
+      <div className="auth-page-form-stack">
+        <p className="auth-page-error">
           This reset link is missing or invalid. Request a new one from the sign-in panel in the
           header.
         </p>
-        <Link href="/" className="font-medium text-gold hover:text-gold-light">
-          Back to home
-        </Link>
+        <p className="auth-page-switch">
+          <Link href="/">Back to home</Link>
+        </p>
       </div>
     );
   }
 
   if (done) {
     return (
-      <div className="space-y-4">
-        <p className="text-sm text-purple-deep/75">
-          Your password was updated. You can sign in from the header whenever you are ready.
+      <div className="auth-page-form-stack">
+        <p className="auth-page-copy" style={{ marginTop: 0, textAlign: "center" }}>
+          Your password was updated. You can sign in whenever you are ready.
         </p>
-        <Link
-          href="/"
-          className="relative inline-flex items-center justify-center rounded-full bg-gold px-6 py-3 text-sm font-medium tracking-wide text-purple-deep shadow-lg shadow-gold/30 transition hover:bg-gold-light"
-        >
-          Back to home
+        <Link href="/auth/sign-in" className="auth-page-submit">
+          <span className="auth-page-submit-shine" aria-hidden />
+          <span className="relative">Sign in</span>
         </Link>
       </div>
     );
@@ -41,7 +39,7 @@ export function ResetPasswordForm({ token }: { token: string }) {
 
   return (
     <form
-      className="space-y-4"
+      className="auth-page-form"
       onSubmit={async (event) => {
         event.preventDefault();
         if (loading) return;
@@ -69,35 +67,32 @@ export function ResetPasswordForm({ token }: { token: string }) {
         }
       }}
     >
-      <label className="block text-sm">
-        <span className="font-medium text-purple-deep/75">New password</span>
+      <label className="auth-page-label">
+        New password
         <input
           name="password"
           type="password"
           minLength={8}
           required
           autoComplete="new-password"
-          className="mt-1.5 w-full rounded-xl border border-purple-deep/10 bg-cream/40 px-3 py-2.5"
+          className="auth-page-input"
         />
       </label>
-      <label className="block text-sm">
-        <span className="font-medium text-purple-deep/75">Confirm password</span>
+      <label className="auth-page-label">
+        Confirm password
         <input
           name="confirmPassword"
           type="password"
           minLength={8}
           required
           autoComplete="new-password"
-          className="mt-1.5 w-full rounded-xl border border-purple-deep/10 bg-cream/40 px-3 py-2.5"
+          className="auth-page-input"
         />
       </label>
-      {error ? <p className="text-sm text-red-700">{error}</p> : null}
-      <button
-        type="submit"
-        disabled={loading}
-        className="relative inline-flex w-full items-center justify-center rounded-full bg-gold px-6 py-3 text-sm font-medium tracking-wide text-purple-deep shadow-lg shadow-gold/30 transition hover:bg-gold-light disabled:opacity-60"
-      >
-        {loading ? "Updating…" : "Update password"}
+      {error ? <p className="auth-page-error">{error}</p> : null}
+      <button type="submit" disabled={loading} className="auth-page-submit">
+        <span className="auth-page-submit-shine" aria-hidden />
+        <span className="relative">{loading ? "Updating…" : "Update password"}</span>
       </button>
     </form>
   );

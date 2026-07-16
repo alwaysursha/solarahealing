@@ -114,6 +114,7 @@ model SiteSettings {
 
 model OnlineCourse {
   id          String         @id
+  slug        String         @unique
   title       String
   description String
   dateLabel   String
@@ -133,6 +134,7 @@ model OnlineCourse {
 
 model Workshop {
   id          String   @id
+  slug        String   @unique
   title       String
   description String
   dateLabel   String
@@ -153,6 +155,7 @@ model Workshop {
 
 model PrivateSession {
   id          String   @id
+  slug        String   @unique
   title       String
   description String
   duration    String

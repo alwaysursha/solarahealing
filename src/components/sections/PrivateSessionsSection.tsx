@@ -11,6 +11,7 @@ import { formatCad, privateSessions, privateSessionsIntro } from "@/lib/site";
 
 type SessionItem = {
   id: string;
+  slug?: string;
   title: string;
   description: string;
   duration: string;
@@ -90,7 +91,7 @@ function BookButton({
 function SessionCard({ session }: { session: SessionItem }) {
   return (
     <article className="private-sessions-card group">
-      <Link href={`/sessions/${session.id}`} className="private-sessions-card-media">
+      <Link href={`/sessions/${session.slug ?? session.id}`} className="private-sessions-card-media">
         <Image
           src={session.image}
           alt={session.imageAlt}
@@ -105,7 +106,7 @@ function SessionCard({ session }: { session: SessionItem }) {
       <div className="private-sessions-card-body">
         <p className="private-sessions-card-duration">{session.duration}</p>
         <h3 className="private-sessions-card-title">
-          <Link href={`/sessions/${session.id}`}>{session.title}</Link>
+          <Link href={`/sessions/${session.slug ?? session.id}`}>{session.title}</Link>
         </h3>
         <p className="private-sessions-card-copy">{session.description}</p>
 
@@ -117,7 +118,7 @@ function SessionCard({ session }: { session: SessionItem }) {
           <BookButton session={session} />
         </div>
 
-        <Link href={`/sessions/${session.id}`} className="private-sessions-card-details">
+        <Link href={`/sessions/${session.slug ?? session.id}`} className="private-sessions-card-details">
           View details
           <span aria-hidden>→</span>
         </Link>

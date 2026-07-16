@@ -19,12 +19,13 @@ type CatalogIndexViewProps = {
 };
 
 function IndexCard({ type, item }: { type: CartItemType; item: CatalogDetailItem }) {
+  const path = item.slug ?? item.id;
   const detailHref =
     type === "course"
-      ? `/courses/${item.id}`
+      ? `/courses/${path}`
       : type === "workshop"
-        ? `/workshops/${item.id}`
-        : `/sessions/${item.id}`;
+        ? `/workshops/${path}`
+        : `/sessions/${path}`;
   const objectPosition = toImageObjectPosition(item.imageFocusX ?? 50, item.imageFocusY ?? 50);
   const detailsLabel =
     type === "course"
