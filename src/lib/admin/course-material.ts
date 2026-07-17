@@ -153,9 +153,9 @@ export const introductionToReiki: CourseMaterialDeck = {
       quote:
         "Every healing journey begins with one decision—to become open to possibility.",
       image: {
-        src: "/course-material/introduction-to-reiki/what-brought-you.png",
+        src: "/course-material/introduction-to-reiki/what-brought-you-dark.png",
         alt: "Reasons people begin a healing journey",
-        width: 1076,
+        width: 1072,
         height: 552,
       },
     },
