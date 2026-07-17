@@ -2,6 +2,7 @@ import Image from "next/image";
 import { site } from "@/lib/site";
 
 export const LOGO_SRC = "/brand/Soulara-logo-transparent.png";
+export const HEADER_LOGO_SRC = "/brand/Soulara-logo-header.png";
 export const LOGO_WIDTH = 972;
 export const LOGO_HEIGHT = 312;
 
@@ -12,6 +13,7 @@ type LogoProps = {
 
 export function Logo({ variant = "light", className = "" }: LogoProps) {
   const isLight = variant === "light";
+  const src = isLight ? HEADER_LOGO_SRC : LOGO_SRC;
 
   return (
     <a
@@ -19,7 +21,7 @@ export function Logo({ variant = "light", className = "" }: LogoProps) {
       className={`inline-flex shrink-0 items-center overflow-visible transition-opacity hover:opacity-90 ${className}`}
     >
       <Image
-        src={LOGO_SRC}
+        src={src}
         alt={`${site.name} — Heal, Align, Awaken`}
         width={LOGO_WIDTH}
         height={LOGO_HEIGHT}
