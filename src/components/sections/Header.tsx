@@ -228,7 +228,13 @@ export function Header() {
 
     const onScroll = (event: Event) => {
       const target = event.target;
-      if (target instanceof Node && headerRootRef.current?.contains(target)) {
+      // Ignore swipe-scroll inside the mobile menu / submenus.
+      if (
+        target instanceof Element &&
+        (target.closest(".mobile-nav-scroll") ||
+          target.closest(".mobile-nav-shell") ||
+          headerRootRef.current?.contains(target))
+      ) {
         return;
       }
       closeFromPageInteraction();

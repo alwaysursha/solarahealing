@@ -29,7 +29,7 @@ type MobileNavMenuProps = {
 };
 
 function MobileNavShell({ children }: { children: ReactNode }) {
-  return <div className="mobile-nav-shell relative overflow-hidden">{children}</div>;
+  return <div className="mobile-nav-shell relative">{children}</div>;
 }
 
 function MobileNavHeader() {
@@ -156,7 +156,10 @@ export function MobileNavMenu({ items, onClose, onLogin }: MobileNavMenuProps) {
       <div {...shellProps}>
         <MobileNavShell>
           <MobileNavHeader />
-          <nav className="mobile-nav-menu flex flex-col px-3 py-2 sm:px-4" aria-label="Mobile">
+          <nav
+            className="mobile-nav-menu mobile-nav-scroll flex flex-col px-3 py-2 sm:px-4"
+            aria-label="Mobile"
+          >
             {linkList}
           </nav>
           <MobileNavFooter onLogin={handleLogin} onClose={onClose} animated={false} />
@@ -175,7 +178,7 @@ export function MobileNavMenu({ items, onClose, onLogin }: MobileNavMenuProps) {
       <MobileNavShell>
         <MobileNavHeader />
         <motion.nav
-          className="mobile-nav-menu flex flex-col px-3 py-2 sm:px-4"
+          className="mobile-nav-menu mobile-nav-scroll flex flex-col px-3 py-2 sm:px-4"
           aria-label="Mobile"
           variants={mobileNavListVariants}
           initial="closed"
