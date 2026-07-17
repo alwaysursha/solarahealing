@@ -2410,6 +2410,426 @@ html[data-brand-theme="8"] .bg-spiritual-shimmer {
   color: color-mix(in srgb, var(--purple-deep) 88%, #3a2560);
 }
 
+/* Vision & Mission */
+.vm-page {
+  position: relative;
+  isolation: isolate;
+  min-height: 100%;
+  overflow: hidden;
+  padding: 8.75rem 1.35rem 5rem;
+  background:
+    linear-gradient(
+      168deg,
+      #f8f3fc 0%,
+      #f3eaf8 26%,
+      #faf8f4 58%,
+      #f4eef8 100%
+    );
+}
+
+@media (min-width: 768px) {
+  .vm-page {
+    padding: 9.75rem 2.5rem 6rem;
+  }
+}
+
+@media (min-width: 1100px) {
+  .vm-page {
+    padding: 10.25rem 3.5rem 7rem;
+  }
+}
+
+.vm-page-aura,
+.vm-page-veil {
+  pointer-events: none;
+  position: absolute;
+  inset: 0;
+  z-index: 0;
+}
+
+.vm-page-aura {
+  background:
+    radial-gradient(ellipse 58% 42% at 50% 8%, rgba(201, 128, 212, 0.2), transparent 62%),
+    radial-gradient(ellipse 36% 30% at 12% 28%, rgba(143, 99, 181, 0.12), transparent 58%),
+    radial-gradient(ellipse 34% 28% at 90% 22%, rgba(201, 162, 39, 0.1), transparent 55%);
+}
+
+.vm-page-veil {
+  background:
+    linear-gradient(180deg, rgba(253, 252, 250, 0.15) 0%, transparent 18%),
+    linear-gradient(180deg, transparent 72%, rgba(253, 252, 250, 0.35) 100%);
+}
+
+.vm-page-inner {
+  position: relative;
+  z-index: 1;
+  margin: 0 auto;
+  max-width: 58rem;
+}
+
+.vm-hero {
+  max-width: 40rem;
+  margin: 0 auto;
+  text-align: center;
+}
+
+.vm-hero-eyebrow {
+  margin: 0;
+  font-size: 0.68rem;
+  font-weight: 650;
+  letter-spacing: 0.34em;
+  text-transform: uppercase;
+  color: color-mix(in srgb, var(--gold) 82%, #8f63b5);
+}
+
+.vm-hero-title {
+  margin: 1.15rem 0 0;
+  font-family: var(--font-instrument-serif), Georgia, serif;
+  font-size: clamp(2.6rem, 7vw, 4.4rem);
+  font-weight: 400;
+  line-height: 1.02;
+  letter-spacing: -0.025em;
+  color: var(--purple-deep);
+}
+
+.vm-hero-title span {
+  display: block;
+  margin-top: 0.12em;
+  background: linear-gradient(120deg, #5c1470 0%, #8f63b5 48%, #c9a227 100%);
+  -webkit-background-clip: text;
+  background-clip: text;
+  color: transparent;
+  font-style: italic;
+}
+
+.vm-hero-lead {
+  margin: 1.35rem auto 0;
+  max-width: 28rem;
+  font-size: 1.02rem;
+  line-height: 1.65;
+  color: rgba(58, 37, 96, 0.58);
+}
+
+.vm-signature {
+  position: relative;
+  margin: 3.25rem auto 0;
+  max-width: 44rem;
+  padding: 2.5rem 1.5rem 2.1rem;
+  text-align: center;
+}
+
+@media (min-width: 768px) {
+  .vm-signature {
+    margin-top: 4rem;
+    padding: 3rem 3rem 2.4rem;
+  }
+}
+
+.vm-signature-frame {
+  pointer-events: none;
+  position: absolute;
+  inset: 0;
+}
+
+.vm-signature-corner {
+  position: absolute;
+  width: 1.35rem;
+  height: 1.35rem;
+  border-color: rgba(201, 162, 39, 0.55);
+  border-style: solid;
+  border-width: 0;
+}
+
+.vm-signature-corner-tl {
+  top: 0;
+  left: 0;
+  border-top-width: 1px;
+  border-left-width: 1px;
+}
+
+.vm-signature-corner-tr {
+  top: 0;
+  right: 0;
+  border-top-width: 1px;
+  border-right-width: 1px;
+}
+
+.vm-signature-corner-bl {
+  bottom: 0;
+  left: 0;
+  border-bottom-width: 1px;
+  border-left-width: 1px;
+}
+
+.vm-signature-corner-br {
+  right: 0;
+  bottom: 0;
+  border-right-width: 1px;
+  border-bottom-width: 1px;
+}
+
+.vm-signature-mark {
+  display: block;
+  width: 2.75rem;
+  height: 2.75rem;
+  margin: 0 auto;
+  color: color-mix(in srgb, var(--gold) 70%, #8f63b5);
+}
+
+.vm-signature-text {
+  margin: 1.35rem 0 0;
+  font-family: var(--font-instrument-serif), Georgia, serif;
+  font-size: clamp(1.45rem, 3.6vw, 2.15rem);
+  font-weight: 400;
+  font-style: italic;
+  line-height: 1.35;
+  letter-spacing: -0.015em;
+  color: var(--purple-deep);
+}
+
+.vm-signature-ink {
+  width: min(14rem, 55%);
+  height: 1px;
+  margin: 1.5rem auto 0;
+  transform-origin: center;
+  background: linear-gradient(
+    90deg,
+    transparent 0%,
+    rgba(201, 162, 39, 0.15) 18%,
+    rgba(201, 162, 39, 0.75) 50%,
+    rgba(201, 162, 39, 0.15) 82%,
+    transparent 100%
+  );
+}
+
+.vm-signature-sanskrit {
+  margin: 1.15rem 0 0;
+  font-family: var(--font-instrument-serif), Georgia, serif;
+  font-size: 1.05rem;
+  letter-spacing: 0.08em;
+  color: rgba(92, 20, 112, 0.55);
+}
+
+.vm-signature-meaning {
+  margin: 0.4rem 0 0;
+  font-size: 0.66rem;
+  font-weight: 650;
+  letter-spacing: 0.28em;
+  text-transform: uppercase;
+  color: rgba(58, 37, 96, 0.38);
+}
+
+.vm-pillars {
+  position: relative;
+  display: grid;
+  gap: 2.75rem;
+  margin-top: 3.75rem;
+}
+
+@media (max-width: 899px) {
+  .vm-pillars-spine {
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    gap: 0.75rem;
+    min-height: auto;
+    padding: 0.25rem 0;
+  }
+
+  .vm-pillars-spine::before,
+  .vm-pillars-spine::after {
+    content: "";
+    height: 1px;
+    flex: 1;
+    max-width: 5.5rem;
+    background: linear-gradient(
+      90deg,
+      transparent,
+      rgba(201, 162, 39, 0.45),
+      transparent
+    );
+  }
+
+  .vm-pillars-gem {
+    position: static;
+    transform: rotate(45deg);
+    flex-shrink: 0;
+  }
+}
+
+@media (min-width: 900px) {
+  .vm-pillars {
+    grid-template-columns: minmax(0, 1fr) auto minmax(0, 1fr);
+    gap: 2.5rem;
+    margin-top: 5rem;
+    align-items: start;
+  }
+}
+
+.vm-pillars-spine {
+  display: flex;
+  align-items: center;
+  justify-content: center;
+}
+
+.vm-pillars-gem {
+  width: 0.55rem;
+  height: 0.55rem;
+  border: 1px solid rgba(201, 162, 39, 0.65);
+  background: rgba(201, 162, 39, 0.18);
+}
+
+@media (min-width: 900px) {
+  .vm-pillars-spine {
+    align-items: stretch;
+    min-height: 100%;
+    padding-top: 2.5rem;
+  }
+
+  .vm-pillars-spine::before {
+    content: "";
+    width: 1px;
+    background: linear-gradient(
+      180deg,
+      transparent 0%,
+      rgba(201, 162, 39, 0.45) 18%,
+      rgba(143, 99, 181, 0.28) 50%,
+      rgba(201, 162, 39, 0.45) 82%,
+      transparent 100%
+    );
+  }
+
+  .vm-pillars-spine::after {
+    display: none;
+  }
+
+  .vm-pillars-gem {
+    position: absolute;
+    top: 42%;
+    left: 50%;
+    transform: translate(-50%, -50%) rotate(45deg);
+  }
+}
+
+.vm-pillar {
+  position: relative;
+}
+
+.vm-pillar-index {
+  font-family: var(--font-instrument-serif), Georgia, serif;
+  font-size: clamp(3.5rem, 8vw, 5.5rem);
+  font-weight: 400;
+  line-height: 0.9;
+  letter-spacing: -0.04em;
+  color: rgba(92, 20, 112, 0.1);
+}
+
+.vm-pillar-body {
+  margin-top: -1.35rem;
+}
+
+.vm-pillar-eyebrow {
+  margin: 0;
+  font-size: 0.68rem;
+  font-weight: 650;
+  letter-spacing: 0.3em;
+  text-transform: uppercase;
+  color: color-mix(in srgb, var(--gold) 78%, #8f63b5);
+}
+
+.vm-pillar-rule {
+  width: 2.75rem;
+  height: 1px;
+  margin: 0.85rem 0 1.25rem;
+  background: linear-gradient(90deg, rgba(201, 162, 39, 0.7), transparent);
+}
+
+.vm-pillar-end .vm-pillar-rule {
+  margin-left: auto;
+  background: linear-gradient(270deg, rgba(201, 162, 39, 0.7), transparent);
+}
+
+.vm-pillar-copy {
+  margin: 0;
+  font-size: 1.02rem;
+  line-height: 1.78;
+  color: rgba(58, 37, 96, 0.7);
+}
+
+.vm-pillar-copy + .vm-pillar-copy {
+  margin-top: 1.15rem;
+}
+
+@media (min-width: 900px) {
+  .vm-pillar-end {
+    text-align: right;
+  }
+
+  .vm-pillar-end .vm-pillar-index {
+    text-align: right;
+  }
+
+  .vm-pillar-start .vm-pillar-copy {
+    padding-right: 0.5rem;
+  }
+
+  .vm-pillar-end .vm-pillar-copy {
+    padding-left: 0.5rem;
+  }
+}
+
+.vm-close {
+  margin: 4.5rem auto 0;
+  max-width: 36rem;
+  text-align: center;
+}
+
+@media (min-width: 768px) {
+  .vm-close {
+    margin-top: 5.5rem;
+  }
+}
+
+.vm-close-quote {
+  margin: 0;
+  font-family: var(--font-instrument-serif), Georgia, serif;
+  font-size: clamp(1.15rem, 2.4vw, 1.45rem);
+  font-style: italic;
+  line-height: 1.45;
+  color: rgba(58, 37, 96, 0.62);
+}
+
+.vm-close-cta {
+  display: inline-flex;
+  align-items: center;
+  gap: 0.7rem;
+  margin-top: 1.75rem;
+  border-radius: 9999px;
+  border: 1px solid rgba(143, 99, 181, 0.28);
+  background: linear-gradient(
+    145deg,
+    #8f63b5 0%,
+    #734795 48%,
+    #5c1470 100%
+  );
+  padding: 0.95rem 1.55rem;
+  font-size: 0.7rem;
+  font-weight: 650;
+  letter-spacing: 0.22em;
+  text-transform: uppercase;
+  text-decoration: none;
+  color: #faf6fc;
+  box-shadow: 0 16px 36px -18px rgba(92, 20, 112, 0.55);
+  transition:
+    transform 0.25s ease,
+    box-shadow 0.25s ease;
+}
+
+.vm-close-cta:hover {
+  transform: translateY(-1px);
+  box-shadow: 0 20px 42px -18px rgba(92, 20, 112, 0.62);
+}
+
 .article-prose em {
   font-style: italic;
 }
