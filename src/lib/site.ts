@@ -580,7 +580,7 @@ export const footerColumns = [
         title: "About Soulara Healing Academy",
         links: [
           { label: "Who We Are", href: "#about" },
-          { label: "Vision & Mission", href: "#about" },
+          { label: "Vision & Mission", href: "/vision-mission" },
           { label: "Leadership", href: "#about" },
           { label: "Our Services", href: "#schedule" },
           { label: "Articles", href: "/articles" },
