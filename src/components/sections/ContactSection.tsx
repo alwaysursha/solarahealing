@@ -14,12 +14,11 @@ export type ContactSectionInfo = {
   email: string;
   phone: string;
   whatsapp: string;
-  location: string;
 };
 
 const initialFormState: ContactFormState = { ok: false };
 
-function ContactIcon({ kind }: { kind: "email" | "phone" | "location" }) {
+function ContactIcon({ kind }: { kind: "email" | "phone" }) {
   switch (kind) {
     case "email":
       return (
@@ -36,15 +35,6 @@ function ContactIcon({ kind }: { kind: "email" | "phone" | "location" }) {
           <path
             fill="currentColor"
             d="M6.6 10.8c1.4 2.8 3.8 5.1 6.6 6.6l2.2-2.2c.3-.3.7-.4 1.1-.2 1.2.4 2.5.6 3.8.6.6 0 1 .4 1 1V20c0 .6-.4 1-1 1C10.6 21 3 13.4 3 4c0-.6.4-1 1-1h3.5c.6 0 1 .4 1 1 0 1.3.2 2.6.6 3.8.1.4 0 .8-.3 1.1L6.6 10.8z"
-          />
-        </svg>
-      );
-    case "location":
-      return (
-        <svg viewBox="0 0 24 24" className="contact-detail-icon" aria-hidden>
-          <path
-            fill="currentColor"
-            d="M12 2C8.1 2 5 5.1 5 9c0 5.2 7 13 7 13s7-7.8 7-13c0-3.9-3.1-7-7-7zm0 9.5A2.5 2.5 0 1 1 12 6a2.5 2.5 0 0 1 0 5.5z"
           />
         </svg>
       );
@@ -122,47 +112,56 @@ export function ContactSection({ contact }: { contact: ContactSectionInfo }) {
         </SectionReveal>
 
         <div className="contact-grid">
-          <SectionReveal delay={0.08}>
-            <div className="contact-details">
-              {contact.email ? (
-                <a href={`mailto:${contact.email}`} className="contact-detail">
-                  <span className="contact-detail-icon-wrap">
-                    <ContactIcon kind="email" />
-                  </span>
-                  <span className="contact-detail-copy">
-                    <span className="contact-detail-label">Email</span>
-                    <span className="contact-detail-value">{contact.email}</span>
-                  </span>
-                </a>
-              ) : null}
+          <SectionReveal delay={0.08} className="contact-aside-reveal">
+            <aside className="contact-aside">
+              <div className="contact-aside-intro">
+                <p className="contact-aside-eyebrow">Reach us directly</p>
+                <h3 className="contact-aside-title">We reply with care</h3>
+                <p className="contact-aside-copy">
+                  Whether you are booking a session, joining a course, or simply seeking guidance —
+                  send a note and we will respond within 24 hours.
+                </p>
+              </div>
 
-              {contact.phone ? (
-                <a href={`tel:${phoneHref}`} className="contact-detail">
-                  <span className="contact-detail-icon-wrap">
-                    <ContactIcon kind="phone" />
-                  </span>
-                  <span className="contact-detail-copy">
-                    <span className="contact-detail-label">Phone</span>
-                    <span className="contact-detail-value">{contact.phone}</span>
-                  </span>
-                </a>
-              ) : null}
+              <div className="contact-details">
+                {contact.email ? (
+                  <a href={`mailto:${contact.email}`} className="contact-detail">
+                    <span className="contact-detail-icon-wrap">
+                      <ContactIcon kind="email" />
+                    </span>
+                    <span className="contact-detail-copy">
+                      <span className="contact-detail-label">Email</span>
+                      <span className="contact-detail-value">{contact.email}</span>
+                    </span>
+                  </a>
+                ) : null}
 
-              {contact.location ? (
-                <div className="contact-detail">
-                  <span className="contact-detail-icon-wrap">
-                    <ContactIcon kind="location" />
-                  </span>
-                  <span className="contact-detail-copy">
-                    <span className="contact-detail-label">Location</span>
-                    <span className="contact-detail-value">{contact.location}</span>
-                  </span>
-                </div>
-              ) : null}
-            </div>
+                {contact.phone ? (
+                  <a href={`tel:${phoneHref}`} className="contact-detail">
+                    <span className="contact-detail-icon-wrap">
+                      <ContactIcon kind="phone" />
+                    </span>
+                    <span className="contact-detail-copy">
+                      <span className="contact-detail-label">Phone</span>
+                      <span className="contact-detail-value">{contact.phone}</span>
+                    </span>
+                  </a>
+                ) : null}
+              </div>
+
+              <ul className="contact-aside-points">
+                <li>Distance Reiki sessions available worldwide</li>
+                <li>Course enrollments &amp; private bookings welcome</li>
+                <li>Prefer WhatsApp? Use the button on the form</li>
+              </ul>
+
+              <p className="contact-aside-quote">
+                Healing begins the moment you are heard.
+              </p>
+            </aside>
           </SectionReveal>
 
-          <SectionReveal delay={0.16}>
+          <SectionReveal delay={0.16} className="contact-form-reveal">
             <div className="contact-form-panel">
               {showSuccess ? (
                 <div className="contact-success" role="status">

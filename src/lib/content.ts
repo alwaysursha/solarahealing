@@ -290,8 +290,25 @@ export async function getHomePageContent() {
     scheduleBooking: (map.get("scheduleBooking") as typeof scheduleBooking | undefined) ?? scheduleBooking,
     testimonialsIntro:
       (map.get("testimonialsIntro") as typeof testimonialsIntro | undefined) ?? testimonialsIntro,
-    testimonials: (map.get("testimonials") as typeof testimonials | undefined) ?? testimonials,
+    testimonials: normalizeTestimonials(map.get("testimonials")),
   };
+}
+
+function normalizeTestimonials(raw: unknown): typeof testimonials {
+  if (!Array.isArray(raw) || raw.length === 0) return testimonials;
+
+  const items = raw.filter(
+    (item): item is (typeof testimonials)[number] =>
+      !!item &&
+      typeof item === "object" &&
+      typeof (item as { quote?: unknown }).quote === "string" &&
+      typeof (item as { name?: unknown }).name === "string" &&
+      typeof (item as { location?: unknown }).location === "string",
+  );
+
+  // Prefer code defaults until CMS/seed catches up to the expanded set.
+  if (items.length < testimonials.length) return testimonials;
+  return items;
 }
 
 export async function getReikiPageContent(): Promise<ReikiPageContent> {
