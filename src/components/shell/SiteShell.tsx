@@ -25,7 +25,7 @@ const PANEL_POSITION = [
   "lg:bottom-2.5 lg:left-2",
 ].join(" ");
 
-const HASH_SCROLL_GAP_PX = 14;
+const HASH_SCROLL_GAP_PX = 22;
 
 export function SiteShell({ children }: SiteShellProps) {
   const pathname = usePathname();
@@ -76,13 +76,17 @@ export function SiteShell({ children }: SiteShellProps) {
     const target = document.getElementById(id);
     if (!target || !panel.contains(target)) return;
 
+    const gapRaw = getComputedStyle(document.documentElement)
+      .getPropertyValue("--panel-header-gap")
+      .trim();
+    const headerGap = Number.parseFloat(gapRaw) || 6;
+    // Use layout height (not getBoundingClientRect) so open mega-menus don't inflate offset.
+    const offset = (header?.offsetHeight ?? 88) + headerGap + HASH_SCROLL_GAP_PX;
     const panelRect = panel.getBoundingClientRect();
-    const headerBottom = header?.getBoundingClientRect().bottom ?? panelRect.top + 88;
-    const offset = Math.max(0, headerBottom - panelRect.top) + HASH_SCROLL_GAP_PX;
-    const delta = target.getBoundingClientRect().top - panelRect.top - offset;
-    if (Math.abs(delta) < 2) return;
+    const nextTop =
+      panel.scrollTop + (target.getBoundingClientRect().top - panelRect.top) - offset;
 
-    panel.scrollBy({ top: delta, behavior: "smooth" });
+    panel.scrollTo({ top: Math.max(0, nextTop), behavior: "smooth" });
   }, []);
 
   useEffect(() => {
@@ -111,19 +115,17 @@ export function SiteShell({ children }: SiteShellProps) {
 
   // Native hash scrolling fights our fixed header + custom scroll panel — align manually.
   useEffect(() => {
-    if (!window.location.hash) return;
-
-    const timers = [
-      window.setTimeout(scrollToHashTarget, 0),
-      window.setTimeout(scrollToHashTarget, 120),
-      window.setTimeout(scrollToHashTarget, 320),
-    ];
-
-    window.addEventListener("hashchange", scrollToHashTarget);
-    return () => {
-      timers.forEach((timer) => window.clearTimeout(timer));
-      window.removeEventListener("hashchange", scrollToHashTarget);
+    const onHash = () => {
+      if (!window.location.hash) return;
+      // Override the browser’s first jump after layout settles.
+      window.setTimeout(scrollToHashTarget, 0);
+      window.setTimeout(scrollToHashTarget, 80);
+      window.setTimeout(scrollToHashTarget, 200);
     };
+
+    onHash();
+    window.addEventListener("hashchange", onHash);
+    return () => window.removeEventListener("hashchange", onHash);
   }, [pathname, scrollToHashTarget]);
 
   return (

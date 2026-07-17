@@ -107,13 +107,15 @@ export function ContactSection({ contact }: { contact: ContactSectionInfo }) {
   };
 
   return (
-    <section id="contact" className="contact-section" aria-label="Contact Us">
+    <section className="contact-section" aria-label="Contact Us">
       <div className="contact-section-aura" aria-hidden />
       <div className="contact-section-inner">
         <SectionReveal>
-          <ChakraDivider />
-          <p className="contact-eyebrow">Begin your journey</p>
-          <h2 className="contact-title">Contact Us</h2>
+          <div id="contact" className="contact-scroll-target">
+            <ChakraDivider />
+            <p className="contact-eyebrow">Begin your journey</p>
+            <h2 className="contact-title">Contact Us</h2>
+          </div>
           <p className="contact-lede">
             Reach out for sessions, courses, or quiet guidance — we respond with care.
           </p>
