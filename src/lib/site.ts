@@ -668,23 +668,59 @@ export const footerSocial = {
   ],
 } as const;
 
-export const testimonials = [
+export type Testimonial = {
+  quote: string;
+  name: string;
+  location: string;
+};
+
+export const testimonials: Testimonial[] = [
   {
     quote:
       "After just three sessions, my chronic anxiety melted away. I felt a warmth I'd never experienced — like being held by light itself.",
     name: "Priya Sharma",
-    location: "Mumbai",
+    location: "Mumbai, India",
   },
   {
     quote:
       "The distance healing worked when nothing else did. I could feel the energy across continents. Truly miraculous.",
     name: "James Mitchell",
-    location: "London",
+    location: "London, UK",
   },
   {
     quote:
       "Her chakra balancing session was life-changing. I left feeling lighter, clearer, and deeply connected to something greater.",
     name: "Ananya Reddy",
-    location: "Bangalore",
+    location: "Bangalore, India",
   },
-] as const;
+  {
+    quote:
+      "I joined from Lahore feeling restless and heavy. After my session, sleep returned and my heart felt open again — as if someone had quietly reset my energy.",
+    name: "Ayesha Khan",
+    location: "Lahore, Pakistan",
+  },
+  {
+    quote:
+      "Soulara's Reiki course gave me a language for what I had always sensed. The practices are gentle, profound, and now part of my every morning.",
+    name: "Rohan Mehta",
+    location: "Delhi, India",
+  },
+  {
+    quote:
+      "From Toronto, the distance session still felt intimate. My shoulders softened, my mind quieted, and I carried that calm through the whole week.",
+    name: "Sophie Chen",
+    location: "Toronto, Canada",
+  },
+  {
+    quote:
+      "I came skeptical from New York. One private session shifted years of held tension — I finally felt safe in my own body again.",
+    name: "Marcus Ellison",
+    location: "New York, USA",
+  },
+  {
+    quote:
+      "Living in Edinburgh, I longed for grounded spiritual support. Soulara’s guidance is warm, clear, and deeply trustworthy.",
+    name: "Emily Hughes",
+    location: "Edinburgh, UK",
+  },
+];
