@@ -2,6 +2,7 @@
 
 import dynamic from "next/dynamic";
 import { useMemo, useState, useTransition } from "react";
+import { AdminImageFocusField } from "@/components/admin/catalog/AdminImageFocusField";
 import { AdminMediaUploader } from "@/components/admin/AdminMediaUploader";
 import { AdminPanel } from "@/components/admin/AdminShell";
 import {
@@ -19,6 +20,7 @@ import {
   type HeroSlideButton,
   type SiteNavItem,
 } from "@/lib/frontpage-content";
+import { parseImageObjectPosition, toImageObjectPosition } from "@/lib/image-focus";
 
 function createClientId() {
   if (typeof crypto !== "undefined" && "randomUUID" in crypto) {
@@ -83,31 +85,34 @@ function SaveBar({
 }
 
 function HeroPreview({ slide }: { slide: HeroSlide }) {
+  const position = slide.imagePosition || "50% 50%";
+
   return (
     <div className="overflow-hidden rounded-2xl border border-[var(--admin-border)] bg-gradient-to-br from-[#f7f4fc] via-white to-[#f4eef8]">
-      <div className="grid gap-0 lg:grid-cols-2">
-        <div className="relative min-h-[220px] bg-purple-deep/10">
-          {slide.image ? (
-            // eslint-disable-next-line @next/next/no-img-element
-            <img
-              src={slide.image}
-              alt={slide.imageAlt || ""}
-              className="absolute inset-0 h-full w-full object-cover"
-              style={{ objectPosition: slide.imagePosition || "50% 50%" }}
-            />
-          ) : (
-            <div className="flex h-full min-h-[220px] items-center justify-center text-sm text-[var(--admin-text-muted)]">
-              Upload a hero image
-            </div>
-          )}
-        </div>
-        <div className="space-y-3 p-5">
-          <p className="text-[0.65rem] font-semibold uppercase tracking-[0.22em] text-gold">{slide.eyebrowSub}</p>
-          <h3 className="font-serif text-2xl text-purple-deep">
+      <div className="relative aspect-[21/9] min-h-[200px] overflow-hidden bg-purple-deep/10">
+        {slide.image ? (
+          // eslint-disable-next-line @next/next/no-img-element
+          <img
+            src={slide.image}
+            alt={slide.imageAlt || ""}
+            className="absolute inset-0 h-full w-full object-cover"
+            style={{ objectPosition: position }}
+          />
+        ) : (
+          <div className="flex h-full min-h-[200px] items-center justify-center text-sm text-[var(--admin-text-muted)]">
+            Upload a hero image
+          </div>
+        )}
+        <div className="absolute inset-0 bg-gradient-to-r from-white/92 via-white/55 to-transparent" />
+        <div className="relative z-[1] flex h-full max-w-md flex-col justify-center p-5 sm:p-7">
+          <p className="text-[0.65rem] font-semibold uppercase tracking-[0.22em] text-gold">
+            {slide.eyebrowSub}
+          </p>
+          <h3 className="font-serif mt-2 text-2xl text-purple-deep sm:text-3xl">
             {slide.title} <span className="text-gold">{slide.titleAccent}</span>
           </h3>
-          <p className="text-sm leading-relaxed text-purple-deep/65">{slide.description}</p>
-          <div className="flex flex-wrap gap-2 pt-2">
+          <p className="mt-2 text-sm leading-relaxed text-purple-deep/65">{slide.description}</p>
+          <div className="mt-4 flex flex-wrap gap-2">
             {slide.buttons.map((button) => (
               <span
                 key={button.id}
@@ -149,6 +154,10 @@ export function AdminFrontpageManager({
   const activeSlide = useMemo(
     () => slides.find((slide) => slide.id === activeSlideId) ?? slides[0],
     [activeSlideId, slides],
+  );
+  const activeSlideFocus = useMemo(
+    () => parseImageObjectPosition(activeSlide?.imagePosition),
+    [activeSlide?.imagePosition],
   );
 
   const updateSlide = (id: string, patch: Partial<HeroSlide>) => {
@@ -431,21 +440,12 @@ export function AdminFrontpageManager({
                     onChange={(event) => updateSlide(activeSlide.id, { description: event.target.value })}
                   />
                 </label>
-                <label className="admin-field text-sm">
+                <label className="admin-field text-sm lg:col-span-2">
                   <span className="admin-field-label font-medium">Image alt</span>
                   <input
                     className={fieldClass()}
                     value={activeSlide.imageAlt}
                     onChange={(event) => updateSlide(activeSlide.id, { imageAlt: event.target.value })}
-                  />
-                </label>
-                <label className="admin-field text-sm">
-                  <span className="admin-field-label font-medium">Focus position</span>
-                  <input
-                    className={fieldClass()}
-                    value={activeSlide.imagePosition || "50% 50%"}
-                    onChange={(event) => updateSlide(activeSlide.id, { imagePosition: event.target.value })}
-                    placeholder="50% 40%"
                   />
                 </label>
               </div>
@@ -456,6 +456,25 @@ export function AdminFrontpageManager({
                   folder="hero"
                   value={activeSlide.image}
                   onChange={(url) => updateSlide(activeSlide.id, { image: url })}
+                />
+              </div>
+
+              <div className="mt-5">
+                <AdminImageFocusField
+                  key={`${activeSlide.id}-${activeSlide.image || "empty"}`}
+                  imageUrl={activeSlide.image}
+                  imageAlt={activeSlide.imageAlt}
+                  focusX={activeSlideFocus.x}
+                  focusY={activeSlideFocus.y}
+                  includeFormInputs={false}
+                  aspectClassName="aspect-[21/9]"
+                  label="Hero image framing"
+                  helpText="Drag the crosshair or use the sliders to reframe the crop. Move focus right if the right edge is cut off. Save hero section when done."
+                  onFocusChange={(focusX, focusY) =>
+                    updateSlide(activeSlide.id, {
+                      imagePosition: toImageObjectPosition(focusX, focusY),
+                    })
+                  }
                 />
               </div>
 

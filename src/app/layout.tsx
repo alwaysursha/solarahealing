@@ -1,5 +1,6 @@
 import type { Metadata } from "next";
 import { Instrument_Serif, Plus_Jakarta_Sans } from "next/font/google";
+import localFont from "next/font/local";
 import { Providers } from "@/components/Providers";
 import { SITE_DESCRIPTION, SITE_NAME } from "@/lib/constants";
 import "./globals.css";
@@ -16,6 +17,14 @@ const instrumentSerif = Instrument_Serif({
   variable: "--font-instrument-serif",
   subsets: ["latin"],
   weight: ["400"],
+});
+
+const priestacy = localFont({
+  src: "../fonts/Priestacy.otf",
+  variable: "--font-priestacy",
+  display: "swap",
+  weight: "400",
+  style: "normal",
 });
 
 export async function generateMetadata(): Promise<Metadata> {
@@ -37,7 +46,7 @@ export default function RootLayout({
     <html
       lang="en"
       data-brand-theme="8"
-      className={`${jakarta.variable} ${instrumentSerif.variable} h-full antialiased`}
+      className={`${jakarta.variable} ${instrumentSerif.variable} ${priestacy.variable} h-full antialiased`}
       suppressHydrationWarning
     >
       <body className="h-full">

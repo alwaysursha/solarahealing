@@ -1,6 +1,7 @@
 "use client";
 
 import { motion, useReducedMotion } from "framer-motion";
+import Image from "next/image";
 import { useEffect, useRef, useState, type ReactNode } from "react";
 import { useAnimationsActive } from "@/hooks/useAnimationsActive";
 import { useHeroEntranceComplete } from "@/hooks/useHeroEntranceComplete";
@@ -8,15 +9,8 @@ import { aboutContent as staticAbout } from "@/lib/site";
 import { DEFAULT_QUOTE_LABEL, normalizeAboutContent, type AboutContent } from "@/lib/frontpage-content";
 
 const ease = [0.22, 1, 0.36, 1] as const;
-
-const particles = [
-  { x: "18%", y: "72%", size: 4, delay: 0 },
-  { x: "78%", y: "65%", size: 3, delay: 0.4 },
-  { x: "62%", y: "28%", size: 5, delay: 0.8 },
-  { x: "32%", y: "38%", size: 3, delay: 1.2 },
-  { x: "85%", y: "42%", size: 4, delay: 0.6 },
-  { x: "12%", y: "48%", size: 3, delay: 1.5 },
-];
+const DEFAULT_ABOUT_IMAGE = "/about/vanita-portrait-v3.jpg";
+const DEFAULT_ABOUT_IMAGE_ALT = "Vanita Bassi, founder of Soulara Healing Academy";
 
 function Reveal({
   children,
@@ -46,141 +40,72 @@ function Reveal({
   );
 }
 
-function AboutEnergyVisual({ animationsActive }: { animationsActive: boolean }) {
+function AboutPortraitVisual({
+  animationsActive,
+  src,
+  alt,
+}: {
+  animationsActive: boolean;
+  src: string;
+  alt: string;
+}) {
   const reduceMotion = useReducedMotion();
-  const motionEnabled = animationsActive && !reduceMotion;
 
   return (
-    <div className="relative h-full w-full overflow-hidden rounded-xl lg:rounded-2xl">
-      <div className="absolute inset-0 bg-gradient-to-br from-[#352560] via-purple-deep to-[#2A1848]" />
-
-      <div
-        className="absolute inset-0 opacity-60"
-        style={{
-          backgroundImage:
-            "radial-gradient(circle at 30% 35%, rgba(212,173,53,0.32) 0%, transparent 42%), radial-gradient(circle at 72% 68%, rgba(157,77,174,0.4) 0%, transparent 48%), radial-gradient(circle at 50% 50%, rgba(116,112,232,0.12) 0%, transparent 55%)",
-        }}
-        aria-hidden
-      />
-
+    <div className="about-portrait relative h-full w-full overflow-hidden rounded-xl bg-[#d9d2df] lg:rounded-2xl">
       <motion.div
-        className="absolute left-1/2 top-1/2 h-44 w-44 -translate-x-1/2 -translate-y-1/2 rounded-full bg-gold/20 blur-3xl"
-        animate={motionEnabled ? { scale: [1, 1.15, 1], opacity: [0.5, 0.75, 0.5] } : undefined}
-        transition={
-          motionEnabled
-            ? { duration: 5, repeat: Infinity, ease: "easeInOut" }
-            : undefined
-        }
-        aria-hidden
-      />
-
-      <svg
-        viewBox="0 0 400 400"
-        className="absolute inset-0 h-full w-full"
-        aria-hidden
+        className="absolute inset-0"
+        initial={reduceMotion ? false : { opacity: 0 }}
+        animate={animationsActive || reduceMotion ? { opacity: 1 } : { opacity: 0 }}
+        transition={{ duration: 0.85, ease }}
       >
-        <defs>
-          <radialGradient id="about-core-glow" cx="50%" cy="50%" r="50%">
-            <stop offset="0%" stopColor="#dbb94a" stopOpacity="0.9" />
-            <stop offset="45%" stopColor="#c9a227" stopOpacity="0.35" />
-            <stop offset="100%" stopColor="#5C1A94" stopOpacity="0" />
-          </radialGradient>
-          <filter id="about-soft-glow" x="-50%" y="-50%" width="200%" height="200%">
-            <feGaussianBlur stdDeviation="8" result="blur" />
-            <feMerge>
-              <feMergeNode in="blur" />
-              <feMergeNode in="SourceGraphic" />
-            </feMerge>
-          </filter>
-        </defs>
+        <Image
+          src={src}
+          alt={alt}
+          fill
+          priority
+          unoptimized
+          sizes="(max-width: 1024px) 100vw, 420px"
+          className="object-contain object-center"
+        />
+      </motion.div>
+      <div className="pointer-events-none absolute inset-0 ring-1 ring-inset ring-black/10" aria-hidden />
+    </div>
+  );
+}
 
-        {[88, 112, 136].map((radius, index) => (
-          <circle
-            key={radius}
-            cx="200"
-            cy="200"
-            r={radius}
-            fill="none"
-            stroke="#c9a227"
-            strokeWidth="0.6"
-            opacity={0.12 + index * 0.06}
-          />
-        ))}
+function AboutSignature({ active }: { active: boolean }) {
+  const reduceMotion = useReducedMotion();
+  const name = "Vanita Bassi";
 
-        {[0, 45, 90, 135, 180, 225, 270, 315].map((angle, index) => (
-          <ellipse
-            key={angle}
-            cx="200"
-            cy="200"
-            rx="34"
-            ry="82"
-            fill="url(#about-core-glow)"
-            opacity={0.22 + (index % 3) * 0.05}
-            transform={`rotate(${angle} 200 200)`}
-          />
-        ))}
-
-        <circle cx="200" cy="200" r="28" fill="#c9a227" opacity="0.85" filter="url(#about-soft-glow)" />
-        <circle cx="200" cy="200" r="12" fill="#faf7f2" opacity="0.95" />
-
-        <motion.g
-          animate={motionEnabled ? { rotate: 360 } : undefined}
-          transition={
-            motionEnabled
-              ? { duration: 90, repeat: Infinity, ease: "linear" }
-              : undefined
-          }
-          style={{ transformOrigin: "200px 200px" }}
-        >
-          {[0, 120, 240].map((angle) => (
-            <line
-              key={angle}
-              x1="200"
-              y1="200"
-              x2="200"
-              y2="72"
-              stroke="#dbb94a"
-              strokeWidth="0.8"
-              opacity="0.25"
-              transform={`rotate(${angle} 200 200)`}
-            />
-          ))}
-        </motion.g>
-      </svg>
-
-      {motionEnabled &&
-        particles.map((particle) => (
-          <motion.span
-            key={`${particle.x}-${particle.y}`}
-            className="absolute rounded-full bg-gold-light/80 shadow-[0_0_12px_rgba(219,185,74,0.8)]"
-            style={{
-              left: particle.x,
-              top: particle.y,
-              width: particle.size,
-              height: particle.size,
-            }}
-            animate={{ y: [0, -28, 0], opacity: [0.2, 0.9, 0.2] }}
-            transition={{
-              duration: 4.5 + particle.delay,
-              repeat: Infinity,
-              ease: "easeInOut",
-              delay: particle.delay,
-            }}
-            aria-hidden
-          />
-        ))}
-
-      <div className="absolute inset-0 bg-gradient-to-t from-[#2A1848]/65 via-transparent to-[#352560]/20" />
-      <div className="absolute inset-0 ring-1 ring-inset ring-gold/20" />
-
-      <div className="absolute bottom-4 left-4 right-4 md:bottom-5 md:left-5 md:right-5">
-        <p className="font-serif text-sm italic text-gold-light/90 md:text-base">
-          Universal light, inner peace
+  if (reduceMotion) {
+    return (
+      <div className="about-signature-block">
+        <p className="about-signature">
+          <span className="about-signature-first">Vanita </span>
+          <span className="about-signature-last">Bassi</span>
         </p>
-        <p className="mt-1 text-[0.6rem] uppercase tracking-[0.28em] text-white">
-          Energy · Balance · Renewal
-        </p>
+        <p className="about-signature-role text-gold">Founder</p>
       </div>
+    );
+  }
+
+  return (
+    <div className="about-signature-block">
+      <p className="about-signature" aria-label={name}>
+        <span className={["about-signature-write", active ? "is-active" : ""].join(" ")} aria-hidden>
+          <span className="about-signature-first">Vanita </span>
+          <span className="about-signature-last">Bassi</span>
+        </span>
+      </p>
+      <motion.p
+        className="about-signature-role text-gold"
+        initial={{ opacity: 0 }}
+        animate={active ? { opacity: 1 } : { opacity: 0 }}
+        transition={{ duration: 0.6, delay: active ? 0.9 : 0, ease }}
+      >
+        Founder
+      </motion.p>
     </div>
   );
 }
@@ -358,6 +283,8 @@ export function AboutSection({
     ? resolved.paragraphs
     : [...staticAbout.paragraphs];
   const [first, second, third] = paragraphs;
+  const portraitSrc = resolved.image?.trim() || DEFAULT_ABOUT_IMAGE;
+  const portraitAlt = resolved.imageAlt?.trim() || DEFAULT_ABOUT_IMAGE_ALT;
   const sectionRef = useRef<HTMLElement>(null);
   const heroEntranceComplete = useHeroEntranceComplete();
   const scrollAnimationsActive = useAnimationsActive(sectionRef);
@@ -372,10 +299,17 @@ export function AboutSection({
       <div className="mx-auto grid max-w-7xl gap-6 md:gap-8 lg:grid-cols-12 lg:items-stretch lg:gap-6 xl:gap-10">
         <Reveal
           delay={0.05}
-          className="order-2 lg:order-none lg:col-span-3 lg:flex lg:h-full lg:flex-col"
+          className="order-2 lg:order-none lg:col-span-3 lg:self-start"
         >
-          <div className="relative aspect-[16/10] lg:aspect-auto lg:min-h-[22rem] lg:flex-1">
-            <AboutEnergyVisual animationsActive={animationsActive} />
+          <div className="relative w-full overflow-visible">
+            <div className="relative aspect-[68/85] w-full overflow-hidden">
+              <AboutPortraitVisual
+                animationsActive={animationsActive}
+                src={portraitSrc}
+                alt={portraitAlt}
+              />
+            </div>
+            <AboutSignature active={animationsActive} />
           </div>
         </Reveal>
 
