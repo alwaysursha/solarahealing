@@ -3732,18 +3732,18 @@ a.contact-detail:hover {
 
 .footer-brand-logo {
   display: inline-flex;
-  max-width: min(100%, 18rem);
+  max-width: min(100%, 20rem);
 }
 
 .footer-brand-logo img {
-  height: 3.25rem !important;
+  height: 3.5rem !important;
   max-width: 100%;
   scale: 1 !important;
 }
 
 @media (min-width: 768px) {
   .footer-brand-logo img {
-    height: 3.75rem !important;
+    height: 4.25rem !important;
   }
 }
 
@@ -4201,20 +4201,20 @@ a.contact-detail:hover {
 
 .testimonial-carousel-stage {
   position: relative;
-  min-height: 22rem;
+  min-height: 18.5rem;
   perspective: 1400px;
   transform-style: preserve-3d;
 }
 
 @media (max-width: 639px) {
   .testimonial-carousel-stage {
-    min-height: 26rem;
+    min-height: 21rem;
   }
 }
 
 @media (min-width: 768px) {
   .testimonial-carousel-stage {
-    min-height: 24rem;
+    min-height: 20rem;
   }
 }
 
@@ -4222,7 +4222,7 @@ a.contact-detail:hover {
   position: absolute;
   inset: 0;
   display: flex;
-  align-items: stretch;
+  align-items: center;
   justify-content: center;
   pointer-events: none;
   transform-style: preserve-3d;
@@ -4230,6 +4230,7 @@ a.contact-detail:hover {
 
 .testimonial-carousel-card-inner {
   width: min(100%, 34rem);
+  height: auto;
   margin: 0 auto;
 }
 
@@ -4242,20 +4243,6 @@ a.contact-detail:hover {
 }
 
 .testimonial-carousel-card-active .testimonial-card-corner {
-  opacity: 1;
-}
-
-.testimonial-carousel-glow {
-  pointer-events: none;
-  position: absolute;
-  inset: auto -10% -30% -10%;
-  height: 55%;
-  background: radial-gradient(ellipse at 50% 0%, rgba(201, 162, 39, 0.14), transparent 70%);
-  opacity: 0;
-  transition: opacity 0.45s ease;
-}
-
-.testimonial-carousel-card-active .testimonial-carousel-glow {
   opacity: 1;
 }
 
