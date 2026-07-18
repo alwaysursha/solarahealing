@@ -297,8 +297,18 @@ export function normalizeAboutContent(raw: unknown): AboutContent {
         ? row.quoteLabel
         : DEFAULT_QUOTE_LABEL,
     bodyHtml,
-    image: typeof row.image === "string" && row.image.trim() ? row.image : undefined,
-    imageAlt: typeof row.imageAlt === "string" ? row.imageAlt : undefined,
+    image:
+      typeof row.image === "string" && row.image.trim()
+        ? row.image
+        : "image" in aboutContent && typeof aboutContent.image === "string"
+          ? aboutContent.image
+          : undefined,
+    imageAlt:
+      typeof row.imageAlt === "string" && row.imageAlt.trim()
+        ? row.imageAlt
+        : "imageAlt" in aboutContent && typeof aboutContent.imageAlt === "string"
+          ? aboutContent.imageAlt
+          : undefined,
     paragraphs,
   };
 }

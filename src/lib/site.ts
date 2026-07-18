@@ -24,6 +24,8 @@ export const site = {
 export const aboutContent = {
   opener: "At Soulara Healing Academy,",
   quote: "Healing begins from within.",
+  image: "/about/vanita-portrait-v3.jpg",
+  imageAlt: "Vanita Bassi, founder of Soulara Healing Academy",
   paragraphs: [
     "we believe in the profound power of energy healing and the ability of Reiki to support balance, relaxation, and inner transformation. Our mission is to create a safe, nurturing, and welcoming space where individuals can reconnect with themselves, restore harmony, and embrace their natural healing journey.",
     "Through authentic Reiki practices, compassionate guidance, and thoughtfully designed learning experiences, Soulara Healing Academy is committed to making this ancient healing art accessible to everyone. Whether you are seeking personal growth, emotional balance, stress relief, or a deeper spiritual connection, our approach is centered around respect, mindfulness, and the belief that healing begins from within.",
