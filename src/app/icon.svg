@@ -1,0 +1,62 @@
+<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 64 64" role="img" aria-label="Soulara Healing Academy">
+  <defs>
+    <linearGradient id="soulara-bg" x1="12" y1="4" x2="52" y2="60" gradientUnits="userSpaceOnUse">
+      <stop offset="0%" stop-color="#7A2A8E"/>
+      <stop offset="48%" stop-color="#5C1470"/>
+      <stop offset="100%" stop-color="#3F0E52"/>
+    </linearGradient>
+    <linearGradient id="soulara-gold" x1="18" y1="14" x2="46" y2="50" gradientUnits="userSpaceOnUse">
+      <stop offset="0%" stop-color="#F3E2A8"/>
+      <stop offset="42%" stop-color="#E8C978"/>
+      <stop offset="100%" stop-color="#C9A227"/>
+    </linearGradient>
+    <radialGradient id="soulara-glow" cx="50%" cy="42%" r="46%">
+      <stop offset="0%" stop-color="#F06BDE" stop-opacity="0.28"/>
+      <stop offset="55%" stop-color="#B84DC8" stop-opacity="0.12"/>
+      <stop offset="100%" stop-color="#5C1470" stop-opacity="0"/>
+    </radialGradient>
+  </defs>
+
+  <!-- Soft app-icon tile -->
+  <rect width="64" height="64" rx="14" fill="url(#soulara-bg)"/>
+  <rect width="64" height="64" rx="14" fill="url(#soulara-glow)"/>
+
+  <!-- Crescent moon -->
+  <path
+    fill="url(#soulara-gold)"
+    d="M40.8 14.2c-8.6 1.4-15 8.9-15 17.9s6.4 16.5 15 17.9c-10.2.2-18.5-8-18.5-18.1S30.6 14 40.8 14.2Z"
+  />
+
+  <!-- Lotus: center petal -->
+  <path
+    fill="url(#soulara-gold)"
+    d="M32 28.5c1.8 3.2 2.8 6.4 2.8 9.2 0 2.6-1.2 4.5-2.8 5.8-1.6-1.3-2.8-3.2-2.8-5.8 0-2.8 1-6 2.8-9.2Z"
+  />
+  <!-- Left petal -->
+  <path
+    fill="url(#soulara-gold)"
+    opacity="0.92"
+    d="M32 36.2c-2.4-1.1-5.2-1.2-7.6-.2-1.5.6-2.5 1.7-2.8 3.1 2.3 1.9 5.2 3.1 8.3 3.4-.1-2.1.4-4.2 2.1-6.3Z"
+  />
+  <!-- Right petal -->
+  <path
+    fill="url(#soulara-gold)"
+    opacity="0.92"
+    d="M32 36.2c2.4-1.1 5.2-1.2 7.6-.2 1.5.6 2.5 1.7 2.8 3.1-2.3 1.9-5.2 3.1-8.3 3.4.1-2.1-.4-4.2-2.1-6.3Z"
+  />
+  <!-- Outer left petal -->
+  <path
+    fill="url(#soulara-gold)"
+    opacity="0.78"
+    d="M31.4 38.4c-3.1-2.4-6.8-3.4-9.9-2.6-1.2.3-2.1 1.1-2.5 2.2 3.1 2.8 7.1 4.5 11.2 4.9-.1-1.6.1-3 .1-4.5Z"
+  />
+  <!-- Outer right petal -->
+  <path
+    fill="url(#soulara-gold)"
+    opacity="0.78"
+    d="M32.6 38.4c3.1-2.4 6.8-3.4 9.9-2.6 1.2.3 2.1 1.1 2.5 2.2-3.1 2.8-7.1 4.5-11.2 4.9.1-1.6-.1-3-.1-4.5Z"
+  />
+
+  <!-- Soft highlight -->
+  <circle cx="26" cy="22" r="3.2" fill="#fff" opacity="0.16"/>
+</svg>
