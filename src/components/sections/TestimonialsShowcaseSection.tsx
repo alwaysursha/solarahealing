@@ -97,16 +97,15 @@ function TestimonialSlideCard({
       transition={{ duration: 0.7, ease }}
       aria-hidden={!isActive}
     >
-      <div className="testimonial-card-inner testimonial-carousel-card-inner relative h-full overflow-hidden rounded-[1.75rem] border border-purple-deep/8 bg-white p-8 md:p-10">
+      <div className="testimonial-card-inner testimonial-carousel-card-inner relative overflow-hidden rounded-[1.75rem] border border-purple-deep/8 bg-white p-7 md:p-9">
         <div className="testimonial-card-corner testimonial-card-corner-tl" aria-hidden />
         <div className="testimonial-card-corner testimonial-card-corner-br" aria-hidden />
-        <div className="testimonial-carousel-glow" aria-hidden />
         <QuoteMark className="testimonial-quote-icon h-10 w-10 text-gold/35" />
-        <p className="font-serif mt-6 text-[1.12rem] font-normal leading-[1.65] tracking-[-0.01em] text-purple-deep/85 md:text-[1.28rem]">
+        <p className="font-serif mt-5 text-[1.12rem] font-normal leading-[1.65] tracking-[-0.01em] text-purple-deep/85 md:text-[1.28rem]">
           &ldquo;{item.quote}&rdquo;
         </p>
-        <div className="testimonial-card-rule mt-8 h-px w-full bg-gradient-to-r from-gold/70 via-gold/25 to-transparent" />
-        <footer className="mt-6 flex items-end justify-between gap-4">
+        <div className="testimonial-card-rule mt-6 h-px w-full bg-gradient-to-r from-gold/70 via-gold/25 to-transparent" />
+        <footer className="mt-5 flex items-end justify-between gap-4">
           <div>
             <p className="font-medium text-purple-deep">{item.name}</p>
             <p className="mt-1 text-[0.72rem] font-medium uppercase tracking-[0.18em] text-purple-deep/45">

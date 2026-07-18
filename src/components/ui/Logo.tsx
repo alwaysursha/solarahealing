@@ -3,8 +3,11 @@ import { site } from "@/lib/site";
 
 export const LOGO_SRC = "/brand/Soulara-logo-transparent.png";
 export const HEADER_LOGO_SRC = "/brand/Soulara-logo-header.png";
+export const FOOTER_LOGO_SRC = "/brand/Soulara-logo-footer.png";
 export const LOGO_WIDTH = 972;
 export const LOGO_HEIGHT = 312;
+export const FOOTER_LOGO_WIDTH = 958;
+export const FOOTER_LOGO_HEIGHT = 312;
 
 type LogoProps = {
   variant?: "light" | "dark";
@@ -13,7 +16,9 @@ type LogoProps = {
 
 export function Logo({ variant = "light", className = "" }: LogoProps) {
   const isLight = variant === "light";
-  const src = isLight ? HEADER_LOGO_SRC : LOGO_SRC;
+  const src = isLight ? HEADER_LOGO_SRC : FOOTER_LOGO_SRC;
+  const width = isLight ? LOGO_WIDTH : FOOTER_LOGO_WIDTH;
+  const height = isLight ? LOGO_HEIGHT : FOOTER_LOGO_HEIGHT;
 
   return (
     <a
@@ -23,8 +28,8 @@ export function Logo({ variant = "light", className = "" }: LogoProps) {
       <Image
         src={src}
         alt={`${site.name} — Heal, Align, Awaken`}
-        width={LOGO_WIDTH}
-        height={LOGO_HEIGHT}
+        width={width}
+        height={height}
         priority={isLight}
         className={[
           "w-auto origin-left object-contain object-left",
