@@ -1,8 +1,9 @@
 "use client";
 
-import { useCallback, useState } from "react";
+import { useCallback, useEffect, useState } from "react";
 import Cropper, { type Area } from "react-easy-crop";
 import { getEditedImageBlob, type ImageAdjustments } from "@/lib/admin/crop-image";
+import { resolveEditableImageSrc } from "@/lib/admin/editable-image";
 
 export type AdvancedEditorAspect = "free" | "1:1" | "4:3" | "16:9" | "16:10" | "21:9";
 
@@ -45,27 +46,77 @@ export function AdminAdvancedImageEditor({
   const [croppedAreaPixels, setCroppedAreaPixels] = useState<Area | null>(null);
   const [adjustments, setAdjustments] = useState<ImageAdjustments>(DEFAULT_ADJUSTMENTS);
   const [saving, setSaving] = useState(false);
+  const [loading, setLoading] = useState(false);
+  const [editableSrc, setEditableSrc] = useState<string | null>(null);
   const [error, setError] = useState<string | null>(null);
 
   const aspect = ASPECT_OPTIONS.find((option) => option.id === aspectId)?.value;
+
+  useEffect(() => {
+    if (!open) return;
+
+    let cancelled = false;
+    let objectUrl: string | null = null;
+
+    setLoading(true);
+    setError(null);
+    setEditableSrc(null);
+    setCrop({ x: 0, y: 0 });
+    setZoom(1);
+    setRotation(0);
+    setAspectId(initialAspect);
+    setAdjustments(DEFAULT_ADJUSTMENTS);
+    setCroppedAreaPixels(null);
+
+    void (async () => {
+      try {
+        const resolved = await resolveEditableImageSrc(imageSrc);
+        if (cancelled) {
+          if (resolved.startsWith("blob:")) URL.revokeObjectURL(resolved);
+          return;
+        }
+        objectUrl = resolved.startsWith("blob:") ? resolved : null;
+        setEditableSrc(resolved);
+      } catch (err) {
+        if (!cancelled) {
+          setError(err instanceof Error ? err.message : "Could not load image for editing.");
+        }
+      } finally {
+        if (!cancelled) setLoading(false);
+      }
+    })();
+
+    return () => {
+      cancelled = true;
+      if (objectUrl) URL.revokeObjectURL(objectUrl);
+    };
+  }, [open, imageSrc, initialAspect]);
 
   const onCropComplete = useCallback((_: Area, pixels: Area) => {
     setCroppedAreaPixels(pixels);
   }, []);
 
+  const handleClose = () => {
+    if (editableSrc?.startsWith("blob:")) {
+      URL.revokeObjectURL(editableSrc);
+    }
+    setEditableSrc(null);
+    onClose();
+  };
+
   const handleSave = async () => {
-    if (!croppedAreaPixels) return;
+    if (!croppedAreaPixels || !editableSrc) return;
     setSaving(true);
     setError(null);
     try {
       const blob = await getEditedImageBlob({
-        imageSrc,
+        imageSrc: editableSrc,
         pixelCrop: croppedAreaPixels,
         rotation,
         adjustments,
       });
       await onSave(blob);
-      onClose();
+      handleClose();
     } catch (err) {
       setError(
         err instanceof Error
@@ -87,36 +138,44 @@ export function AdminAdvancedImageEditor({
             <p className="admin-image-editor-eyebrow">Advanced photo editor</p>
             <h3 className="admin-image-editor-title">{title}</h3>
           </div>
-          <button type="button" className="admin-image-editor-ghost" onClick={onClose} disabled={saving}>
+          <button type="button" className="admin-image-editor-ghost" onClick={handleClose} disabled={saving}>
             Close
           </button>
         </div>
 
         <div className="admin-image-editor-stage">
-          <div
-            className="admin-image-editor-crop"
-            style={{
-              filter: [
-                `brightness(${adjustments.brightness}%)`,
-                `contrast(${adjustments.contrast}%)`,
-                `saturate(${adjustments.saturate}%)`,
-              ].join(" "),
-            }}
-          >
-            <Cropper
-              image={imageSrc}
-              crop={crop}
-              zoom={zoom}
-              rotation={rotation}
-              aspect={aspect}
-              onCropChange={setCrop}
-              onZoomChange={setZoom}
-              onRotationChange={setRotation}
-              onCropComplete={onCropComplete}
-              objectFit="contain"
-              showGrid
-            />
-          </div>
+          {loading ? (
+            <div className="admin-image-editor-status">Preparing image for editing…</div>
+          ) : editableSrc ? (
+            <div
+              className="admin-image-editor-crop"
+              style={{
+                filter: [
+                  `brightness(${adjustments.brightness}%)`,
+                  `contrast(${adjustments.contrast}%)`,
+                  `saturate(${adjustments.saturate}%)`,
+                ].join(" "),
+              }}
+            >
+              <Cropper
+                image={editableSrc}
+                crop={crop}
+                zoom={zoom}
+                rotation={rotation}
+                aspect={aspect}
+                onCropChange={setCrop}
+                onZoomChange={setZoom}
+                onRotationChange={setRotation}
+                onCropComplete={onCropComplete}
+                objectFit="contain"
+                showGrid
+              />
+            </div>
+          ) : (
+            <div className="admin-image-editor-status">
+              {error || "Could not load image for editing."}
+            </div>
+          )}
         </div>
 
         <div className="admin-image-editor-controls">
@@ -130,6 +189,7 @@ export function AdminAdvancedImageEditor({
                   aspectId === option.id ? "admin-image-editor-chip-active" : "",
                 ].join(" ")}
                 onClick={() => setAspectId(option.id)}
+                disabled={!editableSrc || saving}
               >
                 {option.label}
               </button>
@@ -144,6 +204,7 @@ export function AdminAdvancedImageEditor({
               max={3}
               step={0.01}
               value={zoom}
+              disabled={!editableSrc || saving}
               onChange={(event) => setZoom(Number(event.target.value))}
             />
           </label>
@@ -156,6 +217,7 @@ export function AdminAdvancedImageEditor({
               max={360}
               step={1}
               value={rotation}
+              disabled={!editableSrc || saving}
               onChange={(event) => setRotation(Number(event.target.value))}
             />
           </label>
@@ -168,6 +230,7 @@ export function AdminAdvancedImageEditor({
               max={140}
               step={1}
               value={adjustments.brightness}
+              disabled={!editableSrc || saving}
               onChange={(event) =>
                 setAdjustments((prev) => ({ ...prev, brightness: Number(event.target.value) }))
               }
@@ -182,6 +245,7 @@ export function AdminAdvancedImageEditor({
               max={140}
               step={1}
               value={adjustments.contrast}
+              disabled={!editableSrc || saving}
               onChange={(event) =>
                 setAdjustments((prev) => ({ ...prev, contrast: Number(event.target.value) }))
               }
@@ -196,6 +260,7 @@ export function AdminAdvancedImageEditor({
               max={180}
               step={1}
               value={adjustments.saturate}
+              disabled={!editableSrc || saving}
               onChange={(event) =>
                 setAdjustments((prev) => ({ ...prev, saturate: Number(event.target.value) }))
               }
@@ -206,6 +271,7 @@ export function AdminAdvancedImageEditor({
             <button
               type="button"
               className="admin-image-editor-chip"
+              disabled={!editableSrc || saving}
               onClick={() => {
                 setZoom(1);
                 setRotation(0);
@@ -220,14 +286,14 @@ export function AdminAdvancedImageEditor({
           {error ? <p className="admin-image-editor-error">{error}</p> : null}
 
           <div className="admin-image-editor-actions">
-            <button type="button" className="admin-image-editor-ghost" onClick={onClose} disabled={saving}>
+            <button type="button" className="admin-image-editor-ghost" onClick={handleClose} disabled={saving}>
               Cancel
             </button>
             <button
               type="button"
               className="admin-image-editor-primary"
               onClick={() => void handleSave()}
-              disabled={saving || !croppedAreaPixels}
+              disabled={saving || loading || !editableSrc || !croppedAreaPixels}
             >
               {saving ? "Saving…" : "Apply & upload"}
             </button>
