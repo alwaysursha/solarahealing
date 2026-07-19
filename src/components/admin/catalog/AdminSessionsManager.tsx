@@ -1,4 +1,5 @@
 import Link from "next/link";
+import { AdminCatalogImageField } from "@/components/admin/AdminCatalogImageField";
 import { AdminCatalogCollapsiblePanel } from "@/components/admin/catalog/AdminCatalogCollapsiblePanel";
 import { AdminField, AdminSubmit } from "@/components/admin/AdminShell";
 import { AdminCatalogHero } from "@/components/admin/catalog/AdminCatalogHero";
@@ -32,10 +33,7 @@ function NewSessionPanel() {
             <AdminField label="Slug" name="slug" />
             <AdminField label="Price (CAD)" name="priceCad" defaultValue={180} type="number" />
             <AdminField label="Duration" name="duration" defaultValue="60 minutes · one-to-one" />
-            <AdminField label="Image URL" name="image" />
-            <AdminField label="Image alt" name="imageAlt" />
-            <input type="hidden" name="imageFocusX" value="50" />
-            <input type="hidden" name="imageFocusY" value="50" />
+            <AdminCatalogImageField label="Session image" aspect="16:10" />
             <label className="admin-catalog-checkbox flex items-center gap-2 text-sm">
               <input type="checkbox" name="published" defaultChecked />
               Published on storefront

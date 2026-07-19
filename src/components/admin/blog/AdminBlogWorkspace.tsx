@@ -6,7 +6,7 @@ import Link from "next/link";
 import { useEffect, useMemo, useState, useTransition, type ReactNode } from "react";
 import { useRouter } from "next/navigation";
 import { AdminDeleteButton } from "@/components/admin/AdminDeleteButton";
-import { AdminMediaUploader } from "@/components/admin/AdminMediaUploader";
+import { AdminCatalogImageField } from "@/components/admin/AdminCatalogImageField";
 import { ARTICLE_CATEGORIES, articleBodyToEditorHtml } from "@/lib/article-content";
 import {
   deleteArticleFormAction,
@@ -365,20 +365,16 @@ export function AdminBlogWorkspace({ articles }: { articles: AdminBlogArticle[] 
 
             <aside className="admin-blog-editor-side">
               <div className="admin-blog-side-card">
-                <AdminMediaUploader
+                <AdminCatalogImageField
                   label="Cover image"
                   folder="general"
+                  aspect="16:9"
                   value={editor.image}
+                  altValue={editor.imageAlt}
                   onChange={(url) => patch("image", url)}
+                  onAltChange={(imageAlt) => patch("imageAlt", imageAlt)}
+                  includeFocusHiddenInputs={false}
                 />
-                <label className="admin-blog-field mt-4">
-                  <span>Image alt text</span>
-                  <input
-                    value={editor.imageAlt}
-                    onChange={(event) => patch("imageAlt", event.target.value)}
-                    placeholder="Describe the image for accessibility"
-                  />
-                </label>
               </div>
 
               <div className="admin-blog-side-card space-y-3">

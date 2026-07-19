@@ -1,7 +1,7 @@
 import Image from "next/image";
 import Link from "next/link";
+import { AdminCatalogImageField } from "@/components/admin/AdminCatalogImageField";
 import { AdminCatalogCollapsiblePanel } from "@/components/admin/catalog/AdminCatalogCollapsiblePanel";
-import { AdminImageFocusField } from "@/components/admin/catalog/AdminImageFocusField";
 import { AdminDeleteButton } from "@/components/admin/AdminDeleteButton";
 import { AdminField, AdminSubmit } from "@/components/admin/AdminShell";
 import { AdminCatalogHero } from "@/components/admin/catalog/AdminCatalogHero";
@@ -135,13 +135,11 @@ function WorkshopCard({ workshop }: { workshop: WorkshopWithSales }) {
                 />
                 <AdminField label="Duration" name="duration" defaultValue={workshop.duration} />
                 <AdminField label="Badge" name="badge" defaultValue={workshop.badge} />
-                <AdminField label="Image URL" name="image" defaultValue={workshop.image} />
-                <AdminField label="Image alt" name="imageAlt" defaultValue={workshop.imageAlt} />
-                <AdminImageFocusField
-                  imageUrl={workshop.image}
-                  imageAlt={workshop.imageAlt}
-                  defaultFocusX={workshop.imageFocusX}
-                  defaultFocusY={workshop.imageFocusY}
+                <AdminCatalogImageField
+                  label="Workshop image"
+                  defaultImage={workshop.image}
+                  defaultAlt={workshop.imageAlt}
+                  aspect="16:10"
                 />
                 <label className="admin-catalog-checkbox flex items-center gap-2 text-sm">
                   <input type="checkbox" name="published" defaultChecked={workshop.published} />
@@ -223,10 +221,7 @@ function NewWorkshopPanel() {
             />
             <AdminField label="Duration" name="duration" defaultValue="2 hours · online" />
             <AdminField label="Badge" name="badge" defaultValue="Scheduled Live" />
-            <AdminField label="Image URL" name="image" />
-            <AdminField label="Image alt" name="imageAlt" />
-            <input type="hidden" name="imageFocusX" value="50" />
-            <input type="hidden" name="imageFocusY" value="50" />
+            <AdminCatalogImageField label="Workshop image" aspect="16:10" />
             <label className="admin-catalog-checkbox flex items-center gap-2 text-sm">
               <input type="checkbox" name="published" defaultChecked />
               Published for spot checkout

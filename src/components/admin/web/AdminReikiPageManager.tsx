@@ -1,7 +1,7 @@
 "use client";
 
 import { useState, useTransition } from "react";
-import { AdminMediaUploader } from "@/components/admin/AdminMediaUploader";
+import { AdminCatalogImageField } from "@/components/admin/AdminCatalogImageField";
 import { AdminPanel } from "@/components/admin/AdminShell";
 import {
   saveReikiBenefitsAction,
@@ -279,11 +279,14 @@ export function AdminReikiPageManager({ initialContent }: AdminReikiPageManagerP
               />
             </div>
             <div className="mt-5">
-              <AdminMediaUploader
+              <AdminCatalogImageField
                 label="Hero image"
                 folder="hero"
+                aspect="21:9"
                 value={hero.image}
                 onChange={(url) => setHero((current) => ({ ...current, image: url }))}
+                showAltField={false}
+                includeFocusHiddenInputs={false}
               />
             </div>
             <div className="mt-6">
@@ -324,18 +327,17 @@ export function AdminReikiPageManager({ initialContent }: AdminReikiPageManagerP
                 value={intro.titleAccent}
                 onChange={(value) => setIntro((current) => ({ ...current, titleAccent: value }))}
               />
-              <TextField
-                label="Image alt text"
-                value={intro.imageAlt}
-                onChange={(value) => setIntro((current) => ({ ...current, imageAlt: value }))}
-              />
             </div>
             <div className="mt-5">
-              <AdminMediaUploader
+              <AdminCatalogImageField
                 label="Section image"
                 folder="about"
+                aspect="4:3"
                 value={intro.image}
+                altValue={intro.imageAlt}
                 onChange={(url) => setIntro((current) => ({ ...current, image: url }))}
+                onAltChange={(imageAlt) => setIntro((current) => ({ ...current, imageAlt }))}
+                includeFocusHiddenInputs={false}
               />
             </div>
             <div className="mt-5 space-y-3">

@@ -2,8 +2,7 @@
 
 import dynamic from "next/dynamic";
 import { useMemo, useState, useTransition } from "react";
-import { AdminImageFocusField } from "@/components/admin/catalog/AdminImageFocusField";
-import { AdminMediaUploader } from "@/components/admin/AdminMediaUploader";
+import { AdminCatalogImageField } from "@/components/admin/AdminCatalogImageField";
 import { AdminPanel } from "@/components/admin/AdminShell";
 import {
   saveAboutContentAction,
@@ -20,8 +19,6 @@ import {
   type HeroSlideButton,
   type SiteNavItem,
 } from "@/lib/frontpage-content";
-import { parseImageObjectPosition, toImageObjectPosition } from "@/lib/image-focus";
-
 function createClientId() {
   if (typeof crypto !== "undefined" && "randomUUID" in crypto) {
     return crypto.randomUUID();
@@ -154,10 +151,6 @@ export function AdminFrontpageManager({
   const activeSlide = useMemo(
     () => slides.find((slide) => slide.id === activeSlideId) ?? slides[0],
     [activeSlideId, slides],
-  );
-  const activeSlideFocus = useMemo(
-    () => parseImageObjectPosition(activeSlide?.imagePosition),
-    [activeSlide?.imagePosition],
   );
 
   const updateSlide = (id: string, patch: Partial<HeroSlide>) => {
@@ -451,30 +444,20 @@ export function AdminFrontpageManager({
               </div>
 
               <div className="mt-5">
-                <AdminMediaUploader
+                <AdminCatalogImageField
+                  key={`${activeSlide.id}-${activeSlide.image || "empty"}`}
                   label="Hero image"
                   folder="hero"
+                  aspect="21:9"
                   value={activeSlide.image}
-                  onChange={(url) => updateSlide(activeSlide.id, { image: url })}
-                />
-              </div>
-
-              <div className="mt-5">
-                <AdminImageFocusField
-                  key={`${activeSlide.id}-${activeSlide.image || "empty"}`}
-                  imageUrl={activeSlide.image}
-                  imageAlt={activeSlide.imageAlt}
-                  focusX={activeSlideFocus.x}
-                  focusY={activeSlideFocus.y}
-                  includeFormInputs={false}
-                  aspectClassName="aspect-[21/9]"
-                  label="Hero image framing"
-                  helpText="Drag the crosshair or use the sliders to reframe the crop. Move focus right if the right edge is cut off. Save hero section when done."
-                  onFocusChange={(focusX, focusY) =>
+                  onChange={(url) =>
                     updateSlide(activeSlide.id, {
-                      imagePosition: toImageObjectPosition(focusX, focusY),
+                      image: url,
+                      imagePosition: "50% 50%",
                     })
                   }
+                  showAltField={false}
+                  includeFocusHiddenInputs={false}
                 />
               </div>
 
@@ -677,20 +660,16 @@ export function AdminFrontpageManager({
                 />
               </div>
               <div className="space-y-4">
-                <AdminMediaUploader
+                <AdminCatalogImageField
                   label="About image"
                   folder="about"
+                  aspect="4:3"
                   value={aboutImage}
+                  altValue={aboutImageAlt}
                   onChange={setAboutImage}
+                  onAltChange={setAboutImageAlt}
+                  includeFocusHiddenInputs={false}
                 />
-                <label className="admin-field text-sm">
-                  <span className="admin-field-label font-medium">Image alt text</span>
-                  <input
-                    className={fieldClass()}
-                    value={aboutImageAlt}
-                    onChange={(event) => setAboutImageAlt(event.target.value)}
-                  />
-                </label>
                 <div className="rounded-2xl border border-[var(--admin-border)] bg-[var(--admin-input-bg)] p-4">
                   <p className="mb-3 text-xs font-semibold uppercase tracking-[0.18em] text-[var(--admin-text-muted)]">
                     Preview

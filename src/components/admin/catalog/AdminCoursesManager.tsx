@@ -1,4 +1,5 @@
 import Link from "next/link";
+import { AdminCatalogImageField } from "@/components/admin/AdminCatalogImageField";
 import { AdminCatalogCollapsiblePanel } from "@/components/admin/catalog/AdminCatalogCollapsiblePanel";
 import { AdminField, AdminSelect, AdminSubmit } from "@/components/admin/AdminShell";
 import { AdminCatalogHero } from "@/components/admin/catalog/AdminCatalogHero";
@@ -50,10 +51,7 @@ function NewCoursePanel() {
             <AdminField label="Price (CAD)" name="priceCad" defaultValue={199} type="number" />
             <AdminField label="Date label" name="dateLabel" defaultValue="Start anytime" />
             <AdminField label="Duration" name="duration" defaultValue="8 modules · self-paced" />
-            <AdminField label="Image URL" name="image" />
-            <AdminField label="Image alt" name="imageAlt" />
-            <input type="hidden" name="imageFocusX" value="50" />
-            <input type="hidden" name="imageFocusY" value="50" />
+            <AdminCatalogImageField label="Course image" aspect="16:10" />
             <label className="admin-catalog-checkbox flex items-center gap-2 text-sm">
               <input type="checkbox" name="published" defaultChecked />
               Published on storefront
