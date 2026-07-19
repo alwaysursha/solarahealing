@@ -69,6 +69,7 @@ function IndexCard({ type, item }: { type: CartItemType; item: CatalogDetailItem
         <h2 className="catalog-index-card-title">
           <Link href={detailHref}>{item.title}</Link>
         </h2>
+        {item.subHeading ? <p className="catalog-index-card-subheading">{item.subHeading}</p> : null}
         {item.level ? <p className="catalog-index-card-level">{item.level}</p> : null}
         <p className="catalog-index-card-copy">{item.description}</p>
 

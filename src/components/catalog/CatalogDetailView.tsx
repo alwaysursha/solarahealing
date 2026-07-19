@@ -12,6 +12,7 @@ export type CatalogDetailItem = {
   id: string;
   slug?: string;
   title: string;
+  subHeading?: string;
   description: string;
   date: string;
   duration: string;
@@ -141,6 +142,7 @@ export function CatalogDetailView({
           <div className="catalog-detail-hero-copy">
             <p className="catalog-detail-eyebrow">{copy.kindLabel}</p>
             <h1 className="catalog-detail-title">{item.title}</h1>
+            {item.subHeading ? <p className="catalog-detail-subheading">{item.subHeading}</p> : null}
             <p className="catalog-detail-lead">{item.description}</p>
 
             <div className="catalog-detail-meta">

@@ -116,6 +116,7 @@ model OnlineCourse {
   id          String         @id
   slug        String         @unique
   title       String
+  subHeading  String         @default("")
   description String
   dateLabel   String
   duration    String

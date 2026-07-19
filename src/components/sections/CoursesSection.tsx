@@ -16,6 +16,7 @@ type CourseItem = {
   id: string;
   slug?: string;
   title: string;
+  subHeading?: string;
   description: string;
   date: string;
   duration: string;
@@ -237,22 +238,27 @@ function EnrollButton({
   className = "",
 }: {
   course: Pick<CourseItem, "id" | "title" | "priceCad" | "image">;
-  variant?: "gold" | "outline";
+  variant?: "gold" | "outline" | "dashboard";
   className?: string;
 }) {
   const reduceMotion = useReducedMotion();
   const { requestEnrollment } = useEnrollmentGate();
   const buttonRef = useRef<HTMLButtonElement>(null);
-  const styles =
-    variant === "gold"
-      ? "bg-gold text-purple-deep shadow-lg shadow-gold/30 hover:bg-gold-light"
-      : "border border-gold/45 bg-white/5 text-gold backdrop-blur-sm hover:bg-gold/10";
+  const isDashboard = variant === "dashboard";
+  const styles = isDashboard
+    ? "header-account-primary"
+    : variant === "gold"
+      ? "workshop-register-btn bg-gold text-purple-deep shadow-lg shadow-gold/30 hover:bg-gold-light"
+      : "workshop-register-btn border border-gold/45 bg-white/5 text-gold backdrop-blur-sm hover:bg-gold/10";
+  const baseStyles = isDashboard
+    ? "course-enroll-dashboard relative shrink-0 justify-center overflow-hidden"
+    : "relative inline-flex shrink-0 items-center justify-center gap-2 overflow-hidden whitespace-nowrap rounded-full px-4 py-2 text-[0.7rem] font-semibold uppercase tracking-[0.1em] transition-colors md:px-5 md:text-[0.75rem]";
 
   return (
     <motion.button
       ref={buttonRef}
       type="button"
-      className={`workshop-register-btn relative inline-flex shrink-0 items-center justify-center gap-2 overflow-hidden whitespace-nowrap rounded-full px-4 py-2 text-[0.7rem] font-semibold uppercase tracking-[0.1em] transition-colors md:px-5 md:text-[0.75rem] ${styles} ${className}`}
+      className={`${baseStyles} ${styles} ${className}`}
       whileHover={reduceMotion ? undefined : { scale: 1.04 }}
       whileTap={reduceMotion ? undefined : { scale: 0.97 }}
       onClick={() =>
@@ -269,9 +275,12 @@ function EnrollButton({
         )
       }
     >
-      <span className="workshop-register-shimmer pointer-events-none absolute inset-0" aria-hidden />
-      <EnrolIcon className="relative h-3.5 w-3.5" />
-      <span className="relative">Enroll Now</span>
+      <span
+        className={`${isDashboard ? "course-enroll-dashboard-shine" : "workshop-register-shimmer"} pointer-events-none absolute inset-0`}
+        aria-hidden
+      />
+      <EnrolIcon className="relative z-[1] h-3.5 w-3.5" />
+      <span className="relative z-[1]">Enroll Now</span>
     </motion.button>
   );
 }
@@ -333,36 +342,41 @@ function FeaturedCourse({
         </motion.div>
 
         <motion.div
-          className="relative z-[3] flex flex-col justify-between bg-[#2a1050]/82 p-6 backdrop-blur-xl md:p-8 lg:col-span-5"
+          className="relative z-[3] flex flex-col justify-between bg-spiritual-gradient-panel p-6 md:p-8 lg:col-span-5"
           variants={featuredPanelReveal}
         >
-          <div
-            className="pointer-events-none absolute inset-y-0 left-0 w-px bg-gradient-to-b from-transparent via-gold/40 to-transparent"
-            aria-hidden
-          />
           <motion.div variants={featuredContentStagger}>
             <motion.div variants={featuredContentItem}>
               <h3 className="font-serif text-3xl font-normal leading-tight text-white md:text-4xl">
                 {course.title}
               </h3>
-              <p className="mt-4 text-[0.98rem] leading-relaxed text-white/60">{course.description}</p>
+              {course.subHeading ? (
+                <p className="course-card-subheading mt-2.5 text-[0.82rem] font-semibold uppercase tracking-[0.16em] text-gold/90">
+                  {course.subHeading}
+                </p>
+              ) : null}
+              <p className="mt-4 text-[0.98rem] leading-relaxed text-white/88">{course.description}</p>
               <div className="mt-3.5">
                 <ViewCourseDetailsLink courseSlug={course.slug ?? course.id} />
               </div>
-              <p className="mt-3 text-[0.72rem] font-medium uppercase tracking-[0.2em] text-white/35">
+              <p className="mt-3 text-[0.72rem] font-medium uppercase tracking-[0.2em] text-white/72">
                 {course.duration}
               </p>
             </motion.div>
 
             <motion.div
-              className="mt-8 flex flex-wrap items-end justify-between gap-4 border-t border-white/10 pt-6"
+              className="mt-8 flex flex-wrap items-end justify-between gap-4 border-t border-white/25 pt-6"
               variants={featuredContentItem}
             >
               <div>
-                <p className="text-[0.68rem] uppercase tracking-[0.24em] text-white/40">Course Fee</p>
+                <p className="text-[0.68rem] uppercase tracking-[0.24em] text-white/78">Course Fee</p>
                 <PriceTag priceCad={course.priceCad} large />
               </div>
-              <EnrollButton course={course} className="px-6 py-2.5 text-[0.75rem] md:text-[0.8rem]" />
+              <EnrollButton
+                course={course}
+                variant="dashboard"
+                className="px-6 py-2.5 text-[0.72rem] tracking-[0.14em] md:text-[0.75rem]"
+              />
             </motion.div>
           </motion.div>
         </motion.div>
@@ -390,21 +404,30 @@ function FeaturedCourseStatic({ course }: { course: CourseItem }) {
             <CourseBadge label={courseTagLabel(course)} />
           </div>
         </div>
-        <div className="relative flex flex-col justify-between bg-[#2a1050]/82 p-6 backdrop-blur-xl md:p-8 lg:col-span-5">
+        <div className="relative flex flex-col justify-between bg-spiritual-gradient-panel p-6 md:p-8 lg:col-span-5">
           <div>
             <h3 className="font-serif text-3xl font-normal leading-tight text-white md:text-4xl">{course.title}</h3>
-            <p className="mt-4 text-[0.98rem] leading-relaxed text-white/60">{course.description}</p>
+            {course.subHeading ? (
+              <p className="course-card-subheading mt-2.5 text-[0.82rem] font-semibold uppercase tracking-[0.16em] text-gold/90">
+                {course.subHeading}
+              </p>
+            ) : null}
+            <p className="mt-4 text-[0.98rem] leading-relaxed text-white/88">{course.description}</p>
             <div className="mt-3.5">
               <ViewCourseDetailsLink courseSlug={course.slug ?? course.id} />
             </div>
-            <p className="mt-3 text-[0.72rem] font-medium uppercase tracking-[0.2em] text-white/35">{course.duration}</p>
+            <p className="mt-3 text-[0.72rem] font-medium uppercase tracking-[0.2em] text-white/72">{course.duration}</p>
           </div>
-          <div className="mt-8 flex flex-wrap items-end justify-between gap-4 border-t border-white/10 pt-6">
+          <div className="mt-8 flex flex-wrap items-end justify-between gap-4 border-t border-white/25 pt-6">
             <div>
-              <p className="text-[0.68rem] uppercase tracking-[0.24em] text-white/40">Course Fee</p>
+              <p className="text-[0.68rem] uppercase tracking-[0.24em] text-white/78">Course Fee</p>
               <PriceTag priceCad={course.priceCad} large />
             </div>
-            <EnrollButton course={course} className="px-6 py-2.5 text-[0.75rem] md:text-[0.8rem]" />
+            <EnrollButton
+              course={course}
+              variant="dashboard"
+              className="px-6 py-2.5 text-[0.72rem] tracking-[0.14em] md:text-[0.75rem]"
+            />
           </div>
         </div>
       </div>
@@ -425,7 +448,7 @@ function UpcomingCourseCard({
 
   if (reduceMotion) {
     return (
-      <article className="workshop-upcoming group relative min-h-[420px] overflow-hidden rounded-[1.5rem] border border-white/15">
+      <article className="course-tile workshop-upcoming group">
         <UpcomingCourseCardContent course={course} />
       </article>
     );
@@ -433,43 +456,48 @@ function UpcomingCourseCard({
 
   return (
     <motion.article
-      className="workshop-upcoming group relative z-0 min-h-[420px] overflow-hidden rounded-[1.5rem] border border-white/15"
+      className="course-tile workshop-upcoming group z-0"
       variants={variants}
       style={{ transformPerspective: 1000 }}
     >
       <motion.div
-        className="absolute inset-0"
-        initial={{ scale: 1.12 }}
-        whileInView={{ scale: 1 }}
+        className="course-tile-media"
+        initial={{ opacity: 0.85, scale: 1.04 }}
+        whileInView={{ opacity: 1, scale: 1 }}
         viewport={{ once: true }}
-        transition={{ duration: 1.2, ease }}
+        transition={{ duration: 1.05, ease }}
       >
         <Image
           src={course.image}
           alt={course.imageAlt}
           fill
           sizes="(max-width: 768px) 100vw, 33vw"
-          className="object-cover transition-transform duration-700 group-hover:scale-110"
+          className="object-cover"
           style={{ objectPosition: courseImagePosition(course) }}
         />
-      </motion.div>
-      <div className="absolute inset-0 bg-gradient-to-t from-[#352560]/75 via-[#483878]/40 to-[#584890]/10" />
-      <div className="workshop-card-shimmer pointer-events-none absolute inset-0 opacity-0 transition-opacity duration-500 group-hover:opacity-100" />
-
-      <motion.div className="absolute right-4 top-4 z-[3]" variants={cardPriceReveal}>
-        <PriceTag priceCad={course.priceCad} />
-      </motion.div>
-
-      <motion.div className="absolute inset-x-0 bottom-0 z-[3] p-5 md:p-6" variants={cardOverlayReveal}>
-        <CourseBadge label={courseTagLabel(course)} />
-        <h3 className="font-serif mt-3 text-2xl leading-tight text-white">{course.title}</h3>
-        <p className="mt-2 line-clamp-2 text-[0.95rem] leading-relaxed text-white/55">{course.description}</p>
-        <div className="mt-3">
-          <ViewCourseDetailsLink courseSlug={course.slug ?? course.id} />
+        <div className="course-tile-media-shade" aria-hidden />
+        <div className="course-tile-badge">
+          <CourseBadge label={courseTagLabel(course)} />
         </div>
-        <div className="mt-5 flex items-center justify-between gap-3">
-          <span className="text-[0.7rem] uppercase tracking-[0.18em] text-white/35">{course.duration}</span>
-          <EnrollButton course={course} variant="outline" />
+      </motion.div>
+
+      <motion.div className="course-tile-body" variants={cardOverlayReveal}>
+        <motion.div variants={cardPriceReveal}>
+          <h3 className="course-tile-title">{course.title}</h3>
+          {course.subHeading ? <p className="course-tile-subheading">{course.subHeading}</p> : null}
+          <p className="course-tile-copy">{course.description}</p>
+          <div className="mt-3">
+            <ViewCourseDetailsLink courseSlug={course.slug ?? course.id} />
+          </div>
+        </motion.div>
+
+        <div className="course-tile-footer">
+          <EnrollButton course={course} className="course-tile-enroll px-5 py-2.5 text-[0.72rem] md:text-[0.75rem]" />
+          <div className="course-tile-fee-block">
+            <p className="course-tile-fee-label">Course Fee</p>
+            <p className="course-tile-fee">{formatCad(course.priceCad)}</p>
+          </div>
+          <p className="course-tile-duration">{course.duration}</p>
         </div>
       </motion.div>
     </motion.article>
@@ -479,28 +507,38 @@ function UpcomingCourseCard({
 function UpcomingCourseCardContent({ course }: { course: CourseItem }) {
   return (
     <>
-      <Image
-        src={course.image}
-        alt={course.imageAlt}
-        fill
-        sizes="(max-width: 768px) 100vw, 33vw"
-        className="object-cover"
-        style={{ objectPosition: courseImagePosition(course) }}
-      />
-      <div className="absolute inset-0 bg-gradient-to-t from-[#352560]/75 via-[#483878]/40 to-[#584890]/10" />
-      <div className="absolute right-4 top-4 z-[3]">
-        <PriceTag priceCad={course.priceCad} />
-      </div>
-      <div className="absolute inset-x-0 bottom-0 z-[3] p-5 md:p-6">
-        <CourseBadge label={courseTagLabel(course)} />
-        <h3 className="font-serif mt-3 text-2xl leading-tight text-white">{course.title}</h3>
-        <p className="mt-2 line-clamp-2 text-[0.95rem] leading-relaxed text-white/55">{course.description}</p>
-        <div className="mt-3">
-          <ViewCourseDetailsLink courseSlug={course.slug ?? course.id} />
+      <div className="course-tile-media">
+        <Image
+          src={course.image}
+          alt={course.imageAlt}
+          fill
+          sizes="(max-width: 768px) 100vw, 33vw"
+          className="object-cover"
+          style={{ objectPosition: courseImagePosition(course) }}
+        />
+        <div className="course-tile-media-shade" aria-hidden />
+        <div className="course-tile-badge">
+          <CourseBadge label={courseTagLabel(course)} />
         </div>
-        <div className="mt-5 flex items-center justify-between gap-3">
-          <span className="text-[0.7rem] uppercase tracking-[0.18em] text-white/35">{course.duration}</span>
-          <EnrollButton course={course} variant="outline" />
+      </div>
+
+      <div className="course-tile-body">
+        <div>
+          <h3 className="course-tile-title">{course.title}</h3>
+          {course.subHeading ? <p className="course-tile-subheading">{course.subHeading}</p> : null}
+          <p className="course-tile-copy">{course.description}</p>
+          <div className="mt-3">
+            <ViewCourseDetailsLink courseSlug={course.slug ?? course.id} />
+          </div>
+        </div>
+
+        <div className="course-tile-footer">
+          <EnrollButton course={course} className="course-tile-enroll px-5 py-2.5 text-[0.72rem] md:text-[0.75rem]" />
+          <div className="course-tile-fee-block">
+            <p className="course-tile-fee-label">Course Fee</p>
+            <p className="course-tile-fee">{formatCad(course.priceCad)}</p>
+          </div>
+          <p className="course-tile-duration">{course.duration}</p>
         </div>
       </div>
     </>
@@ -580,7 +618,7 @@ function CoursesUpcomingSlider({
 
   if (pageCount <= 1) {
     return (
-      <div className="grid gap-6 overflow-visible md:grid-cols-3">
+      <div className="grid gap-6 overflow-visible pb-7 md:grid-cols-3">
         {courses.map((course, index) => (
           <UpcomingCourseCard
             key={course.id}
@@ -667,6 +705,7 @@ export function CoursesSection({
       : [...onlineCourses].map((course) => ({
           id: course.id,
           title: course.title,
+          subHeading: course.subHeading,
           description: course.description,
           date: course.date,
           duration: course.duration,

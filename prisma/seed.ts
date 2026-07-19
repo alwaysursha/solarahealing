@@ -231,6 +231,7 @@ async function main() {
         id: course.id,
         slug: course.id,
         title: course.title,
+        subHeading: course.subHeading,
         description: course.description,
         dateLabel: course.date,
         duration: course.duration,
@@ -245,6 +246,7 @@ async function main() {
       },
       update: {
         title: course.title,
+        subHeading: course.subHeading,
         description: course.description,
         dateLabel: course.date,
         duration: course.duration,

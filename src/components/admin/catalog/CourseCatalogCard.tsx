@@ -69,6 +69,9 @@ export function CourseCatalogCard({ course }: { course: CourseWithSales }) {
                 {categoryLabel} · {levelLabel}
               </p>
               <h4 className="admin-catalog-card-title mt-2 font-serif text-[1.45rem] leading-tight">{course.title}</h4>
+              {course.subHeading ? (
+                <p className="admin-catalog-card-copy mt-1.5 text-sm font-medium leading-snug">{course.subHeading}</p>
+              ) : null}
             </div>
             <CourseStatusBadge published={course.published} />
           </div>
@@ -108,6 +111,12 @@ export function CourseCatalogCard({ course }: { course: CourseWithSales }) {
               <div className="grid gap-3 lg:grid-cols-2">
                 <AdminField label="Title" name="title" defaultValue={course.title} />
                 <AdminField label="Slug" name="slug" defaultValue={course.slug || course.id} />
+                <AdminField
+                  label="Sub-heading"
+                  name="subHeading"
+                  defaultValue={course.subHeading}
+                  placeholder="Short line under the course name"
+                />
                 <AdminSelect
                   label="Category"
                   name="category"

@@ -356,6 +356,7 @@ export const onlineCourses = [
   {
     id: "introduction-to-reiki",
     title: "Introduction to Reiki",
+    subHeading: "A gentle free foundation",
     description:
       "Begin your Reiki path with a free, gentle foundation — core principles, energy awareness, and practices you can return to anytime.",
     date: "Start anytime",
@@ -371,6 +372,7 @@ export const onlineCourses = [
   {
     id: "reiki-level-1",
     title: "Reiki Level I Certification",
+    subHeading: "Certification foundations",
     description:
       "Master sacred hand positions, energy sensing, and self-healing rituals through guided video modules you can revisit anytime.",
     date: "Start anytime",
@@ -386,6 +388,7 @@ export const onlineCourses = [
   {
     id: "reiki-level-2",
     title: "Reiki Level II Advanced",
+    subHeading: "Symbols & distance healing",
     description:
       "Expand your practice with distance healing symbols, emotional release techniques, and advanced energetic protocols.",
     date: "Lifetime access",
@@ -401,6 +404,7 @@ export const onlineCourses = [
   {
     id: "chakra-mastery",
     title: "Chakra Mastery Program",
+    subHeading: "Balance the seven centers",
     description:
       "Deep-dive into all seven chakras with guided scans, balancing practices, and integration exercises for daily life.",
     date: "Lifetime access",
@@ -416,6 +420,7 @@ export const onlineCourses = [
   {
     id: "distance-practitioner",
     title: "Distance Healing Practitioner",
+    subHeading: "Heal across space",
     description:
       "Learn to send healing across space with confidence — protocols, intention setting, and client-ready distance sessions.",
     date: "Lifetime access",
@@ -431,6 +436,7 @@ export const onlineCourses = [
   {
     id: "master-teacher",
     title: "Reiki Master Teacher Path",
+    subHeading: "Teach & attune others",
     description:
       "The complete attunement and teaching pathway for those called to guide others — lineage, ethics, and mastery curriculum.",
     date: "Lifetime access",
@@ -446,6 +452,7 @@ export const onlineCourses = [
   {
     id: "energy-anatomy",
     title: "Energy Anatomy & Aura",
+    subHeading: "Map the subtle body",
     description:
       "Understand the subtle body, aura layers, and energetic anatomy — essential knowledge for any serious healing practice.",
     date: "Lifetime access",
@@ -461,6 +468,7 @@ export const onlineCourses = [
   {
     id: "sacred-symbols",
     title: "Sacred Symbols & Attunement",
+    subHeading: "Meaning, use & reverence",
     description:
       "Study the sacred Reiki symbols with reverence — their meaning, application, and role in attunement and healing work.",
     date: "Lifetime access",
@@ -476,6 +484,7 @@ export const onlineCourses = [
   {
     id: "crystal-reiki",
     title: "Crystal Reiki Integration",
+    subHeading: "Crystals meet Reiki flow",
     description:
       "Blend crystal allies with Reiki flows — placement maps, cleansing rituals, and session design for grounded, luminous results.",
     date: "Lifetime access",
@@ -491,6 +500,7 @@ export const onlineCourses = [
   {
     id: "intuitive-presence",
     title: "Intuitive Presence Training",
+    subHeading: "Clear, ethical intuition",
     description:
       "Strengthen inner listening, ethical intuition, and client-ready presence so your healing sessions feel clear and trustworthy.",
     date: "Lifetime access",
@@ -506,6 +516,7 @@ export const onlineCourses = [
   {
     id: "sound-and-breath",
     title: "Sound, Breath & Energy",
+    subHeading: "Self-paced online program",
     description:
       "Pair breathwork and gentle sound with Reiki to deepen calm, release tension, and support lasting energetic balance.",
     date: "Lifetime access",
