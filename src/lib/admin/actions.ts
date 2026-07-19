@@ -132,6 +132,7 @@ export async function upsertCourseAction(formData: FormData) {
   const data = {
     slug,
     title,
+    subHeading: formData.get("subHeading")?.toString().trim() ?? "",
     description: formData.get("description")?.toString() ?? "",
     dateLabel: formData.get("dateLabel")?.toString() ?? "Start anytime",
     duration: formData.get("duration")?.toString() ?? "",

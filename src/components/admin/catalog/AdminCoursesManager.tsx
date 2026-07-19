@@ -46,6 +46,11 @@ function NewCoursePanel() {
           <div className="grid gap-3 lg:grid-cols-2">
             <AdminField label="Title" name="title" />
             <AdminField label="Slug" name="slug" />
+            <AdminField
+              label="Sub-heading"
+              name="subHeading"
+              placeholder="Short line under the course name"
+            />
             <AdminSelect label="Category" name="category" defaultValue="REIKI" options={categoryOptions} />
             <AdminSelect label="Pathway level" name="level" defaultValue="BEGINNER" options={levelOptions} />
             <AdminField label="Price (CAD)" name="priceCad" defaultValue={199} type="number" />

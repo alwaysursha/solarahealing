@@ -121,12 +121,14 @@ export function AdminField({
   defaultValue,
   type = "text",
   rows,
+  placeholder,
 }: {
   label: string;
   name: string;
   defaultValue?: string | number;
   type?: string;
   rows?: number;
+  placeholder?: string;
 }) {
   const className = "admin-field-input mt-1.5 w-full rounded-xl px-3 py-2.5 text-sm outline-none";
 
@@ -134,9 +136,21 @@ export function AdminField({
     <label className="admin-field block text-sm">
       <span className="admin-field-label font-medium">{label}</span>
       {rows ? (
-        <textarea name={name} defaultValue={defaultValue} rows={rows} className={className} />
+        <textarea
+          name={name}
+          defaultValue={defaultValue}
+          rows={rows}
+          placeholder={placeholder}
+          className={className}
+        />
       ) : (
-        <input name={name} type={type} defaultValue={defaultValue} className={className} />
+        <input
+          name={name}
+          type={type}
+          defaultValue={defaultValue}
+          placeholder={placeholder}
+          className={className}
+        />
       )}
     </label>
   );

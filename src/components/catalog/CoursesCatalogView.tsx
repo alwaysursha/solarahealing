@@ -94,6 +94,7 @@ function SpotlightCourse({
         <h2 className="courses-catalog-spotlight-title">
           <Link href={href}>{course.title}</Link>
         </h2>
+        {course.subHeading ? <p className="courses-catalog-spotlight-subheading">{course.subHeading}</p> : null}
         {course.level ? <p className="courses-catalog-spotlight-level">{course.level}</p> : null}
         <p className="courses-catalog-spotlight-body">{course.description}</p>
         <p className="courses-catalog-spotlight-meta">{course.duration}</p>
@@ -168,6 +169,7 @@ function CatalogCard({
         <h3 className="courses-catalog-card-title">
           <Link href={href}>{course.title}</Link>
         </h3>
+        {course.subHeading ? <p className="courses-catalog-card-subheading">{course.subHeading}</p> : null}
         <p className="courses-catalog-card-copy">{course.description}</p>
         <div className="courses-catalog-card-footer">
           <p className="courses-catalog-card-price">{formatCad(course.priceCad)}</p>
