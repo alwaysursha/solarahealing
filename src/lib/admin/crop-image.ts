@@ -16,7 +16,10 @@ function loadImage(src: string): Promise<HTMLImageElement> {
     const image = new Image();
     image.addEventListener("load", () => resolve(image));
     image.addEventListener("error", () => reject(new Error("Could not load image for editing.")));
-    image.crossOrigin = "anonymous";
+    // Blob/data URLs are same-origin; skip CORS mode for those.
+    if (!src.startsWith("blob:") && !src.startsWith("data:")) {
+      image.crossOrigin = "anonymous";
+    }
     image.src = src;
   });
 }
