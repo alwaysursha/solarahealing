@@ -1,6 +1,6 @@
 import Image from "next/image";
+import { AdminCatalogImageField } from "@/components/admin/AdminCatalogImageField";
 import { AdminCatalogCollapsiblePanel } from "@/components/admin/catalog/AdminCatalogCollapsiblePanel";
-import { AdminImageFocusField } from "@/components/admin/catalog/AdminImageFocusField";
 import { AdminDeleteButton } from "@/components/admin/AdminDeleteButton";
 import { AdminField, AdminSelect, AdminSubmit } from "@/components/admin/AdminShell";
 import { deleteCourseFormAction, upsertCourseAction } from "@/lib/admin/actions";
@@ -123,13 +123,11 @@ export function CourseCatalogCard({ course }: { course: CourseWithSales }) {
                 <AdminField label="Price (CAD)" name="priceCad" defaultValue={course.priceCad} type="number" />
                 <AdminField label="Date label" name="dateLabel" defaultValue={course.dateLabel} />
                 <AdminField label="Duration" name="duration" defaultValue={course.duration} />
-                <AdminField label="Image URL" name="image" defaultValue={course.image} />
-                <AdminField label="Image alt" name="imageAlt" defaultValue={course.imageAlt} />
-                <AdminImageFocusField
-                  imageUrl={course.image}
-                  imageAlt={course.imageAlt}
-                  defaultFocusX={course.imageFocusX}
-                  defaultFocusY={course.imageFocusY}
+                <AdminCatalogImageField
+                  label="Course image"
+                  defaultImage={course.image}
+                  defaultAlt={course.imageAlt}
+                  aspect="16:10"
                 />
                 <label className="admin-catalog-checkbox flex items-center gap-2 text-sm">
                   <input type="checkbox" name="published" defaultChecked={course.published} />

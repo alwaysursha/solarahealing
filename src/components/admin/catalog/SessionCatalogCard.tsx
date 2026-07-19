@@ -1,6 +1,6 @@
 import Image from "next/image";
+import { AdminCatalogImageField } from "@/components/admin/AdminCatalogImageField";
 import { AdminCatalogCollapsiblePanel } from "@/components/admin/catalog/AdminCatalogCollapsiblePanel";
-import { AdminImageFocusField } from "@/components/admin/catalog/AdminImageFocusField";
 import { AdminDeleteButton } from "@/components/admin/AdminDeleteButton";
 import { AdminField, AdminSubmit } from "@/components/admin/AdminShell";
 import { deletePrivateSessionFormAction, upsertPrivateSessionAction } from "@/lib/admin/actions";
@@ -91,13 +91,11 @@ export function SessionCatalogCard({ session }: { session: PrivateSessionWithSal
                 <AdminField label="Slug" name="slug" defaultValue={session.slug || session.id} />
                 <AdminField label="Price (CAD)" name="priceCad" defaultValue={session.priceCad} type="number" />
                 <AdminField label="Duration" name="duration" defaultValue={session.duration} />
-                <AdminField label="Image URL" name="image" defaultValue={session.image} />
-                <AdminField label="Image alt" name="imageAlt" defaultValue={session.imageAlt} />
-                <AdminImageFocusField
-                  imageUrl={session.image}
-                  imageAlt={session.imageAlt}
-                  defaultFocusX={session.imageFocusX}
-                  defaultFocusY={session.imageFocusY}
+                <AdminCatalogImageField
+                  label="Session image"
+                  defaultImage={session.image}
+                  defaultAlt={session.imageAlt}
+                  aspect="16:10"
                 />
                 <label className="admin-catalog-checkbox flex items-center gap-2 text-sm">
                   <input type="checkbox" name="published" defaultChecked={session.published} />

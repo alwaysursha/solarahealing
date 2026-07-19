@@ -269,8 +269,6 @@ export function normalizeHeroSlides(raw: unknown, ctaLabel: string = site.cta): 
       title: typeof row.title === "string" ? row.title : "",
       titleAccent: typeof row.titleAccent === "string" ? row.titleAccent : "",
       description: typeof row.description === "string" ? row.description : "",
-      caption: typeof row.caption === "string" ? row.caption : undefined,
-      captionSub: typeof row.captionSub === "string" ? row.captionSub : undefined,
       buttons: buttons.length > 0 ? buttons : defaultHeroButtons(ctaLabel),
     };
   });

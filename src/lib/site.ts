@@ -47,8 +47,6 @@ export const heroSlides = [
     titleAccent: "Light",
     description:
       "Ancient healing energy for modern souls. Channel universal life energy through authentic Reiki healing rooted in Indian spiritual wisdom.",
-    caption: "Universal energy, infinite peace",
-    captionSub: "In-person & distance healing available",
   },
   {
     id: "chakras",

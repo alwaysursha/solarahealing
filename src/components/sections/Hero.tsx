@@ -328,9 +328,11 @@ export function Hero({ slides }: { slides: HeroSlide[] }) {
           </div>
 
           <div className="shrink-0">
-            <div className="hidden h-[5.25rem] md:ml-auto md:block md:max-w-xs md:text-right">
-              <AnimatePresence mode="wait">
-                {slide.variant === "illustrated" && "caption" in slide && (
+            {"caption" in slide &&
+            typeof slide.caption === "string" &&
+            slide.caption.trim() ? (
+              <div className="hidden md:ml-auto md:block md:max-w-xs md:text-right">
+                <AnimatePresence mode="wait">
                   <motion.div
                     key={`${slide.id}-caption`}
                     initial={reduceMotion ? false : { opacity: 0, y: 12 }}
@@ -345,11 +347,17 @@ export function Hero({ slides }: { slides: HeroSlide[] }) {
                     <p className="font-serif text-base font-normal leading-snug text-purple-deep/72 md:text-lg">
                       {slide.caption}
                     </p>
-                    <p className="mt-1.5 text-[0.8rem] tracking-[0.02em] text-purple-deep/38">{slide.captionSub}</p>
+                    {"captionSub" in slide &&
+                    typeof slide.captionSub === "string" &&
+                    slide.captionSub.trim() ? (
+                      <p className="mt-1.5 text-[0.8rem] tracking-[0.02em] text-purple-deep/38">
+                        {slide.captionSub}
+                      </p>
+                    ) : null}
                   </motion.div>
-                )}
-              </AnimatePresence>
-            </div>
+                </AnimatePresence>
+              </div>
+            ) : null}
 
             <motion.div
               className="mt-8 flex h-9 items-center gap-4 md:mt-10"
