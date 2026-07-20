@@ -7110,7 +7110,7 @@ html[data-brand-theme="10"] section[aria-label="Hero highlights"] [role="tablist
   display: flex;
   align-items: stretch;
   justify-content: center;
-  padding: 0.45rem 0.65rem 0.2rem;
+  padding: 0.2rem 0.35rem 0.1rem;
   touch-action: pan-y;
   cursor: grab;
 }
@@ -7120,7 +7120,7 @@ html[data-brand-theme="10"] section[aria-label="Hero highlights"] [role="tablist
 }
 
 .cm-presenter-frame {
-  width: min(100%, 98rem);
+  width: 100%;
   height: 100%;
   display: flex;
   align-items: stretch;
@@ -7128,11 +7128,12 @@ html[data-brand-theme="10"] section[aria-label="Hero highlights"] [role="tablist
 }
 
 .cm-slide {
+  position: relative;
   width: 100%;
   height: 100%;
   max-height: 100%;
   overflow: auto;
-  border-radius: 1.15rem;
+  border-radius: 0.85rem;
   border: 1px solid rgba(92, 20, 112, 0.12);
   background:
     radial-gradient(
@@ -7155,12 +7156,226 @@ html[data-brand-theme="10"] section[aria-label="Hero highlights"] [role="tablist
   scrollbar-width: none;
 }
 
+.cm-slide-has-brand {
+  padding-top: clamp(3.5rem, 6vw, 5rem);
+}
+
+.cm-slide-body {
+  height: 100%;
+  min-height: 0;
+}
+
+.cm-slide-body > .cm-slide {
+  background: none;
+  border: none;
+  box-shadow: none;
+  border-radius: 0;
+  padding: 0;
+  height: 100%;
+  max-height: none;
+  overflow: visible;
+}
+
+.cm-slide:has(.cm-slide-chakra-system),
+.cm-slide:has(.cm-slide-chakras-guide),
+.cm-slide:has(.cm-slide-balancing-chakras),
+.cm-slide:has(.cm-slide-meditation),
+.cm-slide:has(.cm-slide-aura),
+.cm-slide:has(.cm-slide-aura-reading),
+.cm-slide:has(.cm-slide-beyond-reiki) {
+  overflow: hidden;
+}
+
+.cm-slide:has(.cm-slide-meditation) {
+  border-color: transparent;
+  box-shadow:
+    0 24px 60px -28px rgba(45, 27, 78, 0.18),
+    inset 0 0 0 1px rgba(255, 255, 255, 0.2);
+}
+
+.cm-slide-body:has(.cm-slide-chakra-system),
+.cm-slide-body:has(.cm-slide-chakras-guide),
+.cm-slide-body:has(.cm-slide-balancing-chakras),
+.cm-slide-body:has(.cm-slide-meditation),
+.cm-slide-body:has(.cm-slide-aura),
+.cm-slide-body:has(.cm-slide-aura-reading),
+.cm-slide-body:has(.cm-slide-beyond-reiki) {
+  display: flex;
+  flex-direction: column;
+}
+
+.cm-slide-body:has(.cm-slide-chakra-system) > .cm-slide,
+.cm-slide-body:has(.cm-slide-chakras-guide) > .cm-slide,
+.cm-slide-body:has(.cm-slide-balancing-chakras) > .cm-slide,
+.cm-slide-body:has(.cm-slide-meditation) > .cm-slide,
+.cm-slide-body:has(.cm-slide-aura) > .cm-slide,
+.cm-slide-body:has(.cm-slide-aura-reading) > .cm-slide,
+.cm-slide-body:has(.cm-slide-beyond-reiki) > .cm-slide {
+  overflow: hidden;
+  max-height: 100%;
+  min-height: 0;
+  display: flex;
+  flex-direction: column;
+}
+
+.cm-slide-body:has(.cm-slide-meditation) > .cm-slide {
+  display: block;
+  position: relative;
+}
+
+.cm-slide-corner-logo {
+  position: absolute;
+  top: clamp(0.7rem, 1.4vw, 1.1rem);
+  left: clamp(0.7rem, 1.4vw, 1.1rem);
+  z-index: 6;
+  width: min(9.75rem, 20vw);
+  pointer-events: none;
+}
+
+.cm-slide-corner-logo-img {
+  display: block;
+  width: 100%;
+  height: auto;
+}
+
 .cm-slide::-webkit-scrollbar {
   display: none;
 }
 
 .cm-slide-cover {
   text-align: center;
+}
+
+.cm-slide-cover-with-portrait {
+  display: grid;
+  grid-template-columns: minmax(0, 1.05fr) minmax(14rem, 0.85fr);
+  align-items: center;
+  gap: clamp(1.25rem, 3vw, 2.75rem);
+  text-align: left;
+  width: 100%;
+  max-width: 72rem;
+  margin-inline: auto;
+}
+
+.cm-slide-cover-copy {
+  min-width: 0;
+}
+
+.cm-slide-cover-with-portrait .cm-slide-rule {
+  margin-left: 0;
+  margin-right: auto;
+}
+
+.cm-slide-cover-with-portrait .cm-slide-cover-actions {
+  align-items: flex-start;
+}
+
+.cm-slide-cover-with-portrait .cm-slide-eyebrow {
+  font-size: clamp(0.92rem, 1.5vw, 1.05rem);
+  letter-spacing: 0.28em;
+}
+
+.cm-slide-cover-with-portrait .cm-slide-subtitle {
+  max-width: 38rem;
+  font-size: clamp(1.2rem, 2.35vw, 1.5rem);
+  line-height: 1.5;
+}
+
+.cm-slide-cover-with-portrait .cm-slide-title {
+  white-space: nowrap;
+  font-size: clamp(2.2rem, 4vw, 3.55rem);
+}
+
+.cm-slide-cover-with-portrait .cm-slide-duration {
+  padding: 0.58rem 1.2rem;
+  font-size: 0.86rem;
+}
+
+.cm-slide-cover-with-portrait .cm-slide-journey-under-duration {
+  margin-top: 0.95rem;
+  font-size: clamp(1.4rem, 2.6vw, 1.7rem);
+}
+
+.cm-slide-cover-with-portrait .cm-slide-teacher-signature.about-signature {
+  font-size: clamp(2.1rem, 3.5vw, 2.85rem);
+}
+
+.cm-slide-cover-with-portrait .cm-slide-roles-portrait {
+  font-size: 0.86rem;
+  max-width: 20rem;
+}
+
+.cm-slide-cover-teacher {
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  min-width: 0;
+  text-align: center;
+}
+
+.cm-slide-cover-portrait {
+  position: relative;
+  width: min(100%, 20rem);
+  aspect-ratio: 4 / 5;
+  overflow: hidden;
+  border-radius: 1.25rem;
+  background: #d9d2df;
+  box-shadow:
+    0 18px 40px -22px rgba(58, 37, 96, 0.45),
+    inset 0 0 0 1px rgba(58, 37, 96, 0.08);
+}
+
+.cm-slide-cover-portrait-img {
+  width: 100%;
+  height: 100%;
+  object-fit: cover;
+  object-position: center 18%;
+}
+
+.cm-slide-teacher-signature.about-signature {
+  margin-top: 0.85rem;
+  padding: 0.15rem 0.1rem 0;
+  font-size: clamp(1.85rem, 3.2vw, 2.55rem);
+  text-align: center;
+  color: #5c1470;
+}
+
+.cm-slide-roles-portrait {
+  margin-top: 0.45rem;
+  max-width: 18rem;
+  font-size: 0.78rem;
+  line-height: 1.45;
+  letter-spacing: 0.04em;
+}
+
+@media (max-width: 900px) {
+  .cm-slide-cover-with-portrait {
+    grid-template-columns: 1fr;
+    text-align: center;
+  }
+
+  .cm-slide-cover-with-portrait .cm-slide-rule,
+  .cm-slide-cover-with-portrait .cm-slide-cover-actions {
+    margin-inline: auto;
+    align-items: center;
+  }
+
+  .cm-slide-cover-with-portrait .cm-slide-subtitle {
+    margin-inline: auto;
+  }
+
+  .cm-slide-cover-with-portrait .cm-slide-title {
+    white-space: nowrap;
+    font-size: clamp(1.75rem, 6.5vw, 2.55rem);
+  }
+
+  .cm-slide-cover-teacher {
+    order: -1;
+  }
+
+  .cm-slide-cover-portrait {
+    width: min(100%, 16rem);
+  }
 }
 
 .cm-slide-session-start {
@@ -7294,6 +7509,13 @@ html[data-brand-theme="10"] section[aria-label="Hero highlights"] [role="tablist
   color: rgba(92, 20, 112, 0.7);
 }
 
+.cm-slide-journey-under-duration {
+  margin: 0.85rem 0 0;
+  font-size: clamp(1.25rem, 2.4vw, 1.5rem);
+  letter-spacing: 0.01em;
+  color: rgba(92, 20, 112, 0.62);
+}
+
 .cm-slide-duration {
   display: inline-flex;
   margin-top: 0;
@@ -7312,7 +7534,7 @@ html[data-brand-theme="10"] section[aria-label="Hero highlights"] [role="tablist
   display: flex;
   flex-direction: column;
   align-items: center;
-  gap: 1rem;
+  gap: 0.35rem;
   margin-top: 1.5rem;
 }
 
@@ -7685,6 +7907,1907 @@ html[data-brand-theme="10"] section[aria-label="Hero highlights"] [role="tablist
   display: grid;
   grid-template-columns: repeat(2, minmax(0, 1fr));
   gap: 0.85rem;
+}
+
+.cm-slide-life-force {
+  display: flex;
+  flex-direction: column;
+  gap: clamp(1rem, 2vw, 1.45rem);
+  text-align: left;
+}
+
+.cm-slide-story {
+  display: grid;
+  grid-template-columns: minmax(0, 1.1fr) minmax(16rem, 0.9fr);
+  gap: clamp(1.25rem, 3vw, 2.5rem);
+  align-items: center;
+  width: 100%;
+  max-width: 74rem;
+  margin-inline: auto;
+  text-align: left;
+}
+
+.cm-story-copy {
+  min-width: 0;
+}
+
+.cm-story-title {
+  margin-top: 0.55rem;
+  font-size: clamp(2.35rem, 4.4vw, 3.55rem);
+}
+
+.cm-story-paragraphs {
+  margin-top: 1.15rem;
+  display: grid;
+  gap: 0.95rem;
+}
+
+.cm-story-paragraphs p {
+  margin: 0;
+  max-width: 38rem;
+  font-size: clamp(1.12rem, 2.1vw, 1.38rem);
+  line-height: 1.6;
+  color: rgba(58, 37, 96, 0.74);
+}
+
+.cm-story-media {
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  min-width: 0;
+}
+
+.cm-story-portrait {
+  width: min(100%, 24rem);
+  overflow: hidden;
+  border-radius: 1.35rem;
+  background: #d9d2df;
+  box-shadow:
+    0 22px 48px -24px rgba(58, 37, 96, 0.42),
+    inset 0 0 0 1px rgba(255, 255, 255, 0.35);
+}
+
+.cm-story-portrait-img {
+  display: block;
+  width: 100%;
+  height: auto;
+}
+
+.cm-story-caption {
+  margin: 0.85rem 0 0;
+  font-size: 0.82rem;
+  font-weight: 650;
+  letter-spacing: 0.14em;
+  text-transform: uppercase;
+  color: rgba(92, 20, 112, 0.62);
+  text-align: center;
+}
+
+@media (max-width: 900px) {
+  .cm-slide-story {
+    grid-template-columns: 1fr;
+    text-align: center;
+  }
+
+  .cm-story-paragraphs p {
+    margin-inline: auto;
+  }
+
+  .cm-story-media {
+    order: -1;
+  }
+
+  .cm-story-portrait {
+    width: min(100%, 18rem);
+  }
+}
+
+.cm-slide-significance {
+  display: grid;
+  grid-template-columns: minmax(0, 1fr) minmax(18rem, 1.05fr);
+  gap: clamp(1rem, 2.5vw, 2rem);
+  align-items: center;
+  width: 100%;
+  max-width: 78rem;
+  margin-inline: auto;
+  text-align: left;
+}
+
+.cm-significance-title {
+  margin-top: 0.45rem;
+  font-size: clamp(2.2rem, 4vw, 3.3rem);
+}
+
+.cm-significance-lead {
+  margin: 0.75rem 0 0;
+  max-width: 34rem;
+  font-size: clamp(1.08rem, 2vw, 1.32rem);
+  line-height: 1.5;
+  color: rgba(58, 37, 96, 0.72);
+}
+
+.cm-significance-section {
+  margin-top: 1.15rem;
+}
+
+.cm-significance-section-label {
+  margin: 0;
+  font-size: 0.78rem;
+  font-weight: 700;
+  letter-spacing: 0.2em;
+  text-transform: uppercase;
+  color: color-mix(in srgb, #c9a227 78%, #8f63b5);
+}
+
+.cm-significance-chips {
+  margin: 0.65rem 0 0;
+  padding: 0;
+  list-style: none;
+  display: flex;
+  flex-wrap: wrap;
+  gap: 0.45rem;
+}
+
+.cm-significance-chips li {
+  display: inline-flex;
+  align-items: center;
+  border-radius: 9999px;
+  border: 1px solid rgba(92, 20, 112, 0.14);
+  background: linear-gradient(165deg, #fbf6ff 0%, #efe2f8 100%);
+  padding: 0.45rem 0.85rem;
+  font-size: 0.9rem;
+  font-weight: 650;
+  color: #5c1470;
+}
+
+.cm-significance-benefits {
+  margin: 0.65rem 0 0;
+  padding: 0;
+  list-style: none;
+  display: grid;
+  grid-template-columns: repeat(2, minmax(0, 1fr));
+  gap: 0.45rem;
+}
+
+.cm-significance-benefits li {
+  position: relative;
+  padding: 0.55rem 0.65rem 0.55rem 1.15rem;
+  border-radius: 0.75rem;
+  background: rgba(255, 255, 255, 0.72);
+  border: 1px solid rgba(92, 20, 112, 0.1);
+  font-size: clamp(0.9rem, 1.5vw, 1.02rem);
+  font-weight: 600;
+  line-height: 1.35;
+  color: #3a2560;
+}
+
+.cm-significance-benefits li::before {
+  content: "";
+  position: absolute;
+  left: 0.45rem;
+  top: 0.85rem;
+  width: 0.35rem;
+  height: 0.35rem;
+  border-radius: 9999px;
+  background: linear-gradient(135deg, #eecf78, #c9a227);
+}
+
+.cm-significance-wheel-wrap {
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  min-width: 0;
+}
+
+.cm-reiki-wheel {
+  width: min(100%, 34rem);
+  height: auto;
+  display: block;
+}
+
+@media (max-width: 980px) {
+  .cm-slide-significance {
+    grid-template-columns: 1fr;
+  }
+
+  .cm-significance-wheel-wrap {
+    order: -1;
+  }
+
+  .cm-reiki-wheel {
+    width: min(100%, 26rem);
+  }
+
+  .cm-significance-benefits {
+    grid-template-columns: 1fr;
+  }
+}
+
+.cm-slide-energy {
+  display: grid;
+  grid-template-columns: minmax(0, 0.88fr) minmax(22rem, 1.28fr);
+  gap: clamp(1rem, 2.2vw, 1.75rem);
+  align-items: center;
+  width: 100%;
+  max-width: 86rem;
+  margin-inline: auto;
+  text-align: left;
+}
+
+.cm-energy-title {
+  margin-top: 0.45rem;
+  font-size: clamp(2.55rem, 4.5vw, 3.7rem);
+}
+
+.cm-energy-lead {
+  margin: 0.75rem 0 0;
+  font-family: var(--font-instrument-serif), Georgia, serif;
+  font-size: clamp(1.6rem, 2.8vw, 2rem);
+  font-style: italic;
+  color: #5c1470;
+}
+
+.cm-energy-einstein {
+  margin: 0.8rem 0 0;
+  max-width: 34rem;
+  font-size: clamp(1.15rem, 2.1vw, 1.35rem);
+  line-height: 1.5;
+  color: rgba(58, 37, 96, 0.72);
+}
+
+.cm-energy-principles {
+  margin: 1.15rem 0 0;
+  padding: 0;
+  list-style: none;
+  display: grid;
+  gap: 0.62rem;
+}
+
+.cm-energy-principles li {
+  position: relative;
+  padding-left: 1.25rem;
+  font-family: var(--font-instrument-serif), Georgia, serif;
+  font-size: clamp(1.25rem, 2.3vw, 1.5rem);
+  line-height: 1.4;
+  color: #3a2560;
+}
+
+.cm-energy-principles li::before {
+  content: "";
+  position: absolute;
+  left: 0;
+  top: 0.55em;
+  width: 0.42rem;
+  height: 0.42rem;
+  border-radius: 9999px;
+  background: linear-gradient(135deg, #eecf78, #c9a227);
+}
+
+.cm-energy-closing {
+  margin: 1.25rem 0 0;
+  max-width: 36rem;
+  padding: 1rem 1.1rem;
+  border-radius: 1rem;
+  border: 1px solid rgba(201, 162, 39, 0.28);
+  background: linear-gradient(165deg, rgba(255, 252, 245, 0.95), rgba(246, 236, 255, 0.88));
+  font-size: clamp(1.1rem, 2vw, 1.28rem);
+  line-height: 1.55;
+  color: rgba(58, 37, 96, 0.8);
+}
+
+.cm-energy-visual-wrap {
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  min-width: 0;
+}
+
+.cm-energy-takers {
+  width: 100%;
+  max-width: 46rem;
+  padding: 1.15rem 1.15rem 1.35rem;
+  border-radius: 1.5rem;
+  border: 1px solid rgba(92, 20, 112, 0.12);
+  background:
+    linear-gradient(180deg, #ebe0f4 0%, #ebe0f4 46%, #f4eef9 46%, #f4eef9 100%);
+  box-shadow: 0 18px 40px -24px rgba(58, 37, 96, 0.3);
+}
+
+.cm-energy-takers-head {
+  text-align: center;
+  margin-bottom: 1rem;
+}
+
+.cm-energy-takers-kicker {
+  margin: 0;
+  font-size: clamp(0.82rem, 1.2vw, 0.95rem);
+  font-weight: 700;
+  letter-spacing: 0.22em;
+  text-transform: uppercase;
+  color: color-mix(in srgb, #c9a227 72%, #8f63b5);
+}
+
+.cm-energy-takers-title {
+  margin: 0.3rem 0 0;
+  font-family: var(--font-instrument-serif), Georgia, serif;
+  font-size: clamp(2.15rem, 3.4vw, 2.75rem);
+  font-weight: 400;
+  line-height: 1.05;
+  color: #5c1470;
+}
+
+.cm-energy-takers-grid {
+  display: grid;
+  grid-template-columns: repeat(3, minmax(0, 1fr));
+  gap: 0.75rem;
+}
+
+.cm-energy-takers-card {
+  position: relative;
+  aspect-ratio: 1;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  padding: 1.55rem 1rem 1.15rem;
+  border-radius: 9999px;
+  text-align: center;
+  box-shadow: 0 12px 24px -16px rgba(45, 18, 72, 0.4);
+}
+
+.cm-energy-takers-card.tone-deep {
+  background: linear-gradient(165deg, #6b3d8a 0%, #5c1470 55%, #4a0f5c 100%);
+  color: #fffaf2;
+}
+
+.cm-energy-takers-card.tone-mid {
+  background: linear-gradient(165deg, #c9a8d8 0%, #b48ccc 100%);
+  color: #3a2560;
+}
+
+.cm-energy-takers-card.tone-soft {
+  background: linear-gradient(165deg, #f3ebf8 0%, #e8daf2 100%);
+  color: #3a2560;
+  border: 1px solid rgba(92, 20, 112, 0.1);
+}
+
+.cm-energy-takers-sparkle {
+  position: absolute;
+  top: 0.55rem;
+  left: 50%;
+  width: 1rem;
+  height: 1rem;
+  transform: translateX(-50%);
+  color: color-mix(in srgb, #c9a227 75%, #3a2560);
+}
+
+.cm-energy-takers-card.tone-deep .cm-energy-takers-sparkle {
+  color: color-mix(in srgb, #eecf78 80%, #fffaf2);
+}
+
+.cm-energy-takers-card p {
+  margin: 0;
+  font-size: clamp(0.92rem, 1.45vw, 1.05rem);
+  font-weight: 650;
+  line-height: 1.3;
+  letter-spacing: -0.01em;
+}
+
+.cm-energy-takers-wave {
+  margin: 0.85rem 0 0.95rem;
+  filter: drop-shadow(0 2px 4px rgba(183, 217, 74, 0.35));
+}
+
+.cm-energy-takers-wave svg {
+  display: block;
+  width: 100%;
+  height: 1.55rem;
+}
+
+@media (max-width: 980px) {
+  .cm-slide-energy {
+    grid-template-columns: 1fr;
+  }
+
+  .cm-energy-visual-wrap {
+    order: -1;
+  }
+
+  .cm-energy-takers {
+    max-width: 40rem;
+  }
+
+  .cm-energy-takers-grid {
+    grid-template-columns: 1fr;
+  }
+
+  .cm-energy-takers-card {
+    aspect-ratio: auto;
+    border-radius: 1.25rem;
+    min-height: 0;
+    padding: 1.1rem 1.2rem;
+  }
+
+  .cm-energy-takers-card p {
+    font-size: 1.08rem;
+  }
+}
+
+.cm-slide-reiki-energy {
+  display: grid;
+  grid-template-columns: minmax(0, 1.05fr) minmax(16rem, 0.85fr);
+  gap: clamp(1.15rem, 2.8vw, 2.25rem);
+  align-items: center;
+  width: 100%;
+  max-width: 78rem;
+  margin-inline: auto;
+  text-align: left;
+}
+
+.cm-reiki-energy-copy {
+  min-width: 0;
+}
+
+.cm-reiki-energy-title {
+  margin-top: 0.45rem;
+  font-size: clamp(2.45rem, 4.4vw, 3.55rem);
+}
+
+.cm-reiki-energy-lead {
+  margin: 0.85rem 0 0;
+  max-width: 36rem;
+  font-family: var(--font-instrument-serif), Georgia, serif;
+  font-size: clamp(1.45rem, 2.5vw, 1.85rem);
+  font-style: italic;
+  line-height: 1.4;
+  color: #5c1470;
+}
+
+.cm-reiki-energy-paragraphs {
+  margin-top: 1.1rem;
+  display: grid;
+  gap: 0.9rem;
+}
+
+.cm-reiki-energy-paragraphs p {
+  margin: 0;
+  max-width: 36rem;
+  font-size: clamp(1.12rem, 2vw, 1.32rem);
+  line-height: 1.55;
+  color: rgba(58, 37, 96, 0.76);
+}
+
+.cm-reiki-energy-closing {
+  margin: 1.25rem 0 0;
+  max-width: 34rem;
+  padding: 1rem 1.1rem;
+  border-radius: 1rem;
+  border: 1px solid rgba(201, 162, 39, 0.28);
+  background: linear-gradient(165deg, rgba(255, 252, 245, 0.95), rgba(246, 236, 255, 0.88));
+  font-size: clamp(1.08rem, 1.9vw, 1.24rem);
+  line-height: 1.5;
+  color: rgba(58, 37, 96, 0.82);
+}
+
+.cm-reiki-energy-media {
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  min-width: 0;
+}
+
+.cm-reiki-energy-frame {
+  width: min(100%, 22rem);
+  overflow: hidden;
+  border-radius: 1.4rem;
+  background: #1a0f24;
+  box-shadow:
+    0 24px 52px -26px rgba(58, 37, 96, 0.5),
+    inset 0 0 0 1px rgba(255, 255, 255, 0.18);
+}
+
+.cm-reiki-energy-img {
+  display: block;
+  width: 100%;
+  height: auto;
+}
+
+@media (max-width: 900px) {
+  .cm-slide-reiki-energy {
+    grid-template-columns: 1fr;
+    text-align: center;
+  }
+
+  .cm-reiki-energy-lead,
+  .cm-reiki-energy-paragraphs p,
+  .cm-reiki-energy-closing {
+    margin-inline: auto;
+  }
+
+  .cm-reiki-energy-media {
+    order: -1;
+  }
+
+  .cm-reiki-energy-frame {
+    width: min(100%, 18rem);
+  }
+}
+
+.cm-slide-reiki-activation {
+  display: grid;
+  grid-template-columns: minmax(0, 1fr) minmax(18rem, 1.05fr);
+  gap: clamp(1.15rem, 2.8vw, 2.25rem);
+  align-items: center;
+  width: 100%;
+  max-width: 80rem;
+  margin-inline: auto;
+  text-align: left;
+}
+
+.cm-reiki-activation-copy {
+  min-width: 0;
+}
+
+.cm-reiki-activation-title {
+  margin-top: 0.45rem;
+  font-size: clamp(2.25rem, 4vw, 3.2rem);
+}
+
+.cm-reiki-activation-lead {
+  margin: 0.8rem 0 0;
+  max-width: 34rem;
+  font-size: clamp(1.12rem, 2vw, 1.32rem);
+  line-height: 1.5;
+  color: rgba(58, 37, 96, 0.76);
+}
+
+.cm-reiki-activation-steps-block {
+  margin-top: 1.15rem;
+}
+
+.cm-reiki-activation-steps-title {
+  margin: 0;
+  font-family: var(--font-instrument-serif), Georgia, serif;
+  font-size: clamp(1.35rem, 2.3vw, 1.65rem);
+  color: #5c1470;
+}
+
+.cm-reiki-activation-steps {
+  margin: 0.75rem 0 0;
+  padding: 0;
+  list-style: none;
+  display: grid;
+  gap: 0.55rem;
+  counter-reset: reiki-step;
+}
+
+.cm-reiki-activation-steps li {
+  position: relative;
+  display: grid;
+  grid-template-columns: auto 1fr;
+  gap: 0.75rem;
+  align-items: start;
+  counter-increment: reiki-step;
+  font-size: clamp(1.08rem, 1.9vw, 1.28rem);
+  line-height: 1.4;
+  color: #3a2560;
+}
+
+.cm-reiki-activation-steps li::before {
+  content: counter(reiki-step);
+  display: inline-flex;
+  align-items: center;
+  justify-content: center;
+  width: 1.7rem;
+  height: 1.7rem;
+  border-radius: 9999px;
+  background: linear-gradient(145deg, #6b3d8a, #5c1470);
+  color: #fffaf2;
+  font-size: 0.85rem;
+  font-weight: 700;
+  line-height: 1;
+  flex-shrink: 0;
+}
+
+.cm-reiki-activation-closing {
+  margin: 1.2rem 0 0;
+  max-width: 34rem;
+  padding: 0.95rem 1.05rem;
+  border-radius: 1rem;
+  border: 1px solid rgba(201, 162, 39, 0.28);
+  background: linear-gradient(165deg, rgba(255, 252, 245, 0.95), rgba(246, 236, 255, 0.88));
+  font-size: clamp(1.02rem, 1.8vw, 1.18rem);
+  line-height: 1.5;
+  color: rgba(58, 37, 96, 0.82);
+}
+
+.cm-reiki-activation-media {
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  min-width: 0;
+}
+
+.cm-reiki-activation-frame {
+  width: 100%;
+  max-width: 34rem;
+  overflow: hidden;
+  border-radius: 1.35rem;
+  background: #d9d2df;
+  box-shadow:
+    0 22px 48px -24px rgba(58, 37, 96, 0.42),
+    inset 0 0 0 1px rgba(255, 255, 255, 0.35);
+}
+
+.cm-reiki-activation-img {
+  display: block;
+  width: 100%;
+  height: auto;
+}
+
+@media (max-width: 900px) {
+  .cm-slide-reiki-activation {
+    grid-template-columns: 1fr;
+    text-align: center;
+  }
+
+  .cm-reiki-activation-lead,
+  .cm-reiki-activation-closing {
+    margin-inline: auto;
+  }
+
+  .cm-reiki-activation-steps {
+    text-align: left;
+    max-width: 28rem;
+    margin-inline: auto;
+  }
+
+  .cm-reiki-activation-media {
+    order: -1;
+  }
+
+  .cm-reiki-activation-frame {
+    max-width: 28rem;
+  }
+}
+
+.cm-slide-chakra-system {
+  display: flex;
+  flex-direction: column;
+  gap: clamp(0.65rem, 1.2vw, 0.95rem);
+  width: 100%;
+  max-width: 84rem;
+  margin-inline: auto;
+  text-align: left;
+  min-height: 0;
+  height: 100%;
+  overflow: hidden;
+  position: relative;
+}
+
+.cm-chakra-watermark {
+  pointer-events: none;
+  position: absolute;
+  inset: 0;
+  z-index: 0;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  overflow: hidden;
+  transition: z-index 0s linear 0.35s;
+}
+
+.cm-chakra-watermark.is-revealed {
+  z-index: 3;
+  transition: z-index 0s;
+}
+
+.cm-chakra-watermark-img {
+  display: block;
+  width: auto;
+  height: min(92%, 38rem);
+  max-width: min(52%, 22rem);
+  object-fit: contain;
+  opacity: 0.34;
+  filter: saturate(1.05) brightness(1.02);
+  transform: translate(-10.5rem, 2.75rem);
+  transition:
+    opacity 0.35s ease,
+    filter 0.35s ease;
+}
+
+.cm-chakra-watermark.is-revealed .cm-chakra-watermark-img {
+  opacity: 1;
+  filter: saturate(1.3) brightness(1.05);
+}
+
+.cm-chakra-watermark-toggle {
+  position: absolute;
+  top: 0.15rem;
+  right: 0;
+  z-index: 5;
+  margin: 0;
+  padding: 0.35rem 0.7rem;
+  border: 1px solid rgba(92, 20, 112, 0.18);
+  border-radius: 9999px;
+  background: rgba(255, 252, 248, 0.88);
+  color: #5c1470;
+  font-size: 0.72rem;
+  font-weight: 700;
+  letter-spacing: 0.04em;
+  cursor: pointer;
+  box-shadow: 0 8px 18px -14px rgba(58, 37, 96, 0.35);
+  transition:
+    background 0.2s ease,
+    border-color 0.2s ease,
+    transform 0.2s ease;
+}
+
+.cm-chakra-watermark-toggle:hover {
+  background: #fff;
+  border-color: rgba(92, 20, 112, 0.32);
+  transform: translateY(-1px);
+}
+
+.cm-chakra-watermark-toggle[aria-pressed="true"] {
+  background: linear-gradient(145deg, #6b3d8a, #5c1470);
+  border-color: transparent;
+  color: #fffaf2;
+}
+
+.cm-chakra-system-header,
+.cm-chakra-system-visuals {
+  position: relative;
+  z-index: 1;
+}
+
+.cm-chakra-system-header {
+  width: 100%;
+  max-width: none;
+  flex-shrink: 0;
+}
+
+.cm-chakra-system-heading-row {
+  display: flex;
+  align-items: flex-end;
+  justify-content: space-between;
+  gap: 1rem 1.5rem;
+  flex-wrap: wrap;
+}
+
+.cm-chakra-system-heading {
+  min-width: 0;
+}
+
+.cm-chakra-system-title {
+  margin-top: 0.2rem;
+  font-size: clamp(2rem, 3.4vw, 2.85rem);
+}
+
+.cm-chakra-system-lead {
+  margin: 0.55rem 0 0;
+  max-width: none;
+  width: 100%;
+  font-size: clamp(0.98rem, 1.55vw, 1.15rem);
+  line-height: 1.45;
+  color: rgba(58, 37, 96, 0.76);
+}
+
+.cm-chakra-system-stats {
+  margin: 0;
+  padding: 0;
+  list-style: none;
+  display: flex;
+  flex-wrap: wrap;
+  gap: 0.45rem;
+  justify-content: flex-end;
+}
+
+.cm-chakra-system-stats li {
+  display: flex;
+  flex-direction: column;
+  gap: 0.1rem;
+  min-width: 7.25rem;
+  padding: 0.45rem 0.75rem;
+  border-radius: 0.85rem;
+  border: 1px solid rgba(92, 20, 112, 0.12);
+  background:
+    linear-gradient(165deg, rgba(255, 252, 245, 0.92), rgba(246, 236, 255, 0.82));
+  box-shadow: 0 10px 22px -18px rgba(58, 37, 96, 0.28);
+}
+
+.cm-chakra-system-stat-value {
+  font-family: var(--font-instrument-serif), Georgia, serif;
+  font-size: clamp(1.25rem, 2vw, 1.55rem);
+  line-height: 1;
+  color: #5c1470;
+}
+
+.cm-chakra-system-stat-label {
+  font-size: 0.68rem;
+  font-weight: 650;
+  letter-spacing: 0.06em;
+  text-transform: uppercase;
+  color: rgba(58, 37, 96, 0.58);
+}
+
+.cm-chakra-system-visuals {
+  display: grid;
+  grid-template-columns: 1fr;
+  gap: 0;
+  align-items: stretch;
+  min-height: 0;
+  flex: 1;
+  overflow: hidden;
+  position: relative;
+  justify-items: center;
+}
+
+.cm-chakra-system-card {
+  position: relative;
+  z-index: 1;
+  margin: 0;
+  display: flex;
+  flex-direction: column;
+  gap: 0.35rem;
+  width: 100%;
+  max-width: 48rem;
+  min-width: 0;
+  min-height: 0;
+  overflow: hidden;
+}
+
+.cm-chakra-system-frame {
+  position: relative;
+  flex: 1;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  min-height: 0;
+  padding: clamp(0.45rem, 1vw, 0.75rem);
+  border-radius: 1.2rem;
+  border: 1px solid rgba(92, 20, 112, 0.1);
+  background:
+    radial-gradient(ellipse 70% 55% at 50% 35%, rgba(255, 255, 255, 0.72), transparent 70%),
+    linear-gradient(165deg, #f7f1fb 0%, #efe4f6 48%, #e8daf2 100%);
+  box-shadow:
+    0 18px 36px -24px rgba(58, 37, 96, 0.32),
+    inset 0 1px 0 rgba(255, 255, 255, 0.7);
+  overflow: hidden;
+}
+
+.cm-chakra-system-frame::after {
+  content: "";
+  pointer-events: none;
+  position: absolute;
+  inset: 0;
+  border-radius: inherit;
+  background:
+    radial-gradient(ellipse 55% 40% at 80% 15%, rgba(201, 162, 39, 0.1), transparent 55%),
+    radial-gradient(ellipse 45% 35% at 15% 85%, rgba(143, 99, 181, 0.12), transparent 60%);
+}
+
+.cm-chakra-system-img {
+  position: relative;
+  z-index: 1;
+  display: block;
+  width: 100%;
+  height: 100%;
+  max-height: 100%;
+  object-fit: contain;
+  mix-blend-mode: multiply;
+}
+
+.cm-chakra-system-caption {
+  margin: 0;
+  flex-shrink: 0;
+  text-align: center;
+  font-size: 0.7rem;
+  font-weight: 650;
+  letter-spacing: 0.12em;
+  text-transform: uppercase;
+  color: rgba(92, 20, 112, 0.62);
+}
+
+@media (max-width: 980px) {
+  .cm-slide-chakra-system {
+    overflow: auto;
+    height: auto;
+  }
+
+  .cm-chakra-system-heading-row {
+    align-items: flex-start;
+  }
+
+  .cm-chakra-system-stats {
+    justify-content: flex-start;
+  }
+
+  .cm-chakra-system-visuals {
+    grid-template-columns: 1fr;
+    overflow: visible;
+  }
+
+  .cm-chakra-system-img {
+    height: auto;
+    max-height: min(38vh, 20rem);
+  }
+}
+
+.cm-slide-chakras-guide {
+  width: 100%;
+  height: 100%;
+  min-height: 0;
+  overflow: hidden;
+  display: flex;
+  flex-direction: column;
+}
+
+.cm-slide-chakras-guide > * {
+  flex: 1;
+  min-height: 0;
+  display: flex;
+}
+
+.cm-chakras-guide {
+  display: grid;
+  grid-template-rows: auto minmax(0, 1fr) auto;
+  gap: 0.35rem;
+  width: 100%;
+  height: 100%;
+  min-height: 0;
+  max-width: 92rem;
+  margin-inline: auto;
+  overflow: hidden;
+  position: relative;
+}
+
+.cm-chakras-guide-head,
+.cm-chakras-guide-body,
+.cm-chakras-guide-foot {
+  position: relative;
+  z-index: 1;
+}
+
+.cm-chakras-guide-head {
+  text-align: center;
+  flex-shrink: 0;
+}
+
+.cm-chakras-guide-title {
+  margin: 0;
+  font-family: var(--font-instrument-serif), Georgia, serif;
+  font-size: clamp(1.55rem, 2.6vw, 2.15rem);
+  font-weight: 400;
+  line-height: 1.05;
+  color: #5c1470;
+}
+
+.cm-chakras-guide-subtitle {
+  margin: 0.2rem 0 0;
+  font-size: clamp(0.68rem, 1.05vw, 0.82rem);
+  font-weight: 700;
+  letter-spacing: 0.16em;
+  text-transform: uppercase;
+  color: color-mix(in srgb, #c9a227 70%, #8f63b5);
+}
+
+.cm-chakras-guide-lotus {
+  display: inline-block;
+  margin-top: 0.1rem;
+  color: #c9a227;
+  font-size: 0.7rem;
+}
+
+.cm-chakras-guide-body {
+  display: grid;
+  grid-template-columns: 1fr;
+  gap: 0;
+  min-height: 0;
+  overflow: hidden;
+  position: relative;
+}
+
+.cm-chakras-guide-table-wrap {
+  position: relative;
+  z-index: 1;
+  display: grid;
+  grid-template-rows: auto minmax(0, 1fr);
+  min-height: 0;
+  overflow: hidden;
+  border-radius: 0.9rem;
+  border: 1px solid rgba(92, 20, 112, 0.1);
+  background: rgba(255, 252, 248, 0.72);
+  backdrop-filter: blur(2px);
+}
+
+.cm-chakras-guide-table-head {
+  display: grid;
+  grid-template-columns: minmax(9rem, 1.15fr) minmax(5.5rem, 0.7fr) minmax(0, 1.45fr) minmax(6.5rem, 0.85fr);
+  gap: 0.4rem;
+  padding: 0.28rem 0.55rem;
+  font-size: clamp(0.68rem, 1.05vw, 0.8rem);
+  font-weight: 750;
+  letter-spacing: 0.1em;
+  text-transform: uppercase;
+  color: rgba(58, 37, 96, 0.58);
+  border-bottom: 1px solid rgba(92, 20, 112, 0.1);
+  background: rgba(255, 255, 255, 0.45);
+}
+
+.cm-chakras-guide-rows {
+  display: grid;
+  grid-template-rows: repeat(7, minmax(0, 1fr));
+  min-height: 0;
+  overflow: hidden;
+}
+
+.cm-chakras-guide-row {
+  display: grid;
+  grid-template-columns: minmax(9rem, 1.15fr) minmax(5.5rem, 0.7fr) minmax(0, 1.45fr) minmax(6.5rem, 0.85fr);
+  gap: 0.4rem;
+  align-items: center;
+  min-height: 0;
+  padding: 0.12rem 0.55rem;
+  background: var(--chakra-soft);
+  border-bottom: 1px solid rgba(92, 20, 112, 0.06);
+}
+
+.cm-chakras-guide-row:last-child {
+  border-bottom: none;
+}
+
+.cm-chakras-guide-name {
+  display: flex;
+  align-items: center;
+  gap: 0.4rem;
+  min-width: 0;
+}
+
+.cm-chakras-guide-symbol {
+  width: clamp(1.35rem, 2vw, 1.7rem);
+  height: clamp(1.35rem, 2vw, 1.7rem);
+  flex-shrink: 0;
+}
+
+.cm-chakras-guide-name-main {
+  margin: 0;
+  font-size: clamp(0.84rem, 1.3vw, 1.02rem);
+  font-weight: 750;
+  line-height: 1.1;
+  color: #3a2560;
+}
+
+.cm-chakras-guide-name-sub {
+  margin: 0.02rem 0 0;
+  font-size: clamp(0.68rem, 1.05vw, 0.8rem);
+  line-height: 1.1;
+  color: rgba(58, 37, 96, 0.58);
+}
+
+.cm-chakras-guide-color {
+  display: flex;
+  align-items: center;
+  gap: 0.35rem;
+  font-size: clamp(0.74rem, 1.15vw, 0.9rem);
+  font-weight: 650;
+  line-height: 1.15;
+  color: #3a2560;
+}
+
+.cm-chakras-guide-swatch {
+  width: 0.7rem;
+  height: 0.7rem;
+  border-radius: 9999px;
+  flex-shrink: 0;
+  box-shadow: 0 0 0 1px rgba(255, 255, 255, 0.55);
+}
+
+.cm-chakras-guide-blockages {
+  margin: 0;
+  padding: 0;
+  list-style: none;
+  display: grid;
+  grid-template-columns: 1fr 1fr;
+  gap: 0 0.55rem;
+  font-size: clamp(0.7rem, 1.1vw, 0.86rem);
+  line-height: 1.18;
+  color: rgba(58, 37, 96, 0.78);
+}
+
+.cm-chakras-guide-blockages li {
+  position: relative;
+  padding-left: 0.55rem;
+}
+
+.cm-chakras-guide-blockages li::before {
+  content: "•";
+  position: absolute;
+  left: 0;
+  color: var(--chakra-color);
+}
+
+.cm-chakras-guide-mantra {
+  display: flex;
+  align-items: center;
+  gap: 0.35rem;
+  font-size: clamp(0.74rem, 1.15vw, 0.9rem);
+  font-weight: 700;
+  line-height: 1.15;
+  color: #3a2560;
+}
+
+.cm-chakras-guide-glyph {
+  font-size: clamp(1.12rem, 1.75vw, 1.4rem);
+  line-height: 1;
+}
+
+.cm-chakras-guide-foot {
+  text-align: center;
+  flex-shrink: 0;
+  padding-top: 0.15rem;
+}
+
+.cm-chakras-guide-foot p {
+  margin: 0;
+  max-width: 52rem;
+  margin-inline: auto;
+  font-family: var(--font-instrument-serif), Georgia, serif;
+  font-size: clamp(0.78rem, 1.2vw, 0.95rem);
+  font-style: italic;
+  line-height: 1.35;
+  color: rgba(58, 37, 96, 0.72);
+}
+
+.cm-chakras-guide-brand {
+  margin-top: 0.25rem !important;
+  font-family: var(--font-plus-jakarta), system-ui, sans-serif !important;
+  font-size: 0.68rem !important;
+  font-style: normal !important;
+  font-weight: 750;
+  letter-spacing: 0.18em;
+  text-transform: uppercase;
+  color: color-mix(in srgb, #c9a227 65%, #5c1470) !important;
+}
+
+@media (max-width: 980px) {
+  .cm-slide:has(.cm-slide-chakras-guide) {
+    overflow: auto;
+  }
+
+  .cm-chakras-guide-body {
+    grid-template-columns: 1fr;
+  }
+
+  .cm-chakras-guide-table-head,
+  .cm-chakras-guide-row {
+    grid-template-columns: 1.1fr 0.7fr 1.4fr 0.9fr;
+  }
+
+  .cm-chakras-guide-blockages {
+    grid-template-columns: 1fr;
+  }
+}
+
+.cm-slide-balancing-chakras {
+  width: 100%;
+  height: 100%;
+  min-height: 0;
+  overflow: hidden;
+  display: flex;
+  flex-direction: column;
+}
+
+.cm-slide-balancing-chakras > * {
+  flex: 1;
+  min-height: 0;
+  display: flex;
+}
+
+.cm-balancing {
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  width: 100%;
+  height: 100%;
+  min-height: 0;
+  overflow: hidden;
+  border-radius: 1.25rem;
+}
+
+.cm-balancing-infographic {
+  display: block;
+  width: 100%;
+  height: 100%;
+  max-width: 100%;
+  max-height: 100%;
+  object-fit: contain;
+  object-position: center;
+  border-radius: 1.25rem;
+  mix-blend-mode: multiply;
+}
+
+.cm-slide-meditation {
+  position: relative;
+  display: block;
+  width: 100%;
+  height: 100%;
+  min-height: 0;
+  overflow: hidden;
+  border-radius: 0;
+}
+
+.cm-meditation-bg {
+  pointer-events: none;
+  position: absolute;
+  inset: -0.35rem;
+  z-index: 0;
+  overflow: hidden;
+}
+
+.cm-meditation-bg-img {
+  display: block;
+  width: 100%;
+  height: 100%;
+  object-fit: cover;
+  object-position: 18% center;
+  opacity: 1;
+  filter: saturate(1.08) contrast(1.02);
+  /* Girl stays crisp on the left; fades open toward the right */
+  -webkit-mask-image: linear-gradient(
+    90deg,
+    #000 0%,
+    #000 34%,
+    rgba(0, 0, 0, 0.88) 48%,
+    rgba(0, 0, 0, 0.45) 68%,
+    rgba(0, 0, 0, 0.18) 100%
+  );
+  mask-image: linear-gradient(
+    90deg,
+    #000 0%,
+    #000 34%,
+    rgba(0, 0, 0, 0.88) 48%,
+    rgba(0, 0, 0, 0.45) 68%,
+    rgba(0, 0, 0, 0.18) 100%
+  );
+}
+
+.cm-meditation-bg::after {
+  content: "";
+  position: absolute;
+  inset: 0;
+  background:
+    linear-gradient(
+      90deg,
+      transparent 0%,
+      transparent 36%,
+      rgba(239, 228, 246, 0.28) 52%,
+      rgba(239, 228, 246, 0.72) 72%,
+      rgba(239, 228, 246, 0.92) 100%
+    ),
+    radial-gradient(ellipse 90% 80% at 50% 50%, transparent 55%, rgba(239, 228, 246, 0.55) 100%);
+  pointer-events: none;
+}
+
+.cm-meditation-bg::before {
+  content: "";
+  position: absolute;
+  inset: 0;
+  z-index: 1;
+  pointer-events: none;
+  box-shadow:
+    inset 0 0 4.5rem 2.75rem rgba(239, 228, 246, 0.95),
+    inset 0 0 1.5rem 0.65rem rgba(239, 228, 246, 0.75);
+}
+
+.cm-meditation-panel {
+  position: absolute;
+  top: 50%;
+  right: clamp(0.75rem, 3vw, 2.25rem);
+  z-index: 1;
+  width: min(42%, 32rem);
+  max-width: 32rem;
+  transform: translateY(-50%);
+  padding: 1rem 1.15rem 1.1rem;
+  text-align: left;
+  border-radius: 1.25rem;
+  background:
+    linear-gradient(
+      165deg,
+      rgba(255, 252, 248, 0.55) 0%,
+      rgba(246, 236, 255, 0.42) 100%
+    );
+  border: 1px solid rgba(255, 255, 255, 0.35);
+  backdrop-filter: blur(2px);
+  box-shadow: 0 18px 40px -28px rgba(58, 37, 96, 0.28);
+}
+
+.cm-meditation-title {
+  margin: 0;
+  font-size: clamp(2.35rem, 4.2vw, 3.35rem);
+}
+
+.cm-meditation-why {
+  margin: 0.55rem 0 0;
+  font-family: var(--font-instrument-serif), Georgia, serif;
+  font-size: clamp(1.4rem, 2.4vw, 1.85rem);
+  font-style: italic;
+  color: #5c1470;
+}
+
+.cm-meditation-reasons {
+  margin: 0.9rem 0 0;
+  padding: 0;
+  list-style: none;
+  display: grid;
+  gap: 0.48rem;
+}
+
+.cm-meditation-reasons li {
+  position: relative;
+  padding-left: 1.15rem;
+  font-size: clamp(1.05rem, 1.85vw, 1.28rem);
+  line-height: 1.35;
+  color: #3a2560;
+}
+
+.cm-meditation-reasons li::before {
+  content: "";
+  position: absolute;
+  left: 0;
+  top: 0.55em;
+  width: 0.42rem;
+  height: 0.42rem;
+  border-radius: 9999px;
+  background: linear-gradient(135deg, #eecf78, #c9a227);
+}
+
+.cm-meditation-practice {
+  margin: 1rem 0 0;
+  max-width: none;
+  padding: 0.8rem 0.95rem;
+  border-radius: 1rem;
+  border: 1px solid rgba(201, 162, 39, 0.28);
+  background: linear-gradient(165deg, rgba(255, 252, 245, 0.92), rgba(246, 236, 255, 0.82));
+  font-size: clamp(1.02rem, 1.75vw, 1.18rem);
+  line-height: 1.45;
+  color: rgba(58, 37, 96, 0.82);
+}
+
+.cm-meditation-closing {
+  margin: 0.9rem 0 0;
+  font-family: var(--font-instrument-serif), Georgia, serif;
+  font-size: clamp(1.2rem, 2.1vw, 1.48rem);
+  font-style: italic;
+  color: #5c1470;
+}
+
+@media (max-width: 900px) {
+  .cm-slide-meditation {
+    display: flex;
+    justify-content: center;
+    align-items: flex-end;
+  }
+
+  .cm-meditation-bg-img {
+    object-position: center 30%;
+    -webkit-mask-image: linear-gradient(180deg, #000 0%, #000 35%, rgba(0, 0, 0, 0.35) 70%, rgba(0, 0, 0, 0.12) 100%);
+    mask-image: linear-gradient(180deg, #000 0%, #000 35%, rgba(0, 0, 0, 0.35) 70%, rgba(0, 0, 0, 0.12) 100%);
+  }
+
+  .cm-meditation-bg::after {
+    background: linear-gradient(
+      180deg,
+      transparent 0%,
+      transparent 30%,
+      rgba(239, 228, 246, 0.45) 55%,
+      rgba(239, 228, 246, 0.9) 100%
+    );
+  }
+
+  .cm-meditation-panel {
+    position: relative;
+    top: auto;
+    right: auto;
+    transform: none;
+    width: 100%;
+    max-width: none;
+    margin: 0 0 0.25rem;
+  }
+}
+
+.cm-slide-aura {
+  width: 100%;
+  height: 100%;
+  min-height: 0;
+  overflow: hidden;
+  display: flex;
+  flex-direction: column;
+}
+
+.cm-slide-aura > * {
+  flex: 1;
+  min-height: 0;
+  display: flex;
+}
+
+.cm-aura-diagram {
+  display: grid;
+  grid-template-rows: auto minmax(0, 1fr);
+  gap: 0.4rem;
+  width: 100%;
+  height: 100%;
+  min-height: 0;
+  overflow: hidden;
+}
+
+.cm-aura-diagram-head {
+  text-align: left;
+  width: 100%;
+  max-width: none;
+  margin: 0;
+  flex-shrink: 0;
+  padding-inline: 0;
+}
+
+.cm-aura-diagram-title {
+  margin: 0;
+  font-family: var(--font-instrument-serif), Georgia, serif;
+  font-size: clamp(2rem, 3.5vw, 2.75rem);
+  font-weight: 400;
+  color: #5c1470;
+}
+
+.cm-aura-diagram-lead {
+  margin: 0.45rem 0 0;
+  width: 100%;
+  max-width: none;
+  font-size: clamp(0.95rem, 1.45vw, 1.12rem);
+  line-height: 1.45;
+  color: rgba(58, 37, 96, 0.74);
+}
+
+.cm-aura-diagram-art {
+  min-height: 0;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  background: transparent;
+  box-shadow: none;
+}
+
+.cm-aura-diagram-img {
+  display: block;
+  width: auto;
+  height: auto;
+  max-width: 100%;
+  max-height: 100%;
+  object-fit: contain;
+  object-position: center;
+  border-radius: 1.25rem;
+  overflow: hidden;
+}
+
+@media (max-width: 980px) {
+  .cm-slide:has(.cm-slide-aura) {
+    overflow: auto;
+  }
+
+  .cm-aura-diagram {
+    height: auto;
+  }
+
+  .cm-aura-diagram-art {
+    min-height: 18rem;
+  }
+}
+
+.cm-slide-aura-reading {
+  width: 100%;
+  height: 100%;
+  min-height: 0;
+  overflow: hidden;
+  display: flex;
+  flex-direction: column;
+  gap: clamp(0.85rem, 1.8vw, 1.35rem);
+}
+
+.cm-aura-reading-title {
+  margin: 0;
+  flex-shrink: 0;
+  font-family: var(--font-instrument-serif), Georgia, serif;
+  font-size: clamp(2rem, 3.6vw, 2.85rem);
+  font-weight: 400;
+  color: #5c1470;
+}
+
+.cm-aura-reading-flow {
+  margin: 0;
+  padding: 0;
+  list-style: none;
+  flex: 1;
+  min-height: 0;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  gap: 0;
+}
+
+.cm-aura-reading-item {
+  position: relative;
+  display: flex;
+  align-items: center;
+  min-width: 0;
+  flex: 1 1 0;
+}
+
+.cm-aura-reading-arrow {
+  position: absolute;
+  left: -0.15rem;
+  top: 42%;
+  transform: translate(-50%, -50%);
+  z-index: 2;
+  display: inline-flex;
+  color: #8f63b5;
+  pointer-events: none;
+}
+
+.cm-aura-reading-arrow svg {
+  width: clamp(1.6rem, 2.6vw, 2.25rem);
+  height: auto;
+  display: block;
+}
+
+.cm-aura-reading-step {
+  width: min(100%, 15.5rem);
+  margin-inline: auto;
+  aspect-ratio: 1;
+  border-radius: 50%;
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  justify-content: center;
+  text-align: center;
+  min-height: 0;
+  padding: clamp(1rem, 1.8vw, 1.45rem);
+  background:
+    radial-gradient(circle at 35% 28%, rgba(255, 255, 255, 0.96), rgba(247, 240, 252, 0.8) 55%, rgba(236, 224, 245, 0.9));
+  box-shadow:
+    inset 0 0 0 1px rgba(255, 255, 255, 0.7),
+    0 16px 36px -22px rgba(58, 37, 96, 0.4);
+}
+
+.cm-aura-reading-num {
+  display: inline-flex;
+  align-items: center;
+  justify-content: center;
+  width: clamp(1.75rem, 2.5vw, 2.1rem);
+  height: clamp(1.75rem, 2.5vw, 2.1rem);
+  margin-bottom: 0.3rem;
+  border-radius: 9999px;
+  background: linear-gradient(145deg, #8f63b5, #5c1470);
+  color: #fffaf2;
+  font-size: clamp(0.88rem, 1.3vw, 1.02rem);
+  font-weight: 700;
+  line-height: 1;
+  flex-shrink: 0;
+  box-shadow: 0 0 0 3px rgba(255, 255, 255, 0.55);
+}
+
+.cm-aura-reading-step-title {
+  margin: 0;
+  font-family: var(--font-instrument-serif), Georgia, serif;
+  font-size: clamp(1.02rem, 1.55vw, 1.28rem);
+  font-weight: 400;
+  line-height: 1.15;
+  color: #5c1470;
+}
+
+.cm-aura-reading-step-text {
+  margin: 0.35rem 0 0;
+  max-width: 12.5rem;
+  font-size: clamp(0.72rem, 1.05vw, 0.86rem);
+  line-height: 1.32;
+  color: rgba(58, 37, 96, 0.76);
+}
+
+@media (max-width: 980px) {
+  .cm-slide:has(.cm-slide-aura-reading) {
+    overflow: auto;
+  }
+
+  .cm-aura-reading-flow {
+    flex-direction: column;
+    height: auto;
+    gap: 0.35rem;
+  }
+
+  .cm-aura-reading-item {
+    flex: none;
+    width: 100%;
+    justify-content: center;
+  }
+
+  .cm-aura-reading-arrow {
+    left: 50%;
+    top: -0.1rem;
+    transform: translate(-50%, -50%) rotate(90deg);
+  }
+
+  .cm-aura-reading-step {
+    width: min(100%, 16.5rem);
+  }
+}
+
+.cm-slide-beyond-reiki {
+  width: 100%;
+  height: 100%;
+  min-height: 0;
+  overflow: hidden;
+  display: grid;
+  grid-template-rows: auto minmax(0, 1.2fr) auto;
+  gap: clamp(0.5rem, 1.2vw, 0.85rem);
+  align-items: stretch;
+}
+
+.cm-beyond-reiki-title {
+  margin: 0;
+  flex-shrink: 0;
+  font-family: var(--font-instrument-serif), Georgia, serif;
+  font-size: clamp(2rem, 3.6vw, 2.85rem);
+  font-weight: 400;
+  line-height: 1.1;
+  color: #5c1470;
+}
+
+.cm-beyond-reiki-media {
+  min-width: 0;
+  min-height: 0;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+}
+
+.cm-beyond-reiki-frame {
+  width: 100%;
+  height: 100%;
+  min-height: 0;
+  overflow: hidden;
+  border-radius: 1.15rem;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  background: transparent;
+}
+
+.cm-beyond-reiki-img {
+  display: block;
+  width: auto;
+  height: auto;
+  max-width: 100%;
+  max-height: 100%;
+  object-fit: contain;
+  object-position: center;
+  border-radius: 1.15rem;
+}
+
+.cm-beyond-reiki-copy {
+  min-width: 0;
+  flex-shrink: 0;
+}
+
+.cm-beyond-reiki-subtitle {
+  margin: 0;
+  font-family: var(--font-instrument-serif), Georgia, serif;
+  font-size: clamp(1.3rem, 2.4vw, 1.75rem);
+  font-weight: 400;
+  line-height: 1.2;
+  color: #5c1470;
+}
+
+.cm-beyond-reiki-points {
+  margin: clamp(0.55rem, 1.2vw, 0.85rem) 0 0;
+  padding: 0;
+  list-style: none;
+  display: grid;
+  grid-template-columns: repeat(2, minmax(0, 1fr));
+  gap: clamp(0.4rem, 1vw, 0.65rem) clamp(0.9rem, 1.8vw, 1.4rem);
+}
+
+.cm-beyond-reiki-points li {
+  position: relative;
+  padding-left: 1.2rem;
+  font-size: clamp(0.9rem, 1.4vw, 1.08rem);
+  line-height: 1.35;
+  color: rgba(45, 28, 72, 0.9);
+}
+
+.cm-beyond-reiki-points li::before {
+  content: "";
+  position: absolute;
+  left: 0;
+  top: 0.5em;
+  width: 0.4rem;
+  height: 0.4rem;
+  border-radius: 9999px;
+  background: linear-gradient(145deg, #c4a35a, #8f63b5);
+  box-shadow: 0 0 0 3px rgba(196, 163, 90, 0.18);
+}
+
+@media (max-width: 980px) {
+  .cm-slide:has(.cm-slide-beyond-reiki) {
+    overflow: auto;
+  }
+
+  .cm-slide-beyond-reiki {
+    height: auto;
+    grid-template-rows: auto auto auto;
+  }
+
+  .cm-beyond-reiki-frame {
+    min-height: 12rem;
+  }
+
+  .cm-beyond-reiki-points {
+    grid-template-columns: 1fr;
+  }
+}
+
+.cm-life-force-main {
+  display: grid;
+  grid-template-columns: minmax(0, 1.05fr) minmax(0, 0.95fr);
+  gap: clamp(1rem, 2.4vw, 1.85rem);
+  align-items: center;
+}
+
+.cm-life-force-lead {
+  margin: 0.55rem 0 0;
+  max-width: none;
+  white-space: nowrap;
+  font-size: clamp(1.05rem, 2.1vw, 1.45rem);
+  line-height: 1.5;
+  color: rgba(58, 37, 96, 0.68);
+}
+
+.cm-life-force-title {
+  margin-top: 0.55rem;
+  font-size: clamp(2.35rem, 4.4vw, 3.55rem);
+}
+
+.cm-life-force-principles {
+  margin: 1rem 0 0;
+  padding: 0;
+  list-style: none;
+  display: grid;
+  gap: 0.7rem;
+}
+
+.cm-life-force-principles li {
+  position: relative;
+  padding-left: 1.25rem;
+  font-family: var(--font-instrument-serif), Georgia, serif;
+  font-size: clamp(1.3rem, 2.4vw, 1.6rem);
+  line-height: 1.4;
+  color: #5c1470;
+}
+
+.cm-life-force-principles li::before {
+  content: "";
+  position: absolute;
+  left: 0;
+  top: 0.55em;
+  width: 0.42rem;
+  height: 0.42rem;
+  border-radius: 9999px;
+  background: linear-gradient(135deg, #eecf78, #c9a227);
+}
+
+.cm-life-force-media .cm-slide-media-frame-wide {
+  max-width: 100%;
+  margin: 0;
+  overflow: hidden;
+  border-radius: 1.1rem;
+  border: 1px solid rgba(92, 20, 112, 0.12);
+  background: transparent;
+  aspect-ratio: 16 / 9;
+  box-shadow: 0 18px 40px -22px rgba(45, 18, 72, 0.4);
+}
+
+.cm-life-force-media .cm-slide-media-img {
+  width: 100%;
+  height: 100%;
+  max-height: none;
+  display: block;
+  object-fit: cover;
+  object-position: center;
+}
+
+.cm-life-force-compare {
+  display: grid;
+  grid-template-columns: repeat(2, minmax(0, 1fr));
+  gap: clamp(0.85rem, 1.8vw, 1.25rem);
+}
+
+.cm-life-force-panel {
+  border-radius: 1.15rem;
+  border: 1px solid rgba(92, 20, 112, 0.12);
+  padding: clamp(0.95rem, 1.8vw, 1.25rem);
+  background: rgba(255, 255, 255, 0.72);
+}
+
+.cm-life-force-panel.is-open {
+  background:
+    linear-gradient(165deg, rgba(255, 252, 245, 0.95), rgba(246, 236, 255, 0.88));
+  border-color: rgba(201, 162, 39, 0.28);
+}
+
+.cm-life-force-panel.is-blocked {
+  background:
+    linear-gradient(165deg, rgba(255, 248, 252, 0.95), rgba(236, 224, 245, 0.9));
+  border-color: rgba(92, 20, 112, 0.16);
+}
+
+.cm-slide-life-force .cm-slide-eyebrow {
+  font-size: clamp(0.92rem, 1.5vw, 1.05rem);
+  letter-spacing: 0.28em;
+}
+
+.cm-life-force-panel-lead {
+  margin: 0;
+  font-size: clamp(1.08rem, 1.9vw, 1.28rem);
+  font-weight: 650;
+  line-height: 1.4;
+  color: #3a2560;
+}
+
+.cm-life-force-chips {
+  margin: 0.95rem 0 0;
+  padding: 0;
+  list-style: none;
+  display: grid;
+  grid-template-columns: repeat(2, minmax(0, 1fr));
+  gap: 0.55rem;
+}
+
+.cm-life-force-chips li {
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  min-height: 2.85rem;
+  border-radius: 0.85rem;
+  border: 1px solid rgba(92, 20, 112, 0.12);
+  background: rgba(255, 255, 255, 0.82);
+  padding: 0.55rem 0.75rem;
+  text-align: center;
+  font-size: clamp(0.98rem, 1.65vw, 1.12rem);
+  font-weight: 650;
+  letter-spacing: 0.03em;
+  color: #5c1470;
+  box-shadow: 0 8px 18px -14px rgba(58, 37, 96, 0.28);
+}
+
+.cm-life-force-panel.is-open .cm-life-force-chips li {
+  border-color: rgba(201, 162, 39, 0.34);
+  color: #6b4f10;
+  background: linear-gradient(165deg, #fffaf0 0%, #f7ecd0 100%);
+  box-shadow: 0 8px 18px -14px rgba(201, 162, 39, 0.4);
+}
+
+.cm-life-force-panel.is-blocked .cm-life-force-chips li {
+  border-color: rgba(92, 20, 112, 0.18);
+  color: #5c1470;
+  background: linear-gradient(165deg, #fbf6ff 0%, #efe2f8 100%);
+  box-shadow: 0 8px 18px -14px rgba(92, 20, 112, 0.28);
+}
+
+@media (max-width: 900px) {
+  .cm-life-force-main,
+  .cm-life-force-compare {
+    grid-template-columns: 1fr;
+  }
+
+  .cm-life-force-media .cm-slide-media-frame-wide {
+    aspect-ratio: 16 / 10;
+  }
 }
 
 .cm-slide-impact-media {

@@ -8,7 +8,13 @@ import {
 } from "framer-motion";
 import Image from "next/image";
 import Link from "next/link";
-import { useCallback, useEffect, useRef, useState } from "react";
+import { useCallback, useEffect, useRef, useState, type ReactNode } from "react";
+import { AuraDiagramVisual } from "@/components/admin/course-material/AuraDiagramVisual";
+import { BalancingChakrasVisual } from "@/components/admin/course-material/BalancingChakrasVisual";
+import { ChakrasGuideVisual } from "@/components/admin/course-material/ChakrasGuideVisual";
+import { ChakraWatermark } from "@/components/admin/course-material/ChakraWatermark";
+import { EnergyTakersVisual } from "@/components/admin/course-material/EnergyTakersVisual";
+import { ReikiBenefitsWheel } from "@/components/admin/course-material/ReikiBenefitsWheel";
 import {
   type CourseMaterialDeck,
   type CourseMaterialSlide,
@@ -91,17 +97,6 @@ function SlideSessionStart({
       animate={reduceMotion ? undefined : "show"}
     >
       <div className="cm-slide-session-main">
-        <motion.div variants={reduceMotion ? undefined : slideMedia}>
-          <Image
-            src={slide.logo.src}
-            alt={slide.logo.alt}
-            width={slide.logo.width}
-            height={slide.logo.height}
-            className="cm-slide-logo cm-slide-logo-session"
-            quality={95}
-            priority
-          />
-        </motion.div>
         <motion.div
           className="cm-slide-session-heading"
           variants={reduceMotion ? undefined : slideContainer}
@@ -139,6 +134,18 @@ function SlideSessionStart({
   );
 }
 
+function teacherNameParts(name: string) {
+  const trimmed = name.trim();
+  const space = trimmed.indexOf(" ");
+  if (space === -1) {
+    return { first: trimmed, last: "" };
+  }
+  return {
+    first: `${trimmed.slice(0, space)} `,
+    last: trimmed.slice(space + 1),
+  };
+}
+
 function SlideCover({
   slide,
   reduceMotion,
@@ -146,48 +153,68 @@ function SlideCover({
   slide: Extract<CourseMaterialSlide, { kind: "cover" }>;
   reduceMotion: boolean;
 }) {
+  const hasPortrait = Boolean(slide.teacherImage);
+  const { first, last } = teacherNameParts(slide.teacher);
+
   return (
     <motion.div
-      className="cm-slide cm-slide-cover"
+      className={["cm-slide cm-slide-cover", hasPortrait ? "cm-slide-cover-with-portrait" : ""].join(
+        " ",
+      )}
       variants={reduceMotion ? undefined : slideContainer}
       initial={reduceMotion ? false : "hidden"}
       animate={reduceMotion ? undefined : "show"}
     >
-      {slide.logo ? (
-        <motion.div variants={reduceMotion ? undefined : slideMedia}>
-          <Image
-            src={slide.logo.src}
-            alt={slide.logo.alt}
-            width={slide.logo.width}
-            height={slide.logo.height}
-            className="cm-slide-logo"
-            quality={95}
-            priority
-          />
+      <div className="cm-slide-cover-copy">
+        <motion.p className="cm-slide-eyebrow" variants={reduceMotion ? undefined : slideItem}>
+          {slide.eyebrow}
+        </motion.p>
+        <motion.h1 className="cm-slide-title" variants={reduceMotion ? undefined : slideItem}>
+          {slide.title}
+        </motion.h1>
+        <motion.p className="cm-slide-subtitle" variants={reduceMotion ? undefined : slideItem}>
+          {slide.subtitle}
+        </motion.p>
+        <motion.div className="cm-slide-rule" aria-hidden variants={reduceMotion ? undefined : slideSoft} />
+        {!hasPortrait ? (
+          <>
+            <motion.p className="cm-slide-teacher" variants={reduceMotion ? undefined : slideItem}>
+              {slide.teacher}
+            </motion.p>
+            <motion.p className="cm-slide-roles" variants={reduceMotion ? undefined : slideItem}>
+              {slide.teacherRoles}
+            </motion.p>
+          </>
+        ) : null}
+        <motion.div className="cm-slide-cover-actions" variants={reduceMotion ? undefined : slideItem}>
+          <p className="cm-slide-duration">{slide.duration}</p>
+          <p className="cm-slide-journey cm-slide-journey-under-duration">{slide.journeyLine}</p>
         </motion.div>
+      </div>
+
+      {hasPortrait && slide.teacherImage ? (
+        <motion.aside
+          className="cm-slide-cover-teacher"
+          variants={reduceMotion ? undefined : slideMedia}
+        >
+          <div className="cm-slide-cover-portrait">
+            <Image
+              src={slide.teacherImage.src}
+              alt={slide.teacherImage.alt}
+              width={slide.teacherImage.width}
+              height={slide.teacherImage.height}
+              className="cm-slide-cover-portrait-img"
+              quality={95}
+              priority
+            />
+          </div>
+          <p className="cm-slide-teacher-signature about-signature" aria-label={slide.teacher}>
+            <span className="about-signature-first">{first}</span>
+            {last ? <span className="about-signature-last">{last}</span> : null}
+          </p>
+          <p className="cm-slide-roles cm-slide-roles-portrait">{slide.teacherRoles}</p>
+        </motion.aside>
       ) : null}
-      <motion.p className="cm-slide-eyebrow" variants={reduceMotion ? undefined : slideItem}>
-        {slide.eyebrow}
-      </motion.p>
-      <motion.h1 className="cm-slide-title" variants={reduceMotion ? undefined : slideItem}>
-        {slide.title}
-      </motion.h1>
-      <motion.p className="cm-slide-subtitle" variants={reduceMotion ? undefined : slideItem}>
-        {slide.subtitle}
-      </motion.p>
-      <motion.div className="cm-slide-rule" aria-hidden variants={reduceMotion ? undefined : slideSoft} />
-      <motion.p className="cm-slide-teacher" variants={reduceMotion ? undefined : slideItem}>
-        {slide.teacher}
-      </motion.p>
-      <motion.p className="cm-slide-roles" variants={reduceMotion ? undefined : slideItem}>
-        {slide.teacherRoles}
-      </motion.p>
-      <motion.p className="cm-slide-journey" variants={reduceMotion ? undefined : slideItem}>
-        {slide.journeyLine}
-      </motion.p>
-      <motion.div className="cm-slide-cover-actions" variants={reduceMotion ? undefined : slideItem}>
-        <p className="cm-slide-duration">{slide.duration}</p>
-      </motion.div>
     </motion.div>
   );
 }
@@ -378,81 +405,649 @@ function SlideDefinition({
   );
 }
 
-function SlideImpactGrid({
+function SlideStory({
   slide,
   reduceMotion,
 }: {
-  slide: Extract<CourseMaterialSlide, { kind: "impact-grid" }>;
+  slide: Extract<CourseMaterialSlide, { kind: "story" }>;
+  reduceMotion: boolean;
+}) {
+  return (
+    <motion.div
+      className="cm-slide cm-slide-story"
+      variants={reduceMotion ? undefined : slideContainer}
+      initial={reduceMotion ? false : "hidden"}
+      animate={reduceMotion ? undefined : "show"}
+    >
+      <div className="cm-story-copy">
+        {slide.eyebrow ? (
+          <motion.p className="cm-slide-eyebrow" variants={reduceMotion ? undefined : slideItem}>
+            {slide.eyebrow}
+          </motion.p>
+        ) : null}
+        <motion.h2 className="cm-slide-title cm-story-title" variants={reduceMotion ? undefined : slideItem}>
+          {slide.title}
+        </motion.h2>
+        <motion.div className="cm-story-paragraphs" variants={reduceMotion ? undefined : slideContainer}>
+          {slide.paragraphs.map((paragraph) => (
+            <motion.p key={paragraph} variants={reduceMotion ? undefined : slideItem}>
+              {paragraph}
+            </motion.p>
+          ))}
+        </motion.div>
+      </div>
+
+      <motion.aside className="cm-story-media" variants={reduceMotion ? undefined : slideMedia}>
+        <div className="cm-story-portrait">
+          <Image
+            src={slide.image.src}
+            alt={slide.image.alt}
+            width={slide.image.width}
+            height={slide.image.height}
+            className="cm-story-portrait-img"
+            quality={95}
+            priority
+          />
+        </div>
+        {slide.imageCaption ? (
+          <p className="cm-story-caption">{slide.imageCaption}</p>
+        ) : null}
+      </motion.aside>
+    </motion.div>
+  );
+}
+
+function SlideSignificance({
+  slide,
+  reduceMotion,
+}: {
+  slide: Extract<CourseMaterialSlide, { kind: "significance" }>;
+  reduceMotion: boolean;
+}) {
+  return (
+    <motion.div
+      className="cm-slide cm-slide-significance"
+      variants={reduceMotion ? undefined : slideContainer}
+      initial={reduceMotion ? false : "hidden"}
+      animate={reduceMotion ? undefined : "show"}
+    >
+      <div className="cm-significance-copy">
+        {slide.eyebrow ? (
+          <motion.p className="cm-slide-eyebrow" variants={reduceMotion ? undefined : slideItem}>
+            {slide.eyebrow}
+          </motion.p>
+        ) : null}
+        <motion.h2 className="cm-slide-title cm-significance-title" variants={reduceMotion ? undefined : slideItem}>
+          {slide.title}
+        </motion.h2>
+        <motion.p className="cm-significance-lead" variants={reduceMotion ? undefined : slideItem}>
+          {slide.lead}
+        </motion.p>
+
+        <motion.div className="cm-significance-section" variants={reduceMotion ? undefined : slideItem}>
+          <p className="cm-significance-section-label">{slide.bodiesTitle}</p>
+          <ul className="cm-significance-chips">
+            {slide.bodies.map((item) => (
+              <li key={item}>{item}</li>
+            ))}
+          </ul>
+        </motion.div>
+
+        <motion.div className="cm-significance-section" variants={reduceMotion ? undefined : slideItem}>
+          <p className="cm-significance-section-label">{slide.benefitsTitle}</p>
+          <ul className="cm-significance-benefits">
+            {slide.benefits.map((item) => (
+              <li key={item}>{item}</li>
+            ))}
+          </ul>
+        </motion.div>
+      </div>
+
+      <motion.aside className="cm-significance-wheel-wrap" variants={reduceMotion ? undefined : slideMedia}>
+        <ReikiBenefitsWheel />
+      </motion.aside>
+    </motion.div>
+  );
+}
+
+function SlideEnergy({
+  slide,
+  reduceMotion,
+}: {
+  slide: Extract<CourseMaterialSlide, { kind: "energy" }>;
+  reduceMotion: boolean;
+}) {
+  return (
+    <motion.div
+      className="cm-slide cm-slide-energy"
+      variants={reduceMotion ? undefined : slideContainer}
+      initial={reduceMotion ? false : "hidden"}
+      animate={reduceMotion ? undefined : "show"}
+    >
+      <div className="cm-energy-copy">
+        {slide.eyebrow ? (
+          <motion.p className="cm-slide-eyebrow" variants={reduceMotion ? undefined : slideItem}>
+            {slide.eyebrow}
+          </motion.p>
+        ) : null}
+        <motion.h2 className="cm-slide-title cm-energy-title" variants={reduceMotion ? undefined : slideItem}>
+          {slide.title}
+        </motion.h2>
+        <motion.p className="cm-energy-lead" variants={reduceMotion ? undefined : slideItem}>
+          {slide.lead}
+        </motion.p>
+        <motion.p className="cm-energy-einstein" variants={reduceMotion ? undefined : slideItem}>
+          {slide.einstein}
+        </motion.p>
+        <motion.ul className="cm-energy-principles" variants={reduceMotion ? undefined : slideContainer}>
+          {slide.principles.map((item) => (
+            <motion.li key={item} variants={reduceMotion ? undefined : slideItem}>
+              {item}
+            </motion.li>
+          ))}
+        </motion.ul>
+        <motion.p className="cm-energy-closing" variants={reduceMotion ? undefined : slideItem}>
+          {slide.closing}
+        </motion.p>
+      </div>
+
+      <motion.aside className="cm-energy-visual-wrap" variants={reduceMotion ? undefined : slideMedia}>
+        <EnergyTakersVisual />
+      </motion.aside>
+    </motion.div>
+  );
+}
+
+function SlideReikiEnergy({
+  slide,
+  reduceMotion,
+}: {
+  slide: Extract<CourseMaterialSlide, { kind: "reiki-energy" }>;
+  reduceMotion: boolean;
+}) {
+  return (
+    <motion.div
+      className="cm-slide cm-slide-reiki-energy"
+      variants={reduceMotion ? undefined : slideContainer}
+      initial={reduceMotion ? false : "hidden"}
+      animate={reduceMotion ? undefined : "show"}
+    >
+      <div className="cm-reiki-energy-copy">
+        {slide.eyebrow ? (
+          <motion.p className="cm-slide-eyebrow" variants={reduceMotion ? undefined : slideItem}>
+            {slide.eyebrow}
+          </motion.p>
+        ) : null}
+        <motion.h2 className="cm-slide-title cm-reiki-energy-title" variants={reduceMotion ? undefined : slideItem}>
+          {slide.title}
+        </motion.h2>
+        <motion.p className="cm-reiki-energy-lead" variants={reduceMotion ? undefined : slideItem}>
+          {slide.lead}
+        </motion.p>
+        <motion.div className="cm-reiki-energy-paragraphs" variants={reduceMotion ? undefined : slideContainer}>
+          {slide.paragraphs.map((paragraph) => (
+            <motion.p key={paragraph} variants={reduceMotion ? undefined : slideItem}>
+              {paragraph}
+            </motion.p>
+          ))}
+        </motion.div>
+        <motion.p className="cm-reiki-energy-closing" variants={reduceMotion ? undefined : slideItem}>
+          {slide.closing}
+        </motion.p>
+      </div>
+
+      <motion.aside className="cm-reiki-energy-media" variants={reduceMotion ? undefined : slideMedia}>
+        <div className="cm-reiki-energy-frame">
+          <Image
+            src={slide.image.src}
+            alt={slide.image.alt}
+            width={slide.image.width}
+            height={slide.image.height}
+            className="cm-reiki-energy-img"
+            quality={100}
+            unoptimized
+            priority
+          />
+        </div>
+      </motion.aside>
+    </motion.div>
+  );
+}
+
+function SlideReikiActivation({
+  slide,
+  reduceMotion,
+}: {
+  slide: Extract<CourseMaterialSlide, { kind: "reiki-activation" }>;
+  reduceMotion: boolean;
+}) {
+  return (
+    <motion.div
+      className="cm-slide cm-slide-reiki-activation"
+      variants={reduceMotion ? undefined : slideContainer}
+      initial={reduceMotion ? false : "hidden"}
+      animate={reduceMotion ? undefined : "show"}
+    >
+      <div className="cm-reiki-activation-copy">
+        {slide.eyebrow ? (
+          <motion.p className="cm-slide-eyebrow" variants={reduceMotion ? undefined : slideItem}>
+            {slide.eyebrow}
+          </motion.p>
+        ) : null}
+        <motion.h2 className="cm-slide-title cm-reiki-activation-title" variants={reduceMotion ? undefined : slideItem}>
+          {slide.title}
+        </motion.h2>
+        <motion.p className="cm-reiki-activation-lead" variants={reduceMotion ? undefined : slideItem}>
+          {slide.lead}
+        </motion.p>
+
+        <motion.div className="cm-reiki-activation-steps-block" variants={reduceMotion ? undefined : slideItem}>
+          <p className="cm-reiki-activation-steps-title">{slide.stepsTitle}</p>
+          <ol className="cm-reiki-activation-steps">
+            {slide.steps.map((step) => (
+              <li key={step}>{step}</li>
+            ))}
+          </ol>
+        </motion.div>
+
+        <motion.p className="cm-reiki-activation-closing" variants={reduceMotion ? undefined : slideItem}>
+          {slide.closing}
+        </motion.p>
+      </div>
+
+      <motion.aside className="cm-reiki-activation-media" variants={reduceMotion ? undefined : slideMedia}>
+        <div className="cm-reiki-activation-frame">
+          <Image
+            src={slide.image.src}
+            alt={slide.image.alt}
+            width={slide.image.width}
+            height={slide.image.height}
+            className="cm-reiki-activation-img"
+            quality={100}
+            unoptimized
+            priority
+          />
+        </div>
+      </motion.aside>
+    </motion.div>
+  );
+}
+
+function SlideChakraSystem({
+  slide,
+  reduceMotion,
+}: {
+  slide: Extract<CourseMaterialSlide, { kind: "chakra-system" }>;
+  reduceMotion: boolean;
+}) {
+  return (
+    <motion.div
+      className="cm-slide cm-slide-chakra-system"
+      variants={reduceMotion ? undefined : slideContainer}
+      initial={reduceMotion ? false : "hidden"}
+      animate={reduceMotion ? undefined : "show"}
+    >
+      <ChakraWatermark />
+
+      <div className="cm-chakra-system-header">
+        <div className="cm-chakra-system-heading-row">
+          <div className="cm-chakra-system-heading">
+            {slide.eyebrow ? (
+              <motion.p className="cm-slide-eyebrow" variants={reduceMotion ? undefined : slideItem}>
+                {slide.eyebrow}
+              </motion.p>
+            ) : null}
+            <motion.h2 className="cm-slide-title cm-chakra-system-title" variants={reduceMotion ? undefined : slideItem}>
+              {slide.title}
+            </motion.h2>
+          </div>
+          <motion.ul className="cm-chakra-system-stats" variants={reduceMotion ? undefined : slideContainer}>
+            {slide.stats.map((stat) => (
+              <motion.li key={stat.label} variants={reduceMotion ? undefined : slideItem}>
+                <span className="cm-chakra-system-stat-value">{stat.value}</span>
+                <span className="cm-chakra-system-stat-label">{stat.label}</span>
+              </motion.li>
+            ))}
+          </motion.ul>
+        </div>
+        <motion.p className="cm-chakra-system-lead" variants={reduceMotion ? undefined : slideItem}>
+          {slide.lead}
+        </motion.p>
+      </div>
+
+      <motion.div className="cm-chakra-system-visuals" variants={reduceMotion ? undefined : slideContainer}>
+        {slide.visuals.map((visual) => (
+          <motion.figure key={visual.src} className="cm-chakra-system-card" variants={reduceMotion ? undefined : slideMedia}>
+            <div className="cm-chakra-system-frame">
+              <Image
+                src={visual.src}
+                alt={visual.alt}
+                width={visual.width}
+                height={visual.height}
+                className="cm-chakra-system-img"
+                quality={100}
+                unoptimized
+                priority
+              />
+            </div>
+            <figcaption className="cm-chakra-system-caption">{visual.caption}</figcaption>
+          </motion.figure>
+        ))}
+      </motion.div>
+    </motion.div>
+  );
+}
+
+function SlideChakrasGuide({ reduceMotion }: { reduceMotion: boolean }) {
+  return (
+    <motion.div
+      className="cm-slide cm-slide-chakras-guide"
+      variants={reduceMotion ? undefined : slideContainer}
+      initial={reduceMotion ? false : "hidden"}
+      animate={reduceMotion ? undefined : "show"}
+    >
+      <motion.div variants={reduceMotion ? undefined : slideMedia}>
+        <ChakrasGuideVisual />
+      </motion.div>
+    </motion.div>
+  );
+}
+
+function SlideBalancingChakras({ reduceMotion }: { reduceMotion: boolean }) {
+  return (
+    <motion.div
+      className="cm-slide cm-slide-balancing-chakras"
+      variants={reduceMotion ? undefined : slideContainer}
+      initial={reduceMotion ? false : "hidden"}
+      animate={reduceMotion ? undefined : "show"}
+    >
+      <motion.div variants={reduceMotion ? undefined : slideMedia}>
+        <BalancingChakrasVisual />
+      </motion.div>
+    </motion.div>
+  );
+}
+
+function SlideMeditation({
+  slide,
+  reduceMotion,
+}: {
+  slide: Extract<CourseMaterialSlide, { kind: "meditation" }>;
+  reduceMotion: boolean;
+}) {
+  return (
+    <motion.div
+      className="cm-slide cm-slide-meditation"
+      variants={reduceMotion ? undefined : slideContainer}
+      initial={reduceMotion ? false : "hidden"}
+      animate={reduceMotion ? undefined : "show"}
+    >
+      <div className="cm-meditation-bg" aria-hidden>
+        <Image
+          src={slide.image.src}
+          alt=""
+          width={slide.image.width}
+          height={slide.image.height}
+          className="cm-meditation-bg-img"
+          quality={100}
+          unoptimized
+          priority
+        />
+      </div>
+
+      <div className="cm-meditation-panel">
+        <motion.h2 className="cm-slide-title cm-meditation-title" variants={reduceMotion ? undefined : slideItem}>
+          {slide.title}
+        </motion.h2>
+        <motion.p className="cm-meditation-why" variants={reduceMotion ? undefined : slideItem}>
+          {slide.whyTitle}
+        </motion.p>
+        <motion.ul className="cm-meditation-reasons" variants={reduceMotion ? undefined : slideContainer}>
+          {slide.reasons.map((reason) => (
+            <motion.li key={reason} variants={reduceMotion ? undefined : slideItem}>
+              {reason}
+            </motion.li>
+          ))}
+        </motion.ul>
+        <motion.p className="cm-meditation-practice" variants={reduceMotion ? undefined : slideItem}>
+          {slide.practice}
+        </motion.p>
+        <motion.p className="cm-meditation-closing" variants={reduceMotion ? undefined : slideItem}>
+          {slide.closing}
+        </motion.p>
+      </div>
+    </motion.div>
+  );
+}
+
+function SlideAura({
+  slide,
+  reduceMotion,
+}: {
+  slide: Extract<CourseMaterialSlide, { kind: "aura" }>;
+  reduceMotion: boolean;
+}) {
+  return (
+    <motion.div
+      className="cm-slide cm-slide-aura"
+      variants={reduceMotion ? undefined : slideContainer}
+      initial={reduceMotion ? false : "hidden"}
+      animate={reduceMotion ? undefined : "show"}
+    >
+      <motion.div variants={reduceMotion ? undefined : slideMedia}>
+        <AuraDiagramVisual title={slide.title} lead={slide.lead} image={slide.image} />
+      </motion.div>
+    </motion.div>
+  );
+}
+
+function SlideAuraReading({
+  slide,
+  reduceMotion,
+}: {
+  slide: Extract<CourseMaterialSlide, { kind: "aura-reading" }>;
+  reduceMotion: boolean;
+}) {
+  return (
+    <motion.div
+      className="cm-slide cm-slide-aura-reading"
+      variants={reduceMotion ? undefined : slideContainer}
+      initial={reduceMotion ? false : "hidden"}
+      animate={reduceMotion ? undefined : "show"}
+    >
+      <motion.h2 className="cm-aura-reading-title" variants={reduceMotion ? undefined : slideItem}>
+        {slide.title}
+      </motion.h2>
+
+      <motion.ol className="cm-aura-reading-flow" variants={reduceMotion ? undefined : slideContainer}>
+        {slide.steps.map((step, index) => (
+          <motion.li key={step.title} className="cm-aura-reading-item" variants={reduceMotion ? undefined : slideItem}>
+            {index > 0 ? (
+              <span className="cm-aura-reading-arrow" aria-hidden>
+                <svg viewBox="0 0 40 20" fill="none">
+                  <path
+                    d="M2 10h30M24 3l12 7-12 7"
+                    stroke="currentColor"
+                    strokeWidth="2.2"
+                    strokeLinecap="round"
+                    strokeLinejoin="round"
+                  />
+                </svg>
+              </span>
+            ) : null}
+
+            <div className="cm-aura-reading-step">
+              <span className="cm-aura-reading-num">{index + 1}</span>
+              <p className="cm-aura-reading-step-title">{step.title}</p>
+              <p className="cm-aura-reading-step-text">{step.text}</p>
+            </div>
+          </motion.li>
+        ))}
+      </motion.ol>
+    </motion.div>
+  );
+}
+
+function SlideBeyondReiki({
+  slide,
+  reduceMotion,
+}: {
+  slide: Extract<CourseMaterialSlide, { kind: "beyond-reiki" }>;
+  reduceMotion: boolean;
+}) {
+  return (
+    <motion.div
+      className="cm-slide cm-slide-beyond-reiki"
+      variants={reduceMotion ? undefined : slideContainer}
+      initial={reduceMotion ? false : "hidden"}
+      animate={reduceMotion ? undefined : "show"}
+    >
+      <motion.h2 className="cm-beyond-reiki-title" variants={reduceMotion ? undefined : slideItem}>
+        {slide.title}
+      </motion.h2>
+
+      <motion.div className="cm-beyond-reiki-media" variants={reduceMotion ? undefined : slideMedia}>
+        <div className="cm-beyond-reiki-frame">
+          <Image
+            src={slide.image.src}
+            alt={slide.image.alt}
+            width={slide.image.width}
+            height={slide.image.height}
+            className="cm-beyond-reiki-img"
+            quality={100}
+            unoptimized
+            priority
+          />
+        </div>
+      </motion.div>
+
+      <motion.div className="cm-beyond-reiki-copy" variants={reduceMotion ? undefined : slideContainer}>
+        <motion.h3 className="cm-beyond-reiki-subtitle" variants={reduceMotion ? undefined : slideItem}>
+          {slide.subtitle}
+        </motion.h3>
+        <motion.ul className="cm-beyond-reiki-points" variants={reduceMotion ? undefined : slideContainer}>
+          {slide.points.map((point) => (
+            <motion.li key={point} variants={reduceMotion ? undefined : slideItem}>
+              {point}
+            </motion.li>
+          ))}
+        </motion.ul>
+      </motion.div>
+    </motion.div>
+  );
+}
+
+function SlideLifeForce({
+  slide,
+  reduceMotion,
+}: {
+  slide: Extract<CourseMaterialSlide, { kind: "life-force" }>;
   reduceMotion: boolean;
 }) {
   const hasImage = Boolean(slide.image);
 
   return (
     <motion.div
-      className={[
-        "cm-slide cm-slide-impact",
-        hasImage ? "cm-slide-impact-media" : "",
-      ].join(" ")}
+      className={["cm-slide cm-slide-life-force", hasImage ? "has-media" : ""].join(" ")}
       variants={reduceMotion ? undefined : slideContainer}
       initial={reduceMotion ? false : "hidden"}
       animate={reduceMotion ? undefined : "show"}
     >
-      <div className="cm-slide-copy">
-        {slide.eyebrow ? (
-          <motion.p className="cm-slide-eyebrow" variants={reduceMotion ? undefined : slideItem}>
-            {slide.eyebrow}
+      <div className="cm-life-force-main">
+        <div className="cm-life-force-intro">
+          {slide.eyebrow ? (
+            <motion.p className="cm-slide-eyebrow" variants={reduceMotion ? undefined : slideItem}>
+              {slide.eyebrow}
+            </motion.p>
+          ) : null}
+          <motion.p className="cm-life-force-lead" variants={reduceMotion ? undefined : slideItem}>
+            {slide.lead}
           </motion.p>
+          <motion.h2 className="cm-slide-title cm-life-force-title" variants={reduceMotion ? undefined : slideItem}>
+            {slide.title}
+          </motion.h2>
+          <motion.ul className="cm-life-force-principles" variants={reduceMotion ? undefined : slideContainer}>
+            {slide.principles.map((item) => (
+              <motion.li key={item} variants={reduceMotion ? undefined : slideItem}>
+                {item}
+              </motion.li>
+            ))}
+          </motion.ul>
+        </div>
+
+        {hasImage && slide.image ? (
+          <motion.div className="cm-life-force-media" variants={reduceMotion ? undefined : slideMedia}>
+            <div className="cm-slide-media-frame cm-slide-media-frame-wide">
+              <Image
+                src={slide.image.src}
+                alt={slide.image.alt}
+                width={slide.image.width}
+                height={slide.image.height}
+                className="cm-slide-media-img"
+                quality={100}
+                unoptimized
+                priority
+              />
+            </div>
+          </motion.div>
         ) : null}
-        <motion.h2 className="cm-slide-title" variants={reduceMotion ? undefined : slideItem}>
-          {slide.title}
-        </motion.h2>
       </div>
 
-      {hasImage && slide.image ? (
-        <motion.div
-          className="cm-slide-media cm-slide-media-between"
-          variants={reduceMotion ? undefined : slideMedia}
-        >
-          <div className="cm-slide-media-frame cm-slide-media-frame-wide">
-            <Image
-              src={slide.image.src}
-              alt={slide.image.alt}
-              width={slide.image.width}
-              height={slide.image.height}
-              className="cm-slide-media-img"
-              quality={100}
-              unoptimized
-              priority
-            />
-          </div>
-        </motion.div>
-      ) : null}
-
-      <motion.ul className="cm-impact-grid" variants={reduceMotion ? undefined : slideContainer}>
-        {slide.items.map((item) => (
-          <motion.li key={item} variants={reduceMotion ? undefined : slideItem}>
-            {item}
-          </motion.li>
-        ))}
-      </motion.ul>
+      <motion.div className="cm-life-force-compare" variants={reduceMotion ? undefined : slideContainer}>
+        <motion.section className="cm-life-force-panel is-open" variants={reduceMotion ? undefined : slideItem}>
+          <p className="cm-life-force-panel-lead">{slide.open.lead}</p>
+          <ul className="cm-life-force-chips">
+            {slide.open.items.map((item) => (
+              <li key={item}>{item}</li>
+            ))}
+          </ul>
+        </motion.section>
+        <motion.section className="cm-life-force-panel is-blocked" variants={reduceMotion ? undefined : slideItem}>
+          <p className="cm-life-force-panel-lead">{slide.blocked.lead}</p>
+          <ul className="cm-life-force-chips">
+            {slide.blocked.items.map((item) => (
+              <li key={item}>{item}</li>
+            ))}
+          </ul>
+        </motion.section>
+      </motion.div>
     </motion.div>
+  );
+}
+
+function SlideCornerLogo({ brandLogo }: { brandLogo: CourseMaterialDeck["brandLogo"] }) {
+  return (
+    <div className="cm-slide-corner-logo">
+      <Image
+        src={brandLogo.src}
+        alt={brandLogo.alt}
+        width={brandLogo.width}
+        height={brandLogo.height}
+        className="cm-slide-corner-logo-img"
+        quality={95}
+        priority
+      />
+    </div>
   );
 }
 
 function SlideView({
   slide,
+  brandLogo,
   showStartSession,
   onStartSession,
   reduceMotion,
 }: {
   slide: CourseMaterialSlide;
+  brandLogo: CourseMaterialDeck["brandLogo"];
   showStartSession?: boolean;
   onStartSession?: () => void;
   reduceMotion: boolean;
 }) {
+  let body: ReactNode;
   switch (slide.kind) {
     case "session-start":
-      return (
+      body = (
         <SlideSessionStart
           slide={slide}
           showStartSession={showStartSession}
@@ -460,21 +1055,70 @@ function SlideView({
           reduceMotion={reduceMotion}
         />
       );
+      break;
     case "cover":
-      return <SlideCover slide={slide} reduceMotion={reduceMotion} />;
+      body = <SlideCover slide={slide} reduceMotion={reduceMotion} />;
+      break;
     case "bullets":
-      return <SlideBullets slide={slide} reduceMotion={reduceMotion} />;
+      body = <SlideBullets slide={slide} reduceMotion={reduceMotion} />;
+      break;
     case "quote":
-      return <SlideQuote slide={slide} reduceMotion={reduceMotion} />;
+      body = <SlideQuote slide={slide} reduceMotion={reduceMotion} />;
+      break;
     case "definition":
-      return <SlideDefinition slide={slide} reduceMotion={reduceMotion} />;
-    case "impact-grid":
-      return <SlideImpactGrid slide={slide} reduceMotion={reduceMotion} />;
+      body = <SlideDefinition slide={slide} reduceMotion={reduceMotion} />;
+      break;
+    case "life-force":
+      body = <SlideLifeForce slide={slide} reduceMotion={reduceMotion} />;
+      break;
+    case "story":
+      body = <SlideStory slide={slide} reduceMotion={reduceMotion} />;
+      break;
+    case "significance":
+      body = <SlideSignificance slide={slide} reduceMotion={reduceMotion} />;
+      break;
+    case "energy":
+      body = <SlideEnergy slide={slide} reduceMotion={reduceMotion} />;
+      break;
+    case "reiki-energy":
+      body = <SlideReikiEnergy slide={slide} reduceMotion={reduceMotion} />;
+      break;
+    case "reiki-activation":
+      body = <SlideReikiActivation slide={slide} reduceMotion={reduceMotion} />;
+      break;
+    case "chakra-system":
+      body = <SlideChakraSystem slide={slide} reduceMotion={reduceMotion} />;
+      break;
+    case "chakras-guide":
+      body = <SlideChakrasGuide reduceMotion={reduceMotion} />;
+      break;
+    case "balancing-chakras":
+      body = <SlideBalancingChakras reduceMotion={reduceMotion} />;
+      break;
+    case "meditation":
+      body = <SlideMeditation slide={slide} reduceMotion={reduceMotion} />;
+      break;
+    case "aura":
+      body = <SlideAura slide={slide} reduceMotion={reduceMotion} />;
+      break;
+    case "aura-reading":
+      body = <SlideAuraReading slide={slide} reduceMotion={reduceMotion} />;
+      break;
+    case "beyond-reiki":
+      body = <SlideBeyondReiki slide={slide} reduceMotion={reduceMotion} />;
+      break;
     default: {
       const _exhaustive: never = slide;
       return _exhaustive;
     }
   }
+
+  return (
+    <div className="cm-slide cm-slide-has-brand">
+      <SlideCornerLogo brandLogo={brandLogo} />
+      <div className="cm-slide-body">{body}</div>
+    </div>
+  );
 }
 
 export function CourseMaterialPresenter({ deck }: { deck: CourseMaterialDeck }) {
@@ -680,6 +1324,7 @@ export function CourseMaterialPresenter({ deck }: { deck: CourseMaterialDeck }) 
           >
             <SlideView
               slide={slide}
+              brandLogo={deck.brandLogo}
               showStartSession={slide.kind === "session-start" && !sessionStarted}
               onStartSession={startSession}
               reduceMotion={!!reduceMotion}
