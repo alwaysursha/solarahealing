@@ -223,7 +223,6 @@ export function ChakrasGuideVisual() {
           When energy flows freely through our chakras, we experience harmony, vitality, and a deep sense of
           connection with ourselves and the universe.
         </p>
-        <p className="cm-chakras-guide-brand">Soulara Healing</p>
       </footer>
     </div>
   );

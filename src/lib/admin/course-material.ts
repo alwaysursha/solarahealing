@@ -212,6 +212,24 @@ export type CourseMaterialSlide =
         width: number;
         height: number;
       };
+    }
+  | {
+      kind: "reiki-path";
+      title: string;
+      lead: string;
+      intro: string;
+      programs: readonly {
+        name: string;
+        tagline: string;
+        text: string;
+        image: {
+          src: string;
+          alt: string;
+          width: number;
+          height: number;
+        };
+      }[];
+      closing: string;
     };
 
 export type CourseMaterialDeck = {
@@ -548,6 +566,93 @@ export const introductionToReiki: CourseMaterialDeck = {
         width: 1024,
         height: 555,
       },
+    },
+    {
+      kind: "reiki-path",
+      title: "Your Reiki Journey",
+      lead: "Your Reiki journey is the beginning of a deeper exploration of your own energy and consciousness.",
+      intro: "As you progress through our advanced programs, you will be introduced to:",
+      programs: [
+        {
+          name: "Reiki Level 1",
+          tagline: "The Awakening",
+          text: "Connecting with Reiki energy, self-healing, chakra balancing, aura awareness, and learning to channel universal life force energy.",
+          image: {
+            src: "https://pub-a660605547dc4bd8bd829924aacdd025.r2.dev/general/1784431890427-b7f9d84d.jpg",
+            alt: "REIKI Level 1 - The Awakening",
+            width: 800,
+            height: 600,
+          },
+        },
+        {
+          name: "Reiki Level 2",
+          tagline: "The Transformation",
+          text: "Developing deeper healing abilities, emotional healing, distance healing, symbols, energy clearing, and working with subconscious patterns.",
+          image: {
+            src: "https://pub-a660605547dc4bd8bd829924aacdd025.r2.dev/general/1784431735235-8e34b5cc.jpg",
+            alt: "REIKI Level 2 - The Reinforcements",
+            width: 800,
+            height: 600,
+          },
+        },
+        {
+          name: "Reiki Level 3",
+          tagline: "The Master Within",
+          text: "Advanced energy techniques, spiritual growth, intuitive development, and mastering your own healing journey.",
+          image: {
+            src: "https://pub-a660605547dc4bd8bd829924aacdd025.r2.dev/general/1784432782285-04083fed.jpg",
+            alt: "REIKI Level 3 - The Advanced Healer",
+            width: 800,
+            height: 600,
+          },
+        },
+        {
+          name: "Reiki Master Level",
+          tagline: "The Path of the Healer",
+          text: "Learning to guide others, deepen your connection with universal energy, and share Reiki wisdom.",
+          image: {
+            src: "https://pub-a660605547dc4bd8bd829924aacdd025.r2.dev/general/1784434396907-ce4d1687.jpg",
+            alt: "REIKI Master - The Enlightenment",
+            width: 800,
+            height: 600,
+          },
+        },
+        {
+          name: "Past Life Regression & Soul Healing",
+          tagline: "Soul-level awareness",
+          text: "Exploring subconscious memories, karmic patterns, inner healing, and soul-level awareness.",
+          image: {
+            src: "https://pub-a660605547dc4bd8bd829924aacdd025.r2.dev/general/1784479803864-c248a483.jpg",
+            alt: "Past Life Regression private session cover",
+            width: 800,
+            height: 600,
+          },
+        },
+        {
+          name: "Akashic Healing",
+          tagline: "Records & soul guidance",
+          text: "Accessing deeper intuitive wisdom through the Akashic Records — illuminating soul patterns, purpose, and next steps.",
+          image: {
+            src: "https://pub-a660605547dc4bd8bd829924aacdd025.r2.dev/general/1784479708575-d27b568a.jpg",
+            alt: "Akashik Reading private session cover",
+            width: 800,
+            height: 600,
+          },
+        },
+        {
+          name: "Dowsing",
+          tagline: "Energetic guidance",
+          text: "Advanced methods of sensing and balancing energy through dowsing — clarity, guidance, and refined energetic awareness.",
+          image: {
+            src: "https://pub-a660605547dc4bd8bd829924aacdd025.r2.dev/general/1784466018691-d894f10c.jpg",
+            alt: "Dowsing course cover",
+            width: 800,
+            height: 600,
+          },
+        },
+      ],
+      closing:
+        "Reiki is not just a healing technique; it is a journey back to yourself. As you continue this path, you will discover that healing is not only about removing pain — it is about remembering your strength, reconnecting with your inner wisdom, and awakening the limitless potential that already exists within you.",
     },
   ],
 };
