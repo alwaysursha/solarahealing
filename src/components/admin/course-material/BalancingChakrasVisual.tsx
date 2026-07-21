@@ -9,6 +9,7 @@ export function BalancingChakrasVisual() {
         width={1536}
         height={1024}
         className="cm-balancing-infographic"
+        style={{ borderRadius: "1.25rem" }}
         quality={100}
         unoptimized
         priority

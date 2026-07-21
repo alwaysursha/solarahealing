@@ -12,7 +12,6 @@ import { useCallback, useEffect, useRef, useState, type ReactNode } from "react"
 import { AuraDiagramVisual } from "@/components/admin/course-material/AuraDiagramVisual";
 import { BalancingChakrasVisual } from "@/components/admin/course-material/BalancingChakrasVisual";
 import { ChakrasGuideVisual } from "@/components/admin/course-material/ChakrasGuideVisual";
-import { ChakraWatermark } from "@/components/admin/course-material/ChakraWatermark";
 import { EnergyTakersVisual } from "@/components/admin/course-material/EnergyTakersVisual";
 import { ReikiBenefitsWheel } from "@/components/admin/course-material/ReikiBenefitsWheel";
 import {
@@ -687,8 +686,6 @@ function SlideChakraSystem({
       initial={reduceMotion ? false : "hidden"}
       animate={reduceMotion ? undefined : "show"}
     >
-      <ChakraWatermark />
-
       <div className="cm-chakra-system-header">
         <div className="cm-chakra-system-heading-row">
           <div className="cm-chakra-system-heading">
@@ -937,6 +934,63 @@ function SlideBeyondReiki({
   );
 }
 
+function SlideReikiPath({
+  slide,
+  reduceMotion,
+}: {
+  slide: Extract<CourseMaterialSlide, { kind: "reiki-path" }>;
+  reduceMotion: boolean;
+}) {
+  return (
+    <motion.div
+      className="cm-slide cm-slide-reiki-path"
+      variants={reduceMotion ? undefined : slideContainer}
+      initial={reduceMotion ? false : "hidden"}
+      animate={reduceMotion ? undefined : "show"}
+    >
+      <header className="cm-reiki-path-head">
+        <motion.h2 className="cm-reiki-path-title" variants={reduceMotion ? undefined : slideItem}>
+          {slide.title}
+        </motion.h2>
+        <motion.p className="cm-reiki-path-lead" variants={reduceMotion ? undefined : slideItem}>
+          {slide.lead}
+        </motion.p>
+        <motion.p className="cm-reiki-path-intro" variants={reduceMotion ? undefined : slideItem}>
+          {slide.intro}
+        </motion.p>
+      </header>
+
+      <motion.ol className="cm-reiki-path-programs" variants={reduceMotion ? undefined : slideContainer}>
+        {slide.programs.map((program) => (
+          <motion.li key={program.name} className="cm-reiki-path-program" variants={reduceMotion ? undefined : slideItem}>
+            <div className="cm-reiki-path-program-media">
+              <Image
+                src={program.image.src}
+                alt={program.image.alt}
+                width={program.image.width}
+                height={program.image.height}
+                className="cm-reiki-path-program-img"
+                quality={90}
+              />
+            </div>
+            <div className="cm-reiki-path-program-copy">
+              <p className="cm-reiki-path-program-name">
+                {program.name}
+                <span className="cm-reiki-path-program-tagline"> — {program.tagline}</span>
+              </p>
+              <p className="cm-reiki-path-program-text">{program.text}</p>
+            </div>
+          </motion.li>
+        ))}
+      </motion.ol>
+
+      <motion.p className="cm-reiki-path-closing" variants={reduceMotion ? undefined : slideItem}>
+        {slide.closing}
+      </motion.p>
+    </motion.div>
+  );
+}
+
 function SlideLifeForce({
   slide,
   reduceMotion,
@@ -1106,6 +1160,9 @@ function SlideView({
       break;
     case "beyond-reiki":
       body = <SlideBeyondReiki slide={slide} reduceMotion={reduceMotion} />;
+      break;
+    case "reiki-path":
+      body = <SlideReikiPath slide={slide} reduceMotion={reduceMotion} />;
       break;
     default: {
       const _exhaustive: never = slide;
