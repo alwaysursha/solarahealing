@@ -368,7 +368,7 @@ export const introductionToReiki: CourseMaterialDeck = {
       },
       image: {
         src: "/course-material/introduction-to-reiki/when-blocked-original.png",
-        alt: "Life force energy flowing through living beings",
+        alt: "When energy is unblocked, we experience joy, peace, vitality, and wellness",
         width: 1024,
         height: 554,
       },
@@ -523,9 +523,9 @@ export const introductionToReiki: CourseMaterialDeck = {
         "An aura consists of seven distinct layers, often called auric bodies. Extending outward from your body, each layer corresponds to a different aspect of your physical, emotional, or spiritual well-being, getting less dense and vibrating at higher frequencies the further out they go.",
       image: {
         src: "/course-material/introduction-to-reiki/aura-seven-layers.png",
-        alt: "Meditating figure surrounded by seven glowing aura layers",
+        alt: "Meditating figure surrounded by seven labeled aura layers",
         width: 1024,
-        height: 570,
+        height: 558,
       },
     },
     {

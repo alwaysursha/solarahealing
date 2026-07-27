@@ -4314,15 +4314,23 @@ a.contact-detail:hover {
 
 .testimonial-carousel-dots {
   display: flex;
-  flex-wrap: wrap;
+  flex-wrap: nowrap;
+  flex: 1 1 auto;
   align-items: center;
   justify-content: center;
   gap: 0.4rem;
-  max-width: min(100%, 18rem);
+  min-width: 0;
+  overflow-x: auto;
+  scrollbar-width: none;
+}
+
+.testimonial-carousel-dots::-webkit-scrollbar {
+  display: none;
 }
 
 .testimonial-carousel-dot {
   position: relative;
+  flex: 0 0 auto;
   overflow: hidden;
   width: 0.55rem;
   height: 0.55rem;
@@ -7921,11 +7929,11 @@ html[data-brand-theme="10"] section[aria-label="Hero highlights"] [role="tablist
 
 .cm-slide-story {
   display: grid;
-  grid-template-columns: minmax(0, 1.1fr) minmax(16rem, 0.9fr);
+  grid-template-columns: minmax(0, 1fr) minmax(20rem, 1.15fr);
   gap: clamp(1.25rem, 3vw, 2.5rem);
   align-items: center;
   width: 100%;
-  max-width: 74rem;
+  max-width: 78rem;
   margin-inline: auto;
   text-align: left;
 }
@@ -7961,7 +7969,7 @@ html[data-brand-theme="10"] section[aria-label="Hero highlights"] [role="tablist
 }
 
 .cm-story-portrait {
-  width: min(100%, 24rem);
+  width: min(100%, 34rem);
   overflow: hidden;
   border-radius: 1.35rem;
   background: #d9d2df;
@@ -8001,7 +8009,7 @@ html[data-brand-theme="10"] section[aria-label="Hero highlights"] [role="tablist
   }
 
   .cm-story-portrait {
-    width: min(100%, 18rem);
+    width: min(100%, 26rem);
   }
 }
 
@@ -10083,13 +10091,22 @@ html[data-brand-theme="10"] section[aria-label="Hero highlights"] [role="tablist
 
 .cm-presenter-dots {
   display: flex;
-  flex-wrap: wrap;
+  flex-wrap: nowrap;
+  flex: 1 1 auto;
+  align-items: center;
   justify-content: center;
   gap: 0.4rem;
-  max-width: 16rem;
+  min-width: 0;
+  overflow-x: auto;
+  scrollbar-width: none;
+}
+
+.cm-presenter-dots::-webkit-scrollbar {
+  display: none;
 }
 
 .cm-presenter-dot {
+  flex: 0 0 auto;
   width: 0.5rem;
   height: 0.5rem;
   border: 0;
