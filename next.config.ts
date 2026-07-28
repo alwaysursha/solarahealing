@@ -7,6 +7,7 @@ const nextConfig: NextConfig = {
     ".prisma/client",
     "jspdf",
     "html2canvas",
+    "modern-screenshot",
     "canvg",
     "dompurify",
   ],

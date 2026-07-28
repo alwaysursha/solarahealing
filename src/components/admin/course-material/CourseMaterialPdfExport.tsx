@@ -1,9 +1,16 @@
 "use client";
 
-import { useCallback, useEffect, useId, useLayoutEffect, useRef, useState } from "react";
+import {
+  useCallback,
+  useEffect,
+  useId,
+  useLayoutEffect,
+  useRef,
+  useState,
+  type ComponentType,
+} from "react";
 import { createPortal, flushSync } from "react-dom";
-import { CourseMaterialSlideView } from "@/components/admin/course-material/CourseMaterialPresenter";
-import type { CourseMaterialDeck } from "@/lib/admin/course-material";
+import type { CourseMaterialDeck, CourseMaterialSlide } from "@/lib/admin/course-material";
 import {
   captureElementToCanvas,
   coursePdfFilename,
@@ -15,6 +22,15 @@ type PdfMode = "all" | "range";
 type PanelCoords = {
   top: number;
   left: number;
+};
+
+type SlideViewProps = {
+  slide: CourseMaterialSlide;
+  brandLogo: CourseMaterialDeck["brandLogo"];
+  showStartSession?: boolean;
+  onStartSession?: () => void;
+  reduceMotion: boolean;
+  forPdf?: boolean;
 };
 
 export function CourseMaterialPdfExport({ deck }: { deck: CourseMaterialDeck }) {
@@ -32,6 +48,7 @@ export function CourseMaterialPdfExport({ deck }: { deck: CourseMaterialDeck }) 
   const [error, setError] = useState<string | null>(null);
   const [captureIndex, setCaptureIndex] = useState<number | null>(null);
   const [mounted, setMounted] = useState(false);
+  const [SlideView, setSlideView] = useState<ComponentType<SlideViewProps> | null>(null);
 
   const count = deck.slides.length;
   const title = deck.dayLabel ? `${deck.title} · ${deck.dayLabel}` : deck.title;
@@ -40,6 +57,13 @@ export function CourseMaterialPdfExport({ deck }: { deck: CourseMaterialDeck }) 
   useEffect(() => {
     setMounted(true);
   }, []);
+
+  const ensureSlideView = useCallback(async () => {
+    if (SlideView) return SlideView;
+    const mod = await import("@/components/admin/course-material/CourseMaterialPresenter");
+    setSlideView(() => mod.CourseMaterialSlideView);
+    return mod.CourseMaterialSlideView;
+  }, [SlideView]);
 
   const updateCoords = useCallback(() => {
     const trigger = triggerRef.current;
@@ -123,6 +147,8 @@ export function CourseMaterialPdfExport({ deck }: { deck: CourseMaterialDeck }) 
     const canvases: HTMLCanvasElement[] = [];
 
     try {
+      await ensureSlideView();
+
       for (let step = 0; step < indices.length; step += 1) {
         const slideIndex = indices[step]!;
         setProgress(`Exporting slide ${slideIndex + 1} of ${count}…`);
@@ -162,7 +188,7 @@ export function CourseMaterialPdfExport({ deck }: { deck: CourseMaterialDeck }) 
       setProgress(null);
       setBusy(false);
     }
-  }, [busy, count, from, mode, title, to]);
+  }, [busy, count, ensureSlideView, from, mode, title, to]);
 
   if (count === 0) return null;
 
@@ -243,8 +269,8 @@ export function CourseMaterialPdfExport({ deck }: { deck: CourseMaterialDeck }) 
   const captureHost = mounted
     ? createPortal(
         <div ref={captureRef} className="cm-pdf-capture-host" aria-hidden>
-          {captureSlide ? (
-            <CourseMaterialSlideView
+          {captureSlide && SlideView ? (
+            <SlideView
               slide={captureSlide}
               brandLogo={deck.brandLogo}
               showStartSession={false}
