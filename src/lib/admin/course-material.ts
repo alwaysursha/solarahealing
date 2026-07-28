@@ -1,3 +1,10 @@
+import {
+  introductionCoursePricingSlide,
+  introductionMindBodySoulSlides,
+  introductionQuestionsSlide,
+} from "@/lib/admin/course-material-introduction-mind-body-soul";
+import { reikiLevel1Day1 } from "@/lib/admin/course-material-reiki-level-1-day-1";
+
 export type CourseMaterialSlide =
   | {
       kind: "session-start";
@@ -89,7 +96,7 @@ export type CourseMaterialSlide =
       eyebrow?: string;
       title: string;
       paragraphs: readonly string[];
-      image: {
+      image?: {
         src: string;
         alt: string;
         width: number;
@@ -230,6 +237,60 @@ export type CourseMaterialSlide =
         };
       }[];
       closing: string;
+    }
+  | {
+      kind: "image-focus";
+      eyebrow?: string;
+      title?: string;
+      caption?: string;
+      image: {
+        src: string;
+        alt: string;
+        width: number;
+        height: number;
+      };
+    }
+  | {
+      kind: "topic-sections";
+      eyebrow?: string;
+      title: string;
+      lead?: string;
+      image?: {
+        src: string;
+        alt: string;
+        width: number;
+        height: number;
+      };
+      sections: readonly {
+        heading: string;
+        items?: readonly string[];
+        text?: string;
+      }[];
+      closing?: string;
+    }
+  | {
+      kind: "course-pricing";
+      eyebrow?: string;
+      title: string;
+      banner: string;
+      lead?: string;
+      items: readonly {
+        name: string;
+        /** Regular / list price shown on the slide. */
+        price: string;
+        note?: string;
+        image: {
+          src: string;
+          alt: string;
+          width: number;
+          height: number;
+        };
+      }[];
+    }
+  | {
+      kind: "questions";
+      title: string;
+      lead?: string;
     };
 
 export type CourseMaterialDeck = {
@@ -237,6 +298,14 @@ export type CourseMaterialDeck = {
   title: string;
   duration: string;
   description: string;
+  /** Groups multi-day courses on the Course Material list. */
+  series?: string;
+  /** e.g. "Day 1" — shown on list cards and presenter chrome. */
+  dayLabel?: string;
+  /** Live session countdown length. Defaults to 60 minutes. */
+  sessionDurationMinutes?: number;
+  /** List UI status when slides are still being authored. */
+  status?: "ready" | "draft" | "coming-soon";
   brandLogo: {
     src: string;
     alt: string;
@@ -245,6 +314,13 @@ export type CourseMaterialDeck = {
   };
   slides: readonly CourseMaterialSlide[];
 };
+
+const soularaBrandLogo = {
+  src: "/course-material/reiki-level-1/cover-logo.png",
+  alt: "Soulara Healing Training Academy",
+  width: 939,
+  height: 271,
+} as const;
 
 export const introductionToReiki: CourseMaterialDeck = {
   slug: "introduction-to-reiki",
@@ -367,10 +443,10 @@ export const introductionToReiki: CourseMaterialDeck = {
         items: ["Stress", "Anxiety", "Disease", "Fear", "Fatigue", "Negative thinking"],
       },
       image: {
-        src: "/course-material/introduction-to-reiki/when-blocked-original.png",
-        alt: "When energy is unblocked, we experience joy, peace, vitality, and wellness",
+        src: "/course-material/introduction-to-reiki/blocked-vs-unblocked.png",
+        alt: "Blocked versus unblocked energy comparison",
         width: 1024,
-        height: 554,
+        height: 558,
       },
     },
     {
@@ -567,6 +643,7 @@ export const introductionToReiki: CourseMaterialDeck = {
         height: 555,
       },
     },
+    ...introductionMindBodySoulSlides,
     {
       kind: "reiki-path",
       title: "Your Reiki Journey",
@@ -634,7 +711,7 @@ export const introductionToReiki: CourseMaterialDeck = {
           text: "Accessing deeper intuitive wisdom through the Akashic Records — illuminating soul patterns, purpose, and next steps.",
           image: {
             src: "https://pub-a660605547dc4bd8bd829924aacdd025.r2.dev/general/1784479708575-d27b568a.jpg",
-            alt: "Akashik Reading private session cover",
+            alt: "Akashic Reading private session cover",
             width: 800,
             height: 600,
           },
@@ -654,10 +731,113 @@ export const introductionToReiki: CourseMaterialDeck = {
       closing:
         "Reiki is not just a healing technique; it is a journey back to yourself. As you continue this path, you will discover that healing is not only about removing pain — it is about remembering your strength, reconnecting with your inner wisdom, and awakening the limitless potential that already exists within you.",
     },
+    introductionCoursePricingSlide,
+    introductionQuestionsSlide,
   ],
 };
 
-export const courseMaterialDecks: readonly CourseMaterialDeck[] = [introductionToReiki];
+export { reikiLevel1Day1 };
+
+export const reikiLevel1Day2: CourseMaterialDeck = {
+  slug: "reiki-level-1-day-2",
+  title: "Reiki Level 1",
+  series: "Reiki Level 1",
+  dayLabel: "Day 2",
+  duration: "2 Hours",
+  sessionDurationMinutes: 120,
+  status: "coming-soon",
+  description:
+    "Day 2 of the two-day Reiki Level 1 certification — deepening practice, integration, and closing. Content will follow once Day 1 is complete.",
+  brandLogo: soularaBrandLogo,
+  slides: [
+    {
+      kind: "session-start",
+      eyebrow: "Day 2 · Two-day certification",
+      title: "Reiki Level 1",
+    },
+    {
+      kind: "cover",
+      eyebrow: "Soulara Healing Academy",
+      title: "Reiki Level 1",
+      subtitle: "The Awakening — Day 2 of your certification journey",
+      teacher: "Vanita Bassi",
+      teacherRoles:
+        "Reiki Master · PLR Therapist · Akashic Reader · Clinical Hypnotherapist · NLP Coach",
+      journeyLine: "Continuing your Reiki path…",
+      duration: "Day 2",
+      teacherImage: {
+        src: "/about/vanita-portrait-v3.jpg",
+        alt: "Vanita Bassi, founder of Soulara Healing Academy",
+        width: 1200,
+        height: 1500,
+      },
+    },
+    {
+      kind: "bullets",
+      eyebrow: "Coming soon",
+      title: "Day 2 awaits",
+      lead: "This day will be built after Day 1 content is finalized.",
+      items: [
+        "Deepening what began on Day 1",
+        "Practice, integration, and confidence",
+        "Certification closing and next steps",
+      ],
+    },
+    {
+      kind: "quote",
+      eyebrow: "Day 2",
+      title: "Content coming next",
+      quote:
+        "Once Day 1 is complete, share your Day 2 document and this deck will be filled with the same care.",
+    },
+  ],
+};
+
+export const courseMaterialDecks: readonly CourseMaterialDeck[] = [
+  introductionToReiki,
+  reikiLevel1Day1,
+  reikiLevel1Day2,
+];
+
+export type CourseMaterialSeriesGroup = {
+  key: string;
+  title: string;
+  description: string;
+  duration: string;
+  decks: readonly CourseMaterialDeck[];
+};
+
+export function getCourseMaterialSeriesGroups(): readonly CourseMaterialSeriesGroup[] {
+  const groups: CourseMaterialSeriesGroup[] = [];
+  const seriesIndex = new Map<string, number>();
+
+  for (const deck of courseMaterialDecks) {
+    const key = deck.series ?? deck.slug;
+    const existing = seriesIndex.get(key);
+
+    if (existing === undefined) {
+      seriesIndex.set(key, groups.length);
+      groups.push({
+        key,
+        title: deck.series ?? deck.title,
+        description: deck.series
+          ? "Two-day live certification. Present Day 1 or Day 2 when you teach — same fullscreen presenter as Introduction to Reiki."
+          : deck.description,
+        duration: deck.series ? "2 Days" : deck.duration,
+        decks: [deck],
+      });
+      continue;
+    }
+
+    const group = groups[existing]!;
+    groups[existing] = {
+      ...group,
+      decks: [...group.decks, deck],
+    };
+  }
+
+  return groups;
+}
 
 export function getCourseMaterialDeck(slug: string): CourseMaterialDeck | undefined {
   return courseMaterialDecks.find((deck) => deck.slug === slug);
