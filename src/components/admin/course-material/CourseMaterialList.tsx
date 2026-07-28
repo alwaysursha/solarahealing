@@ -1,14 +1,30 @@
 "use client";
 
 import { AnimatePresence, motion, useReducedMotion } from "framer-motion";
+import dynamic from "next/dynamic";
 import Link from "next/link";
 import { useState } from "react";
-import { CourseMaterialPdfExport } from "@/components/admin/course-material/CourseMaterialPdfExport";
 import {
   getCourseMaterialSeriesGroups,
   type CourseMaterialDeck,
   type CourseMaterialSeriesGroup,
 } from "@/lib/admin/course-material";
+
+/** Client-only — keeps presenter/PDF libs out of the Cloudflare Worker SSR bundle. */
+const CourseMaterialPdfExport = dynamic(
+  () =>
+    import("@/components/admin/course-material/CourseMaterialPdfExport").then(
+      (mod) => mod.CourseMaterialPdfExport,
+    ),
+  {
+    ssr: false,
+    loading: () => (
+      <button type="button" className="cm-list-pdf-trigger" disabled>
+        Save PDF
+      </button>
+    ),
+  },
+);
 
 function statusLabel(status: CourseMaterialDeck["status"]) {
   switch (status) {

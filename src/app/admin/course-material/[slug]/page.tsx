@@ -1,5 +1,5 @@
 import { notFound } from "next/navigation";
-import { CourseMaterialPresenter } from "@/components/admin/course-material/CourseMaterialPresenter";
+import { CourseMaterialPresenterClient } from "@/components/admin/course-material/CourseMaterialPresenterClient";
 import { getCourseMaterialDeck } from "@/lib/admin/course-material";
 
 export const dynamic = "force-dynamic";
@@ -13,5 +13,5 @@ export default async function AdminCourseMaterialPresentPage({
   const deck = getCourseMaterialDeck(slug);
   if (!deck) notFound();
 
-  return <CourseMaterialPresenter deck={deck} />;
+  return <CourseMaterialPresenterClient deck={deck} />;
 }
