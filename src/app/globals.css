@@ -7065,6 +7065,132 @@ html[data-brand-theme="10"] section[aria-label="Hero highlights"] [role="tablist
   color: #5c1470;
 }
 
+.cm-list-day-actions {
+  display: flex;
+  flex-wrap: wrap;
+  align-items: center;
+  justify-content: flex-end;
+  gap: 0.65rem;
+}
+
+.cm-list-pdf {
+  position: relative;
+}
+
+.cm-list-pdf-trigger {
+  border-radius: 9999px;
+  border: 1px solid color-mix(in srgb, #8f63b5 32%, transparent);
+  background: color-mix(in srgb, #ffffff 88%, #8f63b5);
+  padding: 0.55rem 0.95rem;
+  font-size: 0.68rem;
+  font-weight: 650;
+  letter-spacing: 0.14em;
+  text-transform: uppercase;
+  color: #5c1470;
+  cursor: pointer;
+  white-space: nowrap;
+}
+
+.cm-list-pdf-trigger:hover {
+  border-color: color-mix(in srgb, #5c1470 40%, transparent);
+  background: color-mix(in srgb, #faf6fc 70%, #8f63b5);
+}
+
+.cm-list-pdf-trigger:disabled {
+  opacity: 0.65;
+  cursor: wait;
+}
+
+.cm-list-pdf-panel {
+  position: fixed;
+  z-index: 1200;
+  width: min(18.5rem, calc(100vw - 2rem));
+  display: grid;
+  gap: 0.55rem;
+  padding: 0.85rem 0.9rem;
+  border-radius: 0.9rem;
+  border: 1px solid color-mix(in srgb, var(--admin-border) 80%, #8f63b5);
+  background: #fff;
+  box-shadow: 0 18px 40px -18px rgba(58, 37, 96, 0.35);
+  color: var(--admin-text);
+}
+
+.cm-list-pdf-title {
+  margin: 0;
+  font-size: 0.72rem;
+  font-weight: 700;
+  letter-spacing: 0.16em;
+  text-transform: uppercase;
+  color: #5c1470;
+}
+
+.cm-list-pdf-option {
+  display: flex;
+  align-items: center;
+  gap: 0.5rem;
+  font-size: 0.82rem;
+  cursor: pointer;
+}
+
+.cm-list-pdf-option input {
+  accent-color: #5c1470;
+}
+
+.cm-list-pdf-range {
+  display: grid;
+  grid-template-columns: 1fr 1fr;
+  gap: 0.55rem;
+}
+
+.cm-list-pdf-range label {
+  display: grid;
+  gap: 0.25rem;
+  font-size: 0.68rem;
+  letter-spacing: 0.08em;
+  text-transform: uppercase;
+  color: var(--admin-text-soft);
+}
+
+.cm-list-pdf-range input {
+  width: 100%;
+  border-radius: 0.55rem;
+  border: 1px solid color-mix(in srgb, var(--admin-border) 88%, #8f63b5);
+  background: #fff;
+  padding: 0.4rem 0.55rem;
+  color: var(--admin-text);
+  font-size: 0.9rem;
+}
+
+.cm-list-pdf-range input:disabled {
+  opacity: 0.45;
+}
+
+.cm-list-pdf-download {
+  margin-top: 0.15rem;
+  border: none;
+  border-radius: 9999px;
+  background: linear-gradient(145deg, #8f63b5 0%, #734795 48%, #5c1470 100%);
+  padding: 0.65rem 0.9rem;
+  font-size: 0.72rem;
+  font-weight: 700;
+  letter-spacing: 0.14em;
+  text-transform: uppercase;
+  color: #faf6fc;
+  cursor: pointer;
+}
+
+.cm-list-pdf-download:disabled {
+  opacity: 0.65;
+  cursor: wait;
+}
+
+.cm-list-pdf-error {
+  margin: 0;
+  font-size: 0.75rem;
+  line-height: 1.35;
+  color: #a33b3b;
+}
+
 .cm-list-present-wrap {
   position: relative;
   display: inline-flex;
@@ -7211,6 +7337,28 @@ html[data-brand-theme="10"] section[aria-label="Hero highlights"] [role="tablist
 .cm-presenter-fullscreen:hover {
   border-color: rgba(201, 162, 39, 0.45);
   color: #f5e6b8;
+}
+
+.cm-pdf-capture-host {
+  position: fixed;
+  left: -10000px;
+  top: 0;
+  width: 1920px;
+  height: 1080px;
+  overflow: hidden;
+  pointer-events: none;
+  /* Must stay opaque — html2canvas often captures blank nodes when opacity is 0. */
+  opacity: 1;
+  z-index: 0;
+  /* Keep out of transformed ancestors (portaled to body) so sizing stays reliable. */
+  transform: none !important;
+}
+
+.cm-pdf-capture-host .cm-slide-for-pdf {
+  width: 1920px !important;
+  height: 1080px !important;
+  max-height: 1080px !important;
+  overflow: hidden !important;
 }
 
 .cm-presenter-fullscreen[aria-pressed="true"] {
