@@ -8,7 +8,7 @@ import {
 } from "framer-motion";
 import Image from "next/image";
 import Link from "next/link";
-import { useCallback, useEffect, useRef, useState, type ReactNode } from "react";
+import { useCallback, useEffect, useRef, useState, type CSSProperties, type ReactNode } from "react";
 import { AuraDiagramVisual } from "@/components/admin/course-material/AuraDiagramVisual";
 import { BalancingChakrasVisual } from "@/components/admin/course-material/BalancingChakrasVisual";
 import { ChakrasGuideVisual } from "@/components/admin/course-material/ChakrasGuideVisual";
@@ -21,7 +21,12 @@ import {
 
 const ease: [number, number, number, number] = [0.22, 1, 0.36, 1];
 const SWIPE_THRESHOLD = 48;
-const SESSION_MS = 60 * 60 * 1000;
+const DEFAULT_SESSION_MINUTES = 60;
+
+function sessionMsForDeck(deck: CourseMaterialDeck) {
+  const minutes = deck.sessionDurationMinutes ?? DEFAULT_SESSION_MINUTES;
+  return Math.max(1, minutes) * 60 * 1000;
+}
 
 const slideContainer = {
   hidden: {},
@@ -411,9 +416,11 @@ function SlideStory({
   slide: Extract<CourseMaterialSlide, { kind: "story" }>;
   reduceMotion: boolean;
 }) {
+  const hasImage = Boolean(slide.image);
+
   return (
     <motion.div
-      className="cm-slide cm-slide-story"
+      className={["cm-slide cm-slide-story", hasImage ? "" : "cm-slide-story-text"].join(" ")}
       variants={reduceMotion ? undefined : slideContainer}
       initial={reduceMotion ? false : "hidden"}
       animate={reduceMotion ? undefined : "show"}
@@ -436,22 +443,148 @@ function SlideStory({
         </motion.div>
       </div>
 
-      <motion.aside className="cm-story-media" variants={reduceMotion ? undefined : slideMedia}>
-        <div className="cm-story-portrait">
-          <Image
-            src={slide.image.src}
-            alt={slide.image.alt}
-            width={slide.image.width}
-            height={slide.image.height}
-            className="cm-story-portrait-img"
-            quality={95}
-            priority
-          />
+      {hasImage && slide.image ? (
+        <motion.aside className="cm-story-media" variants={reduceMotion ? undefined : slideMedia}>
+          <div className="cm-story-portrait">
+            <Image
+              src={slide.image.src}
+              alt={slide.image.alt}
+              width={slide.image.width}
+              height={slide.image.height}
+              className="cm-story-portrait-img"
+              quality={95}
+              priority
+            />
+          </div>
+          {slide.imageCaption ? (
+            <p className="cm-story-caption">{slide.imageCaption}</p>
+          ) : null}
+        </motion.aside>
+      ) : null}
+    </motion.div>
+  );
+}
+
+function todayPriceFromOriginal(price: string): string | null {
+  const trimmed = price.trim();
+  if (/^free$/i.test(trimmed)) return null;
+  const amount = Number(trimmed.replace(/[^0-9.]/g, ""));
+  if (!Number.isFinite(amount)) return null;
+  const half = amount / 2;
+  return Number.isInteger(half) ? `$${half}` : `$${half.toFixed(2)}`;
+}
+
+function SlideCoursePricing({
+  slide,
+  reduceMotion,
+}: {
+  slide: Extract<CourseMaterialSlide, { kind: "course-pricing" }>;
+  reduceMotion: boolean;
+}) {
+  return (
+    <motion.div
+      className="cm-slide cm-slide-course-pricing"
+      variants={reduceMotion ? undefined : slideContainer}
+      initial={reduceMotion ? false : "hidden"}
+      animate={reduceMotion ? undefined : "show"}
+    >
+      <header className="cm-course-pricing-head">
+        <div className="cm-course-pricing-head-text">
+          {slide.eyebrow ? (
+            <motion.p className="cm-slide-eyebrow" variants={reduceMotion ? undefined : slideItem}>
+              {slide.eyebrow}
+            </motion.p>
+          ) : null}
+          <motion.h2 className="cm-course-pricing-title" variants={reduceMotion ? undefined : slideItem}>
+            {slide.title}
+          </motion.h2>
+          {slide.lead ? (
+            <motion.p className="cm-course-pricing-lead" variants={reduceMotion ? undefined : slideItem}>
+              {slide.lead}
+            </motion.p>
+          ) : null}
         </div>
-        {slide.imageCaption ? (
-          <p className="cm-story-caption">{slide.imageCaption}</p>
-        ) : null}
-      </motion.aside>
+        <motion.p className="cm-course-pricing-banner" variants={reduceMotion ? undefined : slideItem}>
+          {slide.banner}
+        </motion.p>
+      </header>
+
+      <motion.ul className="cm-course-pricing-grid" variants={reduceMotion ? undefined : slideContainer}>
+        {slide.items.map((item) => {
+          const today = todayPriceFromOriginal(item.price);
+          return (
+            <motion.li key={item.name} className="cm-course-pricing-card" variants={reduceMotion ? undefined : slideItem}>
+              <div className="cm-course-pricing-card-media">
+                <Image
+                  src={item.image.src}
+                  alt={item.image.alt}
+                  width={item.image.width}
+                  height={item.image.height}
+                  className="cm-course-pricing-card-img"
+                  quality={85}
+                />
+              </div>
+              <div className="cm-course-pricing-card-copy">
+                <p className="cm-course-pricing-card-name">{item.name}</p>
+                {item.note ? <p className="cm-course-pricing-card-note">{item.note}</p> : null}
+                <div className="cm-course-pricing-amounts">
+                  {today ? (
+                    <>
+                      <span className="cm-course-pricing-original">{item.price}</span>
+                      <span className="cm-course-pricing-today">{today}</span>
+                    </>
+                  ) : (
+                    <span className="cm-course-pricing-today">{item.price}</span>
+                  )}
+                </div>
+              </div>
+            </motion.li>
+          );
+        })}
+      </motion.ul>
+    </motion.div>
+  );
+}
+
+function SlideQuestions({
+  slide,
+  reduceMotion,
+}: {
+  slide: Extract<CourseMaterialSlide, { kind: "questions" }>;
+  reduceMotion: boolean;
+}) {
+  return (
+    <motion.div
+      className="cm-slide cm-slide-questions"
+      variants={reduceMotion ? undefined : slideContainer}
+      initial={reduceMotion ? false : "hidden"}
+      animate={reduceMotion ? undefined : "show"}
+    >
+      <motion.h2 className="cm-questions-title" variants={reduceMotion ? undefined : slideItem}>
+        {slide.title}
+      </motion.h2>
+      {slide.lead ? (
+        <motion.p className="cm-questions-lead" variants={reduceMotion ? undefined : slideItem}>
+          {slide.lead}
+        </motion.p>
+      ) : null}
+      <motion.div className="cm-questions-actions" variants={reduceMotion ? undefined : slideItem}>
+        <span className="cm-slide-start-session-wrap">
+          {!reduceMotion ? <span className="cm-slide-start-session-glow" aria-hidden /> : null}
+          <Link
+            href="/admin/course-material"
+            className="cm-slide-start-session cm-questions-end"
+            onClick={() => {
+              if (document.fullscreenElement) {
+                void document.exitFullscreen();
+              }
+            }}
+          >
+            {!reduceMotion ? <span className="cm-slide-start-session-shine" aria-hidden /> : null}
+            <span className="relative">Close Course</span>
+          </Link>
+        </span>
+      </motion.div>
     </motion.div>
   );
 }
@@ -991,6 +1124,164 @@ function SlideReikiPath({
   );
 }
 
+function SlideImageFocus({
+  slide,
+  reduceMotion,
+}: {
+  slide: Extract<CourseMaterialSlide, { kind: "image-focus" }>;
+  reduceMotion: boolean;
+}) {
+  const portrait = slide.image.height > slide.image.width;
+  const aspectRatio = `${slide.image.width} / ${slide.image.height}`;
+  const aspectValue = slide.image.width / slide.image.height;
+
+  return (
+    <motion.div
+      className={[
+        "cm-slide cm-slide-image-focus",
+        portrait ? "cm-slide-image-focus-portrait" : "cm-slide-image-focus-landscape",
+      ].join(" ")}
+      variants={reduceMotion ? undefined : slideContainer}
+      initial={reduceMotion ? false : "hidden"}
+      animate={reduceMotion ? undefined : "show"}
+    >
+      {slide.eyebrow || slide.title ? (
+        <header className="cm-image-focus-head">
+          {slide.eyebrow ? (
+            <motion.p className="cm-slide-eyebrow" variants={reduceMotion ? undefined : slideItem}>
+              {slide.eyebrow}
+            </motion.p>
+          ) : null}
+          {slide.title ? (
+            <motion.h2 className="cm-slide-title" variants={reduceMotion ? undefined : slideItem}>
+              {slide.title}
+            </motion.h2>
+          ) : null}
+        </header>
+      ) : null}
+
+      <motion.div className="cm-image-focus-media" variants={reduceMotion ? undefined : slideMedia}>
+        <div className="cm-slide-media-frame cm-image-focus-frame">
+          <div
+            className="cm-image-focus-picture"
+            style={
+              {
+                aspectRatio,
+                ["--cm-image-ar"]: String(aspectValue),
+              } as CSSProperties
+            }
+          >
+            <Image
+              src={slide.image.src}
+              alt={slide.image.alt}
+              width={slide.image.width}
+              height={slide.image.height}
+              className="cm-slide-media-img cm-image-focus-img"
+              sizes="(max-width: 899px) 96vw, min(96vw, 1600px)"
+              quality={100}
+              priority
+            />
+          </div>
+        </div>
+      </motion.div>
+
+      {slide.caption ? (
+        <motion.p className="cm-image-focus-caption" variants={reduceMotion ? undefined : slideItem}>
+          {slide.caption}
+        </motion.p>
+      ) : null}
+    </motion.div>
+  );
+}
+
+function SlideTopicSections({
+  slide,
+  reduceMotion,
+}: {
+  slide: Extract<CourseMaterialSlide, { kind: "topic-sections" }>;
+  reduceMotion: boolean;
+}) {
+  const hasImage = Boolean(slide.image);
+  const portrait = hasImage && slide.image ? slide.image.height >= slide.image.width : false;
+
+  return (
+    <motion.div
+      className={[
+        "cm-slide cm-slide-topic-sections",
+        hasImage ? "cm-slide-topic-sections-media" : "",
+        portrait ? "cm-slide-topic-sections-portrait" : "",
+      ].join(" ")}
+      variants={reduceMotion ? undefined : slideContainer}
+      initial={reduceMotion ? false : "hidden"}
+      animate={reduceMotion ? undefined : "show"}
+    >
+      {hasImage && slide.image ? (
+        <motion.div className="cm-slide-media" variants={reduceMotion ? undefined : slideMedia}>
+          <div
+            className={[
+              "cm-slide-media-frame",
+              portrait ? "cm-slide-media-frame-portrait" : "cm-slide-media-frame-wide",
+            ].join(" ")}
+          >
+            <Image
+              src={slide.image.src}
+              alt={slide.image.alt}
+              width={slide.image.width}
+              height={slide.image.height}
+              className="cm-slide-media-img"
+              quality={95}
+              priority
+            />
+            <span className="cm-slide-media-glow" aria-hidden />
+          </div>
+        </motion.div>
+      ) : null}
+
+      <div className="cm-slide-copy cm-topic-sections-copy">
+        {slide.eyebrow ? (
+          <motion.p className="cm-slide-eyebrow" variants={reduceMotion ? undefined : slideItem}>
+            {slide.eyebrow}
+          </motion.p>
+        ) : null}
+        <motion.h2 className="cm-slide-title" variants={reduceMotion ? undefined : slideItem}>
+          {slide.title}
+        </motion.h2>
+        {slide.lead ? (
+          <motion.p className="cm-slide-lead" variants={reduceMotion ? undefined : slideItem}>
+            {slide.lead}
+          </motion.p>
+        ) : null}
+
+        <motion.div className="cm-topic-sections-grid" variants={reduceMotion ? undefined : slideContainer}>
+          {slide.sections.map((section) => (
+            <motion.section
+              key={section.heading}
+              className="cm-topic-section"
+              variants={reduceMotion ? undefined : slideItem}
+            >
+              <h3 className="cm-topic-section-heading">{section.heading}</h3>
+              {section.text ? <p className="cm-topic-section-text">{section.text}</p> : null}
+              {section.items?.length ? (
+                <ul className="cm-topic-section-list">
+                  {section.items.map((item) => (
+                    <li key={item}>{item}</li>
+                  ))}
+                </ul>
+              ) : null}
+            </motion.section>
+          ))}
+        </motion.div>
+
+        {slide.closing ? (
+          <motion.p className="cm-topic-sections-closing" variants={reduceMotion ? undefined : slideItem}>
+            {slide.closing}
+          </motion.p>
+        ) : null}
+      </div>
+    </motion.div>
+  );
+}
+
 function SlideLifeForce({
   slide,
   reduceMotion,
@@ -1164,6 +1455,18 @@ function SlideView({
     case "reiki-path":
       body = <SlideReikiPath slide={slide} reduceMotion={reduceMotion} />;
       break;
+    case "image-focus":
+      body = <SlideImageFocus slide={slide} reduceMotion={reduceMotion} />;
+      break;
+    case "topic-sections":
+      body = <SlideTopicSections slide={slide} reduceMotion={reduceMotion} />;
+      break;
+    case "course-pricing":
+      body = <SlideCoursePricing slide={slide} reduceMotion={reduceMotion} />;
+      break;
+    case "questions":
+      body = <SlideQuestions slide={slide} reduceMotion={reduceMotion} />;
+      break;
     default: {
       const _exhaustive: never = slide;
       return _exhaustive;
@@ -1183,8 +1486,9 @@ export function CourseMaterialPresenter({ deck }: { deck: CourseMaterialDeck }) 
   const rootRef = useRef<HTMLDivElement>(null);
   const [index, setIndex] = useState(0);
   const [isFullscreen, setIsFullscreen] = useState(false);
+  const sessionMs = sessionMsForDeck(deck);
   const [sessionEndsAt, setSessionEndsAt] = useState<number | null>(null);
-  const [remainingMs, setRemainingMs] = useState(SESSION_MS);
+  const [remainingMs, setRemainingMs] = useState(sessionMs);
   const count = deck.slides.length;
   const slide = deck.slides[index]!;
   const sessionStarted = sessionEndsAt !== null;
@@ -1192,6 +1496,9 @@ export function CourseMaterialPresenter({ deck }: { deck: CourseMaterialDeck }) 
   const mustStartSession =
     !sessionStarted && deck.slides[0]?.kind === "session-start";
   const nextLocked = mustStartSession && index === 0;
+  const presenterTitle = deck.dayLabel
+    ? `${deck.title} · ${deck.dayLabel}`
+    : deck.title;
 
   useEffect(() => {
     const previous = document.body.style.overflow;
@@ -1222,8 +1529,8 @@ export function CourseMaterialPresenter({ deck }: { deck: CourseMaterialDeck }) 
   }, [sessionEndsAt]);
 
   const startSession = useCallback(() => {
-    setSessionEndsAt(Date.now() + SESSION_MS);
-    setRemainingMs(SESSION_MS);
+    setSessionEndsAt(Date.now() + sessionMs);
+    setRemainingMs(sessionMs);
     setIndex(count > 1 ? 1 : 0);
 
     const node = rootRef.current;
@@ -1239,7 +1546,7 @@ export function CourseMaterialPresenter({ deck }: { deck: CourseMaterialDeck }) 
         // Browser may block fullscreen without support.
       }
     })();
-  }, [count]);
+  }, [count, sessionMs]);
 
   const goTo = useCallback(
     (next: number) => {
@@ -1338,7 +1645,7 @@ export function CourseMaterialPresenter({ deck }: { deck: CourseMaterialDeck }) 
             {isFullscreen ? "Exit full screen" : "Full screen"}
           </button>
         </div>
-        <p className="cm-presenter-deck">{deck.title}</p>
+        <p className="cm-presenter-deck">{presenterTitle}</p>
         <div className="cm-presenter-bar-right">
           {sessionStarted ? (
             <p
