@@ -3,6 +3,7 @@
 import { AnimatePresence, motion, useReducedMotion } from "framer-motion";
 import Link from "next/link";
 import { useState } from "react";
+import { CourseMaterialPdfExport } from "@/components/admin/course-material/CourseMaterialPdfExport";
 import {
   getCourseMaterialSeriesGroups,
   type CourseMaterialDeck,
@@ -75,7 +76,10 @@ function DayRow({
           {deck.slides.length} slides · {deck.duration}
         </p>
       </div>
-      <PresentLink deck={deck} reduceMotion={reduceMotion} />
+      <div className="cm-list-day-actions">
+        <CourseMaterialPdfExport deck={deck} />
+        <PresentLink deck={deck} reduceMotion={reduceMotion} />
+      </div>
     </div>
   );
 }
@@ -162,7 +166,8 @@ function CourseCard({
                   ))}
                 </div>
               ) : (
-                <div className="cm-list-actions mt-5 flex justify-end">
+                <div className="cm-list-actions mt-5 flex flex-wrap items-center justify-end gap-3">
+                  <CourseMaterialPdfExport deck={single} />
                   <PresentLink deck={single} reduceMotion={reduceMotion} />
                 </div>
               )}

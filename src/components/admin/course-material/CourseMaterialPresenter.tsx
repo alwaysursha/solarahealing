@@ -549,9 +549,11 @@ function SlideCoursePricing({
 function SlideQuestions({
   slide,
   reduceMotion,
+  forPdf = false,
 }: {
   slide: Extract<CourseMaterialSlide, { kind: "questions" }>;
   reduceMotion: boolean;
+  forPdf?: boolean;
 }) {
   return (
     <motion.div
@@ -568,23 +570,25 @@ function SlideQuestions({
           {slide.lead}
         </motion.p>
       ) : null}
-      <motion.div className="cm-questions-actions" variants={reduceMotion ? undefined : slideItem}>
-        <span className="cm-slide-start-session-wrap">
-          {!reduceMotion ? <span className="cm-slide-start-session-glow" aria-hidden /> : null}
-          <Link
-            href="/admin/course-material"
-            className="cm-slide-start-session cm-questions-end"
-            onClick={() => {
-              if (document.fullscreenElement) {
-                void document.exitFullscreen();
-              }
-            }}
-          >
-            {!reduceMotion ? <span className="cm-slide-start-session-shine" aria-hidden /> : null}
-            <span className="relative">Close Course</span>
-          </Link>
-        </span>
-      </motion.div>
+      {!forPdf ? (
+        <motion.div className="cm-questions-actions" variants={reduceMotion ? undefined : slideItem}>
+          <span className="cm-slide-start-session-wrap">
+            {!reduceMotion ? <span className="cm-slide-start-session-glow" aria-hidden /> : null}
+            <Link
+              href="/admin/course-material"
+              className="cm-slide-start-session cm-questions-end"
+              onClick={() => {
+                if (document.fullscreenElement) {
+                  void document.exitFullscreen();
+                }
+              }}
+            >
+              {!reduceMotion ? <span className="cm-slide-start-session-shine" aria-hidden /> : null}
+              <span className="relative">Close Course</span>
+            </Link>
+          </span>
+        </motion.div>
+      ) : null}
     </motion.div>
   );
 }
@@ -1376,18 +1380,20 @@ function SlideCornerLogo({ brandLogo }: { brandLogo: CourseMaterialDeck["brandLo
   );
 }
 
-function SlideView({
+export function CourseMaterialSlideView({
   slide,
   brandLogo,
   showStartSession,
   onStartSession,
   reduceMotion,
+  forPdf = false,
 }: {
   slide: CourseMaterialSlide;
   brandLogo: CourseMaterialDeck["brandLogo"];
   showStartSession?: boolean;
   onStartSession?: () => void;
   reduceMotion: boolean;
+  forPdf?: boolean;
 }) {
   let body: ReactNode;
   switch (slide.kind) {
@@ -1395,7 +1401,7 @@ function SlideView({
       body = (
         <SlideSessionStart
           slide={slide}
-          showStartSession={showStartSession}
+          showStartSession={showStartSession && !forPdf}
           onStartSession={onStartSession}
           reduceMotion={reduceMotion}
         />
@@ -1465,7 +1471,7 @@ function SlideView({
       body = <SlideCoursePricing slide={slide} reduceMotion={reduceMotion} />;
       break;
     case "questions":
-      body = <SlideQuestions slide={slide} reduceMotion={reduceMotion} />;
+      body = <SlideQuestions slide={slide} reduceMotion={reduceMotion} forPdf={forPdf} />;
       break;
     default: {
       const _exhaustive: never = slide;
@@ -1474,7 +1480,7 @@ function SlideView({
   }
 
   return (
-    <div className="cm-slide cm-slide-has-brand">
+    <div className={["cm-slide cm-slide-has-brand", forPdf ? "cm-slide-for-pdf" : ""].join(" ")}>
       <SlideCornerLogo brandLogo={brandLogo} />
       <div className="cm-slide-body">{body}</div>
     </div>
@@ -1686,7 +1692,7 @@ export function CourseMaterialPresenter({ deck }: { deck: CourseMaterialDeck }) 
             exit={reduceMotion ? undefined : { opacity: 0, x: -32, scale: 0.985 }}
             transition={{ duration: 0.48, ease }}
           >
-            <SlideView
+            <CourseMaterialSlideView
               slide={slide}
               brandLogo={deck.brandLogo}
               showStartSession={slide.kind === "session-start" && !sessionStarted}
