@@ -195,9 +195,12 @@ function CourseCard({
   );
 }
 
-export function CourseMaterialList() {
+export function CourseMaterialList({
+  groups = getCourseMaterialSeriesGroups(),
+}: {
+  groups?: readonly CourseMaterialSeriesGroup[];
+}) {
   const reduceMotion = useReducedMotion();
-  const groups = getCourseMaterialSeriesGroups();
 
   return (
     <div className="cm-list">

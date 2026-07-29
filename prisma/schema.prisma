@@ -113,24 +113,28 @@ model SiteSettings {
 }
 
 model OnlineCourse {
-  id          String         @id
-  slug        String         @unique
-  title       String
-  subHeading  String         @default("")
-  description String
-  dateLabel   String
-  duration    String
-  badge       String         @default("")
-  category    CourseCategory @default(REIKI)
-  priceCad    Int
-  image       String
-  imageAlt    String
-  imageFocusX Int            @default(50)
-  imageFocusY Int            @default(50)
-  level       CourseLevel    @default(BEGINNER)
-  published   Boolean        @default(true)
-  sortOrder   Int            @default(0)
-  updatedAt   DateTime       @updatedAt
+  id                          String         @id
+  slug                        String         @unique
+  title                       String
+  subHeading                  String         @default("")
+  description                 String
+  dateLabel                   String
+  duration                    String
+  badge                       String         @default("")
+  category                    CourseCategory @default(REIKI)
+  priceCad                    Int
+  /** 0–100. Applies to storefront display and Stripe checkout. */
+  discountPercent             Int            @default(0)
+  /** 0–100. Applies only on course-material presentation pricing slides. */
+  presentationDiscountPercent Int            @default(50)
+  image                       String
+  imageAlt                    String
+  imageFocusX                 Int            @default(50)
+  imageFocusY                 Int            @default(50)
+  level                       CourseLevel    @default(BEGINNER)
+  published                   Boolean        @default(true)
+  sortOrder                   Int            @default(0)
+  updatedAt                   DateTime       @updatedAt
 }
 
 model Workshop {
@@ -155,19 +159,23 @@ model Workshop {
 }
 
 model PrivateSession {
-  id          String   @id
-  slug        String   @unique
-  title       String
-  description String
-  duration    String
-  priceCad    Int
-  image       String
-  imageAlt    String
-  imageFocusX Int      @default(50)
-  imageFocusY Int      @default(50)
-  published   Boolean  @default(true)
-  sortOrder   Int      @default(0)
-  updatedAt   DateTime @updatedAt
+  id                          String   @id
+  slug                        String   @unique
+  title                       String
+  description                 String
+  duration                    String
+  priceCad                    Int
+  /** 0–100. Applies to storefront display and Stripe checkout. */
+  discountPercent             Int      @default(0)
+  /** 0–100. Applies only on course-material presentation pricing slides. */
+  presentationDiscountPercent Int      @default(50)
+  image                       String
+  imageAlt                    String
+  imageFocusX                 Int      @default(50)
+  imageFocusY                 Int      @default(50)
+  published                   Boolean  @default(true)
+  sortOrder                   Int      @default(0)
+  updatedAt                   DateTime @updatedAt
 }
 
 model Article {

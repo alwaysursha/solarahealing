@@ -54,6 +54,24 @@ function NewCoursePanel() {
             <AdminSelect label="Category" name="category" defaultValue="REIKI" options={categoryOptions} />
             <AdminSelect label="Pathway level" name="level" defaultValue="BEGINNER" options={levelOptions} />
             <AdminField label="Price (CAD)" name="priceCad" defaultValue={199} type="number" />
+            <AdminField
+              label="Storefront discount %"
+              name="discountPercent"
+              defaultValue={0}
+              type="number"
+              min={0}
+              max={100}
+              hint="0–100. Updates website price and Stripe checkout."
+            />
+            <AdminField
+              label="Presentation discount %"
+              name="presentationDiscountPercent"
+              defaultValue={50}
+              type="number"
+              min={0}
+              max={100}
+              hint="0–100. Course material pricing slides only — not checkout."
+            />
             <AdminField label="Date label" name="dateLabel" defaultValue="Start anytime" />
             <AdminField label="Duration" name="duration" defaultValue="8 modules · self-paced" />
             <AdminCatalogImageField label="Course image" aspect="16:10" />

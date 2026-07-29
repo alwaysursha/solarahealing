@@ -15,6 +15,7 @@ import {
 import { sendPasswordChangedEmail } from "@/lib/email/password-changed";
 import { sendWelcomeEmail } from "@/lib/email/welcome";
 import { isValidWhatsAppNumber, normalizeWhatsAppNumber } from "@/lib/whatsapp";
+import { clampDiscountPercent } from "@/lib/pricing";
 import { ensureUniqueSlug, resolveSlugInput } from "@/lib/slug";
 
 function revalidateAll() {
@@ -23,6 +24,7 @@ function revalidateAll() {
   revalidatePath("/admin/courses");
   revalidatePath("/admin/workshops");
   revalidatePath("/admin/sessions");
+  revalidatePath("/admin/course-material");
   revalidatePath("/courses");
   revalidatePath("/workshops");
   revalidatePath("/sessions");
@@ -139,6 +141,10 @@ export async function upsertCourseAction(formData: FormData) {
     badge: "",
     category: parseCourseCategory(formData.get("category")),
     priceCad: Number(formData.get("priceCad") ?? 0),
+    discountPercent: clampDiscountPercent(Number(formData.get("discountPercent") ?? 0)),
+    presentationDiscountPercent: clampDiscountPercent(
+      Number(formData.get("presentationDiscountPercent") ?? 50),
+    ),
     image: formData.get("image")?.toString() ?? "",
     imageAlt: formData.get("imageAlt")?.toString() ?? "",
     imageFocusX: parseImageFocusValue(formData.get("imageFocusX")),
@@ -278,6 +284,10 @@ export async function upsertPrivateSessionAction(formData: FormData) {
     description: formData.get("description")?.toString() ?? "",
     duration: formData.get("duration")?.toString() ?? "",
     priceCad: Number(formData.get("priceCad") ?? 0),
+    discountPercent: clampDiscountPercent(Number(formData.get("discountPercent") ?? 0)),
+    presentationDiscountPercent: clampDiscountPercent(
+      Number(formData.get("presentationDiscountPercent") ?? 50),
+    ),
     image: formData.get("image")?.toString() ?? "",
     imageAlt: formData.get("imageAlt")?.toString() ?? "",
     imageFocusX: parseImageFocusValue(formData.get("imageFocusX")),

@@ -23,6 +23,8 @@ type CourseItem = {
   badge: string;
   category?: CourseCategory;
   priceCad: number;
+  listPriceCad?: number;
+  discountPercent?: number;
   image: string;
   imageAlt: string;
   imageFocusX?: number;
@@ -194,19 +196,37 @@ function CourseBadge({ label }: { label: string }) {
 
 function PriceTag({
   priceCad,
+  listPriceCad,
+  discountPercent = 0,
   large = false,
 }: {
   priceCad: number;
+  listPriceCad?: number;
+  discountPercent?: number;
   large?: boolean;
 }) {
+  const showList =
+    discountPercent > 0 && typeof listPriceCad === "number" && listPriceCad > priceCad;
+
   return (
     <div className={large ? "workshop-price-large" : "workshop-price-tag"}>
+      {showList ? (
+        <span
+          className={
+            large
+              ? "mb-1 block font-serif text-2xl text-white/45 line-through md:text-3xl"
+              : "mb-0.5 block font-serif text-lg text-white/45 line-through"
+          }
+        >
+          {formatCad(listPriceCad)}
+        </span>
+      ) : null}
       <span className={large ? "font-serif text-5xl text-gold md:text-6xl" : "font-serif text-3xl text-gold"}>
         {formatCad(priceCad)}
       </span>
       {!large && (
         <span className="mt-0.5 block text-[0.62rem] uppercase tracking-[0.22em] text-white/45">
-          Course Fee
+          {showList ? `${discountPercent}% off · Course Fee` : "Course Fee"}
         </span>
       )}
     </div>
@@ -370,7 +390,12 @@ function FeaturedCourse({
             >
               <div>
                 <p className="text-[0.68rem] uppercase tracking-[0.24em] text-white/78">Course Fee</p>
-                <PriceTag priceCad={course.priceCad} large />
+                <PriceTag
+                  priceCad={course.priceCad}
+                  listPriceCad={course.listPriceCad}
+                  discountPercent={course.discountPercent}
+                  large
+                />
               </div>
               <EnrollButton
                 course={course}
@@ -421,7 +446,12 @@ function FeaturedCourseStatic({ course }: { course: CourseItem }) {
           <div className="mt-8 flex flex-wrap items-end justify-between gap-4 border-t border-white/25 pt-6">
             <div>
               <p className="text-[0.68rem] uppercase tracking-[0.24em] text-white/78">Course Fee</p>
-              <PriceTag priceCad={course.priceCad} large />
+              <PriceTag
+                priceCad={course.priceCad}
+                listPriceCad={course.listPriceCad}
+                discountPercent={course.discountPercent}
+                large
+              />
             </div>
             <EnrollButton
               course={course}
@@ -494,7 +524,14 @@ function UpcomingCourseCard({
         <div className="course-tile-footer">
           <EnrollButton course={course} className="course-tile-enroll px-5 py-2.5 text-[0.72rem] md:text-[0.75rem]" />
           <div className="course-tile-fee-block">
-            <p className="course-tile-fee-label">Course Fee</p>
+            <p className="course-tile-fee-label">
+              {(course.discountPercent ?? 0) > 0 ? `${course.discountPercent}% off · Course Fee` : "Course Fee"}
+            </p>
+            {(course.discountPercent ?? 0) > 0 &&
+            typeof course.listPriceCad === "number" &&
+            course.listPriceCad > course.priceCad ? (
+              <p className="course-tile-fee text-white/45 line-through">{formatCad(course.listPriceCad)}</p>
+            ) : null}
             <p className="course-tile-fee">{formatCad(course.priceCad)}</p>
           </div>
           <p className="course-tile-duration">{course.duration}</p>
@@ -535,7 +572,14 @@ function UpcomingCourseCardContent({ course }: { course: CourseItem }) {
         <div className="course-tile-footer">
           <EnrollButton course={course} className="course-tile-enroll px-5 py-2.5 text-[0.72rem] md:text-[0.75rem]" />
           <div className="course-tile-fee-block">
-            <p className="course-tile-fee-label">Course Fee</p>
+            <p className="course-tile-fee-label">
+              {(course.discountPercent ?? 0) > 0 ? `${course.discountPercent}% off · Course Fee` : "Course Fee"}
+            </p>
+            {(course.discountPercent ?? 0) > 0 &&
+            typeof course.listPriceCad === "number" &&
+            course.listPriceCad > course.priceCad ? (
+              <p className="course-tile-fee text-white/45 line-through">{formatCad(course.listPriceCad)}</p>
+            ) : null}
             <p className="course-tile-fee">{formatCad(course.priceCad)}</p>
           </div>
           <p className="course-tile-duration">{course.duration}</p>
