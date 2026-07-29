@@ -4,6 +4,7 @@ import {
   introductionQuestionsSlide,
 } from "@/lib/admin/course-material-introduction-mind-body-soul";
 import { reikiLevel1Day1 } from "@/lib/admin/course-material-reiki-level-1-day-1";
+import { reikiLevel1Day2 } from "@/lib/admin/course-material-reiki-level-1-day-2";
 
 export type CourseMaterialSlide =
   | {
@@ -263,10 +264,27 @@ export type CourseMaterialSlide =
       };
       sections: readonly {
         heading: string;
+        /** Optional course/product name shown as a secondary heading above `text`. */
+        subheading?: string;
         items?: readonly string[];
         text?: string;
+        /** Elevates copy for ceremonial moments (e.g. certificate presentation). */
+        tone?: "honor";
       }[];
       closing?: string;
+    }
+  | {
+      kind: "practitioner-responsibility";
+      eyebrow: string;
+      paragraphs: readonly string[];
+      sessionTitle: string;
+      sessionIncludes: readonly string[];
+      importantTitle: string;
+      important: readonly string[];
+      principles: readonly {
+        heading: string;
+        text: string;
+      }[];
     }
   | {
       kind: "course-pricing";
@@ -319,13 +337,6 @@ export type CourseMaterialDeck = {
   };
   slides: readonly CourseMaterialSlide[];
 };
-
-const soularaBrandLogo = {
-  src: "/course-material/reiki-level-1/cover-logo.png",
-  alt: "Soulara Healing Training Academy",
-  width: 939,
-  height: 271,
-} as const;
 
 export const introductionToReiki: CourseMaterialDeck = {
   slug: "introduction-to-reiki",
@@ -777,62 +788,7 @@ export const introductionToReiki: CourseMaterialDeck = {
   ],
 };
 
-export { reikiLevel1Day1 };
-
-export const reikiLevel1Day2: CourseMaterialDeck = {
-  slug: "reiki-level-1-day-2",
-  title: "Reiki Level 1",
-  series: "Reiki Level 1",
-  dayLabel: "Day 2",
-  duration: "2 Hours",
-  sessionDurationMinutes: 120,
-  status: "coming-soon",
-  description:
-    "Day 2 of the two-day Reiki Level 1 certification — deepening practice, integration, and closing. Content will follow once Day 1 is complete.",
-  brandLogo: soularaBrandLogo,
-  slides: [
-    {
-      kind: "session-start",
-      eyebrow: "Day 2 · Two-day certification",
-      title: "Reiki Level 1",
-    },
-    {
-      kind: "cover",
-      eyebrow: "Soulara Healing Academy",
-      title: "Reiki Level 1",
-      subtitle: "The Awakening — Day 2 of your certification journey",
-      teacher: "Vanita Bassi",
-      teacherRoles:
-        "Reiki Master · PLR Therapist · Akashic Reader · Clinical Hypnotherapist · NLP Coach",
-      journeyLine: "Continuing your Reiki path…",
-      duration: "Day 2",
-      teacherImage: {
-        src: "/about/vanita-portrait-v3.jpg",
-        alt: "Vanita Bassi, founder of Soulara Healing Academy",
-        width: 1200,
-        height: 1500,
-      },
-    },
-    {
-      kind: "bullets",
-      eyebrow: "Coming soon",
-      title: "Day 2 awaits",
-      lead: "This day will be built after Day 1 content is finalized.",
-      items: [
-        "Deepening what began on Day 1",
-        "Practice, integration, and confidence",
-        "Certification closing and next steps",
-      ],
-    },
-    {
-      kind: "quote",
-      eyebrow: "Day 2",
-      title: "Content coming next",
-      quote:
-        "Once Day 1 is complete, share your Day 2 document and this deck will be filled with the same care.",
-    },
-  ],
-};
+export { reikiLevel1Day1, reikiLevel1Day2 };
 
 export const courseMaterialDecks: readonly CourseMaterialDeck[] = [
   introductionToReiki,
