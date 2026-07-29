@@ -8,7 +8,15 @@ import {
 } from "framer-motion";
 import Image from "next/image";
 import Link from "next/link";
-import { useCallback, useEffect, useRef, useState, type CSSProperties, type ReactNode } from "react";
+import {
+  Fragment,
+  useCallback,
+  useEffect,
+  useRef,
+  useState,
+  type CSSProperties,
+  type ReactNode,
+} from "react";
 import { AuraDiagramVisual } from "@/components/admin/course-material/AuraDiagramVisual";
 import { BalancingChakrasVisual } from "@/components/admin/course-material/BalancingChakrasVisual";
 import { ChakrasGuideVisual } from "@/components/admin/course-material/ChakrasGuideVisual";
@@ -27,6 +35,17 @@ const DEFAULT_SESSION_MINUTES = 60;
 function sessionMsForDeck(deck: CourseMaterialDeck) {
   const minutes = deck.sessionDurationMinutes ?? DEFAULT_SESSION_MINUTES;
   return Math.max(1, minutes) * 60 * 1000;
+}
+
+/** Lightweight `**bold**` markers for course-material copy. */
+function renderInlineEmphasis(text: string): ReactNode {
+  const parts = text.split(/(\*\*[^*]+\*\*)/g);
+  return parts.map((part, index) => {
+    if (part.startsWith("**") && part.endsWith("**") && part.length > 4) {
+      return <strong key={index}>{part.slice(2, -2)}</strong>;
+    }
+    return <Fragment key={index}>{part}</Fragment>;
+  });
 }
 
 const slideContainer = {
@@ -446,7 +465,7 @@ function SlideStory({
         <motion.div className="cm-story-paragraphs" variants={reduceMotion ? undefined : slideContainer}>
           {slide.paragraphs.map((paragraph) => (
             <motion.p key={paragraph} variants={reduceMotion ? undefined : slideItem}>
-              {paragraph}
+              {renderInlineEmphasis(paragraph)}
             </motion.p>
           ))}
         </motion.div>
@@ -1190,6 +1209,7 @@ function SlideImageFocus({
               sizes="(max-width: 899px) 96vw, min(96vw, 1600px)"
               quality={100}
               priority
+              unoptimized
             />
           </div>
         </div>
@@ -1200,6 +1220,71 @@ function SlideImageFocus({
           {slide.caption}
         </motion.p>
       ) : null}
+    </motion.div>
+  );
+}
+
+function SlidePractitionerResponsibility({
+  slide,
+  reduceMotion,
+}: {
+  slide: Extract<CourseMaterialSlide, { kind: "practitioner-responsibility" }>;
+  reduceMotion: boolean;
+}) {
+  return (
+    <motion.div
+      className="cm-slide cm-slide-practitioner-responsibility"
+      variants={reduceMotion ? undefined : slideContainer}
+      initial={reduceMotion ? false : "hidden"}
+      animate={reduceMotion ? undefined : "show"}
+    >
+      <header className="cm-pr-header">
+        <motion.p className="cm-slide-eyebrow" variants={reduceMotion ? undefined : slideItem}>
+          {slide.eyebrow}
+        </motion.p>
+        <motion.div className="cm-pr-intro" variants={reduceMotion ? undefined : slideContainer}>
+          {slide.paragraphs.map((paragraph) => (
+            <motion.p key={paragraph} className="cm-pr-intro-text" variants={reduceMotion ? undefined : slideItem}>
+              {renderInlineEmphasis(paragraph)}
+            </motion.p>
+          ))}
+        </motion.div>
+      </header>
+
+      <div className="cm-pr-layout">
+        <motion.section className="cm-pr-panel cm-pr-session" variants={reduceMotion ? undefined : slideItem}>
+          <h3 className="cm-pr-panel-title">{slide.sessionTitle}</h3>
+          <ul className="cm-pr-session-list">
+            {slide.sessionIncludes.map((item) => (
+              <li key={item}>{item}</li>
+            ))}
+          </ul>
+        </motion.section>
+
+        <div className="cm-pr-side">
+          <motion.section className="cm-pr-panel cm-pr-important" variants={reduceMotion ? undefined : slideItem}>
+            <h3 className="cm-pr-panel-title">{slide.importantTitle}</h3>
+            {slide.important.map((paragraph) => (
+              <p key={paragraph} className="cm-pr-important-text">
+                {paragraph}
+              </p>
+            ))}
+          </motion.section>
+
+          <motion.div className="cm-pr-principles" variants={reduceMotion ? undefined : slideContainer}>
+            {slide.principles.map((principle) => (
+              <motion.article
+                key={principle.heading}
+                className="cm-pr-principle"
+                variants={reduceMotion ? undefined : slideItem}
+              >
+                <h4 className="cm-pr-principle-heading">{principle.heading}</h4>
+                <p className="cm-pr-principle-text">{principle.text}</p>
+              </motion.article>
+            ))}
+          </motion.div>
+        </div>
+      </div>
     </motion.div>
   );
 }
@@ -1266,11 +1351,34 @@ function SlideTopicSections({
           {slide.sections.map((section) => (
             <motion.section
               key={section.heading}
-              className="cm-topic-section"
+              className={[
+                "cm-topic-section",
+                section.tone === "honor" ? "cm-topic-section-honor" : "",
+              ]
+                .filter(Boolean)
+                .join(" ")}
               variants={reduceMotion ? undefined : slideItem}
             >
               <h3 className="cm-topic-section-heading">{section.heading}</h3>
-              {section.text ? <p className="cm-topic-section-text">{section.text}</p> : null}
+              {section.tone === "honor" ? (
+                <>
+                  {section.text ? (
+                    <p className="cm-topic-section-text">{renderInlineEmphasis(section.text)}</p>
+                  ) : null}
+                  {section.subheading ? (
+                    <p className="cm-topic-section-subheading">{section.subheading}</p>
+                  ) : null}
+                </>
+              ) : (
+                <>
+                  {section.subheading ? (
+                    <p className="cm-topic-section-subheading">{section.subheading}</p>
+                  ) : null}
+                  {section.text ? (
+                    <p className="cm-topic-section-text">{renderInlineEmphasis(section.text)}</p>
+                  ) : null}
+                </>
+              )}
               {section.items?.length ? (
                 <ul className="cm-topic-section-list">
                   {section.items.map((item) => (
@@ -1472,6 +1580,9 @@ export function CourseMaterialSlideView({
       break;
     case "topic-sections":
       body = <SlideTopicSections slide={slide} reduceMotion={reduceMotion} />;
+      break;
+    case "practitioner-responsibility":
+      body = <SlidePractitionerResponsibility slide={slide} reduceMotion={reduceMotion} />;
       break;
     case "course-pricing":
       body = <SlideCoursePricing slide={slide} reduceMotion={reduceMotion} />;
