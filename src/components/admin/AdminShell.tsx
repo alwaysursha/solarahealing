@@ -122,6 +122,9 @@ export function AdminField({
   type = "text",
   rows,
   placeholder,
+  hint,
+  min,
+  max,
 }: {
   label: string;
   name: string;
@@ -129,6 +132,9 @@ export function AdminField({
   type?: string;
   rows?: number;
   placeholder?: string;
+  hint?: string;
+  min?: number;
+  max?: number;
 }) {
   const className = "admin-field-input mt-1.5 w-full rounded-xl px-3 py-2.5 text-sm outline-none";
 
@@ -149,9 +155,12 @@ export function AdminField({
           type={type}
           defaultValue={defaultValue}
           placeholder={placeholder}
+          min={min}
+          max={max}
           className={className}
         />
       )}
+      {hint ? <span className="mt-1 block text-xs opacity-65">{hint}</span> : null}
     </label>
   );
 }

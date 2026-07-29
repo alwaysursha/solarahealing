@@ -5,6 +5,7 @@ import { AdminDeleteButton } from "@/components/admin/AdminDeleteButton";
 import { AdminField, AdminSelect, AdminSubmit } from "@/components/admin/AdminShell";
 import { deleteCourseFormAction, upsertCourseAction } from "@/lib/admin/actions";
 import { formatCad, type CourseWithSales } from "@/lib/admin/catalog-stats";
+import { effectivePriceCad } from "@/lib/pricing";
 import {
   COURSE_CATEGORIES,
   COURSE_LEVELS,
@@ -82,14 +83,26 @@ export function CourseCatalogCard({ course }: { course: CourseWithSales }) {
             <span className="admin-catalog-chip rounded-full px-3 py-1 text-xs">{course.dateLabel}</span>
             <span className="admin-catalog-chip rounded-full px-3 py-1 text-xs">{course.duration}</span>
             <span className="admin-catalog-chip admin-catalog-chip-price rounded-full px-3 py-1 text-xs font-semibold">
-              {formatCad(course.priceCad)}
+              {formatCad(effectivePriceCad(course.priceCad, course.discountPercent))}
             </span>
+            {course.discountPercent > 0 ? (
+              <span className="admin-catalog-chip rounded-full px-3 py-1 text-xs font-semibold">
+                Store {course.discountPercent}% off
+              </span>
+            ) : null}
+            {course.presentationDiscountPercent > 0 ? (
+              <span className="admin-catalog-chip rounded-full px-3 py-1 text-xs font-semibold">
+                Slide {course.presentationDiscountPercent}% off
+              </span>
+            ) : null}
           </div>
 
           <div className="admin-catalog-card-metrics mt-5 grid gap-3 sm:grid-cols-3">
             <div className="admin-catalog-metric rounded-xl px-3 py-2.5">
               <p className="text-[0.58rem] font-semibold uppercase tracking-[0.18em] opacity-70">Checkout price</p>
-              <p className="mt-1 font-serif text-xl">{formatCad(course.priceCad)}</p>
+              <p className="mt-1 font-serif text-xl">
+                {formatCad(effectivePriceCad(course.priceCad, course.discountPercent))}
+              </p>
             </div>
             <div className="admin-catalog-metric rounded-xl px-3 py-2.5">
               <p className="text-[0.58rem] font-semibold uppercase tracking-[0.18em] opacity-70">Units sold</p>
@@ -130,6 +143,24 @@ export function CourseCatalogCard({ course }: { course: CourseWithSales }) {
                   options={levelOptions}
                 />
                 <AdminField label="Price (CAD)" name="priceCad" defaultValue={course.priceCad} type="number" />
+                <AdminField
+                  label="Storefront discount %"
+                  name="discountPercent"
+                  defaultValue={course.discountPercent}
+                  type="number"
+                  min={0}
+                  max={100}
+                  hint="0–100. Updates website price and Stripe checkout."
+                />
+                <AdminField
+                  label="Presentation discount %"
+                  name="presentationDiscountPercent"
+                  defaultValue={course.presentationDiscountPercent}
+                  type="number"
+                  min={0}
+                  max={100}
+                  hint="0–100. Course material pricing slides only — not checkout."
+                />
                 <AdminField label="Date label" name="dateLabel" defaultValue={course.dateLabel} />
                 <AdminField label="Duration" name="duration" defaultValue={course.duration} />
                 <AdminCatalogImageField

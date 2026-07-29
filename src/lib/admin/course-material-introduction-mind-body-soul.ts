@@ -150,6 +150,12 @@ export const introductionMindBodySoulSlides: CourseMaterialSlide[] = [
       "Loss of inspiration",
       "Feeling spiritually exhausted",
     ],
+    image: {
+      src: asset("slide-08-signs-soul-needs-healing.png"),
+      alt: "Signs the soul needs healing: disconnected from purpose, emotional pain, exhaustion, and struggling to feel love or connection",
+      width: 1536,
+      height: 1024,
+    },
   },
   {
     kind: "topic-sections",
@@ -289,22 +295,13 @@ export const introductionCoursePricingSlide: CourseMaterialSlide = {
   kind: "course-pricing",
   eyebrow: "Next steps",
   title: "Course Pricing",
-  banner: "50% off if you sign up today",
+  banner: "Upto 50% off if you sign up today",
   items: [
-    {
-      name: "Reiki Introduction",
-      price: "Free",
-      note: "2-hour workshop",
-      image: {
-        src: pricingAsset("intro.png"),
-        alt: "Reiki Introduction workshop cover",
-        width: 640,
-        height: 400,
-      },
-    },
     {
       name: "Reiki Level 1",
       price: "$200",
+      catalogSlug: "reiki-level-1",
+      catalogKind: "course",
       image: {
         src: pricingAsset("reiki-1.png"),
         alt: "Reiki Level 1 course cover",
@@ -315,6 +312,8 @@ export const introductionCoursePricingSlide: CourseMaterialSlide = {
     {
       name: "Reiki Level 2",
       price: "$300",
+      catalogSlug: "reiki-level-2",
+      catalogKind: "course",
       image: {
         src: pricingAsset("reiki-2.png"),
         alt: "Reiki Level 2 course cover",
@@ -325,6 +324,8 @@ export const introductionCoursePricingSlide: CourseMaterialSlide = {
     {
       name: "Reiki Level 3",
       price: "$500",
+      catalogSlug: "reiki-level-3",
+      catalogKind: "course",
       image: {
         src: pricingAsset("reiki-3.png"),
         alt: "Reiki Level 3 course cover",
@@ -333,32 +334,26 @@ export const introductionCoursePricingSlide: CourseMaterialSlide = {
       },
     },
     {
-      name: "Reiki Master Teacher",
+      name: "Reiki Master",
       price: "$800",
+      catalogSlug: "master-teacher",
+      catalogKind: "course",
       image: {
         src: pricingAsset("reiki-master.png"),
-        alt: "Reiki Master Teacher course cover",
+        alt: "Reiki Master course cover",
         width: 640,
         height: 640,
       },
     },
     {
-      name: "Pendulum Dowsing",
-      price: "$300",
-      image: {
-        src: pricingAsset("dowsing.png"),
-        alt: "Pendulum Dowsing certification cover",
-        width: 426,
-        height: 640,
-      },
-    },
-    {
-      name: "PLR & Future Progression",
+      name: "Past Life Regression & Future Progression",
       price: "$200",
       note: "Session",
+      catalogSlug: "past-life-regression",
+      catalogKind: "private_session",
       image: {
         src: pricingAsset("plr-session.png"),
-        alt: "Past Life Regression session cover",
+        alt: "Past Life Regression and Future Progression session cover",
         width: 640,
         height: 370,
       },
@@ -366,6 +361,8 @@ export const introductionCoursePricingSlide: CourseMaterialSlide = {
     {
       name: "Past Life Regression Master",
       price: "$500",
+      catalogSlug: "past-life-regression-master",
+      catalogKind: "course",
       image: {
         src: pricingAsset("plr-master.png"),
         alt: "Past Life Regression Master course cover",
@@ -376,6 +373,8 @@ export const introductionCoursePricingSlide: CourseMaterialSlide = {
     {
       name: "Akashic Records Reading",
       price: "$150",
+      catalogSlug: "akashic-reading",
+      catalogKind: "private_session",
       image: {
         src: pricingAsset("akashic-reading.png"),
         alt: "Akashic Records Reading cover",
@@ -386,6 +385,8 @@ export const introductionCoursePricingSlide: CourseMaterialSlide = {
     {
       name: "Akashic Records Reader Master",
       price: "$500",
+      catalogSlug: "akashic-records-reader-master",
+      catalogKind: "course",
       image: {
         src: pricingAsset("akashic-reading.png"),
         alt: "Akashic Records Reader Master cover",
@@ -397,10 +398,24 @@ export const introductionCoursePricingSlide: CourseMaterialSlide = {
       name: "Clinical Hypnotherapy",
       price: "$300",
       note: "Session",
+      catalogSlug: "clinical-hypnotherapy",
+      catalogKind: "private_session",
       image: {
         src: pricingAsset("hypnotherapy.png"),
         alt: "Clinical Hypnotherapy session cover",
         width: 480,
+        height: 640,
+      },
+    },
+    {
+      name: "Pendulum Dowsing",
+      price: "$300",
+      catalogSlug: "pendulum-dowsing",
+      catalogKind: "course",
+      image: {
+        src: pricingAsset("dowsing.png"),
+        alt: "Pendulum Dowsing certification cover",
+        width: 426,
         height: 640,
       },
     },

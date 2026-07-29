@@ -32,6 +32,24 @@ function NewSessionPanel() {
             <AdminField label="Title" name="title" />
             <AdminField label="Slug" name="slug" />
             <AdminField label="Price (CAD)" name="priceCad" defaultValue={180} type="number" />
+            <AdminField
+              label="Storefront discount %"
+              name="discountPercent"
+              defaultValue={0}
+              type="number"
+              min={0}
+              max={100}
+              hint="0–100. Updates website price and Stripe checkout."
+            />
+            <AdminField
+              label="Presentation discount %"
+              name="presentationDiscountPercent"
+              defaultValue={50}
+              type="number"
+              min={0}
+              max={100}
+              hint="0–100. Course material pricing slides only — not checkout."
+            />
             <AdminField label="Duration" name="duration" defaultValue="60 minutes · one-to-one" />
             <AdminCatalogImageField label="Session image" aspect="16:10" />
             <label className="admin-catalog-checkbox flex items-center gap-2 text-sm">

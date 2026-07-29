@@ -18,6 +18,7 @@ import {
   type CourseMaterialDeck,
   type CourseMaterialSlide,
 } from "@/lib/admin/course-material";
+import { discountedSlidePrice } from "@/lib/pricing";
 
 const ease: [number, number, number, number] = [0.22, 1, 0.36, 1];
 const SWIPE_THRESHOLD = 48;
@@ -231,34 +232,20 @@ function SlideBullets({
   reduceMotion: boolean;
 }) {
   const hasImage = Boolean(slide.image);
+  const landscape =
+    hasImage && slide.image ? slide.image.width >= slide.image.height : false;
 
   return (
     <motion.div
       className={[
         "cm-slide cm-slide-bullets",
         hasImage ? "cm-slide-bullets-media" : "",
+        landscape ? "cm-slide-bullets-media-wide" : "",
       ].join(" ")}
       variants={reduceMotion ? undefined : slideContainer}
       initial={reduceMotion ? false : "hidden"}
       animate={reduceMotion ? undefined : "show"}
     >
-      {hasImage && slide.image ? (
-        <motion.div className="cm-slide-media" variants={reduceMotion ? undefined : slideMedia}>
-          <div className="cm-slide-media-frame">
-            <Image
-              src={slide.image.src}
-              alt={slide.image.alt}
-              width={slide.image.width}
-              height={slide.image.height}
-              className="cm-slide-media-img"
-              quality={95}
-              priority
-            />
-            <span className="cm-slide-media-glow" aria-hidden />
-          </div>
-        </motion.div>
-      ) : null}
-
       <div className="cm-slide-copy">
         {slide.eyebrow ? (
           <motion.p className="cm-slide-eyebrow" variants={reduceMotion ? undefined : slideItem}>
@@ -281,6 +268,28 @@ function SlideBullets({
           ))}
         </motion.ul>
       </div>
+
+      {hasImage && slide.image ? (
+        <motion.div className="cm-slide-media" variants={reduceMotion ? undefined : slideMedia}>
+          <div
+            className={[
+              "cm-slide-media-frame",
+              landscape ? "cm-slide-media-frame-wide" : "",
+            ].join(" ")}
+          >
+            <Image
+              src={slide.image.src}
+              alt={slide.image.alt}
+              width={slide.image.width}
+              height={slide.image.height}
+              className="cm-slide-media-img"
+              quality={95}
+              priority
+            />
+            <span className="cm-slide-media-glow" aria-hidden />
+          </div>
+        </motion.div>
+      ) : null}
     </motion.div>
   );
 }
@@ -465,13 +474,8 @@ function SlideStory({
   );
 }
 
-function todayPriceFromOriginal(price: string): string | null {
-  const trimmed = price.trim();
-  if (/^free$/i.test(trimmed)) return null;
-  const amount = Number(trimmed.replace(/[^0-9.]/g, ""));
-  if (!Number.isFinite(amount)) return null;
-  const half = amount / 2;
-  return Number.isInteger(half) ? `$${half}` : `$${half.toFixed(2)}`;
+function todayPriceFromOriginal(price: string, discountPercent = 50): string | null {
+  return discountedSlidePrice(price, discountPercent);
 }
 
 function SlideCoursePricing({
@@ -511,7 +515,8 @@ function SlideCoursePricing({
 
       <motion.ul className="cm-course-pricing-grid" variants={reduceMotion ? undefined : slideContainer}>
         {slide.items.map((item) => {
-          const today = todayPriceFromOriginal(item.price);
+          const discountPercent = item.presentationDiscountPercent ?? 50;
+          const today = todayPriceFromOriginal(item.price, discountPercent);
           return (
             <motion.li key={item.name} className="cm-course-pricing-card" variants={reduceMotion ? undefined : slideItem}>
               <div className="cm-course-pricing-card-media">
@@ -523,6 +528,7 @@ function SlideCoursePricing({
                   className="cm-course-pricing-card-img"
                   quality={85}
                 />
+                {today ? <span className="cm-course-pricing-off">{discountPercent}% OFF</span> : null}
               </div>
               <div className="cm-course-pricing-card-copy">
                 <p className="cm-course-pricing-card-name">{item.name}</p>

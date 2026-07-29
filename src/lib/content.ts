@@ -16,6 +16,7 @@ import {
   courseCategoryLabel,
   courseLevelLabel,
 } from "@/lib/course-taxonomy";
+import { clampDiscountPercent, effectivePriceCad } from "@/lib/pricing";
 import { prisma } from "@/lib/prisma";
 import {
   aboutContent,
@@ -130,6 +131,8 @@ export async function getPublishedCourses() {
       duration: course.duration,
       badge: courseCategoryLabel(course.category),
       category: course.category,
+      listPriceCad: course.priceCad,
+      discountPercent: 0,
       priceCad: course.priceCad,
       image: course.image,
       imageAlt: course.imageAlt,
@@ -140,24 +143,30 @@ export async function getPublishedCourses() {
     }));
   }
 
-  return rows.map((course) => ({
-    id: course.id,
-    slug: course.slug,
-    title: course.title,
-    subHeading: course.subHeading,
-    description: course.description,
-    date: course.dateLabel,
-    duration: course.duration,
-    badge: courseCategoryLabel(course.category),
-    category: course.category,
-    priceCad: course.priceCad,
-    image: course.image,
-    imageAlt: course.imageAlt,
-    imageFocusX: course.imageFocusX,
-    imageFocusY: course.imageFocusY,
-    level: courseLevelLabel(course.level),
-    levelKey: course.level,
-  }));
+  return rows.map((course) => {
+    const discountPercent = clampDiscountPercent(course.discountPercent);
+    const listPriceCad = course.priceCad;
+    return {
+      id: course.id,
+      slug: course.slug,
+      title: course.title,
+      subHeading: course.subHeading,
+      description: course.description,
+      date: course.dateLabel,
+      duration: course.duration,
+      badge: courseCategoryLabel(course.category),
+      category: course.category,
+      listPriceCad,
+      discountPercent,
+      priceCad: effectivePriceCad(listPriceCad, discountPercent),
+      image: course.image,
+      imageAlt: course.imageAlt,
+      imageFocusX: course.imageFocusX,
+      imageFocusY: course.imageFocusY,
+      level: courseLevelLabel(course.level),
+      levelKey: course.level,
+    };
+  });
 }
 
 export async function getPublishedWorkshops() {
@@ -211,25 +220,33 @@ export async function getPublishedPrivateSessions() {
       slug: session.id,
       date: "Schedule after booking",
       badge: "Private session",
+      listPriceCad: session.priceCad,
+      discountPercent: 0,
       imageFocusX: 50,
       imageFocusY: 50,
     }));
   }
 
-  return rows.map((session) => ({
-    id: session.id,
-    slug: session.slug,
-    title: session.title,
-    description: session.description,
-    date: "Schedule after booking",
-    duration: session.duration,
-    badge: "Private session",
-    priceCad: session.priceCad,
-    image: session.image,
-    imageAlt: session.imageAlt,
-    imageFocusX: session.imageFocusX,
-    imageFocusY: session.imageFocusY,
-  }));
+  return rows.map((session) => {
+    const discountPercent = clampDiscountPercent(session.discountPercent);
+    const listPriceCad = session.priceCad;
+    return {
+      id: session.id,
+      slug: session.slug,
+      title: session.title,
+      description: session.description,
+      date: "Schedule after booking",
+      duration: session.duration,
+      badge: "Private session",
+      listPriceCad,
+      discountPercent,
+      priceCad: effectivePriceCad(listPriceCad, discountPercent),
+      image: session.image,
+      imageAlt: session.imageAlt,
+      imageFocusX: session.imageFocusX,
+      imageFocusY: session.imageFocusY,
+    };
+  });
 }
 
 export async function getPublishedCourseById(idOrSlug: string) {

@@ -18,6 +18,8 @@ export type CatalogDetailItem = {
   duration: string;
   badge: string;
   priceCad: number;
+  listPriceCad?: number;
+  discountPercent?: number;
   image: string;
   imageAlt: string;
   imageFocusX?: number;
@@ -166,7 +168,18 @@ export function CatalogDetailView({
 
             <div className="catalog-detail-invest">
               <div>
-                <p className="catalog-detail-meta-label">{copy.feeLabel}</p>
+                <p className="catalog-detail-meta-label">
+                  {(item.discountPercent ?? 0) > 0
+                    ? `${item.discountPercent}% off · ${copy.feeLabel}`
+                    : copy.feeLabel}
+                </p>
+                {(item.discountPercent ?? 0) > 0 &&
+                typeof item.listPriceCad === "number" &&
+                item.listPriceCad > item.priceCad ? (
+                  <p className="catalog-detail-price text-[1.35rem] text-ink/40 line-through">
+                    {formatCad(item.listPriceCad)}
+                  </p>
+                ) : null}
                 <p className="catalog-detail-price">{formatCad(item.priceCad)}</p>
               </div>
               <CatalogDetailCta

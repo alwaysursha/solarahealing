@@ -276,9 +276,14 @@ export type CourseMaterialSlide =
       lead?: string;
       items: readonly {
         name: string;
-        /** Regular / list price shown on the slide. */
+        /** Fallback / list price shown on the slide when catalog is unavailable. */
         price: string;
         note?: string;
+        /** Admin catalog slug used to live-wire price + presentation discount. */
+        catalogSlug?: string;
+        catalogKind?: "course" | "private_session";
+        /** Hydrated from admin; drives the slide % OFF badge. */
+        presentationDiscountPercent?: number;
         image: {
           src: string;
           alt: string;
@@ -523,6 +528,42 @@ export const introductionToReiki: CourseMaterialDeck = {
         width: 1024,
         height: 1536,
       },
+    },
+    {
+      kind: "topic-sections",
+      eyebrow: "Energy anatomy",
+      title: "Ida, Pingala & Sushumna",
+      lead:
+        "The Kundalini travels throughout your body by way of three energy channels, or nadis. The three nadis are the left channel, the right channel and the center channel. All three work perfectly together to integrate and balance the flow of your Kundalini. Each also plays a specific role in maintaining your emotions, moods and physical health.",
+      image: {
+        src: "/course-material/introduction-to-reiki/ida-pingala-nadis-portrait.png",
+        alt: "Meditation figure showing Ida, Pingala, and Sushumna nadi channels with chakra labels",
+        width: 1024,
+        height: 1536,
+      },
+      sections: [
+        {
+          heading: "Pingala Serpent",
+          text: "Represents Nerve Channel — Male, Fire, Solar Element (Venom — Death). Pineal — Pingala related to the opening of the Third Eye.",
+        },
+        {
+          heading: "Ida Serpent",
+          text: "Represents Nerve Channel — Female, Water, Lunar Element (Blood — Life). Pituitary — Ida related to the opening of the Third Eye.",
+        },
+        {
+          heading: "Sushumna Nerve Channel",
+          text: "Neutral-Zero-Null-Line (Balance) — the center channel that integrates Ida and Pingala.",
+        },
+        {
+          heading: "Chakra Points",
+          items: [
+            "Crown Chakra / Bindu / Godhead — Point reached during Enlightenment",
+            "Thalamus · ‘Third Eye’ — Ajna / Brow Chakra",
+            "Chakra Vortices along the spine",
+            "Base Chakra — Coccyx of Spine",
+          ],
+        },
+      ],
     },
     {
       kind: "reiki-activation",

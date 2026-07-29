@@ -1,6 +1,7 @@
 import { OrderItemType, OrderStatus } from "@prisma/client";
 import { auth } from "@/auth";
 import { prisma } from "@/lib/prisma";
+import { effectivePriceCad } from "@/lib/pricing";
 import { cadToStripeAmount, createPaymentIntent, getStripePublishableKey } from "@/lib/stripe";
 import { isValidWhatsAppNumber, normalizeWhatsAppNumber } from "@/lib/whatsapp";
 
@@ -66,7 +67,7 @@ async function resolveCatalogLines(
           itemType: OrderItemType.COURSE,
           title: course.title,
           quantity: item.quantity,
-          unitPriceCad: course.priceCad,
+          unitPriceCad: effectivePriceCad(course.priceCad, course.discountPercent),
         });
         break;
       }
@@ -107,7 +108,7 @@ async function resolveCatalogLines(
           itemType: OrderItemType.PRIVATE_SESSION,
           title: session.title,
           quantity: item.quantity,
-          unitPriceCad: session.priceCad,
+          unitPriceCad: effectivePriceCad(session.priceCad, session.discountPercent),
         });
         break;
       }

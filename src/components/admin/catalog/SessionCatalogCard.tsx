@@ -5,6 +5,7 @@ import { AdminDeleteButton } from "@/components/admin/AdminDeleteButton";
 import { AdminField, AdminSubmit } from "@/components/admin/AdminShell";
 import { deletePrivateSessionFormAction, upsertPrivateSessionAction } from "@/lib/admin/actions";
 import { formatCad, type PrivateSessionWithSales } from "@/lib/admin/catalog-stats";
+import { effectivePriceCad } from "@/lib/pricing";
 import { toImageObjectPosition } from "@/lib/image-focus";
 
 function SessionStatusBadge({ published }: { published: boolean }) {
@@ -60,14 +61,26 @@ export function SessionCatalogCard({ session }: { session: PrivateSessionWithSal
           <div className="mt-4 flex flex-wrap gap-2">
             <span className="admin-catalog-chip rounded-full px-3 py-1 text-xs">{session.duration}</span>
             <span className="admin-catalog-chip admin-catalog-chip-price rounded-full px-3 py-1 text-xs font-semibold">
-              {formatCad(session.priceCad)}
+              {formatCad(effectivePriceCad(session.priceCad, session.discountPercent))}
             </span>
+            {session.discountPercent > 0 ? (
+              <span className="admin-catalog-chip rounded-full px-3 py-1 text-xs font-semibold">
+                Store {session.discountPercent}% off
+              </span>
+            ) : null}
+            {session.presentationDiscountPercent > 0 ? (
+              <span className="admin-catalog-chip rounded-full px-3 py-1 text-xs font-semibold">
+                Slide {session.presentationDiscountPercent}% off
+              </span>
+            ) : null}
           </div>
 
           <div className="admin-catalog-card-metrics mt-5 grid gap-3 sm:grid-cols-3">
             <div className="admin-catalog-metric rounded-xl px-3 py-2.5">
               <p className="text-[0.58rem] font-semibold uppercase tracking-[0.18em] opacity-70">Checkout price</p>
-              <p className="mt-1 font-serif text-xl">{formatCad(session.priceCad)}</p>
+              <p className="mt-1 font-serif text-xl">
+                {formatCad(effectivePriceCad(session.priceCad, session.discountPercent))}
+              </p>
             </div>
             <div className="admin-catalog-metric rounded-xl px-3 py-2.5">
               <p className="text-[0.58rem] font-semibold uppercase tracking-[0.18em] opacity-70">Bookings</p>
@@ -90,6 +103,24 @@ export function SessionCatalogCard({ session }: { session: PrivateSessionWithSal
                 <AdminField label="Title" name="title" defaultValue={session.title} />
                 <AdminField label="Slug" name="slug" defaultValue={session.slug || session.id} />
                 <AdminField label="Price (CAD)" name="priceCad" defaultValue={session.priceCad} type="number" />
+                <AdminField
+                  label="Storefront discount %"
+                  name="discountPercent"
+                  defaultValue={session.discountPercent}
+                  type="number"
+                  min={0}
+                  max={100}
+                  hint="0–100. Updates website price and Stripe checkout."
+                />
+                <AdminField
+                  label="Presentation discount %"
+                  name="presentationDiscountPercent"
+                  defaultValue={session.presentationDiscountPercent}
+                  type="number"
+                  min={0}
+                  max={100}
+                  hint="0–100. Course material pricing slides only — not checkout."
+                />
                 <AdminField label="Duration" name="duration" defaultValue={session.duration} />
                 <AdminCatalogImageField
                   label="Session image"
