@@ -72,11 +72,12 @@ export const reikiLevel2: CourseMaterialDeck = {
       eyebrow: "Sacred tools",
       title: "Reiki Level 2 Symbols",
       image: {
-        src: asset("slide-symbols-overview.png"),
+        src: asset("slide-symbols-overview-v5.png"),
         alt: "Overview of Cho-Ku-Rei, Sei-Hei-Kei, and Hon-Sha-Ze-Sho-Nen",
-        ...landscape,
+        width: 1536,
+        height: 1024,
       },
-      caption: "Power · Balance · Distance — awaken the symbols. Strengthen the healer within.",
+      caption: "Awaken the symbols. Strengthen the healer within.",
     },
     {
       kind: "topic-sections",
@@ -84,8 +85,8 @@ export const reikiLevel2: CourseMaterialDeck = {
       title: "Cho-Ku-Rei",
       lead: "Draw three and a half circles or more and project with intention and visualization.",
       image: {
-        src: asset("slide-cho-ku-rei.png"),
-        alt: "Cho-Ku-Rei symbol of power with key teaching points",
+        src: asset("slide-cho-ku-rei-v2.png"),
+        alt: "Cho-Ku-Rei symbol of power with stroke order and key teaching points",
         ...landscape,
       },
       sections: [
@@ -115,7 +116,7 @@ export const reikiLevel2: CourseMaterialDeck = {
       eyebrow: "Drawing practice",
       title: "How to Draw Cho-Ku-Rei",
       image: {
-        src: asset("slide-draw-cho-ku-rei.png"),
+        src: asset("slide-draw-cho-ku-rei-v2.png"),
         alt: "Stroke order for drawing Cho-Ku-Rei: horizontal, vertical, spiral",
         ...landscape,
       },
@@ -126,9 +127,10 @@ export const reikiLevel2: CourseMaterialDeck = {
       title: "Long Cho-Ku-Rei",
       lead: "We can clean the whole-body aura with Long Cho-Ku-Rei from all four sides.",
       image: {
-        src: asset("slide-long-cho-ku-rei.png"),
-        alt: "Long Cho-Ku-Rei aura cleanse from front, back, left, and right",
-        ...landscape,
+        src: asset("slide-long-cho-ku-rei-v4.png"),
+        alt: "Long Cho-Ku-Rei long downward spiral symbol",
+        width: 1024,
+        height: 1536,
       },
       sections: [
         {
@@ -147,7 +149,7 @@ export const reikiLevel2: CourseMaterialDeck = {
       title: "Sei-Hei-Kei",
       lead: "The symbol of balance. Colour is Pink — it balances the mind and emotions. Used on 4 parts of the body.",
       image: {
-        src: asset("slide-sei-hei-kei.png"),
+        src: asset("slide-sei-hei-kei-v2.png"),
         alt: "Sei-Hei-Kei balance symbol with Male, Female, and apply-on points",
         ...landscape,
       },
@@ -167,11 +169,10 @@ export const reikiLevel2: CourseMaterialDeck = {
       eyebrow: "Practice sequence",
       title: "Use Sequence: 1 + 2 + 1",
       image: {
-        src: asset("slide-sequence-1-2-1.png"),
+        src: asset("slide-sequence-1-2-1-v5.png"),
         alt: "Cho-Ku-Rei, Sei-Hei-Kei, Cho-Ku-Rei sequence 1 + 2 + 1",
         ...landscape,
       },
-      caption: "Apply this sequence on all four parts.",
     },
     {
       kind: "image-focus",
@@ -189,7 +190,7 @@ export const reikiLevel2: CourseMaterialDeck = {
       title: "Hon-Sha-Ze-Sho-Nen",
       lead: "Visualize this symbol for Distance Healing.",
       image: {
-        src: asset("slide-hon-sha.png"),
+        src: asset("slide-hon-sha-v3.png"),
         alt: "Hon-Sha-Ze-Sho-Nen distance and connecting symbol teaching card",
         ...landscape,
       },
@@ -214,22 +215,20 @@ export const reikiLevel2: CourseMaterialDeck = {
       eyebrow: "Healing protocol",
       title: "Healing Sequence for a Person or Situation",
       image: {
-        src: asset("slide-person-sequence.png"),
+        src: asset("slide-person-sequence-v3.png"),
         alt: "Symbol sequence 3 + 1 + 2 + 1 + 1 for person or situation healing",
         ...landscape,
       },
-      caption: "Always use this sequence of symbols to heal a person or situation.",
     },
     {
       kind: "image-focus",
       eyebrow: "Healing protocol",
       title: "Healing an Object or Place",
       image: {
-        src: asset("slide-object-sequence.png"),
+        src: asset("slide-object-sequence-v2.png"),
         alt: "Symbol sequence 3 + 1 + 1 + 1 for object or place healing",
         ...landscape,
       },
-      caption: "Always use these symbol numbers: Connection · Clear Blockage · Healing · Stabilize & Seal.",
     },
     {
       kind: "topic-sections",
