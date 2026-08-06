@@ -23,7 +23,7 @@ export const reikiLevel1Day2: CourseMaterialDeck = {
   slides: [
     {
       kind: "session-start",
-      eyebrow: "Day 2 · Two-day certification",
+      eyebrow: "Day 2 · The Awakening · Two-day certification",
       title: "Reiki Level 1",
     },
     {
@@ -281,7 +281,7 @@ export const reikiLevel1Day2: CourseMaterialDeck = {
         },
         {
           heading: "Recommended next step",
-          subheading: "Reiki Level 2 – The Expansion",
+          subheading: "Reiki Level 2 – The Reinforcements",
           text: "Reiki symbols, distance healing, emotional healing, manifestation, advanced techniques, and practitioner development.",
         },
       ],

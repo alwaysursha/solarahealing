@@ -5,6 +5,7 @@ import {
 } from "@/lib/admin/course-material-introduction-mind-body-soul";
 import { reikiLevel1Day1 } from "@/lib/admin/course-material-reiki-level-1-day-1";
 import { reikiLevel1Day2 } from "@/lib/admin/course-material-reiki-level-1-day-2";
+import { reikiLevel2 } from "@/lib/admin/course-material-reiki-level-2";
 
 export type CourseMaterialSlide =
   | {
@@ -715,7 +716,7 @@ export const introductionToReiki: CourseMaterialDeck = {
         },
         {
           name: "Reiki Level 2",
-          tagline: "The Transformation",
+          tagline: "The Reinforcements",
           text: "Developing deeper healing abilities, emotional healing, distance healing, symbols, energy clearing, and working with subconscious patterns.",
           image: {
             src: "https://pub-a660605547dc4bd8bd829924aacdd025.r2.dev/general/1784431735235-8e34b5cc.jpg",
@@ -788,12 +789,13 @@ export const introductionToReiki: CourseMaterialDeck = {
   ],
 };
 
-export { reikiLevel1Day1, reikiLevel1Day2 };
+export { reikiLevel1Day1, reikiLevel1Day2, reikiLevel2 };
 
 export const courseMaterialDecks: readonly CourseMaterialDeck[] = [
   introductionToReiki,
   reikiLevel1Day1,
   reikiLevel1Day2,
+  reikiLevel2,
 ];
 
 export type CourseMaterialSeriesGroup = {
