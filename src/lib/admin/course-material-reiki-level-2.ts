@@ -72,7 +72,7 @@ export const reikiLevel2: CourseMaterialDeck = {
       eyebrow: "Sacred tools",
       title: "Reiki Level 2 Symbols",
       image: {
-        src: asset("slide-symbols-overview-v5.png"),
+        src: asset("slide-symbols-overview-v8.png"),
         alt: "Overview of Cho-Ku-Rei, Sei-Hei-Kei, and Hon-Sha-Ze-Sho-Nen",
         width: 1536,
         height: 1024,
@@ -127,7 +127,7 @@ export const reikiLevel2: CourseMaterialDeck = {
       title: "Long Cho-Ku-Rei",
       lead: "We can clean the whole-body aura with Long Cho-Ku-Rei from all four sides.",
       image: {
-        src: asset("slide-long-cho-ku-rei-v4.png"),
+        src: asset("slide-long-cho-ku-rei-v5.png"),
         alt: "Long Cho-Ku-Rei long downward spiral symbol",
         width: 1024,
         height: 1536,
@@ -232,12 +232,13 @@ export const reikiLevel2: CourseMaterialDeck = {
     },
     {
       kind: "topic-sections",
+      layout: "stack",
       eyebrow: "Energetic safety",
       title: "Reiki Protection Shield",
       lead: "Visualize Cho-Ku-Rei and create any kind of protective shield with devotion.",
       image: {
-        src: asset("slide-protection-shield.png"),
-        alt: "Neutral meditating figure inside a Cho-Ku-Rei protection shield",
+        src: asset("slide-protection-shield-v3.png"),
+        alt: "Three equal protection shield visualizations: circular, pyramid, and conical rings",
         ...landscape,
       },
       sections: [
