@@ -257,6 +257,8 @@ export type CourseMaterialSlide =
       eyebrow?: string;
       title: string;
       lead?: string;
+      /** Media beside copy (default) or full-width image above copy. */
+      layout?: "columns" | "stack";
       image?: {
         src: string;
         alt: string;

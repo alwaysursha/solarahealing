@@ -1298,6 +1298,7 @@ function SlideTopicSections({
 }) {
   const hasImage = Boolean(slide.image);
   const portrait = hasImage && slide.image ? slide.image.height >= slide.image.width : false;
+  const stack = slide.layout === "stack";
 
   return (
     <motion.div
@@ -1305,6 +1306,7 @@ function SlideTopicSections({
         "cm-slide cm-slide-topic-sections",
         hasImage ? "cm-slide-topic-sections-media" : "",
         portrait ? "cm-slide-topic-sections-portrait" : "",
+        stack ? "cm-slide-topic-sections-stack" : "",
       ].join(" ")}
       variants={reduceMotion ? undefined : slideContainer}
       initial={reduceMotion ? false : "hidden"}
@@ -1315,7 +1317,7 @@ function SlideTopicSections({
           <div
             className={[
               "cm-slide-media-frame",
-              portrait ? "cm-slide-media-frame-portrait" : "cm-slide-media-frame-wide",
+              stack || !portrait ? "cm-slide-media-frame-wide" : "cm-slide-media-frame-portrait",
             ].join(" ")}
           >
             <Image
