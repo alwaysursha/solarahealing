@@ -5,7 +5,10 @@ import {
 } from "@/lib/admin/course-material-introduction-mind-body-soul";
 import { reikiLevel1Day1 } from "@/lib/admin/course-material-reiki-level-1-day-1";
 import { reikiLevel1Day2 } from "@/lib/admin/course-material-reiki-level-1-day-2";
-import { reikiLevel2 } from "@/lib/admin/course-material-reiki-level-2";
+import { reikiLevel2Day1 } from "@/lib/admin/course-material-reiki-level-2-day-1";
+import { reikiLevel2Day2 } from "@/lib/admin/course-material-reiki-level-2-day-2";
+import { reikiLevel3Day1 } from "@/lib/admin/course-material-reiki-level-3-day-1";
+import { reikiLevel3Day2 } from "@/lib/admin/course-material-reiki-level-3-day-2";
 
 export type CourseMaterialSlide =
   | {
@@ -259,6 +262,8 @@ export type CourseMaterialSlide =
       lead?: string;
       /** Media beside copy (default) or full-width image above copy. */
       layout?: "columns" | "stack";
+      /** Tighter type + media so dense slides clear the corner logo. */
+      density?: "compact";
       image?: {
         src: string;
         alt: string;
@@ -273,6 +278,9 @@ export type CourseMaterialSlide =
         text?: string;
         /** Elevates copy for ceremonial moments (e.g. certificate presentation). */
         tone?: "honor";
+        /** Spoken line shown outside the card, visually linked beneath it. */
+        spokenCue?: string;
+        spoken?: string;
       }[];
       closing?: string;
     }
@@ -791,13 +799,16 @@ export const introductionToReiki: CourseMaterialDeck = {
   ],
 };
 
-export { reikiLevel1Day1, reikiLevel1Day2, reikiLevel2 };
+export { reikiLevel1Day1, reikiLevel1Day2, reikiLevel2Day1, reikiLevel2Day2, reikiLevel3Day1, reikiLevel3Day2 };
 
 export const courseMaterialDecks: readonly CourseMaterialDeck[] = [
   introductionToReiki,
   reikiLevel1Day1,
   reikiLevel1Day2,
-  reikiLevel2,
+  reikiLevel2Day1,
+  reikiLevel2Day2,
+  reikiLevel3Day1,
+  reikiLevel3Day2,
 ];
 
 export type CourseMaterialSeriesGroup = {

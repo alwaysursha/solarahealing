@@ -10704,10 +10704,10 @@ html[data-brand-theme="10"] section[aria-label="Hero highlights"] [role="tablist
   column-gap: 1.35rem;
 }
 
-/* Landscape media: give the copy column real width so sections aren't crushed. */
+/* Landscape media: equal 50/50 split — image and copy divide at center. */
 .cm-slide-topic-sections-media:not(.cm-slide-topic-sections-portrait):not(.cm-slide-topic-sections-stack) {
-  grid-template-columns: minmax(14rem, 0.9fr) minmax(0, 1.2fr);
-  column-gap: 1.5rem;
+  grid-template-columns: minmax(0, 1fr) minmax(0, 1fr);
+  column-gap: 1.35rem;
 }
 
 /* Full-width image on top, text content below. */
@@ -10821,30 +10821,42 @@ html[data-brand-theme="10"] section[aria-label="Hero highlights"] [role="tablist
   border-radius: 1.75rem;
 }
 
-.cm-slide-topic-sections-media .cm-slide-media-frame-wide {
-  width: 100%;
+.cm-slide-topic-sections-media:not(.cm-slide-topic-sections-stack) .cm-slide-media-frame-wide {
+  /* Size the frame to the media aspect so the image can fill edge-to-edge. */
+  width: min(100%, calc(min(72vh, 38rem) * 3 / 2));
   max-width: 100%;
+  margin-inline: auto;
+  aspect-ratio: 3 / 2;
   overflow: hidden;
   border-radius: 1.35rem;
   background: transparent;
+  line-height: 0;
 }
 
 .cm-slide-topic-sections-media:not(.cm-slide-topic-sections-portrait) .cm-slide-media {
   justify-content: center;
+  align-self: center;
   width: 100%;
   max-width: 100%;
   min-width: 0;
 }
 
-.cm-slide-topic-sections-media .cm-slide-media-frame-wide .cm-slide-media-img {
-  display: block;
+.cm-slide-topic-sections-media:not(.cm-slide-topic-sections-portrait):not(.cm-slide-topic-sections-stack)
+  .cm-topic-sections-copy {
+  align-self: center;
   width: 100%;
   max-width: 100%;
-  max-height: min(68vh, 34rem);
-  height: auto;
-  object-fit: contain;
+}
+
+.cm-slide-topic-sections-media:not(.cm-slide-topic-sections-stack) .cm-slide-media-frame-wide .cm-slide-media-img {
+  display: block;
+  width: 100%;
+  height: 100%;
+  max-width: none;
+  max-height: none;
+  object-fit: cover;
   object-position: center;
-  border-radius: 1.35rem;
+  border-radius: inherit;
 }
 
 .cm-slide-topic-sections-media .cm-slide-media-glow {
@@ -10866,6 +10878,129 @@ html[data-brand-theme="10"] section[aria-label="Hero highlights"] [role="tablist
   border: 1px solid rgba(92, 20, 112, 0.12);
   background: rgba(255, 255, 255, 0.72);
   padding: 0.75rem 0.9rem;
+}
+
+.cm-topic-section-cluster {
+  display: flex;
+  flex-direction: column;
+  min-width: 0;
+}
+
+.cm-topic-section-cluster-spoken .cm-topic-section {
+  border-bottom-left-radius: 0.55rem;
+  border-bottom-right-radius: 0.55rem;
+}
+
+.cm-topic-section-spoken {
+  position: relative;
+  display: flex;
+  flex-direction: column;
+  align-items: flex-start;
+  gap: 0.28rem;
+  margin: 0 0.55rem;
+  padding: 0.85rem 0.15rem 0.2rem;
+  text-align: left;
+}
+
+/* Soft gold stem — breath-line from card into the spoken phrase. */
+.cm-topic-section-spoken::before {
+  content: "";
+  position: absolute;
+  top: 0;
+  left: 1.1rem;
+  width: 1.5px;
+  height: 0.65rem;
+  background: linear-gradient(
+    to bottom,
+    rgba(184, 146, 58, 0.8),
+    rgba(184, 146, 58, 0.15)
+  );
+}
+
+.cm-topic-section-spoken::after {
+  content: "";
+  position: absolute;
+  top: 0.55rem;
+  left: 0.95rem;
+  width: 0.34rem;
+  height: 0.34rem;
+  transform: rotate(45deg);
+  border: 1px solid rgba(184, 146, 58, 0.7);
+  background: rgba(255, 252, 245, 0.95);
+  box-shadow: 0 0 0 4px rgba(248, 242, 255, 0.9);
+}
+
+.cm-topic-section-spoken-cue {
+  margin-top: 0.2rem;
+  padding-left: 0.15rem;
+  font-size: 0.72rem;
+  font-weight: 700;
+  letter-spacing: 0.18em;
+  text-transform: uppercase;
+  color: #b8923a;
+}
+
+.cm-topic-section-spoken-quote {
+  padding-left: 0.15rem;
+  font-family: var(--font-instrument-serif), Georgia, serif;
+  font-size: clamp(1.15rem, 1.7vw, 1.4rem);
+  font-style: italic;
+  font-weight: 500;
+  line-height: 1.35;
+  color: #3a2560;
+}
+
+/* Spoken clusters in column layouts: roomier cards + prominent quotes. */
+.cm-slide-topic-sections-media:not(.cm-slide-topic-sections-stack)
+  .cm-topic-sections-grid:has(.cm-topic-section-spoken) {
+  gap: 0.7rem;
+  margin-top: 0.55rem;
+}
+
+.cm-slide-topic-sections-media:not(.cm-slide-topic-sections-stack)
+  .cm-topic-section-cluster-spoken
+  .cm-topic-section {
+  padding: 0.8rem 1rem;
+}
+
+.cm-slide-topic-sections-media:not(.cm-slide-topic-sections-stack)
+  .cm-topic-section-cluster-spoken
+  .cm-topic-section-heading {
+  font-size: clamp(0.78rem, 1.1vw, 0.9rem);
+}
+
+.cm-slide-topic-sections-media:not(.cm-slide-topic-sections-stack)
+  .cm-topic-section-cluster-spoken
+  .cm-topic-section-text {
+  font-size: clamp(1.02rem, 1.35vw, 1.15rem);
+  line-height: 1.4;
+}
+
+.cm-slide-topic-sections-media:not(.cm-slide-topic-sections-stack)
+  .cm-topic-section-cluster-spoken
+  .cm-topic-section-spoken {
+  margin: 0 0.35rem;
+  padding: 0.75rem 0.1rem 0.1rem;
+  gap: 0.22rem;
+}
+
+.cm-slide-topic-sections-media:not(.cm-slide-topic-sections-stack)
+  .cm-topic-section-cluster-spoken
+  .cm-topic-section-spoken-cue {
+  font-size: 0.7rem;
+}
+
+.cm-slide-topic-sections-media:not(.cm-slide-topic-sections-stack)
+  .cm-topic-section-cluster-spoken
+  .cm-topic-section-spoken-quote {
+  font-size: clamp(1.22rem, 1.9vw, 1.55rem);
+  line-height: 1.32;
+}
+
+/* Keep the image restrained when spoken lines need vertical room. */
+.cm-slide-topic-sections-compact.cm-slide-topic-sections-media:not(.cm-slide-topic-sections-portrait):not(.cm-slide-topic-sections-stack):has(.cm-topic-section-spoken)
+  .cm-slide-media-frame-wide {
+  width: min(100%, calc(min(48vh, 24rem) * 3 / 2));
 }
 
 .cm-topic-section-heading {
@@ -10969,9 +11104,12 @@ html[data-brand-theme="10"] section[aria-label="Hero highlights"] [role="tablist
     max-height: none;
   }
 
-  .cm-slide-topic-sections-media .cm-slide-media-frame-portrait .cm-slide-media-img,
-  .cm-slide-topic-sections-media .cm-slide-media-frame-wide .cm-slide-media-img {
+  .cm-slide-topic-sections-media .cm-slide-media-frame-portrait .cm-slide-media-img {
     max-height: 22rem;
+  }
+
+  .cm-slide-topic-sections-media:not(.cm-slide-topic-sections-stack) .cm-slide-media-frame-wide {
+    width: min(100%, calc(22rem * 3 / 2));
   }
 }
 
@@ -10996,18 +11134,18 @@ html[data-brand-theme="10"] section[aria-label="Hero highlights"] [role="tablist
     row-gap: 0.42rem;
   }
 
-  /* Landscape media: stack Mind / Body / Soul full-width so bullets have room. */
+  /* Landscape media: stack sections full-width in the equal copy column. */
   .cm-slide-topic-sections-media:not(.cm-slide-topic-sections-portrait) .cm-topic-sections-grid {
     grid-template-columns: 1fr;
     gap: 0.55rem;
   }
 
   .cm-slide-topic-sections-media:not(.cm-slide-topic-sections-portrait) .cm-slide-title {
-    font-size: clamp(1.85rem, 3.2vw, 2.55rem);
+    font-size: clamp(1.75rem, 2.8vw, 2.35rem);
   }
 
   .cm-slide-topic-sections-media:not(.cm-slide-topic-sections-portrait) .cm-slide-lead {
-    font-size: clamp(0.98rem, 1.4vw, 1.12rem);
+    font-size: clamp(0.95rem, 1.3vw, 1.08rem);
     line-height: 1.45;
   }
 
@@ -11017,7 +11155,229 @@ html[data-brand-theme="10"] section[aria-label="Hero highlights"] [role="tablist
 
   .cm-slide-topic-sections-media:not(.cm-slide-topic-sections-portrait) .cm-topic-section-list {
     grid-template-columns: repeat(2, minmax(0, 1fr));
-    font-size: 1.02rem;
+    font-size: 0.98rem;
+  }
+}
+
+/* Dense teaching slides: smaller type + media so content clears the corner logo. */
+.cm-slide-topic-sections-compact {
+  gap: 0.65rem 1rem;
+  padding-block: 2.1rem 1.1rem;
+  align-content: center;
+  align-items: center;
+}
+
+.cm-slide-topic-sections-compact.cm-slide-topic-sections-media {
+  padding-block: 1.85rem 1rem;
+}
+
+.cm-slide-topic-sections-compact .cm-slide-eyebrow {
+  font-size: clamp(0.68rem, 1vw, 0.78rem);
+}
+
+.cm-slide-topic-sections-compact .cm-slide-title {
+  font-size: clamp(1.35rem, 2.2vw, 1.85rem);
+  line-height: 1.15;
+}
+
+.cm-slide-topic-sections-compact .cm-slide-lead {
+  font-size: clamp(0.88rem, 1.15vw, 1rem);
+  margin-top: 0.2rem;
+  line-height: 1.4;
+}
+
+.cm-slide-topic-sections-compact .cm-topic-sections-grid {
+  margin-top: 0.5rem;
+  gap: 0.45rem;
+}
+
+.cm-slide-topic-sections-compact .cm-topic-section {
+  padding: 0.5rem 0.7rem;
+}
+
+.cm-slide-topic-sections-compact .cm-topic-section-heading {
+  font-size: clamp(0.82rem, 1.15vw, 0.95rem);
+}
+
+.cm-slide-topic-sections-compact .cm-topic-section-text {
+  font-size: clamp(0.88rem, 1.15vw, 0.98rem);
+  line-height: 1.4;
+}
+
+.cm-slide-topic-sections-compact .cm-topic-section-list {
+  margin-top: 0.3rem;
+  font-size: 0.9rem;
+  row-gap: 0.22rem;
+  column-gap: 0.65rem;
+}
+
+.cm-slide-topic-sections-compact.cm-slide-topic-sections-portrait .cm-slide-media-frame-portrait .cm-slide-media-img {
+  max-height: min(58vh, 28rem);
+}
+
+.cm-slide-topic-sections-compact.cm-slide-topic-sections-media:not(.cm-slide-topic-sections-portrait):not(.cm-slide-topic-sections-stack)
+  .cm-slide-media-frame-wide {
+  width: min(100%, calc(min(58vh, 28rem) * 3 / 2));
+}
+
+.cm-slide-topic-sections-compact.cm-slide-topic-sections-media:not(.cm-slide-topic-sections-portrait):not(.cm-slide-topic-sections-stack)
+  .cm-slide-media-frame-wide
+  .cm-slide-media-img {
+  width: 100%;
+  height: 100%;
+  max-width: none;
+  max-height: none;
+  object-fit: cover;
+}
+
+/* Stack + compact (e.g. Protection Shield): keep image + copy on one screen. */
+.cm-slide-topic-sections-compact.cm-slide-topic-sections-stack {
+  gap: 0.28rem;
+  padding-block: 1.5rem 0.85rem;
+  overflow: hidden;
+  align-content: center;
+  height: 100%;
+  min-height: 0;
+}
+
+.cm-slide-topic-sections-compact.cm-slide-topic-sections-stack .cm-slide-eyebrow {
+  font-size: clamp(0.62rem, 0.9vw, 0.72rem);
+}
+
+.cm-slide-topic-sections-compact.cm-slide-topic-sections-stack .cm-slide-title {
+  font-size: clamp(1.15rem, 1.85vw, 1.5rem);
+  line-height: 1.12;
+}
+
+.cm-slide-topic-sections-compact.cm-slide-topic-sections-stack .cm-slide-lead {
+  font-size: clamp(0.8rem, 1.05vw, 0.9rem);
+  margin-top: 0.1rem;
+  line-height: 1.35;
+}
+
+.cm-slide-topic-sections-compact.cm-slide-topic-sections-stack .cm-topic-sections-copy {
+  min-height: 0;
+  overflow: hidden;
+}
+
+.cm-slide-topic-sections-compact.cm-slide-topic-sections-stack .cm-topic-sections-grid {
+  margin-top: 0.25rem;
+  gap: 0.3rem;
+  /* Prefer a horizontal row when three short cards share one stack slide. */
+  grid-template-columns: repeat(3, minmax(0, 1fr)) !important;
+}
+
+.cm-slide-topic-sections-compact.cm-slide-topic-sections-stack .cm-topic-sections-grid:has(> :nth-child(4)) {
+  grid-template-columns: repeat(2, minmax(0, 1fr)) !important;
+}
+
+.cm-slide-topic-sections-compact.cm-slide-topic-sections-stack .cm-topic-sections-grid:has(> :nth-child(2):last-child) {
+  grid-template-columns: repeat(2, minmax(0, 1fr)) !important;
+}
+
+.cm-slide-topic-sections-compact.cm-slide-topic-sections-stack .cm-topic-sections-grid:has(> :only-child) {
+  grid-template-columns: 1fr !important;
+}
+
+.cm-slide-topic-sections-compact.cm-slide-topic-sections-stack .cm-topic-section {
+  padding: 0.35rem 0.55rem;
+}
+
+.cm-slide-topic-sections-compact.cm-slide-topic-sections-stack .cm-topic-section-heading {
+  font-size: clamp(0.72rem, 0.95vw, 0.84rem);
+}
+
+.cm-slide-topic-sections-compact.cm-slide-topic-sections-stack .cm-topic-section-text {
+  font-size: clamp(0.78rem, 1vw, 0.88rem);
+  line-height: 1.28;
+  margin: 0.15rem 0 0;
+}
+
+.cm-slide-topic-sections-compact.cm-slide-topic-sections-stack .cm-topic-section-spoken {
+  margin: 0 0.15rem;
+  padding: 0.55rem 0.3rem 0.05rem;
+  gap: 0.12rem;
+}
+
+.cm-slide-topic-sections-compact.cm-slide-topic-sections-stack .cm-topic-section-spoken-cue {
+  font-size: 0.58rem;
+  letter-spacing: 0.14em;
+}
+
+.cm-slide-topic-sections-compact.cm-slide-topic-sections-stack .cm-topic-section-spoken-quote {
+  font-size: clamp(0.78rem, 1.05vw, 0.92rem);
+  line-height: 1.28;
+}
+
+.cm-slide-topic-sections-compact.cm-slide-topic-sections-stack .cm-topic-section-list {
+  font-size: 0.82rem;
+  row-gap: 0.12rem;
+  margin-top: 0.2rem;
+  grid-template-columns: 1fr;
+}
+
+.cm-slide-topic-sections-compact.cm-slide-topic-sections-stack .cm-topic-sections-closing {
+  margin: 0.35rem 0 0;
+  font-size: clamp(1.05rem, 1.7vw, 1.3rem);
+  line-height: 1.3;
+}
+
+.cm-slide-topic-sections-compact.cm-slide-topic-sections-stack .cm-slide-media {
+  flex: 0 0 auto;
+  min-height: 0;
+}
+
+.cm-slide-topic-sections-compact.cm-slide-topic-sections-stack .cm-slide-media-frame-wide {
+  width: min(100%, 52rem);
+  margin-inline: auto;
+}
+
+.cm-slide-topic-sections-compact.cm-slide-topic-sections-stack .cm-slide-media-frame-wide .cm-slide-media-img {
+  width: 100%;
+  max-width: 100%;
+  max-height: min(30vh, 16rem);
+  height: auto;
+  object-fit: cover;
+  object-position: center;
+}
+
+@media (max-width: 699px) {
+  .cm-slide-topic-sections-compact.cm-slide-topic-sections-stack .cm-slide-media-frame-wide .cm-slide-media-img {
+    max-height: 8.5rem;
+  }
+
+  .cm-slide-topic-sections-compact.cm-slide-topic-sections-stack .cm-topic-sections-grid {
+    grid-template-columns: 1fr !important;
+  }
+
+  .cm-slide-topic-sections-compact.cm-slide-topic-sections-stack .cm-topic-section-list {
+    grid-template-columns: 1fr;
+  }
+}
+
+.cm-slide-body:has(.cm-slide-topic-sections-compact.cm-slide-topic-sections-stack) > .cm-slide {
+  overflow: hidden;
+}
+
+@media (min-width: 900px) {
+  .cm-slide-topic-sections-compact.cm-slide-topic-sections-media:not(.cm-slide-topic-sections-portrait)
+    .cm-slide-title {
+    font-size: clamp(1.4rem, 2.2vw, 1.85rem);
+  }
+
+  .cm-slide-topic-sections-compact.cm-slide-topic-sections-media:not(.cm-slide-topic-sections-portrait)
+    .cm-slide-lead {
+    font-size: clamp(0.88rem, 1.15vw, 0.98rem);
+  }
+
+  .cm-slide-topic-sections-compact.cm-slide-topic-sections-media:not(.cm-slide-topic-sections-portrait)
+    .cm-topic-section-list {
+    font-size: 0.9rem;
+  }
+
+  .cm-slide-topic-sections-compact.cm-slide-topic-sections-portrait .cm-topic-section-list {
+    font-size: 0.9rem;
+    row-gap: 0.28rem;
   }
 }
 

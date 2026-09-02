@@ -1299,6 +1299,7 @@ function SlideTopicSections({
   const hasImage = Boolean(slide.image);
   const portrait = hasImage && slide.image ? slide.image.height >= slide.image.width : false;
   const stack = slide.layout === "stack";
+  const compact = slide.density === "compact";
 
   return (
     <motion.div
@@ -1307,6 +1308,7 @@ function SlideTopicSections({
         hasImage ? "cm-slide-topic-sections-media" : "",
         portrait ? "cm-slide-topic-sections-portrait" : "",
         stack ? "cm-slide-topic-sections-stack" : "",
+        compact ? "cm-slide-topic-sections-compact" : "",
       ].join(" ")}
       variants={reduceMotion ? undefined : slideContainer}
       initial={reduceMotion ? false : "hidden"}
@@ -1345,50 +1347,69 @@ function SlideTopicSections({
         </motion.h2>
         {slide.lead ? (
           <motion.p className="cm-slide-lead" variants={reduceMotion ? undefined : slideItem}>
-            {slide.lead}
+            {renderInlineEmphasis(slide.lead)}
           </motion.p>
         ) : null}
 
         <motion.div className="cm-topic-sections-grid" variants={reduceMotion ? undefined : slideContainer}>
           {slide.sections.map((section) => (
-            <motion.section
+            <motion.div
               key={section.heading}
               className={[
-                "cm-topic-section",
-                section.tone === "honor" ? "cm-topic-section-honor" : "",
+                "cm-topic-section-cluster",
+                section.spoken ? "cm-topic-section-cluster-spoken" : "",
               ]
                 .filter(Boolean)
                 .join(" ")}
               variants={reduceMotion ? undefined : slideItem}
             >
-              <h3 className="cm-topic-section-heading">{section.heading}</h3>
-              {section.tone === "honor" ? (
-                <>
-                  {section.text ? (
-                    <p className="cm-topic-section-text">{renderInlineEmphasis(section.text)}</p>
+              <section
+                className={[
+                  "cm-topic-section",
+                  section.tone === "honor" ? "cm-topic-section-honor" : "",
+                ]
+                  .filter(Boolean)
+                  .join(" ")}
+              >
+                <h3 className="cm-topic-section-heading">{section.heading}</h3>
+                {section.tone === "honor" ? (
+                  <>
+                    {section.text ? (
+                      <p className="cm-topic-section-text">{renderInlineEmphasis(section.text)}</p>
+                    ) : null}
+                    {section.subheading ? (
+                      <p className="cm-topic-section-subheading">{section.subheading}</p>
+                    ) : null}
+                  </>
+                ) : (
+                  <>
+                    {section.subheading ? (
+                      <p className="cm-topic-section-subheading">{section.subheading}</p>
+                    ) : null}
+                    {section.text ? (
+                      <p className="cm-topic-section-text">{renderInlineEmphasis(section.text)}</p>
+                    ) : null}
+                  </>
+                )}
+                {section.items?.length ? (
+                  <ul className="cm-topic-section-list">
+                    {section.items.map((item) => (
+                      <li key={item}>{item}</li>
+                    ))}
+                  </ul>
+                ) : null}
+              </section>
+              {section.spoken ? (
+                <p className="cm-topic-section-spoken">
+                  {section.spokenCue ? (
+                    <span className="cm-topic-section-spoken-cue">{section.spokenCue}</span>
                   ) : null}
-                  {section.subheading ? (
-                    <p className="cm-topic-section-subheading">{section.subheading}</p>
-                  ) : null}
-                </>
-              ) : (
-                <>
-                  {section.subheading ? (
-                    <p className="cm-topic-section-subheading">{section.subheading}</p>
-                  ) : null}
-                  {section.text ? (
-                    <p className="cm-topic-section-text">{renderInlineEmphasis(section.text)}</p>
-                  ) : null}
-                </>
-              )}
-              {section.items?.length ? (
-                <ul className="cm-topic-section-list">
-                  {section.items.map((item) => (
-                    <li key={item}>{item}</li>
-                  ))}
-                </ul>
+                  <span className="cm-topic-section-spoken-quote">
+                    “{section.spoken.replace(/^["“]|["”]$/g, "")}”
+                  </span>
+                </p>
               ) : null}
-            </motion.section>
+            </motion.div>
           ))}
         </motion.div>
 
