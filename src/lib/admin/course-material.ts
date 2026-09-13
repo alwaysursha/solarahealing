@@ -9,6 +9,7 @@ import { reikiLevel2Day1 } from "@/lib/admin/course-material-reiki-level-2-day-1
 import { reikiLevel2Day2 } from "@/lib/admin/course-material-reiki-level-2-day-2";
 import { reikiLevel3Day1 } from "@/lib/admin/course-material-reiki-level-3-day-1";
 import { reikiLevel3Day2 } from "@/lib/admin/course-material-reiki-level-3-day-2";
+import { clinicalHypnotherapy } from "@/lib/admin/course-material-clinical-hypnotherapy";
 
 export type CourseMaterialSlide =
   | {
@@ -799,7 +800,15 @@ export const introductionToReiki: CourseMaterialDeck = {
   ],
 };
 
-export { reikiLevel1Day1, reikiLevel1Day2, reikiLevel2Day1, reikiLevel2Day2, reikiLevel3Day1, reikiLevel3Day2 };
+export {
+  reikiLevel1Day1,
+  reikiLevel1Day2,
+  reikiLevel2Day1,
+  reikiLevel2Day2,
+  reikiLevel3Day1,
+  reikiLevel3Day2,
+  clinicalHypnotherapy,
+};
 
 export const courseMaterialDecks: readonly CourseMaterialDeck[] = [
   introductionToReiki,
@@ -809,6 +818,7 @@ export const courseMaterialDecks: readonly CourseMaterialDeck[] = [
   reikiLevel2Day2,
   reikiLevel3Day1,
   reikiLevel3Day2,
+  clinicalHypnotherapy,
 ];
 
 export type CourseMaterialSeriesGroup = {
