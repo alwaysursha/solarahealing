@@ -10,6 +10,7 @@ import { reikiLevel2Day2 } from "@/lib/admin/course-material-reiki-level-2-day-2
 import { reikiLevel3Day1 } from "@/lib/admin/course-material-reiki-level-3-day-1";
 import { reikiLevel3Day2 } from "@/lib/admin/course-material-reiki-level-3-day-2";
 import { clinicalHypnotherapy } from "@/lib/admin/course-material-clinical-hypnotherapy";
+import { akashicReadingMaster } from "@/lib/admin/course-material-akashic-reading-master";
 
 export type CourseMaterialSlide =
   | {
@@ -808,6 +809,7 @@ export {
   reikiLevel3Day1,
   reikiLevel3Day2,
   clinicalHypnotherapy,
+  akashicReadingMaster,
 };
 
 export const courseMaterialDecks: readonly CourseMaterialDeck[] = [
@@ -819,6 +821,7 @@ export const courseMaterialDecks: readonly CourseMaterialDeck[] = [
   reikiLevel3Day1,
   reikiLevel3Day2,
   clinicalHypnotherapy,
+  akashicReadingMaster,
 ];
 
 export type CourseMaterialSeriesGroup = {
